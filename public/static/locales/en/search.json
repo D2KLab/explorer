@@ -1,0 +1,16 @@
+{
+  "buttons": {
+    "clear": "CLEAR",
+    "filter": "FILTER"
+  },
+  "labels": {
+    "sort_by": "Sort by",
+    "sort_select": "Select...",
+    "browse": "Browse {{type}}"
+  },
+  "fields": {
+    "graph": "Graph",
+    "q": "Text search",
+    "languages": "Languages"
+  }
+}

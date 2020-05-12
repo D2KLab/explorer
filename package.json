@@ -1,0 +1,60 @@
+{
+  "name": "exploratory-search",
+  "description": "",
+  "version": "1.0.0",
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "NODE_ENV=production node server.js",
+    "build": "next build",
+    "export": "next export",
+    "lint": "eslint ."
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "dependencies": {
+    "autosuggest-highlight": "^3.1.1",
+    "express": "^4.17.1",
+    "next": "^9.4.0",
+    "next-i18next": "^4.4.2",
+    "react": "^16.13.1",
+    "react-autosuggest": "^10.0.2",
+    "react-dom": "^16.13.1",
+    "react-dropzone": "^11.0.1",
+    "react-graceful-image": "^1.5.0",
+    "react-helmet": "^6.0.0",
+    "react-image": "^2.4.0",
+    "react-image-appear": "^1.2.23",
+    "react-lazy-load-image-component": "^1.4.3",
+    "react-lazyload": "^2.6.7",
+    "react-responsive-carousel": "^3.2.7",
+    "react-select": "^3.1.0",
+    "react-swipeable-views": "^0.13.9",
+    "reakit": "^1.0.0",
+    "sparql-transformer": "^2.3.2",
+    "styled-components": "^5.1.0",
+    "styled-icons": "^10.2.1",
+    "styled-reset": "^4.1.4"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-inline-react-svg": "^1.1.1",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "babel-plugin-styled-components": "^1.10.7",
+    "eslint": "^7.0.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-import-resolver-babel-module": "^5.1.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.19.0",
+    "husky": "^4.2.5",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^2.0.1"
+  }
+}

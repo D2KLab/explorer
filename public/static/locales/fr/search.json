@@ -1,0 +1,16 @@
+{
+  "buttons": {
+    "clear": "EFFACER",
+    "filter": "FILTRER"
+  },
+  "labels": {
+    "sort_by": "Trier par",
+    "sort_select": "Sélectionner...",
+    "browse": "Parcourir: {{type}}"
+  },
+  "fields": {
+    "graph": "Graphe",
+    "q": "Recherche par texte",
+    "languages": "Langues"
+  }
+}
