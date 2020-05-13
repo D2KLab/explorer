@@ -37,19 +37,30 @@ const SuggestionContent = styled.span`
   align-items: center;
 `;
 
-const SuggestionName = styled.span`
-  margin-left: 68px;
-  line-height: 45px;
+const SuggestionImage = styled.img`
+  display: block;
+  max-width: 45px;
+  max-height: 45px;
+  margin-right: 10px;
+`;
 
+const SuggestionName = styled.span`
   &.highlight {
-    color: #ee0000;
     font-weight: bold;
   }
 `;
 
 const Container = styled.div`
+  display: flex;
+  min-width: 0;
+
   .react-autosuggest__suggestions-container {
     display: none;
+  }
+
+  .react-autosuggest__container {
+    display: flex;
+    min-width: 0;
   }
 
   .react-autosuggest__container--open .react-autosuggest__suggestions-container {
@@ -96,8 +107,16 @@ const renderSuggestion = (suggestion, { query }) => {
   const matches = AutosuggestHighlightMatch(suggestionText, query);
   const parts = AutosuggestHighlightParse(suggestionText, matches);
 
+  let mainImage = null;
+  if (suggestion.representation && suggestion.representation.image) {
+    mainImage = Array.isArray(suggestion.representation.image)
+      ? suggestion.representation.image.shift()
+      : suggestion.representation.image;
+  }
+
   return (
     <SuggestionContent>
+      <SuggestionImage src={mainImage} alt="" />
       <SuggestionName>
         {parts.map((part, index) => {
           const className = part.highlight ? 'highlight' : null;

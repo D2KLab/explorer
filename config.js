@@ -18,11 +18,24 @@ module.exports = {
         {
           '@id': '?id',
           label: '?label',
+          representation: {
+            '@id': '?representation',
+            image: '?representationUrl$sample',
+          },
         },
       ],
       $where: [
         '?id a <http://erlangen-crm.org/current/E22_Man-Made_Object>',
         '?id <http://www.w3.org/2000/01/rdf-schema#label> ?label',
+        // Needed because silknow has 2 duplicate images (the source one and the one hosted on silknow.org cloud server)
+        // We should only return the silknow.org one
+        `OPTIONAL {
+          ?id <http://erlangen-crm.org/current/P138i_has_representation> ?representation .
+          OPTIONAL {
+            ?representation <http://schema.org/contentUrl> ?representationUrl .
+            FILTER(STRSTARTS(STR(?representationUrl), "http://silknow.org/"))
+          }
+        }`
       ],
       $limit: 5,
       $langTag: 'hide',
@@ -143,7 +156,7 @@ module.exports = {
             ],
             $where: [
               '?production <http://erlangen-crm.org/current/P4_has_time-span> ?id',
-              '?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?label',
+              '?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?label'
             ],
             $filter: ['langmatches(lang(?label), "en") || lang(?label) = ""'],
             $langTag: 'hide',
