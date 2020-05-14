@@ -221,7 +221,7 @@ export async function getServerSideProps({ query }) {
 
     // Graph
     if (query.graph) {
-      searchQuery.$from = query.graph;
+      searchQuery.$where.push(`FILTER(?g = <${query.graph}>)`);
     }
 
     // Languages
