@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 
 import { breakpoints } from '@styles';
-import EurecomLogoSVG from 'public/images/eurecom-logo.svg';
-
 import { withTranslation } from '~/i18n';
+import config from '~/config';
 
 /**
  * Footer.
@@ -25,8 +24,12 @@ const Container = styled.div`
 `;
 
 const Credits = styled.div`
-  p:not(:last-child) {
-    margin-bottom: 1.5em;
+  p {
+    white-space: pre-line;
+
+    &:not(:last-child) {
+      margin-bottom: 1.5em;
+    }
   }
 
   a {
@@ -39,6 +42,7 @@ const Credits = styled.div`
 `;
 
 const LogoContainer = styled.div`
+  margin-left: 50px;
   margin-top: 24px;
 
   ${breakpoints.tablet`
@@ -47,8 +51,8 @@ const LogoContainer = styled.div`
   `}
 `;
 
-const Logo = styled(EurecomLogoSVG)`
-  width: 120px;
+const Logo = styled.img`
+  height: auto;
 `;
 
 const Footer = ({ className, t }) => {
@@ -56,17 +60,10 @@ const Footer = ({ className, t }) => {
     <Container className={className}>
       <Credits>
         <p>{t('footer.text')}</p>
-        <p>
-          KG Explorer has been developed at{' '}
-          <a href="https://www.eurecom.fr" target="_blank" rel="noopener noreferrer">
-            EURECOM
-          </a>
-          .
-        </p>
       </Credits>
       <LogoContainer>
         <a target="_blank" rel="noopener noreferrer">
-          <Logo />
+          <Logo src={config.footer.logo || config.metadata.logo} alt={config.metadata.title} title={config.metadata.title} />
         </a>
       </LogoContainer>
     </Container>

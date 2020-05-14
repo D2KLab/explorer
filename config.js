@@ -11,6 +11,9 @@ module.exports = {
       image: '/images/silknow-hero.png',
     },
   },
+  footer: {
+    logo: '/images/silknow-footer.png'
+  },
   search: {
     allowTextSearch: true,
     textSearchQuery: {
