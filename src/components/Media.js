@@ -9,7 +9,7 @@ import config from '~/config';
  */
 
 const ThumbnailContainer = styled.div`
-  border: 1px solid #dcdcdc;
+  border: 2px solid ${({ theme }) => theme.colors.secondary};
   display: flex;
   align-items: center;
   justify-content: center;

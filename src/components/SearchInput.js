@@ -52,7 +52,7 @@ const SuggestionName = styled.span`
 
 const Container = styled.div`
   display: flex;
-  min-width: 280px;
+  width: 280px;
 
   .react-autosuggest__suggestions-container {
     display: none;
@@ -69,7 +69,6 @@ const Container = styled.div`
     position: absolute;
     top: 51px;
     right: 0;
-    min-width: 280px;
     max-width: 560px;
     border: 1px solid #aaa;
     background-color: #fff;
