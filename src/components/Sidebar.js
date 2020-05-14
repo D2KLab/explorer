@@ -137,7 +137,7 @@ class Sidebar extends Component {
     this.state = {
       fields,
       languages,
-      graphOptions,
+      graphOptions
     };
   }
 

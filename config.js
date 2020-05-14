@@ -179,6 +179,7 @@ module.exports = {
           {
             '@type': 'http://erlangen-crm.org/current/E22_Man-Made_Object',
             '@id': '?id',
+            '@graph': '?g',
             label: '$<http://www.w3.org/2000/01/rdf-schema#label>$var:label',
             identifier: '$<http://purl.org/dc/elements/1.1/identifier>$var:identifier',
             representation: {
@@ -212,7 +213,7 @@ module.exports = {
           },
         ],
         $where: [
-          '?id a <http://erlangen-crm.org/current/E22_Man-Made_Object>',
+          'GRAPH ?g { ?id a <http://erlangen-crm.org/current/E22_Man-Made_Object> }',
           `OPTIONAL {
             ?collection <http://erlangen-crm.org/current/P106_is_composed_of> ?id .
             ?collection <http://www.w3.org/2000/01/rdf-schema#label> ?collectionLabel .
@@ -307,37 +308,48 @@ module.exports = {
   },
   graphs: {
     'http://data.silknow.org/met': {
-      label: 'MET',
+      label: 'Metropolitan Museum of Art',
+      icon: '/images/graphs/http-data-silknow-org-met.png'
     },
     'http://data.silknow.org/unipa': {
       label: 'UNIPA',
+      icon: '/images/graphs/http-data-silknow-org-unipa.png'
     },
     'http://data.silknow.org/imatex': {
-      label: 'IMATEX',
+      label: 'CDMT Terrassa',
+      icon: '/images/graphs/http-data-silknow-org-imatex.png'
     },
     'http://data.silknow.org/vam': {
-      label: 'V&M',
+      label: 'Victoria and Albert Museum',
+      icon: '/images/graphs/http-data-silknow-org-vam.png'
     },
     'http://data.silknow.org/garin': {
-      label: 'GARIN',
+      label: 'Garín 1820',
+      icon: '/images/graphs/http-data-silknow-org-garin.png'
     },
     'http://data.silknow.org/mad': {
-      label: 'MAD',
+      label: 'Musée des Arts Décoratifs',
+      icon: '/images/graphs/http-data-silknow-org-mad.png'
     },
     'http://data.silknow.org/mfa': {
-      label: 'MFA',
+      label: 'Boston Museum of Fine Arts',
+      icon: '/images/graphs/http-data-silknow-org-mfa.png'
     },
     'http://data.silknow.org/risd': {
-      label: 'RISD',
+      label: 'Rhode Island School of Design',
+      icon: '/images/graphs/http-data-silknow-org-risd.png'
     },
     'http://data.silknow.org/cer': {
-      label: 'CER',
+      label: 'Red Digital de Colecciones de Museos de España',
+      icon: '/images/graphs/http-data-silknow-org-cer.png'
     },
     'http://data.silknow.org/joconde': {
-      label: 'JOCONDE',
+      label: 'Joconde Database of French Museum Collections',
+      icon: '/images/graphs/http-data-silknow-org-joconde.png'
     },
     'http://data.silknow.org/mtmad': {
-      label: 'MTMAD',
+      label: 'Musée des Tissus',
+      icon: '/images/graphs/http-data-silknow-org-mtmad.png'
     },
   },
   vocabularies: [

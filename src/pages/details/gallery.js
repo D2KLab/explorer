@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet';
 import { Header, Footer, Layout, Screen, Media } from '@components';
 import Metadata from '@components/Metadata';
 import Tabs, { Tab } from '@components/TabBar';
+import GraphIcon from '@components/GraphIcon';
 import Debug from '@components/Debug';
 import { breakpoints } from '@styles';
 import config from '~/config';
@@ -190,7 +191,7 @@ const GalleryDetailsPage = ({ result }) => {
   });
 
   const metadata = Object.entries(result).filter(([metaName, meta]) => {
-    return !['@type', '@id', 'title', 'representation'].includes(metaName);
+    return !['@type', '@id', '@graph', 'label', 'representation'].includes(metaName);
   });
 
   // TODO: used to test the Analysis section, remove later
@@ -261,6 +262,7 @@ const GalleryDetailsPage = ({ result }) => {
           <Secondary>
             <MetadataList>
               <Title>{label}</Title>
+              <GraphIcon uri={result['@graph']} />
               {metadata.flatMap(([metaName, meta]) => {
                 const values = [];
                 if (Array.isArray(meta)) {
