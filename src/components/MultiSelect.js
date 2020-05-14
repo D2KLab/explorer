@@ -42,58 +42,53 @@ const Container = styled.div`
 `;
 
 export default class MultiSelect extends Component {
-  constructor(props) {
-    super(props);
+  onSelectChange = (value, meta) => {
+    const values = this.getValues();
+    const newValues = Array.isArray(value) ? value : [value].filter(x => x);
+    values.push(...newValues);
+    this.triggerOnChange(values);
+  };
 
-    const value = Array.isArray(props.value) ? props.value : [props.value].filter((x) => x);
-
-    this.state = { value };
+  getValues = () => {
+    return Array.isArray(this.props.value) ? this.props.value : [this.props.value].filter((x) => x);
   }
 
-  onSelectChange = (value, meta) => {
-    this.setState({ value }, this.triggerOnChange);
-  };
-
   removeItem = (item) => {
-    this.setState(
-      (prevState) => ({
-        value: prevState.value.filter((it) => it.value !== item.value),
-      }),
-      this.triggerOnChange
-    );
-  };
+    const values = this.getValues().filter(v => v.value !== item.value);
+    this.triggerOnChange(values);
+  }
 
-  triggerOnChange() {
+  triggerOnChange(values) {
     const { onChange } = this.props;
     if (typeof onChange === 'function') {
       const meta = {
         name: this.props.name,
       };
-      const { value } = this.state;
-      onChange(value, meta);
+      onChange(values, meta);
     }
   }
 
   render() {
-    const { value } = this.state;
     const { className, id, name, options } = this.props;
+
+    const values = this.getValues();
 
     return (
       <Container className={className}>
         <div>
           <Select
-            isMulti
+            isMulti={false}
             controlShouldRenderValue={false}
             inputId={id}
             name={name}
             options={options}
             onChange={this.onSelectChange}
-            value={value}
+            value={values[values.length - 1]}
           />
         </div>
         <ul className="selected-options">
-          {value.length > 0 &&
-            value.map((item) => (
+          {values.length > 0 &&
+            values.map((item) => (
               <li key={item.value}>
                 <CrossButton onClick={() => this.removeItem(item)} />
                 <span>{item.label}</span>

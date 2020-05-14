@@ -182,6 +182,24 @@ class Sidebar extends Component {
     });
   };
 
+  clearSearch = () => {
+    const fields = {};
+    fields.q = '';
+    fields.graph = '';
+    Object.keys(this.state.fields).forEach(f => {
+      if (Array.isArray(this.state.fields[f])) {
+        fields[f] = [];
+      } else if (typeof this.state.fields[f] === 'object') {
+        fields[f] = {};
+      } else {
+        fields[f] = '';
+      }
+    })
+    this.setState({
+      fields
+    }, this.doSearch);
+  };
+
   doSearch = () => {
     const { onSearch } = this.props;
     if (typeof onSearch === 'function') {
@@ -205,6 +223,7 @@ class Sidebar extends Component {
 
     const field = fields[`field_filter_${filter.id}`];
     const FilterInput = filter.isMulti ? MultiSelect : Select;
+
     return (
       <Field key={filter.label}>
         <label htmlFor="field_filter">{t(`fields.${filter.id}`, filter.label)}</label>
@@ -212,13 +231,13 @@ class Sidebar extends Component {
           inputId={`field_filter_${filter.id}`}
           name={`field_filter_${filter.id}`}
           options={filter.values}
-          value={filter.values.find((v) => {
+          value={filter.isMulti ? field : filter.values.find((v) => {
             if (typeof v.value === 'undefined' || !field) {
               return false;
             }
 
             if (Array.isArray(field)) {
-              return field.find((f) => f === v.value || f.value === v.value);
+              return field.find(f => f === v.value || f.value === v.value);
             }
 
             if (field.value) {
@@ -269,7 +288,7 @@ class Sidebar extends Component {
     return (
       <Container className={className}>
         <ButtonsBar>
-          <ClearButton>{t('buttons.clear')}</ClearButton>
+          <ClearButton onClick={this.clearSearch}>{t('buttons.clear')}</ClearButton>
           <FilterButton onClick={this.doSearch}>{t('buttons.filter')}</FilterButton>
         </ButtonsBar>
 
