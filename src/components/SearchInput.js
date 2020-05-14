@@ -53,6 +53,7 @@ const SuggestionName = styled.span`
 const Container = styled.div`
   display: flex;
   width: 280px;
+  min-width: 0;
 
   .react-autosuggest__suggestions-container {
     display: none;
