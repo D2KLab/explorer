@@ -1,5 +1,6 @@
 import { Component } from 'react';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
+
 import Select from '@components/Select';
 import MultiSelect from '@components/MultiSelect';
 import { breakpoints } from '@styles';
@@ -8,7 +9,7 @@ import { withTranslation, i18n } from '~/i18n';
 import config from '~/config';
 
 const Container = styled.div`
-  background-color: #eee;
+  background-color: #d9d9d9;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -32,7 +33,7 @@ const ButtonsBar = styled.div`
 
 const Button = styled.button`
   font-size: 1rem;
-  flex: 0 1 100px;
+  flex: 0 1 120px;
   padding: 0.5em;
   appearance: none;
   background-color: transparent;
@@ -46,7 +47,7 @@ const Button = styled.button`
 `;
 
 const ClearButton = styled(Button)`
-  background-color: #ccc;
+  background-color: #a6a6a6;
   color: #000;
 `;
 
@@ -61,7 +62,7 @@ const Field = styled.div`
   margin-bottom: 24px;
 
   label {
-    color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.secondary};
     font-size: 0.9em;
     display: block;
     margin-bottom: 8px;
@@ -69,7 +70,7 @@ const Field = styled.div`
 
   > input,
   label > input {
-    background-color: #ccc;
+    background-color: #f0f0f0;
     border-style: solid;
     border-color: #000;
     border-width: 0;
@@ -268,4 +269,4 @@ class Sidebar extends Component {
   }
 }
 
-export default withTranslation('search')(Sidebar);
+export default withTranslation('search')(withTheme(Sidebar));

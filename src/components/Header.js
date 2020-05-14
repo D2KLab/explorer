@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 import { breakpoints } from '@styles';
 import SearchBox from '@components/SearchBox';
-import LanguageSwitch from '@components/LanguageSwitch';
-import ProfileButton from '@components/ProfileButton';
+import LanguageSwitch, { Container as LanguageSwitchContainer } from '@components/LanguageSwitch';
+import ProfileButton, { Container as ProfileButtonContainer } from '@components/ProfileButton';
 
 import { withTranslation } from '~/i18n';
 import config from '~/config';
@@ -19,6 +19,14 @@ const Container = styled.div`
   border-bottom: ${({ theme }) => theme.header.borderBottomWidth} solid #dcdcdc;
   display: flex;
   align-items: center;
+
+  ${LanguageSwitchContainer}, ${ProfileButtonContainer} {
+    display: none;
+
+    ${breakpoints.weirdMedium`
+      display: flex;
+    `}
+  }
 `;
 
 const Logo = styled.div`
@@ -29,11 +37,12 @@ const Logo = styled.div`
   background-size: contain;
   background-position: center;
   flex: 0 0 auto;
-  margin-right: 2em;
+  margin-right: 0;
   margin-left: 5em;
 
   ${breakpoints.weirdMedium`
     margin-left: 2em;
+    margin-right: 2em;
   `}
 `;
 
@@ -85,7 +94,7 @@ const Header = ({ className, t }) => {
       </Link>
       <NavContainer>
         <NavList>
-          {Object.keys(config.routes).flatMap((routeName) => (
+          {Object.keys(config.routes).filter(routeName => config.routes[routeName].showInNavbar !== false).flatMap((routeName) => (
             <NavItem key={routeName}>
               <Link href={`/${routeName}`} passHref>
                 <NavLink>{routeName.substr(0, 1).toUpperCase() + routeName.substr(1)}</NavLink>

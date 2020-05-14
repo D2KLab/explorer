@@ -88,7 +88,7 @@ const Title = styled.h1`
   line-height: 1.2em;
   margin-bottom: 0.2em;
   display: none;
-
+  border-bottom: 3px solid ${({ theme }) => theme.colors.primary};
   ${breakpoints.desktop`
     display: block;
   `}

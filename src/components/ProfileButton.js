@@ -8,6 +8,8 @@ import { User } from '@styled-icons/boxicons-solid/User';
  * Profile button.
  */
 
+export const Container = styled.div``;
+
 const StyledMenu = styled(Menu)`
   background: #fff;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12),
@@ -18,13 +20,14 @@ const StyledMenu = styled(Menu)`
 `;
 
 const StyledMenuButton = styled(MenuButton)`
-  background: #fff;
+  background: transparent;
   border: none;
   outline: none;
   cursor: pointer;
   text-transform: uppercase;
   display: flex;
   align-items: center;
+  font-size: 1em;
 
   &:hover {
     text-decoration: underline;
@@ -58,7 +61,7 @@ const ProfileButton = () => {
   const menu = useMenuState();
 
   return (
-    <>
+    <Container>
       <StyledMenuButton {...menu}>
         <StyledUserIcon />
         Profile
@@ -74,7 +77,7 @@ const ProfileButton = () => {
           Sign in
         </StyledMenuItem>
       </StyledMenu>
-    </>
+    </Container>
   );
 };
 

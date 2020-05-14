@@ -4,7 +4,15 @@ const customStyles = {
   control: provided => ({
     ...provided,
     border: 'none',
-    borderBottom: '2px solid #000'
+    borderBottom: '2px solid #000',
+    backgroundColor: '#f0f0f0'
+  }),
+  dropdownIndicator: base => ({
+    ...base,
+    color: 'hsl(0,0%,20%)',
+    '&:hover': {
+      color: 'hsl(0,0%,20%)',
+    }
   })
 };
 

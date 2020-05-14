@@ -75,9 +75,9 @@ const Logo = styled.div`
 
 const HeroMiddle = styled.div`
   width: 100%;
-  height: 45px;
+  height: 50px;
   position: absolute;
-  bottom: -23px;
+  bottom: -25px;
   left: 0;
   display: flex;
   justify-content: center;
@@ -119,9 +119,10 @@ const ButtonsContainer = styled.div`
 `;
 
 const BigButton = styled.a`
-  background-color: #c6c6c6;
+  background-color: ${({ background }) => background};
   text-decoration: none;
-  color: #000;
+  color: ${({ color }) => color};
+  text-transform: uppercase;
   padding: 0.75em;
   text-align: center;
   border-radius: 8px;
@@ -129,7 +130,7 @@ const BigButton = styled.a`
   margin: 10px 20px;
 
   &:hover {
-    color: inherit;
+    color: ${({ color }) => color};
     text-decoration: underline;
   }
 `;
@@ -139,7 +140,7 @@ const SearchForm = styled.form`
   align-items: center;
   flex-grow: 1;
   max-width: 90%;
-  background-color: #fff;
+  background-color: rgba(255,255,255,0.95);
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12),
     0 1px 5px 0 rgba(0, 0, 0, 0.2);
   position: relative;
@@ -190,7 +191,7 @@ const SearchButton = styled.button`
   appearance: none;
   border: none;
   height: 80%;
-  background-color: #f2c72d;
+  background-color: ${({ theme }) => theme.colors.primary};
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12),
     0 1px 5px 0 rgba(0, 0, 0, 0.2);
   margin-right: 10px;
@@ -202,12 +203,18 @@ const SearchButton = styled.button`
   `}
 `;
 
+const CameraButton = styled(SearchButton)`
+  background-color: #9ca4d1;
+`;
+
 const SearchIcon = styled(SearchAlt2)`
-  height: 24px;
+  color: #fff;
+  height: 32px;
 `;
 
 const CameraIcon = styled(Camera)`
-  height: 24px;
+  color: #fff;
+  height: 32px;
 `;
 
 const StyledUploadDialog = styled(Dialog)`
@@ -279,9 +286,9 @@ const HomePage = ({ t }) => {
                 ) : null}
                 {config.search.allowImageSearch ? (
                   <>
-                    <SearchButton as={DialogDisclosure} type="button" {...dialog}>
+                    <CameraButton as={DialogDisclosure} type="button" {...dialog}>
                       <CameraIcon />
-                    </SearchButton>
+                    </CameraButton>
                     <StyledUploadDialog
                       {...dialog}
                       modal={false}
@@ -307,9 +314,9 @@ const HomePage = ({ t }) => {
           <HeroBottom>
             <Subtitle>{t('browse_by')}</Subtitle>
             <ButtonsContainer>
-              {Object.keys(config.routes).flatMap((routeName) => (
+              {Object.keys(config.routes).filter(routeName => config.routes[routeName].showInNavbar !== false).flatMap((routeName) => (
                 <Link key={routeName} href={`/${routeName}`} passHref>
-                  <BigButton>
+                  <BigButton background={config.routes[routeName].backgroundColor || '#c6c6c6'} color={config.routes[routeName].textColor || '#000000'}>
                     {routeName.substr(0, 1).toUpperCase() + routeName.substr(1)}
                   </BigButton>
                 </Link>

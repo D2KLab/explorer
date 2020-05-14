@@ -7,9 +7,11 @@ const theme = {
   },
   colors: {
     text: '#333',
-    background: '#fff',
-    primary: '#f38468', //'#1b7da0',
-    linkHover: '#b56653' //'#104a5f'
+    background: '#f7f7ef',
+    primary: '#f38468',
+    secondary: '#144168',
+    linkHover: '#b56653',
+    light: '#f5b1a1'
   },
   header: {
     height: '80px',

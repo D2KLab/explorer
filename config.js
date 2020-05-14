@@ -61,6 +61,7 @@ module.exports = {
   routes: {
     objects: {
       view: 'browse',
+      showInNavbar: true,
       rdfType: 'http://erlangen-crm.org/current/E22_Man-Made_Object',
       details: {
         view: 'gallery',
@@ -259,6 +260,8 @@ module.exports = {
     },
     techniques: {
       view: 'vocabulary',
+      backgroundColor: '#16406c',
+      textColor: '#ffffff',
       query: {
         '@graph': [
           {
@@ -276,6 +279,27 @@ module.exports = {
     },
     materials: {
       view: 'vocabulary',
+      backgroundColor: '#335a80',
+      textColor: '#ffffff',
+      query: {
+        '@graph': [
+          {
+            '@id': '?material',
+            label: '?materialLabel',
+          },
+        ],
+        $where: [
+          '?production <http://erlangen-crm.org/current/P126_employed> ?material',
+          '?material <http://www.w3.org/2004/02/skos/core#prefLabel> ?materialLabel',
+        ],
+        $filter: ['lang(?materialLabel) = "en"'],
+        $langTag: 'hide',
+      },
+    },
+    depictions: {
+      view: 'vocabulary',
+      backgroundColor: '#5c81a6',
+      textColor: '#ffffff',
       query: {
         '@graph': [
           {

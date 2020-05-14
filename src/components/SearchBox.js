@@ -7,7 +7,6 @@ import SearchInput from '@components/SearchInput';
 const Form = styled.div`
   display: flex;
   border-bottom: 1px solid #dcdcdc;
-  background-color: white;
   padding-bottom: 0.25em;
 `;
 
