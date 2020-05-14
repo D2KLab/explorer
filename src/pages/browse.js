@@ -184,25 +184,29 @@ export async function getServerSideProps({ query }) {
       const filter = route.filters[i];
       const filterQuery = { ...filter.query };
 
+      let filterValues = null;
       try {
         const res = await sparqlTransformer(filterQuery, {
           endpoint: config.api.endpoint,
           debug: config.debug,
         });
-        filters.push({
-          id: filter.id,
-          label: filter.label,
-          isMulti: filter.isMulti,
-          values: res['@graph'].map((row) => ({
-            label: row.label
-              ? row.label['@value'] || row.label
-              : row['@id']['@value'] || row['@id'],
-            value: row['@id']['@value'] || row['@id'],
-          })),
-        });
+        filterValues = res['@graph'].map((row) => ({
+          label: row.label
+            ? row.label['@value'] || row.label
+            : row['@id']['@value'] || row['@id'],
+          value: row['@id']['@value'] || row['@id'],
+        }));
       } catch (err) {
         console.error(err);
       }
+
+      filters.push({
+        id: filter.id,
+        label: filter.label,
+        isOption: !!filter.isOption,
+        isMulti: !!filter.isMulti,
+        values: filterValues,
+      });
     }
 
     const searchQuery = JSON.parse(JSON.stringify(route.query));

@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import styled, { withTheme } from 'styled-components';
+import Switch from 'react-switch';
 
 import Select from '@components/Select';
 import MultiSelect from '@components/MultiSelect';
@@ -22,6 +23,11 @@ const Container = styled.div`
         `${theme.header.height} - ${theme.header.borderBottomWidth} - ${theme.footer.minHeight}`}
     );
   `}
+`;
+
+const StyledSwitch = styled(Switch)`
+  vertical-align: middle;
+  margin-left: 5px;
 `;
 
 const ButtonsBar = styled.div`
@@ -94,6 +100,8 @@ class Sidebar extends Component {
   constructor(props) {
     super(props);
 
+    this.handleSwitchChange = this.handleSwitchChange.bind(this);
+
     const graphOptions = Object.entries(config.graphs).map(([graphURI, graphObj]) => ({
       value: graphURI,
       label: graphObj.label,
@@ -165,6 +173,15 @@ class Sidebar extends Component {
     }
   };
 
+  handleSwitchChange = (checked, event, id) => {
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        [id]: checked,
+      },
+    });
+  };
+
   doSearch = () => {
     const { onSearch } = this.props;
     if (typeof onSearch === 'function') {
@@ -181,6 +198,66 @@ class Sidebar extends Component {
       onSearch(fields);
     }
   };
+
+  renderFilter = (filter) => {
+    const { t } = this.props;
+    const { fields } = this.state;
+
+    const field = fields[`field_filter_${filter.id}`];
+    const FilterInput = filter.isMulti ? MultiSelect : Select;
+    return (
+      <Field key={filter.label}>
+        <label htmlFor="field_filter">{t(`fields.${filter.id}`, filter.label)}</label>
+        <FilterInput
+          inputId={`field_filter_${filter.id}`}
+          name={`field_filter_${filter.id}`}
+          options={filter.values}
+          value={filter.values.find((v) => {
+            if (typeof v.value === 'undefined' || !field) {
+              return false;
+            }
+
+            if (Array.isArray(field)) {
+              return field.find((f) => f === v.value || f.value === v.value);
+            }
+
+            if (field.value) {
+              return field.value === v.value;
+            }
+
+            return field === v.value;
+          })}
+          onChange={this.handleInputChange}
+        />
+      </Field>
+    );
+  }
+
+  renderOption = (filter) => {
+    const { fields } = this.state;
+    const { theme, t } = this.props;
+
+    return (
+      <div>
+        <span>{t(`fields.${filter.id}`, filter.label)}</span>
+        <StyledSwitch
+          onChange={this.handleSwitchChange}
+          checked={fields[`field_option_${filter.id}`]}
+          onColor={theme.colors.light}
+          offHandleColor="#f0f0f0"
+          onHandleColor={theme.colors.primary}
+          handleDiameter={24}
+          uncheckedIcon={false}
+          checkedIcon={false}
+          boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+          activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+          height={16}
+          width={36}
+          id={`field_option_${filter.id}`}
+        />
+      </div>
+    );
+  }
 
   render() {
     const { className, type, filters, t, req } = this.props;
@@ -232,36 +309,13 @@ class Sidebar extends Component {
                 onChange={this.handleInputChange}
               />
             </Field> */}
-            {filters.map((filter) => {
-              const field = fields[`field_filter_${filter.id}`];
-              const FilterInput = filter.isMulti ? MultiSelect : Select;
-              return (
-                <Field key={filter.label}>
-                  <label htmlFor="field_filter">{t(`fields.${filter.id}`, filter.label)}</label>
-                  <FilterInput
-                    inputId={`field_filter_${filter.id}`}
-                    name={`field_filter_${filter.id}`}
-                    options={filter.values}
-                    value={filter.values.find((v) => {
-                      if (typeof v.value === 'undefined' || !field) {
-                        return false;
-                      }
-
-                      if (Array.isArray(field)) {
-                        return field.find((f) => f === v.value || f.value === v.value);
-                      }
-
-                      if (field.value) {
-                        return field.value === v.value;
-                      }
-
-                      return field === v.value;
-                    })}
-                    onChange={this.handleInputChange}
-                  />
-                </Field>
-              );
-            })}
+            {filters.filter(filter => !filter.isOption).map(this.renderFilter)}
+            {filters.some(filter => filter.isOption) ? (
+              <Field>
+                <label>{t('fields.options')}</label>
+                {filters.filter(filter => filter.isOption).map(this.renderOption)}
+              </Field>
+            ) : null}
           </Fields>
         </form>
       </Container>

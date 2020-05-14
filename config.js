@@ -173,6 +173,24 @@ module.exports = {
             return [`?time = <${value}>`];
           },
         },
+        {
+          id: 'show-only-fabric',
+          label: 'Only fabric',
+          isOption: true,
+          query: {}
+        },
+        {
+          id: 'show-only-images',
+          label: 'With images',
+          isOption: true,
+          query: {}
+        },
+        {
+          id: 'show-only-vloom',
+          label: 'With Virtual Loom',
+          isOption: true,
+          query: {}
+        }
       ],
       labelFunc: (props) => props.label || props.identifier,
       query: {
