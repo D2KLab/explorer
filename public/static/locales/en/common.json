@@ -2,5 +2,13 @@
   "search": "Search",
   "footer": {
     "text": "The data contained in SILKNOW Explorer comes from the archives of ...\nThe Virtual Loom has been developed by UVEG.\nKG Explorer has been developed at EURECOM and includes scientific contribution from ..."
+  },
+  "metadata": {
+    "identifier": "Identifier",
+    "composed": "Collection",
+    "material": "Material",
+    "technique": "Technique",
+    "time": "Production time",
+    "location": "Production place"
   }
 }

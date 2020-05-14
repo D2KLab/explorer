@@ -88,7 +88,7 @@ class BrowsePage extends Component {
         <Body>
           <Sidebar type={query.type} query={query} filters={filters} onSearch={this.onSearch} />
           <Content>
-            <Title>{query.type.substr(0, 1).toUpperCase() + query.type.substr(1)}</Title>
+            <Title>{t('labels.search_results')}</Title>
             <OptionsBar>
               <Option>
                 <Label htmlFor="select_sort">{t('labels.sort_by')}</Label>

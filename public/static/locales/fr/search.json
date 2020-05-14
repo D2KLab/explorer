@@ -4,6 +4,7 @@
     "filter": "FILTRER"
   },
   "labels": {
+    "search_results": "Résultats de recherche",
     "sort_by": "Trier par",
     "sort_select": "Sélectionner...",
     "browse": "Parcourir: {{type}}"

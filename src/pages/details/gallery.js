@@ -177,7 +177,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
   );
 }
 
-const GalleryDetailsPage = ({ result }) => {
+const GalleryDetailsPage = ({ result, t }) => {
   const { query } = useRouter();
   const route = config.routes[query.type];
 
@@ -290,7 +290,7 @@ const GalleryDetailsPage = ({ result }) => {
                 }
 
                 return (
-                  <Metadata key={metaName} label={metaName}>
+                  <Metadata key={metaName} label={t(`metadata.${metaName}`)}>
                     {values.map((value, i) => (
                       // eslint-disable-next-line react/no-array-index-key
                       <div key={i}>{value}</div>
@@ -339,4 +339,4 @@ GalleryDetailsPage.getInitialProps = async ({ query }) => {
   return { result: null };
 };
 
-export default GalleryDetailsPage;
+export default withTranslation('common')(GalleryDetailsPage);

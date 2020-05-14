@@ -104,7 +104,7 @@ const Header = ({ className, t }) => {
         </NavList>
       </NavContainer>
       <SearchContainer>
-        <SearchBox placeholer={t('search')} />
+        <SearchBox placeholder={t('search')} />
       </SearchContainer>
       <LanguageSwitch />
       <ProfileButton />
