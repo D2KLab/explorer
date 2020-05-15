@@ -26,7 +26,6 @@ const Container = styled.div`
 `;
 
 const StyledSwitch = styled(Switch)`
-  vertical-align: middle;
   margin-left: 5px;
 `;
 
@@ -93,6 +92,16 @@ const Field = styled.div`
       box-shadow: 0 0 1 #ccc;
       border-width: 2px;
     }
+  }
+`;
+
+const Option = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+
+  > span {
+    flex: 1;
   }
 `;
 
@@ -257,7 +266,7 @@ class Sidebar extends Component {
     const { theme, t } = this.props;
 
     return (
-      <div>
+      <Option>
         <span>{t(`filters.${filter.id}`, filter.label)}</span>
         <StyledSwitch
           onChange={this.handleSwitchChange}
@@ -274,7 +283,7 @@ class Sidebar extends Component {
           width={36}
           id={`field_option_${filter.id}`}
         />
-      </div>
+      </Option>
     );
   }
 
