@@ -278,7 +278,7 @@ const HomePage = ({ t }) => {
                 <input type="hidden" name="type" value="objects" />
                 {config.search.allowTextSearch ? (
                   <>
-                    <StyledSearchInput name="q" placeholder={t('search.placeholder')} />
+                    <StyledSearchInput name="q" placeholder={t('home:search.placeholder')} />
                     <SearchButton as="button" type="submit">
                       <SearchIcon />
                     </SearchButton>
@@ -312,12 +312,12 @@ const HomePage = ({ t }) => {
             </HeroMiddle>
           </HeroTop>
           <HeroBottom>
-            <Subtitle>{t('browse_by')}</Subtitle>
+            <Subtitle>{t('home:browse_by')}</Subtitle>
             <ButtonsContainer>
               {Object.keys(config.routes).filter(routeName => config.routes[routeName].showInNavbar !== false).flatMap((routeName) => (
                 <Link key={routeName} href={`/${routeName}`} passHref>
                   <BigButton background={config.routes[routeName].backgroundColor || '#c6c6c6'} color={config.routes[routeName].textColor || '#000000'}>
-                    {routeName.substr(0, 1).toUpperCase() + routeName.substr(1)}
+                    {t(`routes.${routeName}`)}
                   </BigButton>
                 </Link>
               ))}
@@ -330,4 +330,4 @@ const HomePage = ({ t }) => {
   );
 };
 
-export default withTranslation('home')(HomePage);
+export default withTranslation(['common', 'home'])(HomePage);

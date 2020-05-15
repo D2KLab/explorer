@@ -97,7 +97,7 @@ const Header = ({ className, t }) => {
           {Object.keys(config.routes).filter(routeName => config.routes[routeName].showInNavbar !== false).flatMap((routeName) => (
             <NavItem key={routeName}>
               <Link href={`/${routeName}`} passHref>
-                <NavLink>{routeName.substr(0, 1).toUpperCase() + routeName.substr(1)}</NavLink>
+                <NavLink>{t(`routes.${routeName}`, routeName.substr(0, 1).toUpperCase() + routeName.substr(1))}</NavLink>
               </Link>
             </NavItem>
           ))}

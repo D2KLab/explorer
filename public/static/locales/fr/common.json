@@ -10,5 +10,11 @@
     "technique": "Technique",
     "time": "Date de production",
     "location": "Lieu de production"
+  },
+  "routes": {
+    "objects": "Objets",
+    "techniques": "Techniques",
+    "materials": "Matériaux",
+    "depictions": "Représentations"
   }
 }
