@@ -12,7 +12,7 @@ module.exports = {
     },
   },
   footer: {
-    logo: '/images/silknow-footer.png'
+    logo: '/images/silknow-footer.png',
   },
   search: {
     allowTextSearch: true,
@@ -38,7 +38,7 @@ module.exports = {
             ?representation <http://schema.org/contentUrl> ?representationUrl .
             FILTER(STRSTARTS(STR(?representationUrl), "http://silknow.org/"))
           }
-        }`
+        }`,
       ],
       $limit: 5,
       $langTag: 'hide',
@@ -80,7 +80,7 @@ module.exports = {
             ],
             $where: [
               '?production <http://erlangen-crm.org/current/P4_has_time-span> ?time',
-              '?time <http://www.w3.org/2004/02/skos/core#prefLabel> ?label'
+              '?time <http://www.w3.org/2004/02/skos/core#prefLabel> ?label',
             ],
             $filter: ['langmatches(lang(?label), "en") || lang(?label) = ""'],
             $langTag: 'hide',
@@ -91,6 +91,36 @@ module.exports = {
           ],
           filterFunc: (value) => {
             return [`?time = <${value}>`];
+          },
+        },
+        {
+          id: 'place',
+          isMulti: true,
+          query: {
+            '@graph': [
+              {
+                '@id': '?locationCountry',
+                label: '?locationCountryLabel',
+              },
+            ],
+            $where: [
+              '?production <http://erlangen-crm.org/current/P8_took_place_on_or_within> ?location',
+              '?location <http://www.geonames.org/ontology#parentCountry>/<http://www.geonames.org/ontology#name> ?locationCountry',
+              '?location <http://www.geonames.org/ontology#parentCountry>/<http://www.geonames.org/ontology#name> ?locationCountryLabel',
+            ],
+            $filter: [
+              'langmatches(lang(?locationCountryLabel), "en") || lang(?locationCountryLabel) = ""',
+            ],
+            $orderby: ['ASC(?locationCountryLabel)'],
+            $langTag: 'hide',
+          },
+          whereFunc: () => [
+            '?production <http://erlangen-crm.org/current/P108_has_produced> ?id',
+            '?production <http://erlangen-crm.org/current/P8_took_place_on_or_within> ?location',
+            '?location <http://www.geonames.org/ontology#parentCountry>/<http://www.geonames.org/ontology#name> ?locationCountry',
+          ],
+          filterFunc: (value) => {
+            return [`?locationCountry = ${JSON.stringify(value)}`];
           },
         },
         {
@@ -172,18 +202,20 @@ module.exports = {
         {
           id: 'show-only-fabric',
           isOption: true,
-          query: {}
         },
         {
           id: 'show-only-images',
           isOption: true,
-          query: {}
+          whereFunc: () => [
+            '?id <http://erlangen-crm.org/current/P138i_has_representation> ?representation',
+            '?representation <http://schema.org/contentUrl> ?representationUrl',
+            'FILTER(STRSTARTS(STR(?representationUrl), "http://silknow.org/"))',
+          ],
         },
         {
           id: 'show-only-vloom',
           isOption: true,
-          query: {}
-        }
+        },
       ],
       labelFunc: (props) => props.label || props.identifier,
       query: {
@@ -344,47 +376,47 @@ module.exports = {
   graphs: {
     'http://data.silknow.org/met': {
       label: 'Metropolitan Museum of Art',
-      icon: '/images/graphs/http-data-silknow-org-met.png'
+      icon: '/images/graphs/http-data-silknow-org-met.png',
     },
     'http://data.silknow.org/unipa': {
       label: 'UNIPA',
-      icon: '/images/graphs/http-data-silknow-org-unipa.png'
+      icon: '/images/graphs/http-data-silknow-org-unipa.png',
     },
     'http://data.silknow.org/imatex': {
       label: 'CDMT Terrassa',
-      icon: '/images/graphs/http-data-silknow-org-imatex.png'
+      icon: '/images/graphs/http-data-silknow-org-imatex.png',
     },
     'http://data.silknow.org/vam': {
       label: 'Victoria and Albert Museum',
-      icon: '/images/graphs/http-data-silknow-org-vam.png'
+      icon: '/images/graphs/http-data-silknow-org-vam.png',
     },
     'http://data.silknow.org/garin': {
       label: 'Garín 1820',
-      icon: '/images/graphs/http-data-silknow-org-garin.png'
+      icon: '/images/graphs/http-data-silknow-org-garin.png',
     },
     'http://data.silknow.org/mad': {
       label: 'Musée des Arts Décoratifs',
-      icon: '/images/graphs/http-data-silknow-org-mad.png'
+      icon: '/images/graphs/http-data-silknow-org-mad.png',
     },
     'http://data.silknow.org/mfa': {
       label: 'Boston Museum of Fine Arts',
-      icon: '/images/graphs/http-data-silknow-org-mfa.png'
+      icon: '/images/graphs/http-data-silknow-org-mfa.png',
     },
     'http://data.silknow.org/risd': {
       label: 'Rhode Island School of Design',
-      icon: '/images/graphs/http-data-silknow-org-risd.png'
+      icon: '/images/graphs/http-data-silknow-org-risd.png',
     },
     'http://data.silknow.org/cer': {
       label: 'Red Digital de Colecciones de Museos de España',
-      icon: '/images/graphs/http-data-silknow-org-cer.png'
+      icon: '/images/graphs/http-data-silknow-org-cer.png',
     },
     'http://data.silknow.org/joconde': {
       label: 'Joconde Database of French Museum Collections',
-      icon: '/images/graphs/http-data-silknow-org-joconde.png'
+      icon: '/images/graphs/http-data-silknow-org-joconde.png',
     },
     'http://data.silknow.org/mtmad': {
       label: 'Musée des Tissus',
-      icon: '/images/graphs/http-data-silknow-org-mtmad.png'
+      icon: '/images/graphs/http-data-silknow-org-mtmad.png',
     },
   },
   vocabularies: [
