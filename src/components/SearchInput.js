@@ -113,6 +113,11 @@ const renderSuggestion = (suggestion, { query }) => {
     mainImage = Array.isArray(suggestion.representation.image)
       ? suggestion.representation.image.shift()
       : suggestion.representation.image;
+  } else if (Array.isArray(suggestion.representation)) {
+    mainImage =
+      suggestion.representation[0].image ||
+      suggestion.representation[0]['@id'] ||
+      suggestion.representation[0];
   }
 
   return (

@@ -155,7 +155,7 @@ class Sidebar extends Component {
     this.state = {
       fields,
       languages,
-      graphOptions
+      graphOptions,
     };
   }
 
@@ -195,7 +195,7 @@ class Sidebar extends Component {
     const fields = {};
     fields.q = '';
     fields.graph = '';
-    Object.keys(this.state.fields).forEach(f => {
+    Object.keys(this.state.fields).forEach((f) => {
       if (Array.isArray(this.state.fields[f])) {
         fields[f] = [];
       } else if (typeof this.state.fields[f] === 'object') {
@@ -203,10 +203,13 @@ class Sidebar extends Component {
       } else {
         fields[f] = '';
       }
-    })
-    this.setState({
-      fields
-    }, this.doSearch);
+    });
+    this.setState(
+      {
+        fields,
+      },
+      this.doSearch
+    );
   };
 
   doSearch = () => {
@@ -233,40 +236,48 @@ class Sidebar extends Component {
     const field = fields[`field_filter_${filter.id}`];
     const FilterInput = filter.isMulti ? MultiSelect : Select;
 
+    let value = null;
+    if (filter.isMulti) {
+      value = field || null;
+    } else {
+      value =
+        filter.values.find((v) => {
+          if (typeof v.value === 'undefined' || !field) {
+            return false;
+          }
+
+          if (Array.isArray(field)) {
+            return field.find((f) => f === v.value || f.value === v.value);
+          }
+
+          if (field.value) {
+            return field.value === v.value;
+          }
+
+          return field === v.value;
+        }) || null;
+    }
+
     return (
-      <Field key={filter.label}>
+      <Field key={filter.id}>
         <label htmlFor="field_filter">{t(`filters.${filter.id}`, filter.label)}</label>
         <FilterInput
           inputId={`field_filter_${filter.id}`}
           name={`field_filter_${filter.id}`}
           options={filter.values}
-          value={filter.isMulti ? field : filter.values.find((v) => {
-            if (typeof v.value === 'undefined' || !field) {
-              return false;
-            }
-
-            if (Array.isArray(field)) {
-              return field.find(f => f === v.value || f.value === v.value);
-            }
-
-            if (field.value) {
-              return field.value === v.value;
-            }
-
-            return field === v.value;
-          })}
+          value={value}
           onChange={this.handleInputChange}
         />
       </Field>
     );
-  }
+  };
 
   renderOption = (filter) => {
     const { fields } = this.state;
     const { theme, t } = this.props;
 
     return (
-      <Option>
+      <Option key={filter.id}>
         <span>{t(`filters.${filter.id}`, filter.label)}</span>
         <StyledSwitch
           onChange={this.handleSwitchChange}
@@ -285,7 +296,7 @@ class Sidebar extends Component {
         />
       </Option>
     );
-  }
+  };
 
   render() {
     const { className, type, filters, t, req } = this.props;
@@ -323,7 +334,7 @@ class Sidebar extends Component {
                 onChange={this.handleInputChange}
               />
             </Field> */}
-            {filters.filter(filter => !filter.isOption).map(this.renderFilter)}
+            {filters.filter((filter) => !filter.isOption).map(this.renderFilter)}
             {route.filterByGraph && (
               <Field>
                 <label htmlFor="graph">
@@ -338,10 +349,10 @@ class Sidebar extends Component {
                 />
               </Field>
             )}
-            {filters.some(filter => filter.isOption) ? (
+            {filters.some((filter) => filter.isOption) ? (
               <Field>
                 <label>{t('search:fields.options')}</label>
-                {filters.filter(filter => filter.isOption).map(this.renderOption)}
+                {filters.filter((filter) => filter.isOption).map(this.renderOption)}
               </Field>
             ) : null}
           </Fields>

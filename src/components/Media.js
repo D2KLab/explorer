@@ -56,6 +56,8 @@ const Container = styled.div`
 `;
 
 const Media = ({ className, thumbnail, title, subtitle, link = '', direction = 'column' }) => {
+  const Placeholder = <Thumbnail src={config.search.placeholderImage} alt={title} />;
+
   return (
     <Container className={className} direction={direction}>
       <Link href={link} passHref>
@@ -65,8 +67,8 @@ const Media = ({ className, thumbnail, title, subtitle, link = '', direction = '
               as={Img}
               src={thumbnail}
               alt={title}
-              loader={<Thumbnail src={config.search.placeholderImage} alt={title} />}
-              unloader={<Thumbnail src={config.search.placeholderImage} alt={title} />}
+              loader={Placeholder}
+              unloader={Placeholder}
             />
           </ThumbnailContainer>
           <TextContainer>

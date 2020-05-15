@@ -117,6 +117,11 @@ class BrowsePage extends Component {
                   mainImage = Array.isArray(result.representation.image)
                     ? result.representation.image.shift()
                     : result.representation.image;
+                } else if (Array.isArray(result.representation)) {
+                  mainImage =
+                    result.representation[0].image ||
+                    result.representation[0]['@id'] ||
+                    result.representation[0];
                 }
                 const label = route.labelFunc(result);
 
@@ -183,21 +188,23 @@ export async function getServerSideProps({ query }) {
     for (let i = 0; i < route.filters.length; i += 1) {
       const filter = route.filters[i];
       const filterQuery = { ...filter.query };
-
       let filterValues = [];
-      try {
-        const res = await sparqlTransformer(filterQuery, {
-          endpoint: config.api.endpoint,
-          debug: config.debug,
-        });
-        filterValues = res['@graph'].map((row) => ({
-          label: row.label
-            ? row.label['@value'] || row.label
-            : row['@id']['@value'] || row['@id'],
-          value: row['@id']['@value'] || row['@id'],
-        }));
-      } catch (err) {
-        console.error(err);
+
+      if (filterQuery) {
+        try {
+          const res = await sparqlTransformer(filterQuery, {
+            endpoint: config.api.endpoint,
+            debug: config.debug,
+          });
+          filterValues = res['@graph'].map((row) => ({
+            label: row.label
+              ? row.label['@value'] || row.label
+              : row['@id']['@value'] || row['@id'],
+            value: row['@id']['@value'] || row['@id'],
+          }));
+        } catch (err) {
+          console.error(err);
+        }
       }
 
       filters.push({
