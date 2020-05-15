@@ -16,5 +16,15 @@
     "techniques": "Techniques",
     "materials": "Matériaux",
     "depictions": "Représentations"
+  },
+  "filters": {
+    "time": "Date de production",
+    "place": "Lieu de production",
+    "technique": "Technique",
+    "material": "Matériau",
+    "composed": "Collection",
+    "show-only-fabric": "En tissu uniquement",
+    "show-only-images": "Avec images uniquement",
+    "show-only-vloom": "Compatible Virtual Loom"
   }
 }

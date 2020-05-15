@@ -226,7 +226,7 @@ class Sidebar extends Component {
 
     return (
       <Field key={filter.label}>
-        <label htmlFor="field_filter">{t(`fields.${filter.id}`, filter.label)}</label>
+        <label htmlFor="field_filter">{t(`filters.${filter.id}`, filter.label)}</label>
         <FilterInput
           inputId={`field_filter_${filter.id}`}
           name={`field_filter_${filter.id}`}
@@ -258,7 +258,7 @@ class Sidebar extends Component {
 
     return (
       <div>
-        <span>{t(`fields.${filter.id}`, filter.label)}</span>
+        <span>{t(`filters.${filter.id}`, filter.label)}</span>
         <StyledSwitch
           onChange={this.handleSwitchChange}
           checked={fields[`field_option_${filter.id}`] || false}
@@ -288,8 +288,8 @@ class Sidebar extends Component {
     return (
       <Container className={className}>
         <ButtonsBar>
-          <ClearButton onClick={this.clearSearch}>{t('buttons.clear')}</ClearButton>
-          <FilterButton onClick={this.doSearch}>{t('buttons.filter')}</FilterButton>
+          <ClearButton onClick={this.clearSearch}>{t('search:buttons.clear')}</ClearButton>
+          <FilterButton onClick={this.doSearch}>{t('search:buttons.filter')}</FilterButton>
         </ButtonsBar>
 
         <form>
@@ -309,7 +309,7 @@ class Sidebar extends Component {
               </Field>
             )}
             <Field>
-              <label htmlFor="q">{t('fields.q')}</label>
+              <label htmlFor="q">{t('search:fields.q')}</label>
               <input
                 id="q"
                 name="q"
@@ -319,7 +319,7 @@ class Sidebar extends Component {
               />
             </Field>
             {/* <Field>
-              <label htmlFor="field_languages">{t('fields.languages')}</label>
+              <label htmlFor="field_languages">{t('search:fields.languages')}</label>
               <MultiSelect
                 id="field_languages"
                 name="field_languages"
@@ -331,7 +331,7 @@ class Sidebar extends Component {
             {filters.filter(filter => !filter.isOption).map(this.renderFilter)}
             {filters.some(filter => filter.isOption) ? (
               <Field>
-                <label>{t('fields.options')}</label>
+                <label>{t('search:fields.options')}</label>
                 {filters.filter(filter => filter.isOption).map(this.renderOption)}
               </Field>
             ) : null}
@@ -342,4 +342,4 @@ class Sidebar extends Component {
   }
 }
 
-export default withTranslation('search')(withTheme(Sidebar));
+export default withTranslation(['common', 'search'])(withTheme(Sidebar));

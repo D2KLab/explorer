@@ -50,8 +50,8 @@ module.exports = {
       fr: 'French',
     },
     graphFieldLabel: {
-      en: 'Museums',
-      fr: 'Musées',
+      en: 'Museum',
+      fr: 'Musée',
     },
     defaultLanguage: 'en',
   },
