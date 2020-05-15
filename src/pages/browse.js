@@ -184,7 +184,7 @@ export async function getServerSideProps({ query }) {
       const filter = route.filters[i];
       const filterQuery = { ...filter.query };
 
-      let filterValues = null;
+      let filterValues = [];
       try {
         const res = await sparqlTransformer(filterQuery, {
           endpoint: config.api.endpoint,
@@ -270,6 +270,7 @@ export async function getServerSideProps({ query }) {
     if (config.debug) {
       try {
         await sparqlTransformer(JSON.parse(JSON.stringify(searchQuery)), {
+          debug: false,
           sparqlFunction: (sparql) => {
             debugSparqlQuery = sparql.trim();
             return Promise.reject();
