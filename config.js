@@ -69,35 +69,32 @@ module.exports = {
       filterByGraph: true,
       filters: [
         {
-          id: 'technique',
-          label: 'Technique',
-          isMulti: true,
+          id: 'time',
+          isMulti: false,
           query: {
             '@graph': [
               {
-                '@id': '?technique',
-                label: '?techniqueLabel',
+                '@id': '?time',
+                label: '?label',
               },
             ],
             $where: [
-              '?id a <http://erlangen-crm.org/current/E22_Man-Made_Object>',
-              '?production <http://erlangen-crm.org/current/P108_has_produced> ?id',
-              '?production <http://erlangen-crm.org/current/P32_used_general_technique> ?technique',
-              '?technique <http://www.w3.org/2004/02/skos/core#prefLabel> ?techniqueLabel',
+              '?production <http://erlangen-crm.org/current/P4_has_time-span> ?time',
+              '?time <http://www.w3.org/2004/02/skos/core#prefLabel> ?label'
             ],
-            $filter: ['lang(?techniqueLabel) = "en"'],
+            $filter: ['langmatches(lang(?label), "en") || lang(?label) = ""'],
             $langTag: 'hide',
           },
           whereFunc: () => [
-            '?production <http://erlangen-crm.org/current/P32_used_general_technique> ?technique',
+            '?production <http://erlangen-crm.org/current/P108_has_produced> ?id',
+            '?production <http://erlangen-crm.org/current/P4_has_time-span> ?time',
           ],
-          filterFunc: (values) => {
-            return [values.map((val) => `?technique = <${val}>`).join(' || ')];
+          filterFunc: (value) => {
+            return [`?time = <${value}>`];
           },
         },
         {
           id: 'material',
-          label: 'Material',
           isMulti: true,
           query: {
             '@graph': [
@@ -123,8 +120,33 @@ module.exports = {
           },
         },
         {
+          id: 'technique',
+          isMulti: true,
+          query: {
+            '@graph': [
+              {
+                '@id': '?technique',
+                label: '?techniqueLabel',
+              },
+            ],
+            $where: [
+              '?id a <http://erlangen-crm.org/current/E22_Man-Made_Object>',
+              '?production <http://erlangen-crm.org/current/P108_has_produced> ?id',
+              '?production <http://erlangen-crm.org/current/P32_used_general_technique> ?technique',
+              '?technique <http://www.w3.org/2004/02/skos/core#prefLabel> ?techniqueLabel',
+            ],
+            $filter: ['lang(?techniqueLabel) = "en"'],
+            $langTag: 'hide',
+          },
+          whereFunc: () => [
+            '?production <http://erlangen-crm.org/current/P32_used_general_technique> ?technique',
+          ],
+          filterFunc: (values) => {
+            return [values.map((val) => `?technique = <${val}>`).join(' || ')];
+          },
+        },
+        {
           id: 'composed',
-          label: 'Collection',
           isMulti: true,
           query: {
             '@graph': [
@@ -148,46 +170,17 @@ module.exports = {
           },
         },
         {
-          id: 'time',
-          label: 'Time',
-          isMulti: false,
-          query: {
-            '@graph': [
-              {
-                '@id': '?id',
-                label: '?label',
-              },
-            ],
-            $where: [
-              '?production <http://erlangen-crm.org/current/P4_has_time-span> ?id',
-              '?id <http://www.w3.org/2004/02/skos/core#prefLabel> ?label'
-            ],
-            $filter: ['langmatches(lang(?label), "en") || lang(?label) = ""'],
-            $langTag: 'hide',
-          },
-          whereFunc: () => [
-            '?production <http://erlangen-crm.org/current/P108_has_produced> ?id',
-            '?production <http://erlangen-crm.org/current/P4_has_time-span> ?time',
-          ],
-          filterFunc: (value) => {
-            return [`?time = <${value}>`];
-          },
-        },
-        {
           id: 'show-only-fabric',
-          label: 'Only fabric',
           isOption: true,
           query: {}
         },
         {
           id: 'show-only-images',
-          label: 'With images',
           isOption: true,
           query: {}
         },
         {
           id: 'show-only-vloom',
-          label: 'With Virtual Loom',
           isOption: true,
           query: {}
         }

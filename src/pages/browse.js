@@ -202,7 +202,7 @@ export async function getServerSideProps({ query }) {
 
       filters.push({
         id: filter.id,
-        label: filter.label,
+        label: filter.label || null,
         isOption: !!filter.isOption,
         isMulti: !!filter.isMulti,
         values: filterValues,

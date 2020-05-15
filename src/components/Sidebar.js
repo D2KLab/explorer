@@ -294,20 +294,6 @@ class Sidebar extends Component {
 
         <form>
           <Fields>
-            {route.filterByGraph && (
-              <Field>
-                <label htmlFor="graph">
-                  {config.search.graphFieldLabel[currentLanguage] || t('fields.graph')}
-                </label>
-                <Select
-                  inputId="graph"
-                  name="graph"
-                  options={graphOptions}
-                  value={fields.graph}
-                  onChange={this.handleInputChange}
-                />
-              </Field>
-            )}
             <Field>
               <label htmlFor="q">{t('search:fields.q')}</label>
               <input
@@ -329,6 +315,20 @@ class Sidebar extends Component {
               />
             </Field> */}
             {filters.filter(filter => !filter.isOption).map(this.renderFilter)}
+            {route.filterByGraph && (
+              <Field>
+                <label htmlFor="graph">
+                  {config.search.graphFieldLabel[currentLanguage] || t('search:fields.graph')}
+                </label>
+                <Select
+                  inputId="graph"
+                  name="graph"
+                  options={graphOptions}
+                  value={fields.graph}
+                  onChange={this.handleInputChange}
+                />
+              </Field>
+            )}
             {filters.some(filter => filter.isOption) ? (
               <Field>
                 <label>{t('search:fields.options')}</label>
