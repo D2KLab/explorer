@@ -2,6 +2,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 import App from 'next/app';
 import { ThemeProvider } from 'styled-components';
+import { Provider as ReakitProvider } from 'reakit';
 import { Reset } from 'styled-reset';
 import { Helmet } from 'react-helmet';
 import theme from '@styles/theme';
@@ -13,18 +14,20 @@ class MyApp extends App {
     const { Component, pageProps } = this.props;
     return (
       <ThemeProvider theme={theme}>
-        <Reset />
-        <Helmet
-          htmlAttributes={{ lang: 'en' }}
-          titleTemplate={`%s - ${config.metadata.title}`}
-          meta={[
-            {
-              name: 'viewport',
-              content: 'width=device-width, initial-scale=1',
-            },
-          ]}
-        />
-        <Component {...pageProps} />
+        <ReakitProvider>
+          <Reset />
+          <Helmet
+            htmlAttributes={{ lang: 'en' }}
+            titleTemplate={`%s - ${config.metadata.title}`}
+            meta={[
+              {
+                name: 'viewport',
+                content: 'width=device-width, initial-scale=1',
+              },
+            ]}
+          />
+          <Component {...pageProps} />
+        </ReakitProvider>
       </ThemeProvider>
     );
   }
