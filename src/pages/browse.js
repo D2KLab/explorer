@@ -95,7 +95,7 @@ class BrowsePage extends Component {
                 <StyledSelect
                   inputId="select_sort"
                   name="sort"
-                  placeholder={t('labels.sort_select')}
+                  placeholder={t('search:labels.select')}
                   options={options}
                   theme={(theme) => ({
                     ...theme,

@@ -266,6 +266,7 @@ class Sidebar extends Component {
           name={`field_filter_${filter.id}`}
           options={filter.values}
           value={value}
+          placeholder={t('search:labels.select')}
           onChange={this.handleInputChange}
         />
       </Field>
@@ -346,6 +347,7 @@ class Sidebar extends Component {
                   options={graphOptions}
                   value={fields.graph}
                   onChange={this.handleInputChange}
+                  placeholder={t('search:labels.select')}
                 />
               </Field>
             )}

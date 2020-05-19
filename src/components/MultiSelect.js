@@ -44,19 +44,19 @@ const Container = styled.div`
 export default class MultiSelect extends Component {
   onSelectChange = (value, meta) => {
     const values = this.getValues();
-    const newValues = Array.isArray(value) ? value : [value].filter(x => x);
+    const newValues = Array.isArray(value) ? value : [value].filter((x) => x);
     values.push(...newValues);
     this.triggerOnChange(values);
   };
 
   getValues = () => {
     return Array.isArray(this.props.value) ? this.props.value : [this.props.value].filter((x) => x);
-  }
+  };
 
   removeItem = (item) => {
-    const values = this.getValues().filter(v => v.value !== item.value);
+    const values = this.getValues().filter((v) => v.value !== item.value);
     this.triggerOnChange(values);
-  }
+  };
 
   triggerOnChange(values) {
     const { onChange } = this.props;
@@ -69,7 +69,7 @@ export default class MultiSelect extends Component {
   }
 
   render() {
-    const { className, id, name, options } = this.props;
+    const { className, id, name, options, placeholder } = this.props;
 
     const values = this.getValues();
 
@@ -84,6 +84,7 @@ export default class MultiSelect extends Component {
             options={options}
             onChange={this.onSelectChange}
             value={values[values.length - 1]}
+            placeholder={placeholder}
           />
         </div>
         <ul className="selected-options">
@@ -103,9 +104,11 @@ export default class MultiSelect extends Component {
 MultiSelect.propTypes = {
   id: PropTypes.string,
   name: PropTypes.string,
+  placeholder: PropTypes.string,
 };
 
 MultiSelect.defaultProps = {
   id: '',
   name: '',
+  placeholder: '',
 };

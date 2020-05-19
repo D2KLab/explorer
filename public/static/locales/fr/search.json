@@ -6,7 +6,7 @@
   "labels": {
     "search_results": "Résultats de recherche",
     "sort_by": "Trier par",
-    "sort_select": "Sélectionner...",
+    "select": "Sélectionner...",
     "browse": "Parcourir par {{type}}"
   },
   "fields": {
