@@ -392,15 +392,32 @@ module.exports = {
       query: {
         '@graph': [
           {
-            '@id': '?material',
-            label: '?materialLabel',
+            '@id': '?member',
+            label: '?memberLabel',
+            items: {
+              '@id': '?item',
+              label: '?itemLabel',
+              description: '?itemDefinition',
+            },
           },
         ],
         $where: [
-          '?production <http://erlangen-crm.org/current/P126_employed> ?material',
-          '?material <http://www.w3.org/2004/02/skos/core#prefLabel> ?materialLabel',
+          '<http://data.silknow.org/vocabulary/facet/depiction> <http://www.w3.org/2004/02/skos/core#member> ?member',
+          '?member <http://www.w3.org/2004/02/skos/core#prefLabel> ?memberLabel',
+          `OPTIONAL {
+            ?member <http://www.w3.org/2004/02/skos/core#member> ?item .
+            OPTIONAL {
+              ?item <http://www.w3.org/2004/02/skos/core#prefLabel> ?itemLabel .
+              FILTER(LANG(?itemLabel) = "en")
+            }
+            OPTIONAL {
+              ?item <http://www.w3.org/2004/02/skos/core#definition> ?itemDefinition .
+              FILTER(LANG(?itemDefinition) = "en")
+            }
+          }`,
         ],
-        $filter: ['lang(?materialLabel) = "en"'],
+        $filter: ['lang(?memberLabel) = "en"'],
+        $orderby: ['ASC(?memberLabel)', 'ASC(?itemLabel)'],
         $langTag: 'hide',
       },
     },
