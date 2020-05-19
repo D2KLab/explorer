@@ -228,7 +228,7 @@ class VocabularyPage extends Component {
                     return (
                       <Item key={item['@id']} id={item['@id']}>
                         <h2>{item.label}</h2>
-                        <p>{item.description}</p>
+                        {item.description && <p>{item.description}</p>}
                         {links}
                       </Item>
                     );
@@ -241,6 +241,7 @@ class VocabularyPage extends Component {
                       ref={this.singleRefs[result['@id']].ref}
                     >
                       <h1>{result.label}</h1>
+                      {result.description && <p>{result.description}</p>}
                       <ul>{items.map(renderItem)}</ul>
                     </div>
                   );
