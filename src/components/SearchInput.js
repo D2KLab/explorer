@@ -73,8 +73,6 @@ const Container = styled.div`
     max-width: 560px;
     border: 1px solid #aaa;
     background-color: #fff;
-    font-family: Helvetica, sans-serif;
-    font-weight: 300;
     font-size: 16px;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;

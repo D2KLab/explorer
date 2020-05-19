@@ -10,7 +10,7 @@ export default class MyDocument extends Document {
     try {
       ctx.renderPage = () =>
         originalRenderPage({
-          enhanceApp: App => props => sheet.collectStyles(<App {...props} />)
+          enhanceApp: (App) => (props) => sheet.collectStyles(<App {...props} />),
         });
 
       const initialProps = await Document.getInitialProps(ctx);
@@ -19,10 +19,14 @@ export default class MyDocument extends Document {
         helmet: Helmet.renderStatic(),
         styles: (
           <>
+            <link
+              href="https://fonts.googleapis.com/css?family=Lato:300,400,700,800"
+              rel="stylesheet"
+            />
             {initialProps.styles}
             {sheet.getStyleElement()}
           </>
-        )
+        ),
       };
     } finally {
       sheet.seal();
@@ -42,8 +46,8 @@ export default class MyDocument extends Document {
   // should render on <head>
   get helmetHeadComponents() {
     return Object.keys(this.props.helmet)
-      .filter(el => el !== 'htmlAttributes' && el !== 'bodyAttributes')
-      .map(el => this.props.helmet[el].toComponent());
+      .filter((el) => el !== 'htmlAttributes' && el !== 'bodyAttributes')
+      .map((el) => this.props.helmet[el].toComponent());
   }
 
   render() {
