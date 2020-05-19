@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import config from '~/config';
 
@@ -7,16 +7,25 @@ import config from '~/config';
  */
 
 const StyledImage = styled.img`
-  height: 24px;
+  ${({ size }) =>
+    css`
+      height: ${size}px;
+    `}
 `;
 
-const GraphIcon = ({ className, uri }) => {
+const GraphIcon = ({ className, size = 24, uri }) => {
   const graph = config.graphs[uri];
   if (!graph) {
     return null;
   }
   return (
-    <StyledImage className={className} src={graph.icon} title={graph.label} alt={graph.label} />
+    <StyledImage
+      className={className}
+      size={size}
+      src={graph.icon}
+      title={graph.label}
+      alt={graph.label}
+    />
   );
 };
 
