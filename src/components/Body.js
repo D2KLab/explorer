@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { Container as ContentContainer } from '@components/Content';
 import { breakpoints } from '@styles';
@@ -19,17 +19,26 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
 
-  ${breakpoints.weirdMedium`
-    flex-direction: row;
-  `}
+  ${({ hasSidebar }) =>
+    hasSidebar
+      ? css`
+          ${breakpoints.weirdMedium`
+      flex-direction: row;
+    `}
+        `
+      : null};
 
   ${ContentContainer} {
     flex: 1;
   }
 `;
 
-const Body = ({ className, children }) => {
-  return <Container className={className}>{children}</Container>;
+const Body = ({ className, hasSidebar, children }) => {
+  return (
+    <Container className={className} hasSidebar={hasSidebar}>
+      {children}
+    </Container>
+  );
 };
 
 export default Body;

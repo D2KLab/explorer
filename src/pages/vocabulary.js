@@ -1,77 +1,252 @@
-import { Component } from 'react';
-import styled from 'styled-components';
-import Router, { withRouter } from 'next/router';
+import React, { Component } from 'react';
+import styled, { css } from 'styled-components';
+import { withRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
+import Link from 'next/link';
+import StickyBox from 'react-sticky-box';
+import 'intersection-observer';
 
-import { Header, Footer, Sidebar, Layout, Body, Content, Media } from '@components';
-import Select from '@components/Select';
-import Pagination from '@components/Pagination';
+import { Header, Footer, Layout, Body, Content } from '@components';
 import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
+import { breakpoints } from '@styles';
 import config from '~/config';
+import { withTranslation } from '~/i18n';
 
 const sparqlTransformer = require('sparql-transformer').default;
 
-const StyledSelect = styled(Select)`
-  flex: 0 1 240px;
+const Hero = styled.div`
+  width: 100%;
+  height: 380px;
+  display: flex;
+  color: #fff;
+  background-image: ${({ image }) => `url(${image})`};
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 `;
 
 const Title = styled.h1`
   font-size: 3em;
   line-height: 1.2em;
-  margin-bottom: 0.2em;
+  padding-left: 80px;
+  padding-bottom: 60px;
+  align-self: end;
+  text-shadow: 0px 4px 3px rgba(0, 0, 0, 0.2), 0px 8px 13px rgba(0, 0, 0, 0.1),
+    0px 18px 23px rgba(0, 0, 0, 0.1);
+  word-break: break-all;
+
+  ${breakpoints.weirdMedium`
+    font-size: 6em;
+  `}
 `;
 
-const OptionsBar = styled.div``;
+const Navigation = styled.nav`
+  max-width: 200px;
+  display: none;
 
-const Option = styled.div`
+  ${breakpoints.weirdMedium`
+    display: block;
+  `}
+`;
+
+const Results = styled.div`
+  flex: 1;
+  margin-left: 120px;
+
+  h1 {
+    font-size: 3em;
+    line-height: 1.2em;
+    margin-bottom: 0.2em;
+  }
+
+  h2 {
+    font-size: 2em;
+    line-height: 1.2em;
+    margin-bottom: 0.2em;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+`;
+
+const Anchor = styled.a`
+  display: block;
+  text-decoration: none;
+  color: #aaa;
+  line-height: 2em;
+  padding-left: 10px;
+  border-left: 2px solid #aaa;
+  transition: color 0.3s ease-in-out, border-left-color 0.3s ease-in-out;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.secondary};
+    border-left-color: ${({ theme }) => theme.colors.secondary};
+  }
+
+  ${(props) =>
+    props.selected
+      ? css`
+          color: ${({ theme }) => theme.colors.secondary};
+          border-left-color: ${({ theme }) => theme.colors.secondary};
+          font-weight: bold;
+        `
+      : null};
+`;
+
+const Container = styled.div`
   display: flex;
-  align-items: center;
+  align-items: baseline;
 `;
 
-const StyledMedia = styled(Media)`
-  margin-left: var(--card-margin);
-  margin-right: var(--card-margin);
-`;
-
-const Results = styled.ul``;
-
-const Label = styled.label`
-  color: ${({ theme }) => theme.colors.primary};
-  margin-right: 12px;
+const Item = styled.div`
+  margin-bottom: 24px;
 `;
 
 class VocabularyPage extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { isLoading: false };
+    this.state = {
+      activeResult: {
+        '@id': null,
+        ratio: 0,
+      },
+    };
+
+    this.rootRef = React.createRef();
+
+    this.singleRefs = props.results.reduce((acc, value) => {
+      acc[value['@id']] = {
+        ref: React.createRef(),
+        id: value['@id'],
+        ratio: 0,
+      };
+
+      return acc;
+    }, {});
+
+    if (typeof IntersectionObserver !== 'undefined') {
+      const callback = (entries) => {
+        entries.forEach((entry) => {
+          this.singleRefs[entry.target.id].ratio = entry.intersectionRatio;
+        });
+
+        const activeResult = Object.values(this.singleRefs).reduce(
+          (acc, value) => (value.ratio > acc.ratio ? value : acc),
+          this.state.activeResult
+        );
+
+        if (activeResult.ratio > this.state.activeResult.ratio) {
+          this.setState({ activeResult });
+        }
+      };
+
+      this.observer = new IntersectionObserver(callback, {
+        root: this.rootRef.current,
+        threshold: new Array(101).fill(0).map((v, i) => i * 0.01),
+      });
+    }
+  }
+
+  componentDidMount() {
+    Object.values(this.singleRefs).forEach((value) => this.observer.observe(value.ref.current));
   }
 
   render() {
-    const { results, filters, router } = this.props;
+    const { results, router, t } = this.props;
     const query = { ...router.query };
-    const { isLoading } = this.state;
     const route = config.routes[query.type];
+
+    const useWith = [];
+    if (route && Array.isArray(route.useWith)) {
+      useWith.push(...route.useWith);
+    }
 
     return (
       <Layout>
         <Helmet title={`Vocabulary: ${query.type}`} />
         <Header />
         <Body>
-          <Content>
+          <Hero image={`/images/pages/${query.type}.jpg`}>
             <Title>{query.type.substr(0, 1).toUpperCase() + query.type.substr(1)}</Title>
-            <Results loading={isLoading}>
-              {results.map((result) => {
-                return (
-                  <li>
-                    <a href={result['@id']} target="_blank" rel="noopener">
+          </Hero>
+          <Content>
+            <Container>
+              <StickyBox offsetTop={20} offsetBottom={20}>
+                <Navigation>
+                  {results.map((result) => (
+                    <Anchor
+                      key={result['@id']}
+                      href={`#${result['@id']}`}
+                      selected={result['@id'] === this.state.activeResult.id}
+                    >
                       {result.label}
-                    </a>
-                  </li>
-                );
-              })}
-            </Results>
+                    </Anchor>
+                  ))}
+                </Navigation>
+              </StickyBox>
+              <Results ref={this.rootRef}>
+                {results.map((result) => {
+                  const items = Array.isArray(result.items)
+                    ? result.items
+                    : [result.items].filter(
+                        (x) =>
+                          x &&
+                          (typeof x !== 'object' ||
+                            x.constructor !== Object ||
+                            Object.keys(x).length > 0)
+                      );
+
+                  const renderLink = (w, item) => {
+                    const withRoute = config.routes[w.route];
+                    if (!withRoute) {
+                      return null;
+                    }
+
+                    const withQuery = {};
+
+                    const filter = withRoute.filters.find((f) => f.id && f.id === w.filter);
+                    if (filter) {
+                      const val = filter.isMulti ? [item['@id']] : item['@id'];
+                      withQuery[`field_filter_${filter.id}`] = val;
+                    }
+
+                    return (
+                      <Link href={{ pathname: w.route, query: withQuery }}>
+                        <a>
+                          Explore the {t(`routes.${w.route}`)} realised in {item.label}
+                        </a>
+                      </Link>
+                    );
+                  };
+
+                  const renderItem = (item) => {
+                    const links = useWith.map((w) => renderLink(w, item));
+
+                    return (
+                      <Item key={item['@id']} id={item['@id']}>
+                        <h2>{item.label}</h2>
+                        <p>{item.description}</p>
+                        {links}
+                      </Item>
+                    );
+                  };
+
+                  return (
+                    <div
+                      key={result['@id']}
+                      id={result['@id']}
+                      ref={this.singleRefs[result['@id']].ref}
+                    >
+                      <h1>{result.label}</h1>
+                      <ul>{items.map(renderItem)}</ul>
+                    </div>
+                  );
+                })}
+              </Results>
+            </Container>
             <Debug>
               <Metadata label="HTTP Parameters">
                 <pre>{JSON.stringify(query, null, 2)}</pre>
@@ -114,4 +289,4 @@ export async function getServerSideProps({ query }) {
   return { props: { results } };
 }
 
-export default withRouter(VocabularyPage);
+export default withTranslation('common')(withRouter(VocabularyPage));

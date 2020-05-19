@@ -85,7 +85,7 @@ class BrowsePage extends Component {
       <Layout>
         <Helmet title={t('labels.browse', { type: query.type })} />
         <Header />
-        <Body>
+        <Body hasSidebar>
           <Sidebar type={query.type} query={query} filters={filters} onSearch={this.onSearch} />
           <Content>
             <Title>{t('labels.search_results')}</Title>
