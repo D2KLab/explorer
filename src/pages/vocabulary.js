@@ -199,22 +199,27 @@ class VocabularyPage extends Component {
                             Object.keys(x).length > 0)
                       );
 
-                  const renderLink = (w, item) => {
-                    const withRoute = config.routes[w.route];
+                  const renderLink = (withConfig, item) => {
+                    const withRoute = config.routes[(withConfig, route)];
                     if (!withRoute) {
                       return null;
                     }
 
                     const withQuery = {};
 
-                    const filter = withRoute.filters.find((f) => f.id && f.id === w.filter);
+                    const filter = withRoute.filters.find(
+                      (f) => f.id && f.id === withConfig.filter
+                    );
                     if (filter) {
                       const val = filter.isMulti ? [item['@id']] : item['@id'];
                       withQuery[`field_filter_${filter.id}`] = val;
                     }
 
                     return (
-                      <Link href={{ pathname: w.route, query: withQuery }}>
+                      <Link
+                        key={withConfig.route}
+                        href={{ pathname: withConfig.route, query: withQuery }}
+                      >
                         <a>
                           Explore the {t(`routes.${w.route}`)} realised in {item.label}
                         </a>
