@@ -116,6 +116,7 @@ const CollectionDetailsPage = ({ result }) => {
                       thumbnail={mainImage}
                       direction="column"
                       link={`/objects/${encodeURIComponent(object['@id'])}`}
+                      uri={result['@graph']}
                     />
                   );
                 })}

@@ -133,6 +133,7 @@ class BrowsePage extends Component {
                     thumbnail={mainImage}
                     direction="column"
                     link={`/${query.type}/${encodeURIComponent(result['@id'])}`}
+                    uri={result['@graph']}
                   />
                 );
               })}

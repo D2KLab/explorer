@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import styled from 'styled-components';
 import Img from 'react-image';
+import GraphIcon from '@components/GraphIcon';
 
 import config from '~/config';
 
@@ -15,12 +16,24 @@ const ThumbnailContainer = styled.div`
   justify-content: center;
   width: 150px;
   height: 150px;
+  position: relative;
 `;
 
 const Thumbnail = styled.img`
   max-width: 100%;
   max-height: 100%;
   height: auto;
+`;
+
+const GraphIconContainer = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #d9d9db;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const TextContainer = styled.div`
@@ -55,7 +68,7 @@ const Container = styled.div`
   }
 `;
 
-const Media = ({ className, thumbnail, title, subtitle, link = '', direction = 'column' }) => {
+const Media = ({ className, thumbnail, title, subtitle, uri, link = '', direction = 'column' }) => {
   const Placeholder = <Thumbnail src={config.search.placeholderImage} alt={title} />;
 
   return (
@@ -70,6 +83,11 @@ const Media = ({ className, thumbnail, title, subtitle, link = '', direction = '
               loader={Placeholder}
               unloader={Placeholder}
             />
+            {uri && (
+              <GraphIconContainer>
+                <GraphIcon uri={uri} />
+              </GraphIconContainer>
+            )}
           </ThumbnailContainer>
           <TextContainer>
             <Title>{title}</Title>

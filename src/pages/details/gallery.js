@@ -94,6 +94,10 @@ const Title = styled.h1`
   `}
 `;
 
+const StyledGraphIcon = styled(GraphIcon)`
+  margin-bottom: 1em;
+`;
+
 const MobileTitle = styled(Title)`
   display: block;
 
@@ -262,7 +266,7 @@ const GalleryDetailsPage = ({ result, t }) => {
           <Secondary>
             <MetadataList>
               <Title>{label}</Title>
-              <GraphIcon uri={result['@graph']} />
+              <StyledGraphIcon uri={result['@graph']} />
               {metadata.flatMap(([metaName, meta]) => {
                 const values = [];
                 if (Array.isArray(meta)) {
