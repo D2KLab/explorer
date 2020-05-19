@@ -6,7 +6,7 @@ import Select from '@components/Select';
 import MultiSelect from '@components/MultiSelect';
 import { breakpoints } from '@styles';
 
-import { withTranslation, i18n } from '~/i18n';
+import { withTranslation } from '~/i18n';
 import config from '~/config';
 
 const Container = styled.div`
@@ -300,11 +300,10 @@ class Sidebar extends Component {
   };
 
   render() {
-    const { className, type, filters, t, req } = this.props;
+    const { className, type, filters, t, i18n } = this.props;
     const { fields, languages, graphOptions } = this.state;
 
     const route = config.routes[type];
-    const currentLanguage = req ? req.language : i18n.language;
 
     return (
       <Container className={className}>

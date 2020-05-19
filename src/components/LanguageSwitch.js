@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
 import { DownArrow } from '@styled-icons/boxicons-solid/DownArrow';
 
-import { i18n } from '~/i18n';
+import { withTranslation } from '~/i18n';
 import config from '~/config';
 
 /**
@@ -54,39 +54,22 @@ const StyledDownArrow = styled(DownArrow)`
   margin: 0 0.2em;
 `;
 
-const useStateWithLocalStorage = (localStorageKey, defaultValue = '') => {
-  const [value, setValue] = React.useState(
-    typeof localStorage === 'undefined' ? '' : localStorage.getItem(localStorageKey) || defaultValue
-  );
-
-  React.useEffect(() => {
-    localStorage.setItem(localStorageKey, value);
-  }, [value]);
-
-  return [value, setValue];
-};
-
-const LanguageSwitch = () => {
-  const [language, setLanguage] = useStateWithLocalStorage(
-    'lang',
-    Object.keys(config.search.languages).shift()
-  );
+const LanguageSwitch = ({ i18n }) => {
   const menu = useMenuState();
 
   return (
     <Container>
       <StyledMenuButton {...menu}>
-        {config.search.languages[language]}
+        <span>{config.search.languages[i18n.language]}</span>
         <StyledDownArrow />
       </StyledMenuButton>
-      <StyledMenu {...menu} aria-label={config.search.languages[language]}>
+      <StyledMenu {...menu} aria-label={config.search.languages[i18n.language]}>
         {Object.entries(config.search.languages).map(([langKey, langLabel]) => (
           <StyledMenuItem
             {...menu}
             key={langKey}
             onClick={() => {
               menu.hide();
-              setLanguage(langKey);
               i18n.changeLanguage(langKey);
             }}
           >
@@ -98,4 +81,4 @@ const LanguageSwitch = () => {
   );
 };
 
-export default LanguageSwitch;
+export default withTranslation()(LanguageSwitch);

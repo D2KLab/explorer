@@ -12,9 +12,9 @@ module.exports = new NextI18Next({
     return langs;
   }, {}),
   detection: {
-    order: ['localStorage', 'cookie'],
+    order: ['cookie', 'localStorage'],
     lookupCookie: 'lang',
     lookupLocalStorage: 'lang',
-    caches: ['localStorage', 'cookie'],
+    caches: ['cookie', 'localStorage'],
   },
 });
