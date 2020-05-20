@@ -338,7 +338,7 @@ class Sidebar extends Component {
             {route.filterByGraph && (
               <Field>
                 <label htmlFor="graph">
-                  {config.search.graphFieldLabel[currentLanguage] || t('search:fields.graph')}
+                  {config.search.graphFieldLabel[i18n.language] || t('search:fields.graph')}
                 </label>
                 <Select
                   inputId="graph"
