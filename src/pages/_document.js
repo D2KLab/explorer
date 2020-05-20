@@ -19,10 +19,6 @@ export default class MyDocument extends Document {
         helmet: Helmet.renderStatic(),
         styles: (
           <>
-            <link
-              href="https://fonts.googleapis.com/css?family=Lato:300,400,700,800"
-              rel="stylesheet"
-            />
             {initialProps.styles}
             {sheet.getStyleElement()}
           </>
