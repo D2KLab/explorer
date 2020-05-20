@@ -19,7 +19,7 @@
   },
   "filters": {
     "time": "Date de production",
-    "place": "Lieu de production",
+    "location": "Lieu de production",
     "technique": "Technique",
     "material": "Matériau",
     "composed": "Collection",
