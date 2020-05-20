@@ -204,6 +204,9 @@ class VocabularyPage extends Component {
                             Object.keys(x).length > 0)
                       );
 
+                  const singleRef = this.singleRefs[result['@id']];
+                  const ref = singleRef ? singleRef.ref : null;
+
                   const renderLink = (withConfig, item) => {
                     const withRoute = config.routes[(withConfig, route)];
                     if (!withRoute) {
@@ -223,7 +226,7 @@ class VocabularyPage extends Component {
                     return (
                       <Link
                         key={withConfig.route}
-                        href={{ pathname: withConfig.route, query: withQuery }}
+                        href={{ pathname: `/${withConfig.route}`, query: withQuery }}
                       >
                         <a>
                           Explore the {t(`routes.${w.route}`)} realised in {item.label}
@@ -245,11 +248,7 @@ class VocabularyPage extends Component {
                   };
 
                   return (
-                    <div
-                      key={result['@id']}
-                      id={result['@id']}
-                      ref={this.singleRefs[result['@id']].ref}
-                    >
+                    <div key={result['@id']} id={result['@id']} ref={ref}>
                       <h1>{result.label}</h1>
                       {result.description && <p>{result.description}</p>}
                       <ul>{items.map(renderItem)}</ul>
