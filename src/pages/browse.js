@@ -43,6 +43,7 @@ const Results = styled.div`
   --card-margin: 12px;
   margin: 24px calc(-1 * var(--card-margin));
 
+  transition: opacity 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
   opacity: ${({ loading }) => (loading ? 0.25 : 1)};
   pointer-events: ${({ loading }) => (loading ? 'none' : 'auto')};
 `;
@@ -59,12 +60,26 @@ class BrowsePage extends Component {
     this.state = { isLoading: false };
   }
 
+  componentDidMount() {
+    Router.events.on('routeChangeComplete', this.onDoneLoading);
+    Router.events.on('routeChangeError', this.onDoneLoading);
+  }
+
+  componentWillUnmount() {
+    Router.events.off('routeChangeComplete', this.onDoneLoading);
+    Router.events.off('routeChangeError', this.onDoneLoading);
+  }
+
+  onDoneLoading = () => {
+    this.setState({ isLoading: false });
+  };
+
   onSearch = (fields) => {
     const { router } = this.props;
     const { pathname, query } = router;
+    this.setState({ isLoading: true });
     router.push({
-      pathname: `/browse`,
-      // as: `/${pathname}`,
+      pathname,
       query: {
         type: query.type,
         ...fields,
