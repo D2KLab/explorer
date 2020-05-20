@@ -170,7 +170,12 @@ class VocabularyPage extends Component {
         <Header />
         <Body>
           <Hero image={`/images/pages/${query.type}.jpg`}>
-            <Title>{query.type.substr(0, 1).toUpperCase() + query.type.substr(1)}</Title>
+            <Title>
+              {t(
+                `routes.${query.type}`,
+                query.type.substr(0, 1).toUpperCase() + query.type.substr(1)
+              )}
+            </Title>
           </Hero>
           <Content>
             <Container>
