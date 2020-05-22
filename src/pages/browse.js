@@ -2,6 +2,7 @@ import { Component } from 'react';
 import styled from 'styled-components';
 import Router, { withRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
+import NProgress from 'nprogress';
 
 import { Header, Footer, Sidebar, Layout, Body, Content, Media } from '@components';
 import Metadata from '@components/Metadata';
@@ -72,12 +73,14 @@ class BrowsePage extends Component {
 
   onDoneLoading = () => {
     this.setState({ isLoading: false });
+    NProgress.done();
   };
 
   onSearch = (fields) => {
     const { router } = this.props;
     const { pathname, query } = router;
     this.setState({ isLoading: true });
+    NProgress.start();
     router.push({
       pathname,
       query: {
