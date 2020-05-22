@@ -106,8 +106,8 @@ module.exports = {
             $where: [
               '?production <http://erlangen-crm.org/current/P108_has_produced> ?id',
               '?production <http://erlangen-crm.org/current/P8_took_place_on_or_within> ?location',
-              '?location <http://www.geonames.org/ontology#parentCountry>/<http://www.geonames.org/ontology#name> ?locationCountry',
-              '?location <http://www.geonames.org/ontology#parentCountry>/<http://www.geonames.org/ontology#name> ?locationCountryLabel',
+              '?location <http://www.geonames.org/ontology#parentCountry> ?locationCountry',
+              '?locationCountry <http://www.geonames.org/ontology#name> ?locationCountryLabel',
             ],
             $filter: [
               'langmatches(lang(?locationCountryLabel), "en") || lang(?locationCountryLabel) = ""',
@@ -117,10 +117,10 @@ module.exports = {
           },
           whereFunc: () => [
             '?production <http://erlangen-crm.org/current/P8_took_place_on_or_within> ?location',
-            '?location <http://www.geonames.org/ontology#parentCountry>/<http://www.geonames.org/ontology#name> ?locationCountry',
+            '?location <http://www.geonames.org/ontology#parentCountry> ?locationCountry',
           ],
           filterFunc: (values) => {
-            return [values.map((val) => `?locationCountry = ${JSON.stringify(val)}`).join(' || ')];
+            return [values.map((val) => `?locationCountry = <${val}>`).join(' || ')];
           },
         },
         {
@@ -292,7 +292,6 @@ module.exports = {
               OPTIONAL { ?location <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?locationLat . }
               OPTIONAL { ?location <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?locationLong . }
               OPTIONAL { ?location <http://www.geonames.org/ontology#parentCountry>/<http://www.geonames.org/ontology#name> ?locationCountry . }
-              OPTIONAL { ?location <http://www.geonames.org/ontology#parentCountry>/<http://www.geonames.org/ontology#name> ?locationCountryLabel . }
             }
           }`,
           // Needed because silknow has 2 duplicate images (the source one and the one hosted on silknow.org cloud server)
