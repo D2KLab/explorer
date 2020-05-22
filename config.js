@@ -219,6 +219,10 @@ module.exports = {
         },
       ],
       labelFunc: (props) => props.label || props.identifier,
+      baseWhere: [
+        'GRAPH ?g { ?id a <http://erlangen-crm.org/current/E22_Man-Made_Object> }',
+        '?production <http://erlangen-crm.org/current/P108_has_produced> ?id',
+      ],
       query: {
         '@graph': [
           {

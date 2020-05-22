@@ -258,6 +258,8 @@ export async function getServerSideProps({ query }) {
     }
 
     // Props filter
+    const extraWhere = [];
+    const extraFilter = [];
     for (let i = 0; i < route.filters.length; i += 1) {
       const filter = route.filters[i];
       if (filter.id && query[`field_filter_${filter.id}`]) {
@@ -265,8 +267,8 @@ export async function getServerSideProps({ query }) {
           filter.isMulti && !Array.isArray(query[`field_filter_${filter.id}`])
             ? [query[`field_filter_${filter.id}`]]
             : query[`field_filter_${filter.id}`];
-        searchQuery.$where.push(...filter.whereFunc(val));
-        searchQuery.$filter.push(...filter.filterFunc(val));
+        extraWhere.push(...filter.whereFunc(val));
+        extraFilter.push(...filter.filterFunc(val));
       }
     }
 
@@ -279,8 +281,11 @@ export async function getServerSideProps({ query }) {
     searchQuery.$where.push(`
       {
         SELECT DISTINCT ?id WHERE {
-          ${searchQuery.$where.join('.')}
-          ${searchQuery.$filter.length > 0 ? `FILTER(${searchQuery.$filter.join(' && ')})` : ''}
+          ${route.baseWhere.join('.')}
+          ${route.baseWhere.length > 1 ? '.' : ''}
+          ${extraWhere.join('.')}
+          ${extraWhere.length > 1 ? '.' : ''}
+          ${extraFilter.length > 0 ? `FILTER(${extraFilter.join(' && ')})` : ''}
         }
         GROUP BY ?id
         OFFSET ${itemsPerPage * ((parseInt(query.page, 10) || 1) - 1)}
