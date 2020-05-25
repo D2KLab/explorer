@@ -18,3 +18,4 @@ export { default as Pagination } from './Pagination';
 export { default as LanguageSwitch } from './LanguageSwitch';
 export { default as ProfileButton } from './ProfileButton';
 export { default as GraphIcon } from './GraphIcon';
+export { default as SPARQLQueryLink } from './SPARQLQueryLink';

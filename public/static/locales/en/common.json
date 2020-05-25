@@ -26,5 +26,8 @@
     "show-only-fabric": "Only fabric",
     "show-only-images": "With images",
     "show-only-vloom": "With Virtual Loom"
+  },
+  "labels": {
+    "edit_query": "Edit the query"
   }
 }

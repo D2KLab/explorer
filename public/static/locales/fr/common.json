@@ -26,5 +26,8 @@
     "show-only-fabric": "En tissu uniquement",
     "show-only-images": "Avec images uniquement",
     "show-only-vloom": "Compatible Virtual Loom"
+  },
+  "labels": {
+    "edit_query": "Modifier la requête"
   }
 }

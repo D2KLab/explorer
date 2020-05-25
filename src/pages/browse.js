@@ -9,6 +9,7 @@ import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import Select from '@components/Select';
 import Pagination from '@components/Pagination';
+import SPARQLQueryLink from '@components/SPARQLQueryLink';
 
 import { withTranslation } from '~/i18n';
 import config from '~/config';
@@ -165,15 +166,9 @@ class BrowsePage extends Component {
                 <pre>{JSON.stringify(results, null, 2)}</pre>
               </Metadata>
               <Metadata label="SPARQL Query">
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={`https://data.silknow.org/sparql?default-graph-uri=&qtxt=${encodeURIComponent(
-                    this.props.debugSparqlQuery
-                  )}&should-sponge=&format=text%2Fhtml&timeout=0&debug=on&run=+Run+Query+`}
-                >
-                  Edit the query
-                </a>
+                <SPARQLQueryLink query={this.props.debugSparqlQuery}>
+                  {t('edit_query')}
+                </SPARQLQueryLink>
                 <pre>{this.props.debugSparqlQuery}</pre>
               </Metadata>
             </Debug>
