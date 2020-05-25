@@ -92,6 +92,19 @@ class BrowsePage extends Component {
     });
   };
 
+  onPageChange = (pageIndex) => {
+    const { pathname, query } = this.props.router;
+    this.setState({ isLoading: true });
+    NProgress.start();
+    Router.push({
+      pathname,
+      query: {
+        ...query,
+        page: pageIndex,
+      },
+    });
+  };
+
   render() {
     const { results, filters, router, t } = this.props;
     const query = { ...router.query };
@@ -157,7 +170,7 @@ class BrowsePage extends Component {
                 );
               })}
             </Results>
-            <Pagination totalPages={11} currentPage={3} />
+            <Pagination totalPages={11} currentPage={3} onChange={this.onPageChange} />
             <Debug>
               <Metadata label="HTTP Parameters">
                 <pre>{JSON.stringify(query, null, 2)}</pre>
