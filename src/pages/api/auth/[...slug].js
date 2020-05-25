@@ -46,7 +46,7 @@ const options = {
   // see https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md
   database: {
     type: 'sqlite',
-    database: 'database.sqlite',
+    database: process.env.DATABASE_PATH || 'database.sqlite',
     // The `synchronize: true` option automatically creates tables/collections.
     // You should use this in development or on first run only as it may result
     // in data loss if used in production.
