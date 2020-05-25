@@ -1,11 +1,12 @@
 import NProgress from 'nprogress';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-
+import NextAuth from 'next-auth/client';
 import App from 'next/app';
 import { ThemeProvider } from 'styled-components';
 import { Provider as ReakitProvider } from 'reakit';
 import { Reset } from 'styled-reset';
 import { Helmet } from 'react-helmet';
+
 import theme from '@styles/theme';
 import config from '~/config';
 import { appWithTranslation } from '~/i18n';
@@ -20,6 +21,8 @@ NProgress.configure({
 class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
+    const { session } = pageProps;
+
     return (
       <ThemeProvider theme={theme}>
         <ReakitProvider>
@@ -42,7 +45,9 @@ class MyApp extends App {
             {/* Import CSS for nprogress */}
             <link rel="stylesheet" type="text/css" href="/nprogress.css" />
           </Helmet>
-          <Component {...pageProps} />
+          <NextAuth.Provider session={session}>
+            <Component {...pageProps} />
+          </NextAuth.Provider>
         </ReakitProvider>
       </ThemeProvider>
     );

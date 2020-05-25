@@ -36,6 +36,10 @@ export default createGlobalStyle`
     max-height: 280px;
   }
 
+  strong, b {
+    font-weight: bold;
+  }
+
   /* NProgress */
   #nprogress {
     pointer-events: none;
