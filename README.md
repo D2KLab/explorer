@@ -42,16 +42,16 @@ npm run start
 
 ## Docker
 
-- Build the container:
+- Build for development
 
 ```bash
-docker build -t silknow/explorer .
+docker-composer -f docker-compose.yml -f docker-compose.dev.yml up
 ```
 
-- Run the container:
+- Build for production
 
 ```bash
-docker run -d -p 3000:3000 silknow/explorer:latest
+docker-composer -f docker-compose.yml -f docker-compose.prod.yml up
 ```
 
 ## License
