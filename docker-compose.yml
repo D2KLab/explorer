@@ -1,0 +1,22 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongo
+    environment:
+      - NODE_ENV=production
+      - SITE=${SITE}
+      - GOOGLE_ID=${GOOGLE_ID}
+      - GOOGLE_SECRET=${GOOGLE_SECRET}
+      - MONGODB_URI=${MONGODB_URI}
+  mongo:
+    image: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - explorer:/data/db
+volumes:
+  explorer: {}

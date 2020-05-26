@@ -45,8 +45,8 @@ const options = {
   // This example configuration is for an SQLite in-memory database. For options
   // see https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md
   database: {
-    type: 'sqlite',
-    database: process.env.DATABASE_PATH || 'database.sqlite',
+    type: 'mongodb',
+    url: process.env.MONGODB_URI || 'mongodb://localhost/explorer',
     // The `synchronize: true` option automatically creates tables/collections.
     // You should use this in development or on first run only as it may result
     // in data loss if used in production.
