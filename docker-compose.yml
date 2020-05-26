@@ -2,12 +2,10 @@ version: '3'
 services:
   web:
     build: .
-    ports:
-      - '3000:3000'
     depends_on:
       - mongo
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=${NODE_ENV}
       - SITE=${SITE}
       - GOOGLE_ID=${GOOGLE_ID}
       - GOOGLE_SECRET=${GOOGLE_SECRET}

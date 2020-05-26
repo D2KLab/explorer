@@ -1,0 +1,5 @@
+version: '3'
+services:
+  web:
+    ports:
+      - '4733:3000'
