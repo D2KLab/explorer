@@ -3,3 +3,5 @@ services:
   web:
     ports:
       - '4733:3000'
+    environment:
+      - NODE_ENV=production

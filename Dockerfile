@@ -1,12 +1,18 @@
-FROM node:11
+FROM node:12
 
+# Create app directory
+RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+# Installing dependencies
+COPY package*.json /usr/src/app/
 RUN npm install
 
-COPY . .
+# Copying source files
+COPY . /usr/src/app
 
+# Building app
 RUN npm run build
 
+# Running the app
 CMD [ "npm", "start" ]
