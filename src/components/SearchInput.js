@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import Autosuggest from 'react-autosuggest';
 import AutosuggestHighlightMatch from 'autosuggest-highlight/match';
 import AutosuggestHighlightParse from 'autosuggest-highlight/parse';
+
+import { uriToId } from '@helpers/utils';
 import config from '~/config';
 
 const sparqlTransformer = require('sparql-transformer').default;
@@ -168,7 +170,7 @@ class SearchInput extends Component {
   onSuggestionSelected = (event, { suggestion }) => {
     const type = 'objects'; // TODO: do not hardcode the type
     Router.push({
-      pathname: `/${type}/${encodeURIComponent(suggestion['@id'])}`,
+      pathname: `/${type}/${uriToId(suggestion['@id'])}`,
       // shallow: true
     });
   };

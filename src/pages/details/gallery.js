@@ -8,6 +8,7 @@ import Tabs, { Tab } from '@components/TabBar';
 import GraphIcon from '@components/GraphIcon';
 import Debug from '@components/Debug';
 import { breakpoints } from '@styles';
+import { uriToId, idToUri } from '@helpers/utils';
 import config from '~/config';
 import { withTranslation } from '~/i18n';
 
@@ -143,7 +144,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
 
   let url = meta['@id'];
   if (type) {
-    url = `/${type[0]}/${encodeURIComponent(meta['@id'])}`;
+    url = `/${type[0]}/${uriToId(meta['@id'])}`;
   } else if (
     currentRoute &&
     Array.isArray(currentRoute.filters) &&
@@ -325,7 +326,7 @@ const GalleryDetailsPage = ({ result, t }) => {
 GalleryDetailsPage.getInitialProps = async ({ query }) => {
   const route = config.routes[query.type];
   const searchQuery = JSON.parse(JSON.stringify(route.query));
-  searchQuery.$filter = `?id = <${query.id}>`;
+  searchQuery.$filter = `?id = <${idToUri(query.id, route.uriBase)}>`;
 
   try {
     if (config.debug) {

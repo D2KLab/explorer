@@ -6,6 +6,7 @@ import { Header, Footer, Layout, Screen, Media } from '@components';
 import Metadata from '@components/Metadata';
 import Tabs, { Tab } from '@components/TabBar';
 import { breakpoints } from '@styles';
+import { uriToId, idToUri } from '@helpers/utils';
 import config from '~/config';
 
 const sparqlTransformer = require('sparql-transformer').default;
@@ -211,7 +212,7 @@ VideoDetailsPage.getInitialProps = async ({ query }) => {
   const route = config.routes[query.type];
   const searchQuery = JSON.parse(JSON.stringify(route.query));
   searchQuery.$limit = 1;
-  searchQuery.$filter = `?id = <${query.id}>`;
+  searchQuery.$filter = `?id = <${idToUri(query.id, route.uriBase)}>`;
 
   try {
     if (config.debug) {

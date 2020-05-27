@@ -13,6 +13,7 @@ import SPARQLQueryLink from '@components/SPARQLQueryLink';
 
 import { withTranslation } from '~/i18n';
 import config from '~/config';
+import { uriToId } from '@helpers/utils';
 
 const sparqlTransformer = require('sparql-transformer').default;
 
@@ -164,7 +165,7 @@ class BrowsePage extends Component {
                     subtitle={result.time.label}
                     thumbnail={mainImage}
                     direction="column"
-                    link={`/${query.type}/${encodeURIComponent(result['@id'])}`}
+                    link={`/${query.type}/${uriToId(result['@id'])}`}
                     uri={result['@graph']}
                   />
                 );

@@ -7,6 +7,7 @@ import { Header, Footer, Layout, Screen, Media } from '@components';
 import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import { breakpoints } from '@styles';
+import { uriToId, idToUri } from '@helpers/utils';
 import config from '~/config';
 
 const sparqlTransformer = require('sparql-transformer').default;
@@ -115,7 +116,7 @@ const CollectionDetailsPage = ({ result }) => {
                       subtitle=""
                       thumbnail={mainImage}
                       direction="column"
-                      link={`/objects/${encodeURIComponent(object['@id'])}`}
+                      link={`/objects/${uriToId(object['@id'])}`}
                       uri={result['@graph']}
                     />
                   );
@@ -142,7 +143,7 @@ const CollectionDetailsPage = ({ result }) => {
 CollectionDetailsPage.getInitialProps = async ({ query }) => {
   const route = config.routes[query.type];
   const searchQuery = JSON.parse(JSON.stringify(route.query));
-  searchQuery.$filter = `?id = <${query.id}>`;
+  searchQuery.$filter = `?id = <${idToUri(query.id, route.uriBase)}>`;
 
   try {
     if (config.debug) {

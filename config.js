@@ -63,6 +63,7 @@ module.exports = {
       view: 'browse',
       showInNavbar: true,
       rdfType: 'http://erlangen-crm.org/current/E22_Man-Made_Object',
+      uriBase: 'http://data.silknow.org/object',
       details: {
         view: 'gallery',
       },

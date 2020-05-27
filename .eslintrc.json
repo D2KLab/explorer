@@ -11,6 +11,7 @@
         "root": ["."],
         "alias": {
           "@components": "./src/components",
+          "@helpers": "./src/helpers",
           "@pages": "./src/pages",
           "@styles": "./src/styles",
           "~": "."
