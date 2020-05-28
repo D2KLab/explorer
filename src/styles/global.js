@@ -18,6 +18,8 @@ export default createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     background-color: ${theme.colors.background};
     color: ${theme.colors.text};
+    font-size: 14px;
+    line-height: 1.65;
   }
 
   a {
