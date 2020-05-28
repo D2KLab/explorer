@@ -17,7 +17,7 @@ export default ({ session, lists }) => {
           <ul>
             {lists.map((list) => (
               <li key={list._id}>
-                <Link href={`/profile/lists/${list._id}`} passHref>
+                <Link href={`/lists/${list._id}`} passHref>
                   <a>{list.name}</a>
                 </Link>
               </li>
@@ -46,7 +46,6 @@ export async function getServerSideProps({ req, res }) {
     headers: req.headers,
   });
   const lists = await apiRes.json();
-  console.log('lists=', lists);
 
   return {
     props: {

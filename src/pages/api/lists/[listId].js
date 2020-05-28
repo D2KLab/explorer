@@ -24,41 +24,55 @@ async function connectToDatabase() {
 }
 
 export default async (req, res) => {
-  const session = await NextAuth.session({ req });
-
-  if (!session) {
-    res.statusCode = 403;
-    res.json({
-      error: {
-        status: 403,
-        message: 'Session not found',
-      },
-    });
-    return;
-  }
-
   // Connect to database
   const db = await connectToDatabase();
 
-  // Get user informations
-  const user = await db.collection('user').findOne({ email: session.user.email });
-
-  const list = await db
-    .collection('list')
-    .findOne({ _id: new ObjectID(req.query.listId), user: new ObjectID(user._id) });
+  const list = await db.collection('list').findOne({ _id: new ObjectID(req.query.listId) });
 
   if (!list) {
-    res.statusCode = 400;
+    res.statusCode = 404;
     res.json({
       error: {
-        status: 400,
+        status: 404,
         message: 'List not found',
       },
     });
     return;
   }
 
+  // Get user informations
+  const session = await NextAuth.session({ req });
+  const user =
+    session && session.user
+      ? await db.collection('user').findOne({ email: session.user.email })
+      : null;
+
+  const isOwner = user && list && list.user.equals(user._id);
+
+  if (!list.is_public && !isOwner) {
+    res.statusCode = 403;
+    res.json({
+      error: {
+        status: 403,
+        message: 'Forbidden',
+      },
+    });
+    return;
+  }
+
   if (req.method === 'PUT') {
+    // Update the list
+    if (!isOwner) {
+      res.statusCode = 403;
+      res.json({
+        error: {
+          status: 403,
+          message: 'Forbidden',
+        },
+      });
+      return;
+    }
+
     const body = JSON.parse(req.body);
     const inList = list.items.includes(body.item);
     const updatedList = (

@@ -95,7 +95,7 @@ const SaveButton = ({ item }) => {
   };
 
   const addToList = async (list) => {
-    await fetch(`/api/profile/lists/${list._id}`, {
+    await fetch(`/api/lists/${list._id}`, {
       method: 'PUT',
       body: JSON.stringify({
         item: item['@id'],

@@ -158,7 +158,10 @@ const renderSessionMenuItems = (session, menu) => {
         {...menu}
         onClick={() => {
           Router.push({
-            pathname: '/profile?tab=favorites',
+            pathname: '/profile',
+            query: {
+              tab: 'lists',
+            },
           });
           menu.hide();
         }}

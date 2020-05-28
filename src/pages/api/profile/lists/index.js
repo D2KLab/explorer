@@ -57,6 +57,7 @@ export default async (req, res) => {
     const list = await db.collection('list').insert({
       user: new ObjectID(user._id),
       name: body.name,
+      is_public: true,
       items: [],
     });
 
