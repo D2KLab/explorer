@@ -39,6 +39,12 @@
       {
         "assert": "nesting"
       }
+    ],
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allow": ["_id"]
+      }
     ]
   }
 }
