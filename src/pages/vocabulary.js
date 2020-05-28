@@ -27,8 +27,6 @@ const Hero = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 3em;
-  line-height: 1.2em;
   padding-left: 80px;
   padding-bottom: 60px;
   align-self: end;
@@ -53,18 +51,6 @@ const Navigation = styled.nav`
 const Results = styled.div`
   flex: 1;
   margin-left: 120px;
-
-  h1 {
-    font-size: 3em;
-    line-height: 1.2em;
-    margin-bottom: 0.2em;
-  }
-
-  h2 {
-    font-size: 2em;
-    line-height: 1.2em;
-    margin-bottom: 0.2em;
-  }
 
   p {
     margin-bottom: 1em;

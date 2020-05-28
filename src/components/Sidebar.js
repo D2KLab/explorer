@@ -5,6 +5,8 @@ import Switch from 'react-switch';
 import Select from '@components/Select';
 import MultiSelect from '@components/MultiSelect';
 import { breakpoints } from '@styles';
+import Button from '@components/Button';
+import Input from '@components/Input';
 
 import { withTranslation } from '~/i18n';
 import config from '~/config';
@@ -36,21 +38,6 @@ const ButtonsBar = styled.div`
   margin-bottom: 24px;
 `;
 
-const Button = styled.button`
-  font-size: 1rem;
-  flex: 0 1 120px;
-  padding: 0.5em;
-  appearance: none;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-
-  &:hover {
-    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
-      0px 2px 1px -1px rgba(0, 0, 0, 0.12);
-  }
-`;
-
 const ClearButton = styled(Button)`
   background-color: #a6a6a6;
   color: #000;
@@ -73,25 +60,8 @@ const Field = styled.div`
     margin-bottom: 8px;
   }
 
-  > input,
-  label > input {
-    background-color: #f0f0f0;
-    border-style: solid;
-    border-color: #000;
-    border-width: 0;
-    border-bottom-width: 2px;
-    border-radius: 0;
-    outline: 0;
-    box-sizing: border-box;
+  ${Input} {
     width: 100%;
-    font-size: 1rem;
-    min-height: 38px;
-    padding: 0 8px;
-
-    &:focus {
-      box-shadow: 0 0 1 #ccc;
-      border-width: 2px;
-    }
   }
 `;
 
@@ -316,7 +286,7 @@ class Sidebar extends Component {
           <Fields>
             <Field>
               <label htmlFor="q">{t('search:fields.q')}</label>
-              <input
+              <Input
                 id="q"
                 name="q"
                 type="text"

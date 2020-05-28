@@ -21,12 +21,6 @@ const StyledSelect = styled(Select)`
   flex: 0 1 240px;
 `;
 
-const Title = styled.h1`
-  font-size: 3em;
-  line-height: 1.2em;
-  margin-bottom: 0.2em;
-`;
-
 const OptionsBar = styled.div``;
 
 const Option = styled.div`
@@ -121,7 +115,7 @@ class BrowsePage extends Component {
         <Body hasSidebar>
           <Sidebar type={query.type} query={query} filters={filters} onSearch={this.onSearch} />
           <Content>
-            <Title>{t('labels.search_results')}</Title>
+            <h1>{t('labels.search_results')}</h1>
             <OptionsBar>
               <Option>
                 <Label htmlFor="select_sort">{t('labels.sort_by')}</Label>

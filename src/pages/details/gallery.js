@@ -85,9 +85,6 @@ const Secondary = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 3em;
-  line-height: 1.2em;
-  margin-bottom: 0.2em;
   display: none;
   border-bottom: 3px solid ${({ theme }) => theme.colors.primary};
   ${breakpoints.desktop`

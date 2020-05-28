@@ -61,12 +61,6 @@ const Analysis = styled.div`
 
 const MetadataList = styled.div`
   margin-bottom: 24px;
-
-  h1 {
-    font-size: 3em;
-    line-height: 1.2em;
-    margin-bottom: 0.2em;
-  }
 `;
 
 const RelatedVideos = styled.div`

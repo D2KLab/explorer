@@ -40,6 +40,26 @@ export default createGlobalStyle`
     font-weight: bold;
   }
 
+  h1 {
+    font-size: 32px;
+    font-weight: 400;
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: 400;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  h4, h5, h6 {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
   /* NProgress */
   #nprogress {
     pointer-events: none;

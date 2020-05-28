@@ -33,18 +33,6 @@ const Primary = styled.div`
   display: flex;
   flex-direction: column;
 
-  h1 {
-    font-size: 3em;
-    line-height: 1.2em;
-    margin-bottom: 0.2em;
-  }
-
-  h2 {
-    font-size: 2em;
-    line-height: 1.2em;
-    margin-bottom: 0.2em;
-  }
-
   p {
     margin-bottom: 1em;
   }
