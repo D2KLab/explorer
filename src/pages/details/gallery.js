@@ -7,11 +7,11 @@ import Metadata from '@components/Metadata';
 import Tabs, { Tab } from '@components/TabBar';
 import GraphIcon from '@components/GraphIcon';
 import Debug from '@components/Debug';
+import SaveButton from '@components/SaveButton';
 import { breakpoints } from '@styles';
 import { uriToId, idToUri } from '@helpers/utils';
 import config from '~/config';
 import { withTranslation } from '~/i18n';
-
 const { Carousel } = require('react-responsive-carousel');
 
 const sparqlTransformer = require('sparql-transformer').default;
@@ -265,6 +265,7 @@ const GalleryDetailsPage = ({ result, t }) => {
             <MetadataList>
               <Title>{label}</Title>
               <StyledGraphIcon uri={result['@graph']} />
+              <SaveButton type={query.type} item={result} />
               {metadata.flatMap(([metaName, meta]) => {
                 const values = [];
                 if (Array.isArray(meta)) {
