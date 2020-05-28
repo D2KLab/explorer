@@ -1,28 +1,18 @@
 import styled from 'styled-components';
-import { Header, Footer, Layout, Body, Screen, Content } from '@components';
+import { Header, Footer, Layout, Body, Content, Title } from '@components';
 import { Helmet } from 'react-helmet';
 import Link from 'next/link';
 import NextAuth from 'next-auth/client';
 import fetch from 'isomorphic-unfetch';
-
-const Title = styled.h1`
-  padding-left: 80px;
-  padding-bottom: 60px;
-  align-self: end;
-  text-shadow: 0px 4px 3px rgba(0, 0, 0, 0.2), 0px 8px 13px rgba(0, 0, 0, 0.1),
-    0px 18px 23px rgba(0, 0, 0, 0.1);
-  word-break: break-all;
-`;
 
 export default ({ session, lists }) => {
   return (
     <Layout>
       <Helmet title="Profile" />
       <Header />
-      <Screen>
+      <Body>
+        <Title>{session.user.name}</Title>
         <Content>
-          <Title>{session.user.name}</Title>
-
           <h2>Saved lists</h2>
           <ul>
             {lists.map((list) => (
@@ -34,7 +24,7 @@ export default ({ session, lists }) => {
             ))}
           </ul>
         </Content>
-      </Screen>
+      </Body>
       <Footer />
     </Layout>
   );

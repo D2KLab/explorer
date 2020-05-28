@@ -19,6 +19,12 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
 
+  min-height: calc(
+    100vh -
+      ${({ theme }) =>
+        `${theme.header.height} - ${theme.header.borderBottomWidth} - ${theme.footer.minHeight}`}
+  );
+
   ${({ hasSidebar }) =>
     hasSidebar
       ? css`

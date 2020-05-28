@@ -2,6 +2,7 @@
 export { default as Body } from './Body';
 export { default as Burger } from './Burger';
 export { default as Content } from './Content';
+export { default as Title } from './Title';
 export { default as Footer } from './Footer';
 export { default as Header } from './Header';
 export { default as Layout } from './Layout';
@@ -9,7 +10,6 @@ export { default as Media } from './Media';
 export { default as Menu } from './Menu';
 export { default as Metadata } from './Metadata';
 export { default as MultiSelect } from './MultiSelect';
-export { default as Screen } from './Screen';
 export { default as SearchBox } from './SearchBox';
 export { default as Select } from './Select';
 export { default as Sidebar } from './Sidebar';

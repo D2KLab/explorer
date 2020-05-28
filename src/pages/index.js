@@ -7,7 +7,7 @@ import { useDropzone } from 'react-dropzone';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
 import { Camera } from '@styled-icons/boxicons-solid/Camera';
 
-import { Layout, Header, Footer, Screen } from '@components';
+import { Layout, Header, Footer, Body } from '@components';
 import { breakpoints } from '@styles';
 import SearchInput from '@components/SearchInput';
 import { withTranslation } from '~/i18n';
@@ -140,7 +140,7 @@ const SearchForm = styled.form`
   align-items: center;
   flex-grow: 1;
   max-width: 90%;
-  background-color: rgba(255,255,255,0.95);
+  background-color: rgba(255, 255, 255, 0.95);
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12),
     0 1px 5px 0 rgba(0, 0, 0, 0.2);
   position: relative;
@@ -268,7 +268,7 @@ const HomePage = ({ t }) => {
     <Layout>
       <Helmet title="Home" />
       <Header />
-      <Screen>
+      <Body>
         <Hero>
           <HeroTop>
             {config.home.hero.headline ? <Title>{config.home.hero.headline}</Title> : null}
@@ -314,18 +314,23 @@ const HomePage = ({ t }) => {
           <HeroBottom>
             <Subtitle>{t('home:browse_by')}</Subtitle>
             <ButtonsContainer>
-              {Object.keys(config.routes).filter(routeName => config.routes[routeName].showInNavbar !== false).flatMap((routeName) => (
-                <Link key={routeName} href={`/${routeName}`} passHref>
-                  <BigButton background={config.routes[routeName].backgroundColor || '#c6c6c6'} color={config.routes[routeName].textColor || '#000000'}>
-                    {t(`routes.${routeName}`)}
-                  </BigButton>
-                </Link>
-              ))}
+              {Object.keys(config.routes)
+                .filter((routeName) => config.routes[routeName].showInNavbar !== false)
+                .flatMap((routeName) => (
+                  <Link key={routeName} href={`/${routeName}`} passHref>
+                    <BigButton
+                      background={config.routes[routeName].backgroundColor || '#c6c6c6'}
+                      color={config.routes[routeName].textColor || '#000000'}
+                    >
+                      {t(`routes.${routeName}`)}
+                    </BigButton>
+                  </Link>
+                ))}
             </ButtonsContainer>
           </HeroBottom>
         </Hero>
         <Footer />
-      </Screen>
+      </Body>
     </Layout>
   );
 };

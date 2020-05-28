@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
 import LazyLoad from 'react-lazyload';
 
-import { Header, Footer, Layout, Screen, Media } from '@components';
+import { Header, Footer, Layout, Body, Media } from '@components';
 import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import { breakpoints } from '@styles';
@@ -77,7 +77,7 @@ const CollectionDetailsPage = ({ result }) => {
     <Layout>
       <Helmet title={`${label}`} />
       <Header />
-      <Screen>
+      <Body>
         <Columns>
           <Primary>
             <h1>{label}</h1>
@@ -122,7 +122,7 @@ const CollectionDetailsPage = ({ result }) => {
           </Primary>
           <Secondary />
         </Columns>
-      </Screen>
+      </Body>
       <Footer />
     </Layout>
   );

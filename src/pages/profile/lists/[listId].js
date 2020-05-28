@@ -5,16 +5,7 @@ import NextAuth from 'next-auth/client';
 import fetch from 'isomorphic-unfetch';
 import { uriToId } from '@helpers/utils';
 
-import { Header, Footer, Layout, Body, Content } from '@components';
-
-const Title = styled.h1`
-  padding-left: 80px;
-  padding-bottom: 60px;
-  align-self: end;
-  text-shadow: 0px 4px 3px rgba(0, 0, 0, 0.2), 0px 8px 13px rgba(0, 0, 0, 0.1),
-    0px 18px 23px rgba(0, 0, 0, 0.1);
-  word-break: break-all;
-`;
+import { Header, Footer, Layout, Body, Content, Title } from '@components';
 
 export default ({ list }) => {
   return (
@@ -22,9 +13,8 @@ export default ({ list }) => {
       <Helmet title={list.name} />
       <Header />
       <Body>
+        <Title>{list.name}</Title>
         <Content>
-          <Title>{list.name}</Title>
-
           <h2>Items in the list</h2>
           {list.items.map((item) => (
             <Link key={item} href={`/objects/${uriToId(item)}`} passHref>

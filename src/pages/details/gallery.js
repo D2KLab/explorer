@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
 
-import { Header, Footer, Layout, Screen, Media } from '@components';
+import { Header, Footer, Layout, Body, Media } from '@components';
 import Metadata from '@components/Metadata';
 import Tabs, { Tab } from '@components/TabBar';
 import GraphIcon from '@components/GraphIcon';
@@ -218,7 +218,7 @@ const GalleryDetailsPage = ({ result, t }) => {
     <Layout>
       <Helmet title={`${label}`} />
       <Header />
-      <Screen>
+      <Body>
         <Columns>
           <Primary>
             <MobileTitle>{label}</MobileTitle>
@@ -315,7 +315,7 @@ const GalleryDetailsPage = ({ result, t }) => {
             </RelatedVideos> */}
           </Secondary>
         </Columns>
-      </Screen>
+      </Body>
       <Footer />
     </Layout>
   );
