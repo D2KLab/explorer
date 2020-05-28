@@ -142,7 +142,7 @@ const renderSessionMenuItems = (session, menu) => {
       >
         Signed in as <strong>{session.user.name}</strong>
       </StyledMenuItem>
-      <StyledDivider {...menu} />
+      <StyledDivider />
       <StyledMenuItem
         {...menu}
         onClick={() => {
@@ -165,7 +165,7 @@ const renderSessionMenuItems = (session, menu) => {
       >
         Your favorites
       </StyledMenuItem>
-      <StyledDivider {...menu} />
+      <StyledDivider />
       <StyledMenuItem
         {...menu}
         onClick={() => {
