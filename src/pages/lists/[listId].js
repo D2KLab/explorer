@@ -56,10 +56,10 @@ export default ({ isOwner, list, shareLink, error }) => {
 
 export async function getServerSideProps({ req, res, query }) {
   // Fetch the list
-  const host = req ? req.headers['x-forwarded-host'] || req.headers.host : window.location.hostname;
-  const protocol = host.indexOf('localhost') > -1 ? 'http:' : 'https:';
-  const listApiRes = await fetch(`${protocol}//${host}/api/lists/${query.listId}`, {
-    headers: req.headers,
+  const listApiRes = await fetch(`${process.env.SITE}/api/lists/${query.listId}`, {
+    headers: {
+      cookie: req.headers.cookie,
+    },
   });
   const list = await listApiRes.json();
 
@@ -74,8 +74,10 @@ export async function getServerSideProps({ req, res, query }) {
   }
 
   // Get current user
-  const userApiRes = await fetch(`${protocol}//${host}/api/profile`, {
-    headers: req.headers,
+  const userApiRes = await fetch(`${process.env.SITE}/api/profile`, {
+    headers: {
+      cookie: req.headers.cookie,
+    },
   });
   const user = await userApiRes.json();
 

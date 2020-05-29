@@ -40,10 +40,10 @@ export async function getServerSideProps({ req, res }) {
     return { props: {} };
   }
 
-  const host = req ? req.headers['x-forwarded-host'] || req.headers.host : window.location.hostname;
-  const protocol = host.indexOf('localhost') > -1 ? 'http:' : 'https:';
-  const apiRes = await fetch(`${protocol}//${host}/api/profile/lists`, {
-    headers: req.headers,
+  const apiRes = await fetch(`${process.env.SITE}/api/profile/lists`, {
+    headers: {
+      cookie: req.headers.cookie,
+    },
   });
   const lists = await apiRes.json();
 
