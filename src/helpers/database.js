@@ -27,6 +27,23 @@ export const getListById = async (listId) => {
   return db.collection('list').findOne({ _id: new ObjectID(listId) });
 };
 
+export const updateList = async (list, newValues) => {
+  console.log('updateList:', list, newValues);
+  const db = await connectToDatabase();
+  const res = await db.collection('list').findOneAndUpdate(
+    {
+      _id: new ObjectID(list._id),
+    },
+    {
+      $set: { ...newValues },
+    },
+    {
+      returnNewDocument: true,
+    }
+  );
+  return res.value;
+};
+
 export const removeItemFromList = async (itemUri, list) => {
   const db = await connectToDatabase();
   const res = await db.collection('list').findOneAndUpdate(

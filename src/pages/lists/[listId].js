@@ -4,13 +4,66 @@ import { Helmet } from 'react-helmet';
 import Link from 'next/link';
 import fetch from 'isomorphic-unfetch';
 import Router from 'next/router';
+import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
+import { DotsHorizontalRounded as SettingsIcon } from '@styled-icons/boxicons-regular/DotsHorizontalRounded';
 
 import { uriToId } from '@helpers/utils';
-import { Header, Footer, Layout, Body, Content, Title, Paragraph, Media } from '@components';
+import {
+  Header,
+  Footer,
+  Layout,
+  Body,
+  Content,
+  Title,
+  Paragraph,
+  Media,
+  Navbar,
+  NavItem,
+} from '@components';
 import Button from '@components/Button';
+import Input from '@components/Input';
 import config from '~/config';
 
 const sparqlTransformer = require('sparql-transformer').default;
+
+const StyledDialogBackdrop = styled(DialogBackdrop)`
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 2000;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const StyledDialog = styled(Dialog)`
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.28) 0px 8px 28px;
+  overflow: visible;
+  padding: 32px;
+  outline: 0;
+`;
+
+const StyledDialogDisclosure = styled(DialogDisclosure)`
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover {
+    font-weight: bold;
+  }
+`;
+
+const StyledSettingsIcon = styled(SettingsIcon)`
+  color: #222;
+  height: 24px;
+`;
 
 const StyledMedia = styled(Media)`
   margin-left: var(--card-margin);
@@ -24,6 +77,9 @@ const Results = styled.div`
 
 export default ({ isOwner, list, shareLink, error }) => {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const settingsDialog = useDialogState();
+  const [listName, setListName] = useState(list.name);
 
   const deleteList = async () => {
     setIsDeleting(true);
@@ -35,6 +91,17 @@ export default ({ isOwner, list, shareLink, error }) => {
     });
   };
 
+  const updateSettings = async () => {
+    setIsUpdating(true);
+    await fetch(`/api/lists/${list._id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        name: listName,
+      }),
+    });
+    Router.reload();
+  };
+
   return (
     <Layout>
       <Header />
@@ -42,8 +109,56 @@ export default ({ isOwner, list, shareLink, error }) => {
         {(list && (
           <>
             <Helmet title={list.name} />
-            <Title>{list.name}</Title>
             <Content>
+              <Navbar>
+                <NavItem>
+                  <h1>{list.name}</h1>
+                </NavItem>
+                <NavItem>
+                  {isOwner && (
+                    <>
+                      <StyledDialogDisclosure {...settingsDialog}>
+                        <StyledSettingsIcon />
+                      </StyledDialogDisclosure>
+                      <StyledDialogBackdrop {...settingsDialog}>
+                        <StyledDialog {...settingsDialog} modal aria-label="Settings">
+                          <h2>Settings</h2>
+                          <p>
+                            <label htmlFor="list_name">Name</label>
+                          </p>
+                          <Input
+                            id="list_name"
+                            name="name"
+                            type="text"
+                            placeholder="List name"
+                            value={listName}
+                            onChange={(e) => setListName(e.target.value)}
+                          />
+                          <Button
+                            type="button"
+                            onClick={() => {
+                              setListName(list.name);
+                              settingsDialog.hide();
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            type="button"
+                            loading={isUpdating}
+                            onClick={async () => {
+                              await updateSettings();
+                              settingsDialog.hide();
+                            }}
+                          >
+                            Save
+                          </Button>
+                        </StyledDialog>
+                      </StyledDialogBackdrop>
+                    </>
+                  )}
+                </NavItem>
+              </Navbar>
               {isOwner && (
                 <>
                   <Paragraph>
