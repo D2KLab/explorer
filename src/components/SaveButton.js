@@ -122,7 +122,7 @@ const SaveButton = ({ item }) => {
         name: newListName,
       }),
     });
-    const newList = res.json();
+    const newList = await res.json();
 
     // Reset form
     setNewListName('');
