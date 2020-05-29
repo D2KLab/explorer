@@ -1,5 +1,5 @@
 module.exports = {
-  debug: true,
+  debug: typeof process !== 'undefined' && process.env.NODE_ENV === 'development',
   metadata: {
     title: 'Silknow',
     logo: '/images/silknow-logo.png',
