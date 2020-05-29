@@ -77,8 +77,8 @@ export const addItemToList = async (itemUri, list) => {
 };
 
 export const getSessionUser = async (session) => {
-  if (typeof session !== 'object' || typeof session.accessToken !== 'string') {
-    return Promise.reject();
+  if (typeof session !== 'object' || session === null || typeof session.accessToken !== 'string') {
+    return null;
   }
 
   const db = await connectToDatabase();
