@@ -94,7 +94,7 @@ export async function getServerSideProps({ req, res, query }) {
     props: {
       list,
       isOwner,
-      shareLink: `${protocol}//${host}/lists/${list._id}`,
+      shareLink: `${process.env.SITE}/lists/${list._id}`,
     },
   };
 }
