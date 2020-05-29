@@ -1,33 +1,15 @@
 import NextAuth from 'next-auth/client';
-import { MongoClient, ObjectID } from 'mongodb';
 
-let cachedDb = null;
-
-async function connectToDatabase() {
-  if (cachedDb) {
-    // Using existing connection
-    return Promise.resolve(cachedDb);
-  }
-
-  return MongoClient.connect(process.env.MONGODB_URI, {
-    native_parser: true,
-    useUnifiedTopology: true,
-  })
-    .then((client) => {
-      cachedDb = client.db();
-      return cachedDb;
-    })
-    .catch((error) => {
-      console.log('Mongo connect Error');
-      console.log(error);
-    });
-}
+import {
+  getListById,
+  getSessionUser,
+  removeItemFromList,
+  addItemToList,
+  removeUserList,
+} from '@helpers/database';
 
 export default async (req, res) => {
-  // Connect to database
-  const db = await connectToDatabase();
-
-  const list = await db.collection('list').findOne({ _id: new ObjectID(req.query.listId) });
+  const list = await getListById(req.query.listId);
 
   if (!list) {
     res.statusCode = 404;
@@ -42,10 +24,7 @@ export default async (req, res) => {
 
   // Get user informations
   const session = await NextAuth.session({ req });
-  const user =
-    session && session.user
-      ? await db.collection('user').findOne({ email: session.user.email })
-      : null;
+  const user = await getSessionUser(session);
 
   const isOwner = user && list && list.user.equals(user._id);
 

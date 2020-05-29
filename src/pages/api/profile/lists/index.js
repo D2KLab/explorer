@@ -1,27 +1,6 @@
 import NextAuth from 'next-auth/client';
-import { MongoClient, ObjectID } from 'mongodb';
 
-let cachedDb = null;
-
-async function connectToDatabase() {
-  if (cachedDb) {
-    // Using existing connection
-    return Promise.resolve(cachedDb);
-  }
-
-  return MongoClient.connect(process.env.MONGODB_URI, {
-    native_parser: true,
-    useUnifiedTopology: true,
-  })
-    .then((client) => {
-      cachedDb = client.db();
-      return cachedDb;
-    })
-    .catch((error) => {
-      console.log('Mongo connect Error');
-      console.log(error);
-    });
-}
+import { getSessionUser, getUserLists, createUserList } from '@helpers/database';
 
 export default async (req, res) => {
   const session = await NextAuth.session({ req });
@@ -37,31 +16,23 @@ export default async (req, res) => {
     return;
   }
 
-  // Connect to database
-  const db = await connectToDatabase();
-
   // Get user informations
-  const user = await db.collection('user').findOne({ email: session.user.email });
+  const user = await getSessionUser(session);
 
   if (req.method === 'GET') {
     // Get user lists
-    const lists = await db
-      .collection('list')
-      .find({ user: new ObjectID(user._id) })
-      .toArray();
+    const lists = await getUserLists(user);
+
     res.status(200).json(lists);
   } else if (req.method === 'POST') {
     const body = JSON.parse(req.body);
 
     // Insert new list
-    const list = (
-      await db.collection('list').insertOne({
-        user: new ObjectID(user._id),
-        name: body.name,
-        is_public: true,
-        items: [],
-      })
-    ).value;
+    const list = await createUserList(user, {
+      name: body.name,
+      is_public: true,
+      items: [],
+    });
 
     res.status(200).json(list);
   }
