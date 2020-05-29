@@ -54,12 +54,14 @@ export default async (req, res) => {
     const body = JSON.parse(req.body);
 
     // Insert new list
-    const list = await db.collection('list').insert({
-      user: new ObjectID(user._id),
-      name: body.name,
-      is_public: true,
-      items: [],
-    });
+    const list = (
+      await db.collection('list').insertOne({
+        user: new ObjectID(user._id),
+        name: body.name,
+        is_public: true,
+        items: [],
+      })
+    ).value;
 
     res.status(200).json(list);
   }
