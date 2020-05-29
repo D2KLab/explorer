@@ -20,6 +20,7 @@ export default ({ session, lists }) => {
                 <Link href={`/lists/${list._id}`} passHref>
                   <a>{list.name}</a>
                 </Link>
+                {` (${list.items.length})`}
               </li>
             ))}
           </ul>
