@@ -28,7 +28,23 @@ export default async (req, res) => {
 
   const isOwner = user && list && list.user.equals(user._id);
 
-  if (!list.is_public && !isOwner) {
+  if (req.method === 'GET') {
+    res.status(200).json(list);
+
+    if (!list.is_public && !isOwner) {
+      res.statusCode = 403;
+      res.json({
+        error: {
+          status: 403,
+          message: 'Forbidden',
+        },
+      });
+      return;
+    }
+  }
+
+  // Owner operations
+  if (!isOwner) {
     res.statusCode = 403;
     res.json({
       error: {
@@ -41,35 +57,15 @@ export default async (req, res) => {
 
   if (req.method === 'PUT') {
     // Update the list
-    if (!isOwner) {
-      res.statusCode = 403;
-      res.json({
-        error: {
-          status: 403,
-          message: 'Forbidden',
-        },
-      });
-      return;
-    }
-
     const body = JSON.parse(req.body);
     const inList = list.items.includes(body.item);
-    const updatedList = (
-      await db.collection('list').findOneAndUpdate(
-        {
-          _id: new ObjectID(list._id),
-        },
-        {
-          [inList ? '$pull' : '$push']: { items: body.item },
-        },
-        {
-          returnNewDocument: true,
-        }
-      )
-    ).value;
+    const updatedList = inList
+      ? await removeItemFromList(body.item, list)
+      : addItemToList(body.item, list);
     res.status(200).json(updatedList);
-    return;
+  } else if (req.method === 'DELETE') {
+    // Delete the list
+    await removeUserList(user, list);
+    res.status(200).json({});
   }
-
-  res.status(200).json(list);
 };

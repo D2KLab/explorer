@@ -1,11 +1,26 @@
+import { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import Link from 'next/link';
 import fetch from 'isomorphic-unfetch';
+import Router from 'next/router';
 
 import { uriToId } from '@helpers/utils';
 import { Header, Footer, Layout, Body, Content, Title, Paragraph } from '@components';
+import Button from '@components/Button';
 
 export default ({ isOwner, list, shareLink, error }) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const deleteList = async () => {
+    setIsDeleting(true);
+    await fetch(`/api/lists/${list._id}`, {
+      method: 'DELETE',
+    });
+    Router.push({
+      pathname: '/profile',
+    });
+  };
+
   return (
     <Layout>
       <Header />
@@ -36,6 +51,14 @@ export default ({ isOwner, list, shareLink, error }) => {
                 ))
               ) : (
                 <Paragraph>This list is empty!</Paragraph>
+              )}
+              {isOwner && (
+                <>
+                  <h2>Operations</h2>
+                  <Button onClick={deleteList} loading={isDeleting}>
+                    Delete list
+                  </Button>
+                </>
               )}
             </Content>
           </>
