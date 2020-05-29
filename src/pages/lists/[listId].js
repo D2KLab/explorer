@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import Link from 'next/link';
@@ -5,8 +6,21 @@ import fetch from 'isomorphic-unfetch';
 import Router from 'next/router';
 
 import { uriToId } from '@helpers/utils';
-import { Header, Footer, Layout, Body, Content, Title, Paragraph } from '@components';
+import { Header, Footer, Layout, Body, Content, Title, Paragraph, Media } from '@components';
 import Button from '@components/Button';
+import config from '~/config';
+
+const sparqlTransformer = require('sparql-transformer').default;
+
+const StyledMedia = styled(Media)`
+  margin-left: var(--card-margin);
+  margin-right: var(--card-margin);
+`;
+
+const Results = styled.div`
+  display: flex;
+  --card-margin: 12px;
+`;
 
 export default ({ isOwner, list, shareLink, error }) => {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -44,11 +58,21 @@ export default ({ isOwner, list, shareLink, error }) => {
               )}
               <h2>Items in the list</h2>
               {list.items.length > 0 ? (
-                list.items.map((item) => (
-                  <Link key={item} href={`/objects/${uriToId(item)}`} passHref>
-                    <a>{item}</a>
-                  </Link>
-                ))
+                <Results>
+                  {list.items.map((item) => {
+                    return (
+                      <StyledMedia
+                        key={item.id}
+                        title={item.title}
+                        subtitle={item.subtitle}
+                        thumbnail={item.image}
+                        direction="column"
+                        link={`/${item.route}/${uriToId(item.id)}`}
+                        uri={item.graph}
+                      />
+                    );
+                  })}
+                </Results>
               ) : (
                 <Paragraph>This list is empty!</Paragraph>
               )}
@@ -111,6 +135,54 @@ export async function getServerSideProps({ req, res, query }) {
     res.statusCode = 302;
     res.end();
     return { props: {} };
+  }
+
+  // Get details (title, image, ...) for each item in the list
+  for (let i = 0; i < list.items.length; i += 1) {
+    const item = list.items[i];
+    const [routeName, route] = Object.entries(config.routes).find(([, r]) => {
+      return r.uriBase && item.startsWith(r.uriBase);
+    });
+
+    if (route) {
+      const searchQuery = JSON.parse(JSON.stringify(route.query));
+      searchQuery.$filter = `?id = <${item}>`;
+
+      try {
+        if (config.debug) {
+          console.log('searchQuery:', JSON.stringify(searchQuery, null, 2));
+        }
+        const res = await sparqlTransformer(searchQuery, {
+          endpoint: config.api.endpoint,
+          debug: config.debug,
+        });
+        const result = res['@graph'][0];
+
+        let mainImage = null;
+        if (result.representation && result.representation.image) {
+          mainImage = Array.isArray(result.representation.image)
+            ? result.representation.image.shift()
+            : result.representation.image;
+        } else if (Array.isArray(result.representation)) {
+          mainImage =
+            result.representation[0].image ||
+            result.representation[0]['@id'] ||
+            result.representation[0];
+        }
+        const label = route.labelFunc(result);
+
+        list.items[i] = {
+          id: result['@id'],
+          title: label,
+          subtitle: result.time && result.time.label ? result.time.label : '',
+          image: mainImage,
+          graph: result['@graph'],
+          route: routeName,
+        };
+      } catch (err) {
+        console.error(err);
+      }
+    }
   }
 
   return {
