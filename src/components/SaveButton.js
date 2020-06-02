@@ -77,16 +77,20 @@ const StyledItem = styled.li`
 `;
 
 const SaveButton = ({ item }) => {
+  const [loading, setLoading] = useState(false);
   const [lists, setLists] = useState([]);
   const [newListName, setNewListName] = useState('');
   const [listFormVisible, setListFormVisible] = useState(false);
   const dialog = useDialogState();
 
   const loadLists = async () => {
+    setLoading(true);
+
     const res = await fetch('/api/profile/lists');
     const loadedLists = await res.json();
 
     setLists(loadedLists);
+    setLoading(false);
 
     // Show new list form if the user has no lists yet
     if (!listFormVisible) {
@@ -176,20 +180,24 @@ const SaveButton = ({ item }) => {
               Create a new list
             </Button>
           )}
-          <StyledList>
-            {lists.map((list) => {
-              const isItemInList = list.items.includes(item['@id']);
-              return (
-                <StyledItem
-                  key={list._id}
-                  onClick={() => (isItemInList ? removeFromList(list) : addToList(list))}
-                >
-                  <StyledHeartIcon as={isItemInList ? HeartSolidIcon : HeartIcon} />
-                  <StyledLabel>{list.name}</StyledLabel>
-                </StyledItem>
-              );
-            })}
-          </StyledList>
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <StyledList>
+              {lists.map((list) => {
+                const isItemInList = list.items.includes(item['@id']);
+                return (
+                  <StyledItem
+                    key={list._id}
+                    onClick={() => (isItemInList ? removeFromList(list) : addToList(list))}
+                  >
+                    <StyledHeartIcon as={isItemInList ? HeartSolidIcon : HeartIcon} />
+                    <StyledLabel>{list.name}</StyledLabel>
+                  </StyledItem>
+                );
+              })}
+            </StyledList>
+          )}
         </StyledDialog>
       </StyledDialogBackdrop>
     </div>
