@@ -45,7 +45,8 @@
     "sqlite3": "^4.2.0",
     "styled-components": "^5.1.0",
     "styled-icons": "^10.2.1",
-    "styled-reset": "^4.1.5"
+    "styled-reset": "^4.1.5",
+    "styled-system": "^5.1.5"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",

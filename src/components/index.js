@@ -1,4 +1,5 @@
 /* eslint-disable import/no-cycle */
+export { default as Element } from './Element';
 export { default as Body } from './Body';
 export { default as Burger } from './Burger';
 export { default as Content } from './Content';

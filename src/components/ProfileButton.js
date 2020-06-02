@@ -6,11 +6,11 @@ import { User } from '@styled-icons/boxicons-solid/User';
 import NextAuth from 'next-auth/client';
 import Router from 'next/router';
 
+import { Element } from '@components';
+
 /**
  * Profile button.
  */
-
-export const Container = styled.div``;
 
 const StyledMenu = styled(Menu)`
   padding-top: 4px;
@@ -188,9 +188,8 @@ const ProfileButton = () => {
   const menu = useMenuState();
   const [session, loading] = NextAuth.useSession();
 
-  return (
-    <Container>
-      {loading && <Spinner size="24" />}
+  const renderMenu = () => (
+    <>
       <StyledMenuButton {...menu}>
         {session && session.user && session.user.image ? (
           <StyledUserIcon as="img" src={session.user.image} alt="" />
@@ -217,8 +216,10 @@ const ProfileButton = () => {
           </StyledMenuItem>
         )}
       </StyledMenu>
-    </Container>
+    </>
   );
+
+  return <Element display="flex">{loading ? <Spinner size="24" /> : renderMenu()}</Element>;
 };
 
 export default ProfileButton;

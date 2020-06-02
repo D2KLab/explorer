@@ -7,6 +7,7 @@ import { breakpoints } from '@styles';
  */
 
 export const Container = styled.div`
+  flex: 1;
   padding: 12px 24px;
 
   ${breakpoints.weirdMedium`

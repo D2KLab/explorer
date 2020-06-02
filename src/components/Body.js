@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components';
 
-import { Container as ContentContainer } from '@components/Content';
 import { breakpoints } from '@styles';
 
 /**
@@ -33,10 +32,6 @@ export const Container = styled.div`
     `}
         `
       : null};
-
-  ${ContentContainer} {
-    flex: 1;
-  }
 `;
 
 const Body = ({ className, hasSidebar, children }) => {

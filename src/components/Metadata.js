@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Element } from '@components';
 
 /**
  * Metadata with label and value(s).
@@ -9,10 +10,6 @@ import styled from 'styled-components';
  * </Metadata>
  * ```
  */
-
-const Container = styled.div`
-  margin-bottom: 1em;
-`;
 
 const Label = styled.span`
   display: block;
@@ -29,10 +26,10 @@ const Data = styled.span`
 
 const Metadata = ({ className, label, children }) => {
   return (
-    <Container className={className}>
+    <Element marginY="1em" className={className}>
       <Label>{label}</Label>
       <Data>{children}</Data>
-    </Container>
+    </Element>
   );
 };
 

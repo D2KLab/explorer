@@ -2,13 +2,11 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
+import { Element } from '@components';
+
 /**
  * Pagination component.
  */
-
-const Container = styled.div`
-  margin-bottom: 24px;
-`;
 
 const PageButton = styled.span`
   padding: 0 4px;
@@ -47,7 +45,7 @@ const Pagination = ({ totalPages, currentPage, onChange }) => {
     );
   }
 
-  return <Container>{links}</Container>;
+  return <Element marginBottom={24}>{links}</Element>;
 };
 
 export default Pagination;

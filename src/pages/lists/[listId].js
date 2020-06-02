@@ -7,7 +7,18 @@ import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit
 import { DotsHorizontalRounded as SettingsIcon } from '@styled-icons/boxicons-regular/DotsHorizontalRounded';
 
 import { uriToId } from '@helpers/utils';
-import { Header, Footer, Layout, Body, Content, Title, Media, Navbar, NavItem } from '@components';
+import {
+  Header,
+  Footer,
+  Layout,
+  Body,
+  Content,
+  Title,
+  Media,
+  Navbar,
+  NavItem,
+  Element,
+} from '@components';
 import Button from '@components/Button';
 import Input from '@components/Input';
 import config from '~/config';
@@ -60,7 +71,10 @@ const StyledMedia = styled(Media)`
 
 const Results = styled.div`
   display: flex;
+  flex-wrap: wrap;
+
   --card-margin: 12px;
+  margin: 0 calc(-1 * var(--card-margin));
 `;
 
 export default ({ isOwner, list, shareLink, error }) => {
@@ -90,6 +104,51 @@ export default ({ isOwner, list, shareLink, error }) => {
     Router.reload();
   };
 
+  const renderListItems = () => {
+    return (
+      <Element marginY={24}>
+        <h2>Items in the list</h2>
+        <Element marginY={12}>
+          {list.items.length > 0 ? (
+            <Results>
+              {list.items.map((item) => {
+                return (
+                  <StyledMedia
+                    key={item.id}
+                    title={item.title}
+                    subtitle={item.subtitle}
+                    thumbnail={item.image}
+                    direction="column"
+                    link={`/${item.route}/${uriToId(item.id)}`}
+                    uri={item.graph}
+                  />
+                );
+              })}
+            </Results>
+          ) : (
+            <p>This list is empty!</p>
+          )}
+        </Element>
+      </Element>
+    );
+  };
+
+  const renderOperations = () => {
+    if (!isOwner) {
+      return null;
+    }
+    return (
+      <Element marginY={24}>
+        <h2>Operations</h2>
+        <Element marginY={12}>
+          <Button onClick={deleteList} loading={isDeleting}>
+            Delete list
+          </Button>
+        </Element>
+      </Element>
+    );
+  };
+
   return (
     <Layout>
       <Header />
@@ -110,10 +169,12 @@ export default ({ isOwner, list, shareLink, error }) => {
                       </StyledDialogDisclosure>
                       <StyledDialogBackdrop {...settingsDialog}>
                         <StyledDialog {...settingsDialog} modal aria-label="Settings">
-                          <h2>Settings</h2>
-                          <p>
+                          <Element marginBottom={24}>
+                            <h2>Settings</h2>
+                          </Element>
+                          <Element display="inline-block" paddingRight={12}>
                             <label htmlFor="list_name">Name</label>
-                          </p>
+                          </Element>
                           <Input
                             id="list_name"
                             name="name"
@@ -122,25 +183,27 @@ export default ({ isOwner, list, shareLink, error }) => {
                             value={listName}
                             onChange={(e) => setListName(e.target.value)}
                           />
-                          <Button
-                            type="button"
-                            onClick={() => {
-                              setListName(list.name);
-                              settingsDialog.hide();
-                            }}
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            type="button"
-                            loading={isUpdating}
-                            onClick={async () => {
-                              await updateSettings();
-                              settingsDialog.hide();
-                            }}
-                          >
-                            Save
-                          </Button>
+                          <Element display="flex" justifyContent="space-between" marginTop={24}>
+                            <Button
+                              type="button"
+                              onClick={() => {
+                                setListName(list.name);
+                                settingsDialog.hide();
+                              }}
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              type="button"
+                              loading={isUpdating}
+                              onClick={async () => {
+                                await updateSettings();
+                                settingsDialog.hide();
+                              }}
+                            >
+                              Save
+                            </Button>
+                          </Element>
                         </StyledDialog>
                       </StyledDialogBackdrop>
                     </>
@@ -159,34 +222,8 @@ export default ({ isOwner, list, shareLink, error }) => {
                   )}
                 </>
               )}
-              <h2>Items in the list</h2>
-              {list.items.length > 0 ? (
-                <Results>
-                  {list.items.map((item) => {
-                    return (
-                      <StyledMedia
-                        key={item.id}
-                        title={item.title}
-                        subtitle={item.subtitle}
-                        thumbnail={item.image}
-                        direction="column"
-                        link={`/${item.route}/${uriToId(item.id)}`}
-                        uri={item.graph}
-                      />
-                    );
-                  })}
-                </Results>
-              ) : (
-                <p>This list is empty!</p>
-              )}
-              {isOwner && (
-                <>
-                  <h2>Operations</h2>
-                  <Button onClick={deleteList} loading={isDeleting}>
-                    Delete list
-                  </Button>
-                </>
-              )}
+              {renderListItems()}
+              {renderOperations()}
             </Content>
           </>
         )) || (

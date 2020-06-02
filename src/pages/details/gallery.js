@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
 
-import { Header, Footer, Layout, Body, Media } from '@components';
+import { Header, Footer, Layout, Body, Media, Element } from '@components';
 import Metadata from '@components/Metadata';
 import Tabs, { Tab } from '@components/TabBar';
 import GraphIcon from '@components/GraphIcon';
@@ -87,6 +87,9 @@ const Secondary = styled.div`
 const Title = styled.h1`
   display: none;
   border-bottom: 3px solid ${({ theme }) => theme.colors.primary};
+  font-size: 48px;
+  line-height: 1.25;
+
   ${breakpoints.desktop`
     display: block;
   `}
@@ -262,10 +265,12 @@ const GalleryDetailsPage = ({ result, t }) => {
             </Debug>
           </Primary>
           <Secondary>
-            <MetadataList>
-              <Title>{label}</Title>
+            <Title>{label}</Title>
+            <Element marginY={12} display="flex">
               <StyledGraphIcon uri={result['@graph']} />
               <SaveButton type={query.type} item={result} />
+            </Element>
+            <MetadataList>
               {metadata.flatMap(([metaName, meta]) => {
                 const values = [];
                 if (Array.isArray(meta)) {

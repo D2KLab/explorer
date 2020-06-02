@@ -2,7 +2,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 
 import { breakpoints } from '@styles';
-import SearchBox from '@components/SearchBox';
+import { SearchBox } from '@components';
 import LanguageSwitch, { Container as LanguageSwitchContainer } from '@components/LanguageSwitch';
 import ProfileButton, { Container as ProfileButtonContainer } from '@components/ProfileButton';
 
@@ -19,14 +19,22 @@ const Container = styled.div`
   border-bottom: ${({ theme }) => theme.header.borderBottomWidth} solid #dcdcdc;
   display: flex;
   align-items: center;
+`;
 
-  ${LanguageSwitchContainer}, ${ProfileButtonContainer} {
-    display: none;
+const StyledLanguageSwitch = styled(LanguageSwitch)`
+  display: none;
 
-    ${breakpoints.weirdMedium`
-      display: flex;
-    `}
-  }
+  ${breakpoints.weirdMedium`
+    display: flex;
+  `}
+`;
+
+const StyledProfileButton = styled(ProfileButton)`
+  display: none;
+
+  ${breakpoints.weirdMedium`
+    display: flex;
+  `}
 `;
 
 const Logo = styled.div`
@@ -94,20 +102,27 @@ const Header = ({ className, t }) => {
       </Link>
       <NavContainer>
         <NavList>
-          {Object.keys(config.routes).filter(routeName => config.routes[routeName].showInNavbar !== false).flatMap((routeName) => (
-            <NavItem key={routeName}>
-              <Link href={`/${routeName}`} passHref>
-                <NavLink>{t(`routes.${routeName}`, routeName.substr(0, 1).toUpperCase() + routeName.substr(1))}</NavLink>
-              </Link>
-            </NavItem>
-          ))}
+          {Object.keys(config.routes)
+            .filter((routeName) => config.routes[routeName].showInNavbar !== false)
+            .flatMap((routeName) => (
+              <NavItem key={routeName}>
+                <Link href={`/${routeName}`} passHref>
+                  <NavLink>
+                    {t(
+                      `routes.${routeName}`,
+                      routeName.substr(0, 1).toUpperCase() + routeName.substr(1)
+                    )}
+                  </NavLink>
+                </Link>
+              </NavItem>
+            ))}
         </NavList>
       </NavContainer>
       <SearchContainer>
         <SearchBox placeholder={t('search')} />
       </SearchContainer>
-      <LanguageSwitch />
-      <ProfileButton />
+      <StyledLanguageSwitch />
+      <StyledProfileButton />
     </Container>
   );
 };
