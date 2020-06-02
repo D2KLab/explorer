@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import Link from 'next/link';
-import fetch from 'isomorphic-unfetch';
 import Router from 'next/router';
 import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
 import { DotsHorizontalRounded as SettingsIcon } from '@styled-icons/boxicons-regular/DotsHorizontalRounded';

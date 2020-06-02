@@ -3,7 +3,6 @@ import { Header, Footer, Layout, Body, Content, Title } from '@components';
 import { Helmet } from 'react-helmet';
 import Link from 'next/link';
 import NextAuth from 'next-auth/client';
-import fetch from 'isomorphic-unfetch';
 
 export default ({ session, lists }) => {
   return (
