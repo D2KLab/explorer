@@ -7,7 +7,7 @@ import Link from 'next/link';
  */
 
 const Container = styled.div`
-  margin: 20px 0;
+  margin-bottom: 24px;
 `;
 
 const PageButton = styled.span`

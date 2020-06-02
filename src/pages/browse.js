@@ -2,9 +2,8 @@ import { Component } from 'react';
 import styled from 'styled-components';
 import Router, { withRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
-import NProgress from 'nprogress';
 
-import { Header, Footer, Sidebar, Layout, Body, Content, Media } from '@components';
+import { Header, Footer, Sidebar, Layout, Body, Content, Media, Paragraph } from '@components';
 import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import Select from '@components/Select';
@@ -21,24 +20,23 @@ const StyledSelect = styled(Select)`
   flex: 0 1 240px;
 `;
 
-const OptionsBar = styled.div``;
+const StyledTitle = styled.h1`
+  margin-bottom: 12px;
+`;
+
+const OptionsBar = styled.div`
+  margin-bottom: 24px;
+`;
 
 const Option = styled.div`
   display: flex;
   align-items: center;
 `;
 
-const StyledMedia = styled(Media)`
-  margin-left: var(--card-margin);
-  margin-right: var(--card-margin);
-`;
-
 const Results = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-
-  --card-margin: 12px;
-  margin: 24px calc(-1 * var(--card-margin));
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-gap: 1rem;
 
   transition: opacity 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
   opacity: ${({ loading }) => (loading ? 0.25 : 1)};
@@ -46,7 +44,7 @@ const Results = styled.div`
 `;
 
 const Label = styled.label`
-  color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.secondary};
   margin-right: 12px;
 `;
 
@@ -69,14 +67,12 @@ class BrowsePage extends Component {
 
   onDoneLoading = () => {
     this.setState({ isLoading: false });
-    NProgress.done();
   };
 
   onSearch = (fields) => {
     const { router } = this.props;
     const { pathname, query } = router;
     this.setState({ isLoading: true });
-    NProgress.start();
     router.push({
       pathname,
       query: {
@@ -90,7 +86,6 @@ class BrowsePage extends Component {
   onPageChange = (pageIndex) => {
     const { pathname, query } = this.props.router;
     this.setState({ isLoading: true });
-    NProgress.start();
     Router.push({
       pathname,
       query: {
@@ -108,6 +103,39 @@ class BrowsePage extends Component {
 
     const options = [{ label: 'Alphabetically', value: '0' }];
 
+    const renderResults = (results) => {
+      return results.map((result) => {
+        let mainImage = null;
+        if (result.representation && result.representation.image) {
+          mainImage = Array.isArray(result.representation.image)
+            ? result.representation.image.shift()
+            : result.representation.image;
+        } else if (Array.isArray(result.representation)) {
+          mainImage =
+            result.representation[0].image ||
+            result.representation[0]['@id'] ||
+            result.representation[0];
+        }
+        const label = route.labelFunc(result);
+
+        return (
+          <Media
+            key={result['@id']}
+            title={label}
+            subtitle={result.time.label}
+            thumbnail={mainImage}
+            direction="column"
+            link={`/${query.type}/${uriToId(result['@id'])}`}
+            uri={result['@graph']}
+          />
+        );
+      });
+    };
+
+    const renderEmptyResults = () => {
+      return <Paragraph>{t('labels.no_results')}</Paragraph>;
+    };
+
     return (
       <Layout>
         <Helmet title={t('labels.browse', { type: query.type })} />
@@ -115,7 +143,7 @@ class BrowsePage extends Component {
         <Body hasSidebar>
           <Sidebar type={query.type} query={query} filters={filters} onSearch={this.onSearch} />
           <Content>
-            <h1>{t('labels.search_results')}</h1>
+            <StyledTitle>{t('labels.search_results')}</StyledTitle>
             <OptionsBar>
               <Option>
                 <Label htmlFor="select_sort">{t('labels.sort_by')}</Label>
@@ -137,35 +165,14 @@ class BrowsePage extends Component {
                 />
               </Option>
             </OptionsBar>
-            <Results loading={isLoading}>
-              {results.map((result) => {
-                let mainImage = null;
-                if (result.representation && result.representation.image) {
-                  mainImage = Array.isArray(result.representation.image)
-                    ? result.representation.image.shift()
-                    : result.representation.image;
-                } else if (Array.isArray(result.representation)) {
-                  mainImage =
-                    result.representation[0].image ||
-                    result.representation[0]['@id'] ||
-                    result.representation[0];
-                }
-                const label = route.labelFunc(result);
-
-                return (
-                  <StyledMedia
-                    key={result['@id']}
-                    title={label}
-                    subtitle={result.time.label}
-                    thumbnail={mainImage}
-                    direction="column"
-                    link={`/${query.type}/${uriToId(result['@id'])}`}
-                    uri={result['@graph']}
-                  />
-                );
-              })}
-            </Results>
-            <Pagination totalPages={11} currentPage={3} onChange={this.onPageChange} />
+            {results.length > 0 ? (
+              <>
+                <Results loading={isLoading}>{renderResults(results)}</Results>
+                <Pagination totalPages={11} currentPage={3} onChange={this.onPageChange} />
+              </>
+            ) : (
+              renderEmptyResults()
+            )}
             <Debug>
               <Metadata label="HTTP Parameters">
                 <pre>{JSON.stringify(query, null, 2)}</pre>

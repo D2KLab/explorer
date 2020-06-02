@@ -41,11 +41,13 @@ const ButtonsBar = styled.div`
 const ClearButton = styled(Button)`
   background-color: #a6a6a6;
   color: #000;
+  justify-content: center;
 `;
 
 const FilterButton = styled(Button)`
   background-color: ${({ theme }) => theme.colors.primary};
   color: #fff;
+  justify-content: center;
 `;
 
 const Fields = styled.div``;

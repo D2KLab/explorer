@@ -7,7 +7,8 @@
     "search_results": "Résultats de recherche",
     "sort_by": "Trier par",
     "select": "Sélectionner...",
-    "browse": "Parcourir par {{type}}"
+    "browse": "Parcourir par {{type}}",
+    "no_results": "Aucun résultat pour cette recherche"
   },
   "fields": {
     "graph": "Graphe",

@@ -54,7 +54,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: ${({ direction }) => direction};
   max-width: 150px;
-  margin-bottom: 24px;
 
   a {
     text-decoration: none;
