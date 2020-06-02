@@ -61,4 +61,8 @@ export default createGlobalStyle`
     font-size: 16px;
     font-weight: bold;
   }
+
+  p {
+    margin: 1em 0;
+  }
 `;

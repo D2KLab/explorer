@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Router, { withRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
 
-import { Header, Footer, Sidebar, Layout, Body, Content, Media, Paragraph } from '@components';
+import { Header, Footer, Sidebar, Layout, Body, Content, Media } from '@components';
 import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import Select from '@components/Select';
@@ -133,7 +133,7 @@ class BrowsePage extends Component {
     };
 
     const renderEmptyResults = () => {
-      return <Paragraph>{t('labels.no_results')}</Paragraph>;
+      return <p>{t('labels.no_results')}</p>;
     };
 
     return (

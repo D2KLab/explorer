@@ -7,18 +7,7 @@ import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit
 import { DotsHorizontalRounded as SettingsIcon } from '@styled-icons/boxicons-regular/DotsHorizontalRounded';
 
 import { uriToId } from '@helpers/utils';
-import {
-  Header,
-  Footer,
-  Layout,
-  Body,
-  Content,
-  Title,
-  Paragraph,
-  Media,
-  Navbar,
-  NavItem,
-} from '@components';
+import { Header, Footer, Layout, Body, Content, Title, Media, Navbar, NavItem } from '@components';
 import Button from '@components/Button';
 import Input from '@components/Input';
 import config from '~/config';
@@ -160,13 +149,13 @@ export default ({ isOwner, list, shareLink, error }) => {
               </Navbar>
               {isOwner && (
                 <>
-                  <Paragraph>
+                  <p>
                     This list is <strong>{list.is_public ? 'public' : 'private'}</strong>.
-                  </Paragraph>
+                  </p>
                   {list.is_public && (
-                    <Paragraph>
+                    <p>
                       Public link: <a href={shareLink}>{shareLink}</a>
-                    </Paragraph>
+                    </p>
                   )}
                 </>
               )}
@@ -188,7 +177,7 @@ export default ({ isOwner, list, shareLink, error }) => {
                   })}
                 </Results>
               ) : (
-                <Paragraph>This list is empty!</Paragraph>
+                <p>This list is empty!</p>
               )}
               {isOwner && (
                 <>
@@ -205,7 +194,7 @@ export default ({ isOwner, list, shareLink, error }) => {
             <Helmet title={error.message} />
             <Title>List not found</Title>
             <Content>
-              <Paragraph>{error.message}</Paragraph>
+              <p>{error.message}</p>
             </Content>
           </>
         )}
