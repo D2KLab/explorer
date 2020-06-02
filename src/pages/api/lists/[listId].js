@@ -74,6 +74,7 @@ export default async (req, res) => {
     if (typeof body.name === 'string') {
       await updateList(list, {
         name: body.name,
+        is_public: body.is_public,
       });
     }
 

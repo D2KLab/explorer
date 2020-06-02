@@ -45,6 +45,7 @@ const Container = styled.button`
   color: #fff;
   display: flex;
   align-items: center;
+  justify-content: ${({ loading }) => (loading ? 'space-between' : 'center')};
 
   &:hover {
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
