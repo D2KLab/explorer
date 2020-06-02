@@ -14,12 +14,11 @@ import config from '~/config';
 const Container = styled.div`
   background-color: #d9d9d9;
   display: flex;
-  flex: 1;
   flex-direction: column;
   padding: 16px 32px;
 
   ${breakpoints.weirdMedium`
-    max-width: 350px;
+    flex: 1 0 350px;
     min-height: calc(
       100vh - ${({ theme }) =>
         `${theme.header.height} - ${theme.header.borderBottomWidth} - ${theme.footer.minHeight}`}
@@ -41,12 +40,14 @@ const ButtonsBar = styled.div`
 const ClearButton = styled(Button)`
   background-color: #a6a6a6;
   color: #000;
+  flex: 0 1 120px;
   justify-content: center;
 `;
 
 const FilterButton = styled(Button)`
   background-color: ${({ theme }) => theme.colors.primary};
   color: #fff;
+  flex: 0 1 120px;
   justify-content: center;
 `;
 

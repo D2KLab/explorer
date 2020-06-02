@@ -34,7 +34,7 @@ export async function getServerSideProps({ req, res }) {
   const session = await NextAuth.session({ req });
 
   if (!session) {
-    res.setHeader('location', '/api/auth/signin');
+    res.setHeader('location', '/auth/signin');
     res.statusCode = 302;
     res.end();
     return { props: {} };

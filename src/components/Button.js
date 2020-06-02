@@ -35,14 +35,12 @@ const StyledSpinner = styled.svg`
 
 const Container = styled.button`
   font-size: 1rem;
-  flex: 0 1 120px;
   padding: 0.5em;
   appearance: none;
-  background-color: transparent;
   border: none;
   cursor: pointer;
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: #fff;
+  background-color: ${({ bg, theme }) => bg || theme.colors.primary};
+  color: ${({ text, theme }) => text || '#fff'};
   display: flex;
   align-items: center;
   justify-content: ${({ loading }) => (loading ? 'space-between' : 'center')};
@@ -57,9 +55,9 @@ const Container = styled.button`
   pointer-events: ${({ loading }) => (loading ? 'none' : 'auto')};
 `;
 
-const Button = ({ loading = false, children, ...props }) => {
+const Button = ({ loading = false, href, children, ...props }) => {
   return (
-    <Container {...props} loading={loading}>
+    <Container {...props} as={href ? 'a' : null} href={href} loading={loading}>
       {loading && (
         <StyledSpinner viewBox="0 0 50 50">
           <circle className="path" cx="25" cy="25" r="20" fill="none" strokeWidth="2" />

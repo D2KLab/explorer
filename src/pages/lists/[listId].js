@@ -301,7 +301,7 @@ export async function getServerSideProps({ req, res, query }) {
   const isOwner = user && list.user === user._id;
 
   if (!list.is_public && !isOwner) {
-    res.setHeader('location', '/api/auth/signin');
+    res.setHeader('location', '/auth/signin');
     res.statusCode = 302;
     res.end();
     return { props: {} };

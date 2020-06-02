@@ -60,8 +60,10 @@ const StyledMenuItem = styled(MenuItem)`
   padding: 10px;
   font-size: 14px;
   line-height: 1.5;
+  color: inherit;
 
   &:hover {
+    color: inherit;
     text-decoration: underline;
   }
 `;
@@ -171,10 +173,10 @@ const renderSessionMenuItems = (session, menu) => {
       <StyledDivider />
       <StyledMenuItem
         {...menu}
-        onClick={() => {
-          Router.push({
-            pathname: '/api/auth/signout',
-          });
+        href="/api/auth/signout"
+        onClick={(e) => {
+          e.preventDefault();
+          NextAuth.signout();
           menu.hide();
         }}
       >
@@ -205,10 +207,11 @@ const ProfileButton = () => {
         ) : (
           <StyledMenuItem
             {...menu}
-            onClick={() => {
-              Router.push({
-                pathname: '/api/auth/signin',
-              });
+            as="a"
+            href="/api/signin"
+            onClick={(e) => {
+              e.preventDefault();
+              NextAuth.signin();
               menu.hide();
             }}
           >
