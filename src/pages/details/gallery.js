@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
+import NextAuth from 'next-auth/client';
 
 import { Header, Footer, Layout, Body, Media, Element } from '@components';
 import Metadata from '@components/Metadata';
@@ -191,6 +192,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
 
 const GalleryDetailsPage = ({ result, t }) => {
   const { query } = useRouter();
+  const [session] = NextAuth.useSession();
   const route = config.routes[query.type];
 
   const images = [];
@@ -275,7 +277,7 @@ const GalleryDetailsPage = ({ result, t }) => {
             <Title>{label}</Title>
             <Element marginY={12} display="flex">
               <StyledGraphIcon uri={result['@graph']} />
-              <SaveButton type={query.type} item={result} />
+              {session && <SaveButton type={query.type} item={result} />}
             </Element>
             <MetadataList>
               {metadata.flatMap(([metaName, meta]) => {
