@@ -266,30 +266,10 @@ export async function getServerSideProps({ query }) {
     searchQuery.$where = searchQuery.$where || [];
     searchQuery.$filter = searchQuery.$filter || [];
 
-    // Text search
-    if (query.q) {
-      searchQuery.$where.push('?id <http://www.w3.org/2000/01/rdf-schema#label> ?label');
-      searchQuery.$filter.push(`CONTAINS(LCASE(STR(?label)), LCASE("${query.q}"))`);
-    }
-
-    // Graph
-    if (query.graph) {
-      searchQuery.$where.push(`FILTER(?g = <${query.graph}>)`);
-    }
-
-    // Languages
-    if (query.field_languages) {
-      searchQuery.$where.push(
-        'OPTIONAL { ?id <http://www.w3.org/2000/01/rdf-schema#label> ?label }'
-      );
-      searchQuery.$filter.push(
-        query.field_languages.map((lang) => `LANGMATCHES(LANG(?label), "${lang}")`).join(' || ')
-      );
-    }
-
-    // Props filter
     const extraWhere = [];
     const extraFilter = [];
+
+    // Props filter
     for (let i = 0; i < route.filters.length; i += 1) {
       const filter = route.filters[i];
       if (filter.id && query[`field_filter_${filter.id}`]) {
@@ -300,6 +280,25 @@ export async function getServerSideProps({ query }) {
         extraWhere.push(...filter.whereFunc(val));
         extraFilter.push(...filter.filterFunc(val));
       }
+    }
+
+    // Text search
+    if (query.q) {
+      extraWhere.push('?id <http://www.w3.org/2000/01/rdf-schema#label> ?label');
+      extraFilter.push(`CONTAINS(LCASE(STR(?label)), LCASE("${query.q}"))`);
+    }
+
+    // Graph
+    if (query.graph) {
+      extraFilter.push(`?g = <${query.graph}>`);
+    }
+
+    // Languages
+    if (query.field_languages) {
+      extraWhere.push('?id <http://www.w3.org/2000/01/rdf-schema#label> ?label');
+      extraFilter.push(
+        query.field_languages.map((lang) => `LANGMATCHES(LANG(?label), "${lang}")`).join(' || ')
+      );
     }
 
     // Pagination
