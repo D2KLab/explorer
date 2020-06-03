@@ -18,7 +18,7 @@ const Container = styled.div`
   padding: 16px 32px;
 
   ${breakpoints.weirdMedium`
-    flex: 1 0 350px;
+    flex: 0 1 350px;
     min-height: calc(
       100vh - ${({ theme }) =>
         `${theme.header.height} - ${theme.header.borderBottomWidth} - ${theme.footer.minHeight}`}

@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 
+import Content from '@components/Content';
 import { breakpoints } from '@styles';
 
 /**
@@ -27,9 +28,12 @@ export const Container = styled.div`
   ${({ hasSidebar }) =>
     hasSidebar
       ? css`
+          ${Content} {
+            flex: 1;
+          }
           ${breakpoints.weirdMedium`
-      flex-direction: row;
-    `}
+            flex-direction: row;
+          `}
         `
       : null};
 `;
