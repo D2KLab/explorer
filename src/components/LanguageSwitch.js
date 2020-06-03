@@ -22,6 +22,8 @@ const StyledMenu = styled(Menu)`
 
 const StyledMenuButton = styled(MenuButton)`
   background: transparent;
+  color: inherit;
+  font-weight: inherit;
   border: none;
   outline: none;
   cursor: pointer;
@@ -51,13 +53,14 @@ const StyledMenuItem = styled(MenuItem)`
 const StyledDownArrow = styled(DownArrow)`
   width: 0.8em;
   margin: 0 0.2em;
+  color: inherit;
 `;
 
-const LanguageSwitch = ({ i18n }) => {
+const LanguageSwitch = ({ className, i18n }) => {
   const menu = useMenuState();
 
   return (
-    <Element>
+    <Element className={className}>
       <StyledMenuButton {...menu}>
         <span>{config.search.languages[i18n.language]}</span>
         <StyledDownArrow />

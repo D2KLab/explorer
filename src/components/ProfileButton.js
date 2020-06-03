@@ -186,7 +186,7 @@ const renderSessionMenuItems = (session, menu) => {
   );
 };
 
-const ProfileButton = () => {
+const ProfileButton = ({ className }) => {
   const menu = useMenuState();
   const [session, loading] = NextAuth.useSession();
 
@@ -222,7 +222,11 @@ const ProfileButton = () => {
     </>
   );
 
-  return <Element display="flex">{loading ? <Spinner size="24" /> : renderMenu()}</Element>;
+  return (
+    <Element className={className} display="flex">
+      {loading ? <Spinner size="24" /> : renderMenu()}
+    </Element>
+  );
 };
 
 export default ProfileButton;

@@ -87,10 +87,10 @@ const SearchContainer = styled.div`
   padding: 0 1em;
   min-width: 0;
   margin-left: auto;
-  width: 100%;
+  display: none;
 
   ${breakpoints.tablet`
-    width: auto;
+    display: block;
   `}
 `;
 
