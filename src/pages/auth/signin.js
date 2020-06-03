@@ -70,7 +70,6 @@ export default SignInPage;
 
 export async function getServerSideProps(ctx) {
   const providers = await NextAuth.providers(ctx);
-  console.log('providers:', providers);
   return {
     props: {
       providers,
