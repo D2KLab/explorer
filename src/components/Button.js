@@ -39,7 +39,15 @@ const Container = styled.button`
   appearance: none;
   border: none;
   cursor: pointer;
-  background-color: ${({ bg, theme }) => bg || theme.colors.primary};
+  background-color: ${({ bg, theme, primary, secondary }) => {
+    if (primary) {
+      return theme.colors.primary;
+    }
+    if (secondary) {
+      return theme.colors.secondary;
+    }
+    return bg || '#000';
+  }};
   color: ${({ text, theme }) => text || '#fff'};
   display: flex;
   align-items: center;

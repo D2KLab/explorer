@@ -6,6 +6,7 @@ import { Heart as HeartIcon } from '@styled-icons/boxicons-regular/Heart';
 import { Heart as HeartSolidIcon } from '@styled-icons/boxicons-solid/Heart';
 import Button from '@components/Button';
 import Input from '@components/Input';
+import Element from '@components/Element';
 
 const StyledDialog = styled(Dialog)`
   z-index: 2000;
@@ -148,38 +149,48 @@ const SaveButton = ({ item }) => {
       <StyledDialogBackdrop {...dialog}>
         <StyledDialog {...dialog} modal aria-label="Save to a list">
           <h2>Save to a list</h2>
-          {listFormVisible ? (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                createListWithItem();
-              }}
-            >
-              <Input
-                type="text"
-                placeholder="List name"
-                value={newListName}
-                onChange={(e) => setNewListName(e.target.value)}
-                autoFocus
-              />
-              <Button
-                type="button"
-                onClick={() => {
-                  setNewListName('');
-                  setListFormVisible(false);
+          <Element marginY={12}>
+            {listFormVisible ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  createListWithItem();
                 }}
               >
-                Cancel
+                <Input
+                  type="text"
+                  placeholder="List name"
+                  value={newListName}
+                  onChange={(e) => setNewListName(e.target.value)}
+                  autoFocus
+                />
+                <Element
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  marginY={12}
+                >
+                  <Button
+                    type="button"
+                    secondary
+                    onClick={() => {
+                      setNewListName('');
+                      setListFormVisible(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="button" primary onClick={createListWithItem}>
+                    Save
+                  </Button>
+                </Element>
+              </form>
+            ) : (
+              <Button type="button" primary onClick={() => setListFormVisible(true)}>
+                Create a new list
               </Button>
-              <Button type="button" onClick={createListWithItem}>
-                Save
-              </Button>
-            </form>
-          ) : (
-            <Button type="button" onClick={() => setListFormVisible(true)}>
-              Create a new list
-            </Button>
-          )}
+            )}
+          </Element>
           {loading ? (
             <p>Loading...</p>
           ) : (

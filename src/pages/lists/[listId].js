@@ -144,7 +144,7 @@ export default withTheme(({ isOwner, list, shareLink, error, theme }) => {
       <Element marginY={24}>
         <h2>Operations</h2>
         <Element marginY={12}>
-          <Button onClick={deleteList} loading={isDeleting}>
+          <Button onClick={deleteList} primary loading={isDeleting}>
             Delete list
           </Button>
         </Element>
@@ -217,6 +217,7 @@ export default withTheme(({ isOwner, list, shareLink, error, theme }) => {
                           <Element display="flex" justifyContent="space-between" marginTop={24}>
                             <Button
                               type="button"
+                              secondary
                               onClick={() => {
                                 settingsDialog.hide();
                               }}
@@ -225,6 +226,7 @@ export default withTheme(({ isOwner, list, shareLink, error, theme }) => {
                             </Button>
                             <Button
                               type="button"
+                              primary
                               loading={isUpdating}
                               onClick={async () => {
                                 await updateSettings();
