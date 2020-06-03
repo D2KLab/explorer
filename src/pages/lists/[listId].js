@@ -82,6 +82,7 @@ export default withTheme(({ isOwner, list, shareLink, error, theme }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const settingsDialog = useDialogState();
+  const deleteListDialog = useDialogState();
   const [listName, setListName] = useState(list.name);
   const [listPublic, setListPublic] = useState(list.is_public);
 

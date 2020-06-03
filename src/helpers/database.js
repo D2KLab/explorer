@@ -28,7 +28,6 @@ export const getListById = async (listId) => {
 };
 
 export const updateList = async (list, newValues) => {
-  console.log('updateList:', list, newValues);
   const db = await connectToDatabase();
   const res = await db.collection('list').findOneAndUpdate(
     {
@@ -143,4 +142,28 @@ export const removeUserList = async (user, list) => {
       justOne: true,
     }
   );
+};
+
+export const deleteUser = async (user) => {
+  const db = await connectToDatabase();
+
+  // Delete all user lists
+  await db.collection('list').remove({
+    user: new ObjectID(user._id),
+  });
+
+  // Delete user session
+  await db.collection('session').remove({
+    userId: new ObjectID(user._id),
+  });
+
+  // Delete user account
+  await db.collection('account').remove({
+    userId: new ObjectID(user._id),
+  });
+
+  // Delete user profile
+  await db.collection('user').remove({
+    _id: new ObjectID(user._id),
+  });
 };
