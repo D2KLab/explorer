@@ -34,7 +34,7 @@ export const updateList = async (list, newValues) => {
       _id: new ObjectID(list._id),
     },
     {
-      $set: { ...newValues },
+      $set: { ...newValues, updated_at: new Date() },
     },
     {
       returnNewDocument: true,
@@ -51,6 +51,7 @@ export const removeItemFromList = async (itemUri, list) => {
     },
     {
       $pull: { items: itemUri },
+      $set: { updated_at: new Date() },
     },
     {
       returnNewDocument: true,
@@ -67,6 +68,7 @@ export const addItemToList = async (itemUri, list) => {
     },
     {
       $push: { items: itemUri },
+      $set: { updated_at: new Date() },
     },
     {
       returnNewDocument: true,
@@ -125,8 +127,10 @@ export const getUserLists = async (user) => {
 export const createUserList = async (user, list) => {
   const db = await connectToDatabase();
   const res = await db.collection('list').insertOne({
-    user: new ObjectID(user._id),
     ...list,
+    user: new ObjectID(user._id),
+    created_at: new Date(),
+    updated_at: new Date(),
   });
   return res.ops[0];
 };

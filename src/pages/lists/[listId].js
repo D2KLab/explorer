@@ -267,6 +267,10 @@ export default withTheme(({ isOwner, list, shareLink, error, theme }) => {
                   )}
                 </NavItem>
               </Navbar>
+              <Element>
+                <p>Created on: {new Date(list.created_at).toTimeString()}</p>
+                <p>Last update: {new Date(list.updated_at).toTimeString()}</p>
+              </Element>
               {isOwner && (
                 <>
                   <p>
