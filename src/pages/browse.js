@@ -130,13 +130,13 @@ class BrowsePage extends Component {
 
         return (
           <Link
+            key={result['@id']}
             href={`/details/${route.details.view}?id=${uriToId(result['@id'])}&type=${query.type}`}
             as={`/${query.type}/${uriToId(result['@id'])}`}
             passHref
           >
             <a>
               <Media
-                key={result['@id']}
                 title={label}
                 subtitle={result.time.label}
                 thumbnail={mainImage}
