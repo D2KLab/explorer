@@ -53,16 +53,17 @@ const StyledDialogDisclosure = styled(DialogDisclosure)`
   background-color: transparent;
   border: none;
   cursor: pointer;
-  text-decoration: underline;
-
-  &:hover {
-    font-weight: bold;
-  }
 `;
 
 const StyledSettingsIcon = styled(SettingsIcon)`
   color: #222;
   height: 24px;
+  border-radius: 0.25em;
+  transition: background-color 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
+
+  ${StyledDialogDisclosure}:hover & {
+    background-color: #ddd;
+  }
 `;
 
 const StyledMedia = styled(Media)`
