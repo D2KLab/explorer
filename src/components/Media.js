@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import styled from 'styled-components';
 import Img from 'react-image';
 import GraphIcon from '@components/GraphIcon';
@@ -55,10 +54,6 @@ const Container = styled.div`
   flex-direction: ${({ direction }) => direction};
   max-width: 150px;
 
-  a {
-    text-decoration: none;
-  }
-
   ${ThumbnailContainer} {
     max-width: ${({ direction }) => (direction === 'row' ? '50%' : '100%')};
     margin-right: ${({ direction }) => (direction === 'row' ? '8px' : 0)};
@@ -67,33 +62,29 @@ const Container = styled.div`
   }
 `;
 
-const Media = ({ className, thumbnail, title, subtitle, uri, link = '', direction = 'column' }) => {
+const Media = ({ className, thumbnail, title, subtitle, graphUri, direction = 'column' }) => {
   const Placeholder = <Thumbnail src={config.search.placeholderImage} alt={title} />;
 
   return (
     <Container className={className} direction={direction}>
-      <Link href={link} passHref>
-        <a>
-          <ThumbnailContainer>
-            <Thumbnail
-              as={Img}
-              src={thumbnail}
-              alt={title}
-              loader={Placeholder}
-              unloader={Placeholder}
-            />
-            {uri && (
-              <GraphIconContainer>
-                <GraphIcon uri={uri} />
-              </GraphIconContainer>
-            )}
-          </ThumbnailContainer>
-          <TextContainer>
-            <Title>{title}</Title>
-            <Subtitle>{subtitle}</Subtitle>
-          </TextContainer>
-        </a>
-      </Link>
+      <ThumbnailContainer>
+        <Thumbnail
+          as={Img}
+          src={thumbnail}
+          alt={title}
+          loader={Placeholder}
+          unloader={Placeholder}
+        />
+        {graphUri && (
+          <GraphIconContainer>
+            <GraphIcon uri={graphUri} />
+          </GraphIconContainer>
+        )}
+      </ThumbnailContainer>
+      <TextContainer>
+        <Title>{title}</Title>
+        <Subtitle>{subtitle}</Subtitle>
+      </TextContainer>
     </Container>
   );
 };

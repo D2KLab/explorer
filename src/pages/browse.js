@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import styled from 'styled-components';
+import Link from 'next/link';
 import Router, { withRouter } from 'next/router';
 import { Helmet } from 'react-helmet';
 
@@ -37,10 +38,19 @@ const Results = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   grid-gap: 1rem;
+  margin-bottom: 24px;
 
   transition: opacity 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
   opacity: ${({ loading }) => (loading ? 0.25 : 1)};
   pointer-events: ${({ loading }) => (loading ? 'none' : 'auto')};
+
+  a {
+    text-decoration: none;
+    &:hover {
+      color: inherit;
+      text-decoration: underline;
+    }
+  }
 `;
 
 const Label = styled.label`
@@ -119,15 +129,22 @@ class BrowsePage extends Component {
         const label = route.labelFunc(result);
 
         return (
-          <Media
-            key={result['@id']}
-            title={label}
-            subtitle={result.time.label}
-            thumbnail={mainImage}
-            direction="column"
-            link={`/${query.type}/${uriToId(result['@id'])}`}
-            uri={result['@graph']}
-          />
+          <Link
+            href={`/details/${route.details.view}?id=${uriToId(result['@id'])}&type=${query.type}`}
+            as={`/${query.type}/${uriToId(result['@id'])}`}
+            passHref
+          >
+            <a>
+              <Media
+                key={result['@id']}
+                title={label}
+                subtitle={result.time.label}
+                thumbnail={mainImage}
+                direction="column"
+                graphUri={result['@graph']}
+              />
+            </a>
+          </Link>
         );
       });
     };
