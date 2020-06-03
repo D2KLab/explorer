@@ -30,10 +30,10 @@ const StyledLanguageSwitch = styled(LanguageSwitch)`
 `;
 
 const StyledProfileButton = styled(ProfileButton)`
-  display: none;
+  margin-left: auto;
 
   ${breakpoints.weirdMedium`
-    display: flex;
+    margin-left: 0;
   `}
 `;
 
