@@ -145,9 +145,32 @@ export default withTheme(({ isOwner, list, shareLink, error, theme }) => {
       <Element marginY={24}>
         <h2>Operations</h2>
         <Element marginY={12}>
-          <Button onClick={deleteList} primary loading={isDeleting}>
+          <DialogDisclosure {...deleteListDialog} as={Button} primary loading={isDeleting}>
             Delete list
-          </Button>
+          </DialogDisclosure>
+          <StyledDialogBackdrop {...deleteListDialog}>
+            <StyledDialog {...deleteListDialog} modal aria-label="Delete list">
+              <h2>Delete list</h2>
+              <p>
+                Are you sure you want to delete the list <strong>"{list.name}"</strong>? This action
+                cannot be undone!
+              </p>
+              <Element display="flex" alignItems="center" justifyContent="space-between">
+                <Button
+                  type="button"
+                  secondary
+                  onClick={() => {
+                    deleteListDialog.hide();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button type="button" primary loading={isDeleting} onClick={deleteList}>
+                  Delete list
+                </Button>
+              </Element>
+            </StyledDialog>
+          </StyledDialogBackdrop>
         </Element>
       </Element>
     );
