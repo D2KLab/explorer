@@ -29,7 +29,9 @@ const Columns = styled.div`
 `;
 
 const Primary = styled.div`
-  flex: 1;
+  flex: auto;
+  overflow: hidden;
+  min-width: 50%;
   padding-right: 24px;
   padding-top: 24px;
   margin-left: 24px;
@@ -48,6 +50,11 @@ const Primary = styled.div`
   }
   .carousel .slide {
     background: #d9d9d9;
+
+    img {
+      width: auto;
+      max-width: 100%;
+    }
   }
   .carousel .carousel-status {
     font-size: 16px;
@@ -73,14 +80,13 @@ const Primary = styled.div`
 `;
 
 const Secondary = styled.div`
-  flex: 1;
+  flex: auto;
   padding-top: 24px;
   margin-left: 24px;
 
   ${breakpoints.desktop`
     padding-right: 24px;
     margin-left: 0;
-    max-width: 30%;
   `}
 `;
 
@@ -89,6 +95,7 @@ const Title = styled.h1`
   border-bottom: 3px solid ${({ theme }) => theme.colors.primary};
   font-size: 48px;
   line-height: 1.25;
+  margin-bottom: 24px;
 
   ${breakpoints.desktop`
     display: block;
