@@ -42,12 +42,12 @@ const Credits = styled.div`
 `;
 
 const LogoContainer = styled.div`
-  margin-left: 50px;
   margin-top: 24px;
 
   ${breakpoints.tablet`
-    margin-left: auto;
     margin-top: 0;
+    margin-left: auto;
+    padding-left: 24px;
   `}
 `;
 
@@ -64,7 +64,11 @@ const Footer = ({ className, t }) => {
       </Credits>
       <LogoContainer>
         <a target="_blank" rel="noopener noreferrer">
-          <Logo src={config.footer.logo || config.metadata.logo} alt={config.metadata.title} title={config.metadata.title} />
+          <Logo
+            src={config.footer.logo || config.metadata.logo}
+            alt={config.metadata.title}
+            title={config.metadata.title}
+          />
         </a>
       </LogoContainer>
     </Container>
