@@ -21,6 +21,7 @@ export default async (req, res) => {
   if (req.method === 'GET') {
     // Return user informations
     res.status(200).json({ ...user });
+    return;
   } else if (req.method === 'DELETE') {
     // Delete user account
     await deleteUser(user);

@@ -90,8 +90,8 @@ export const getSessionUser = async (session) => {
       {
         $lookup: {
           from: 'session',
-          localField: 'userId',
-          foreignField: 'id',
+          localField: '_id',
+          foreignField: 'userId',
           as: 'session',
         },
       },
