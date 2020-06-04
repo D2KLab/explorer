@@ -156,20 +156,6 @@ const renderSessionMenuItems = (session, menu) => {
       >
         Your profile
       </StyledMenuItem>
-      <StyledMenuItem
-        {...menu}
-        onClick={() => {
-          Router.push({
-            pathname: '/profile',
-            query: {
-              tab: 'lists',
-            },
-          });
-          menu.hide();
-        }}
-      >
-        Your favorites
-      </StyledMenuItem>
       <StyledDivider />
       <StyledMenuItem
         {...menu}
