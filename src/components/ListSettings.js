@@ -41,11 +41,10 @@ const StyledDialogDisclosure = styled(DialogDisclosure)`
 const StyledSettingsIcon = styled(SettingsIcon)`
   color: #888;
   height: 24px;
-  border-radius: 0.25em;
-  transition: background-color 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
+  transition: color 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
 
   ${StyledDialogDisclosure}:hover & {
-    background-color: #ddd;
+    color: #444;
   }
 `;
 

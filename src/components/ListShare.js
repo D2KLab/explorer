@@ -60,17 +60,6 @@ const StyledDialogDisclosure = styled(DialogDisclosure)`
   cursor: pointer;
 `;
 
-const StyledSettingsIcon = styled(SettingsIcon)`
-  color: #888;
-  height: 24px;
-  border-radius: 0.25em;
-  transition: background-color 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
-
-  ${StyledDialogDisclosure}:hover & {
-    background-color: #ddd;
-  }
-`;
-
 export default withTheme(({ list, dialogState, children, shareUrl, facebookAppId, theme }) => {
   const shareDialog = dialogState || useDialogState();
 

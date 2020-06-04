@@ -85,6 +85,16 @@ const Avatar = styled.img`
 
 const UserLists = styled.ul``;
 
+const ListItem = styled.li`
+  display: flex
+  align-items: center;
+  transition: box-shadow 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
+
+  &:hover {
+    box-shadow: 0px 0px 50px -30px;
+  }
+`;
+
 const ListItemTitle = styled.div`
   display: flex;
   align-items: center;
@@ -104,7 +114,6 @@ const ListItemButton = styled.div`
 const StyledShareIcon = styled(ShareIcon)`
   color: #888;
   height: 24px;
-  border-radius: 0.25em;
   transition: color 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
 
   &:hover {
@@ -115,7 +124,6 @@ const StyledShareIcon = styled(ShareIcon)`
 const StyledTrashIcon = styled(TrashIcon)`
   color: #888;
   height: 24px;
-  border-radius: 0.25em;
   transition: color 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
 
   &:hover {
@@ -207,7 +215,7 @@ export default ({ session, lists, baseUrl, facebookAppId }) => {
               <h2 style={{ marginBottom: 24, textTransform: 'uppercase' }}>My lists</h2>
               <UserLists>
                 {lists.map((list) => (
-                  <Element key={list._id} as="li" display="flex" alignItems="center">
+                  <ListItem key={list._id}>
                     <Element>
                       <ListItemTitle>
                         <h1>{list.name}</h1>
@@ -244,7 +252,7 @@ export default ({ session, lists, baseUrl, facebookAppId }) => {
                         </Button>
                       </ListItemButton>
                     </Element>
-                  </Element>
+                  </ListItem>
                 ))}
               </UserLists>
             </ProfileContent>
