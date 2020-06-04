@@ -121,6 +121,7 @@ export const getUserLists = async (user) => {
   return db
     .collection('list')
     .find({ user: new ObjectID(user._id) })
+    .sort({ updated_at: 1 })
     .toArray();
 };
 
