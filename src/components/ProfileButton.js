@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
+import { Img } from 'react-image';
 import { DownArrow } from '@styled-icons/boxicons-solid/DownArrow';
 import { User } from '@styled-icons/boxicons-solid/User';
 import NextAuth from 'next-auth/client';
@@ -180,7 +181,14 @@ const ProfileButton = ({ className }) => {
     <>
       <StyledMenuButton {...menu}>
         {session && session.user && session.user.image ? (
-          <StyledUserIcon as="img" src={session.user.image} alt="" />
+          <StyledUserIcon
+            as={Img}
+            loader={<StyledUserIcon />}
+            unloader={<StyledUserIcon />}
+            src={session.user.image}
+            title={session.user.name}
+            alt=""
+          />
         ) : (
           <StyledUserIcon />
         )}
