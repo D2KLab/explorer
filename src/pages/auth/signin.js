@@ -25,9 +25,15 @@ const FacebookButton = styled(Button)`
   }
 `;
 
+const TwitterButton = styled(Button)`
+  background-color: #1da1f2;
+  color: #fff;
+`;
+
 const providersButtons = {
   Google: GoogleButton,
   Facebook: FacebookButton,
+  Twitter: TwitterButton,
 };
 
 const SignInPage = ({ providers }) => {

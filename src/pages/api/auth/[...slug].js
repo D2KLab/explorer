@@ -22,11 +22,11 @@ const options = {
       clientId: process.env.FACEBOOK_ID,
       clientSecret: process.env.FACEBOOK_SECRET,
     }),
-    /*
     Providers.Twitter({
       clientId: process.env.TWITTER_ID,
-      clientSecret: process.env.TWITTER_SECRET
+      clientSecret: process.env.TWITTER_SECRET,
     }),
+    /*
     Providers.GitHub({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET
