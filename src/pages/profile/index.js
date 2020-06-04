@@ -6,12 +6,14 @@ import { Helmet } from 'react-helmet';
 import Link from 'next/link';
 import NextAuth from 'next-auth/client';
 import Moment from 'react-moment';
+import Router from 'next/router';
 import { ShareAlt as ShareIcon } from '@styled-icons/boxicons-solid/ShareAlt';
 import { TrashAlt as TrashIcon } from '@styled-icons/boxicons-solid/TrashAlt';
 
 import ListSettings from '@components/ListSettings';
 import ListDeletion from '@components/ListDeletion';
 import ListShare from '@components/ListShare';
+import { providersButtons } from '@components/ProviderButton';
 import { Header, Footer, Layout, Body, Content, Title, Element, Button } from '@components';
 import { breakpoints } from '@styles';
 
@@ -75,15 +77,18 @@ const ProfileContent = styled.div`
   `}
 `;
 
+const UserName = styled.h1`
+  margin-bottom: 24px;
+  text-align: center;
+`;
+
 const Avatar = styled.img`
   border-radius: 100%;
   height: 96px;
   width: auto;
   display: block;
-  margin: 0 auto 24px auto;
+  margin: 0 auto;
 `;
-
-const UserLists = styled.ul``;
 
 const ListItem = styled.li`
   display: flex
@@ -131,9 +136,10 @@ const StyledTrashIcon = styled(TrashIcon)`
   }
 `;
 
-export default ({ session, lists, baseUrl, facebookAppId }) => {
+export default ({ providers, session, accounts, lists, baseUrl, facebookAppId }) => {
   const deleteAccountDialog = useDialogState();
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [isUnlinkingAccount, setIsUnlinkingAccount] = useState(false);
   const deleteListDialog = useDialogState();
   const shareListDialog = useDialogState();
 
@@ -145,9 +151,18 @@ export default ({ session, lists, baseUrl, facebookAppId }) => {
     NextAuth.signout();
   };
 
+  const unlinkAccount = async (account) => {
+    setIsUnlinkingAccount(true);
+    await fetch(`/api/profile/accounts/${account._id}`, {
+      method: 'DELETE',
+    });
+    Router.reload();
+  };
+
   const renderOperations = () => {
     return (
-      <Element marginY={24} display="flex" justifyContent="center">
+      <Element marginY={24} display="flex" flexDirection="column">
+        <h3 style={{ color: '#dc3535', fontWeight: 'bold' }}>Delete account</h3>
         <DialogDisclosure
           {...deleteAccountDialog}
           as={DeleteButton}
@@ -161,8 +176,15 @@ export default ({ session, lists, baseUrl, facebookAppId }) => {
           <StyledDialog {...deleteAccountDialog} modal aria-label="Delete account">
             <h2>Delete account</h2>
             <p>
-              Are you sure you wish to permanently delete your account? This action cannot be
-              undone!
+              Are you sure you wish to <strong>permanently delete</strong> your account?{' '}
+              <strong>This action cannot be undone!</strong>
+            </p>
+            <p>
+              Deleting this account will also remove:
+              <ul style={{ listStyleType: 'disc', paddingLeft: 20 }}>
+                <li>All user created lists</li>
+                <li>All connected social accounts and sessions</li>
+              </ul>
             </p>
             <Element display="flex" alignItems="center" justifyContent="space-between">
               <Button
@@ -190,6 +212,54 @@ export default ({ session, lists, baseUrl, facebookAppId }) => {
     );
   };
 
+  const renderAccounts = (accounts, providers) => {
+    return (
+      <>
+        <Element marginBottom={24}>
+          <h3>Connected accounts</h3>
+          <ul>
+            {accounts.map((account) => (
+              <Element as="li" key={account._id} marginBottom={12}>
+                {account.providerId.substr(0, 1).toUpperCase() + account.providerId.substr(1)}
+                <Button
+                  primary
+                  onClick={() => {
+                    unlinkAccount(account);
+                  }}
+                  loading={isUnlinkingAccount}
+                >
+                  Unlink this connection
+                </Button>
+              </Element>
+            ))}
+          </ul>
+        </Element>
+        <Element marginBottom={24}>
+          <h3>Connect another account</h3>
+          {providers &&
+            Object.values(providers).map((provider) => {
+              if (
+                accounts.find(
+                  (account) => account.providerId.toLowerCase() === provider.name.toLowerCase()
+                )
+              ) {
+                // Do not display a button if this provider is already linked to the user
+                return null;
+              }
+              const ProviderButton = providersButtons[provider.name] || Button;
+              return (
+                <Element key={provider.name} marginY={12}>
+                  <ProviderButton href={provider.signinUrl}>
+                    Sign in with {provider.name}
+                  </ProviderButton>
+                </Element>
+              );
+            })}
+        </Element>
+      </>
+    );
+  };
+
   const PlaceholderAvatar = <Avatar src="/images/avatar-placeholder.png" alt="" />;
 
   return (
@@ -208,12 +278,13 @@ export default ({ session, lists, baseUrl, facebookAppId }) => {
                 title={session.user.name}
                 alt=""
               />
-              <h1>{session.user.name}</h1>
+              <UserName>{session.user.name}</UserName>
+              {renderAccounts(accounts, providers)}
               {renderOperations()}
             </ProfileSidebar>
             <ProfileContent>
               <h2 style={{ marginBottom: 24, textTransform: 'uppercase' }}>My lists</h2>
-              <UserLists>
+              <ul>
                 {lists.map((list) => (
                   <ListItem key={list._id}>
                     <Element>
@@ -254,7 +325,7 @@ export default ({ session, lists, baseUrl, facebookAppId }) => {
                     </Element>
                   </ListItem>
                 ))}
-              </UserLists>
+              </ul>
             </ProfileContent>
           </ProfileContainer>
         </Content>
@@ -264,7 +335,9 @@ export default ({ session, lists, baseUrl, facebookAppId }) => {
   );
 };
 
-export async function getServerSideProps({ req, res }) {
+export async function getServerSideProps(ctx) {
+  const { req, res } = ctx;
+  const providers = await NextAuth.providers(ctx);
   const session = await NextAuth.session({ req });
 
   if (!session) {
@@ -274,16 +347,27 @@ export async function getServerSideProps({ req, res }) {
     return { props: {} };
   }
 
-  const apiRes = await fetch(`${process.env.SITE}/api/profile/lists`, {
+  // Get user lists
+  const listsRes = await fetch(`${process.env.SITE}/api/profile/lists`, {
     headers: {
       cookie: req.headers.cookie,
     },
   });
-  const lists = await apiRes.json();
+  const lists = await listsRes.json();
+
+  // Get user accounts
+  const accountsRes = await fetch(`${process.env.SITE}/api/profile/accounts`, {
+    headers: {
+      cookie: req.headers.cookie,
+    },
+  });
+  const accounts = await accountsRes.json();
 
   return {
     props: {
+      providers,
       session,
+      accounts,
       lists,
       baseUrl: process.env.SITE,
       facebookAppId: process.env.FACEBOOK_ID,

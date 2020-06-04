@@ -4,37 +4,7 @@ import NextAuth from 'next-auth/client';
 
 import Button from '@components/Button';
 import { Layout, Header, Body, Content, Title, Footer, Element } from '@components';
-
-const GoogleButton = styled(Button)`
-  background-color: #db422c;
-  color: #fff;
-
-  &:hover {
-    color: #fff;
-    text-decoration: underline;
-  }
-`;
-
-const FacebookButton = styled(Button)`
-  background-color: #4457a6;
-  color: #fff;
-
-  &:hover {
-    color: #fff;
-    text-decoration: underline;
-  }
-`;
-
-const TwitterButton = styled(Button)`
-  background-color: #1da1f2;
-  color: #fff;
-`;
-
-const providersButtons = {
-  Google: GoogleButton,
-  Facebook: FacebookButton,
-  Twitter: TwitterButton,
-};
+import { providersButtons } from '@components/ProviderButton';
 
 const SignInPage = ({ providers }) => {
   return (

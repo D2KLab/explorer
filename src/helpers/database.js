@@ -172,3 +172,27 @@ export const deleteUser = async (user) => {
     _id: new ObjectID(user._id),
   });
 };
+
+export const getUserAccounts = async (user) => {
+  const db = await connectToDatabase();
+
+  return await db
+    .collection('account')
+    .find({
+      userId: new ObjectID(user._id),
+    })
+    .toArray();
+};
+
+export const removeUserAccount = async (user, account) => {
+  const db = await connectToDatabase();
+  return db.collection('account').remove(
+    {
+      _id: account._id,
+      user: new ObjectID(user._id),
+    },
+    {
+      justOne: true,
+    }
+  );
+};
