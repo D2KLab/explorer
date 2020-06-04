@@ -20,6 +20,7 @@
   "dependencies": {
     "autosuggest-highlight": "^3.1.1",
     "intersection-observer": "^0.10.0",
+    "moment": "^2.26.0",
     "mongodb": "^3.5.7",
     "next": "^9.4.2",
     "next-auth": "^2.0.0-beta.59",
@@ -35,6 +36,7 @@
     "react-image-appear": "^1.2.23",
     "react-lazy-load-image-component": "^1.4.3",
     "react-lazyload": "^2.6.7",
+    "react-moment": "^0.9.7",
     "react-responsive-carousel": "^3.2.7",
     "react-select": "^3.1.0",
     "react-share": "^4.1.0",

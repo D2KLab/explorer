@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import Link from 'next/link';
 import Router from 'next/router';
 import { useDialogState, DialogDisclosure } from 'reakit/Dialog';
+import Moment from 'react-moment';
 
 import { uriToId } from '@helpers/utils';
 import {
@@ -100,8 +101,12 @@ export default withTheme(({ isOwner, list, shareLink, error, theme }) => {
                 <NavItem>{isOwner && <ListSettings list={list} />}</NavItem>
               </Navbar>
               <Element>
-                <p>Created on: {new Date(list.created_at).toTimeString()}</p>
-                <p>Last update: {new Date(list.updated_at).toTimeString()}</p>
+                <p>
+                  Created on: <Moment format="DD/MM/YYYY">{list.created_at}</Moment>
+                </p>
+                <p>
+                  Last update: <Moment format="DD/MM/YYYY">{list.updated_at}</Moment>
+                </p>
               </Element>
               {isOwner && (
                 <>
