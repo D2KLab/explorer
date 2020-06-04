@@ -1,11 +1,9 @@
 import styled, { withTheme } from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import Link from 'next/link';
 import Router from 'next/router';
-import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
-import { DotsHorizontalRounded as SettingsIcon } from '@styled-icons/boxicons-regular/DotsHorizontalRounded';
-import Switch from 'react-switch';
+import { useDialogState, DialogDisclosure } from 'reakit/Dialog';
 
 import { uriToId } from '@helpers/utils';
 import {
@@ -21,50 +19,11 @@ import {
   Element,
 } from '@components';
 import Button from '@components/Button';
-import Input from '@components/Input';
+import ListSettings from '@components/ListSettings';
+import ListDeletion from '@components/ListDeletion';
 import config from '~/config';
 
 const sparqlTransformer = require('sparql-transformer').default;
-
-const StyledDialogBackdrop = styled(DialogBackdrop)`
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  z-index: 2000;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const StyledDialog = styled(Dialog)`
-  background-color: #fff;
-  box-shadow: rgba(0, 0, 0, 0.28) 0px 8px 28px;
-  overflow: visible;
-  padding: 32px;
-  outline: 0;
-`;
-
-const StyledDialogDisclosure = styled(DialogDisclosure)`
-  appearance: none;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-`;
-
-const StyledSettingsIcon = styled(SettingsIcon)`
-  color: #222;
-  height: 24px;
-  border-radius: 0.25em;
-  transition: background-color 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
-
-  ${StyledDialogDisclosure}:hover & {
-    background-color: #ddd;
-  }
-`;
 
 const StyledMedia = styled(Media)`
   margin-left: var(--card-margin);
@@ -80,35 +39,6 @@ const Results = styled.div`
 `;
 
 export default withTheme(({ isOwner, list, shareLink, error, theme }) => {
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
-  const settingsDialog = useDialogState();
-  const deleteListDialog = useDialogState();
-  const [listName, setListName] = useState(list.name);
-  const [listPublic, setListPublic] = useState(list.is_public);
-
-  const deleteList = async () => {
-    setIsDeleting(true);
-    await fetch(`/api/lists/${list._id}`, {
-      method: 'DELETE',
-    });
-    Router.push({
-      pathname: '/profile',
-    });
-  };
-
-  const updateSettings = async () => {
-    setIsUpdating(true);
-    await fetch(`/api/lists/${list._id}`, {
-      method: 'PUT',
-      body: JSON.stringify({
-        name: listName,
-        is_public: listPublic,
-      }),
-    });
-    Router.reload();
-  };
-
   const renderListItems = () => {
     return (
       <Element marginY={24}>
@@ -142,46 +72,18 @@ export default withTheme(({ isOwner, list, shareLink, error, theme }) => {
     if (!isOwner) {
       return null;
     }
+
+    const deleteListDialog = useDialogState();
+
     return (
       <Element marginY={24}>
         <h2>Operations</h2>
         <Element marginY={12}>
-          <DialogDisclosure {...deleteListDialog} as={Button} primary loading={isDeleting}>
-            Delete list
-          </DialogDisclosure>
-          <StyledDialogBackdrop {...deleteListDialog}>
-            <StyledDialog {...deleteListDialog} modal aria-label="Delete list">
-              <h2>Delete list</h2>
-              <p>
-                Are you sure you want to delete the list <strong>"{list.name}"</strong>? This action
-                cannot be undone!
-              </p>
-              <Element display="flex" alignItems="center" justifyContent="space-between">
-                <Button
-                  type="button"
-                  secondary
-                  onClick={() => {
-                    deleteListDialog.hide();
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button type="button" primary loading={isDeleting} onClick={deleteList}>
-                  Delete list
-                </Button>
-              </Element>
-            </StyledDialog>
-          </StyledDialogBackdrop>
+          <ListDeletion list={list} dialogState={deleteListDialog} />
         </Element>
       </Element>
     );
   };
-
-  useEffect(() => {
-    // Reset form when visibility changes
-    setListName(list.name);
-    setListPublic(list.is_public);
-  }, [settingsDialog.visible]);
 
   return (
     <Layout>
@@ -195,77 +97,7 @@ export default withTheme(({ isOwner, list, shareLink, error, theme }) => {
                 <NavItem>
                   <h1>{list.name}</h1>
                 </NavItem>
-                <NavItem>
-                  {isOwner && (
-                    <>
-                      <StyledDialogDisclosure {...settingsDialog}>
-                        <StyledSettingsIcon />
-                      </StyledDialogDisclosure>
-                      <StyledDialogBackdrop {...settingsDialog}>
-                        <StyledDialog {...settingsDialog} modal aria-label="Settings">
-                          <Element marginBottom={24}>
-                            <h2>Settings</h2>
-                          </Element>
-                          <Element display="flex" alignItems="center" marginBottom={24}>
-                            <Element paddingRight={12}>
-                              <label htmlFor="list_name">Name</label>
-                            </Element>
-                            <Input
-                              id="list_name"
-                              name="list_name"
-                              type="text"
-                              placeholder="List name"
-                              value={listName}
-                              onChange={(e) => setListName(e.target.value)}
-                            />
-                          </Element>
-                          <Element display="flex" alignItems="center" marginBottom={24}>
-                            <Element paddingRight={12}>
-                              <label htmlFor="list_public">Public?</label>
-                            </Element>
-                            <Switch
-                              onChange={(checked) => setListPublic(checked)}
-                              checked={listPublic}
-                              onColor={theme.colors.light}
-                              offHandleColor="#f0f0f0"
-                              onHandleColor={theme.colors.primary}
-                              handleDiameter={24}
-                              uncheckedIcon={false}
-                              checkedIcon={false}
-                              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                              height={16}
-                              width={36}
-                              id="list_public"
-                            />
-                          </Element>
-                          <Element display="flex" justifyContent="space-between" marginTop={24}>
-                            <Button
-                              type="button"
-                              secondary
-                              onClick={() => {
-                                settingsDialog.hide();
-                              }}
-                            >
-                              Cancel
-                            </Button>
-                            <Button
-                              type="button"
-                              primary
-                              loading={isUpdating}
-                              onClick={async () => {
-                                await updateSettings();
-                                settingsDialog.hide();
-                              }}
-                            >
-                              Save
-                            </Button>
-                          </Element>
-                        </StyledDialog>
-                      </StyledDialogBackdrop>
-                    </>
-                  )}
-                </NavItem>
+                <NavItem>{isOwner && <ListSettings list={list} />}</NavItem>
               </Navbar>
               <Element>
                 <p>Created on: {new Date(list.created_at).toTimeString()}</p>
