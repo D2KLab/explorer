@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import NextAuth from 'next-auth/client';
 
 import Button from '@components/Button';
 
@@ -27,8 +28,25 @@ export const TwitterButton = styled(Button)`
   color: #fff;
 `;
 
+export const ProviderButton = ({ provider }) => {
+  const Container = providersButtons[provider.name] || Button;
+  return (
+    <Container
+      href={provider.signinUrl}
+      onClick={(e) => {
+        e.preventDefault();
+        NextAuth.signin(provider.name.toLowerCase());
+      }}
+    >
+      Sign in with {provider.name}
+    </Container>
+  );
+};
+
 export const providersButtons = {
   Google: GoogleButton,
   Facebook: FacebookButton,
   Twitter: TwitterButton,
 };
+
+export default ProviderButton;

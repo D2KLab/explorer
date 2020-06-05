@@ -4,7 +4,7 @@ import NextAuth from 'next-auth/client';
 
 import Button from '@components/Button';
 import { Layout, Header, Body, Content, Title, Footer, Element } from '@components';
-import { providersButtons } from '@components/ProviderButton';
+import { ProviderButton } from '@components/ProviderButton';
 
 const SignInPage = ({ providers }) => {
   return (
@@ -24,12 +24,9 @@ const SignInPage = ({ providers }) => {
             <Element display="flex" flexDirection="column" alignItems="center">
               {providers &&
                 Object.values(providers).map((provider) => {
-                  const ProviderButton = providersButtons[provider.name] || Button;
                   return (
                     <Element key={provider.name} marginY={12}>
-                      <ProviderButton href={provider.signinUrl}>
-                        Sign in with {provider.name}
-                      </ProviderButton>
+                      <ProviderButton provider={provider} />
                     </Element>
                   );
                 })}

@@ -13,7 +13,7 @@ import { TrashAlt as TrashIcon } from '@styled-icons/boxicons-solid/TrashAlt';
 import ListSettings from '@components/ListSettings';
 import ListDeletion from '@components/ListDeletion';
 import ListShare from '@components/ListShare';
-import { providersButtons } from '@components/ProviderButton';
+import { ProviderButton } from '@components/ProviderButton';
 import { Header, Footer, Layout, Body, Content, Title, Element, Button } from '@components';
 import { breakpoints } from '@styles';
 
@@ -246,12 +246,9 @@ export default ({ providers, session, accounts, lists, baseUrl, facebookAppId })
                 // Do not display a button if this provider is already linked to the user
                 return null;
               }
-              const ProviderButton = providersButtons[provider.name] || Button;
               return (
                 <Element key={provider.name} marginY={12}>
-                  <ProviderButton href={provider.signinUrl}>
-                    Sign in with {provider.name}
-                  </ProviderButton>
+                  <ProviderButton provider={provider} />
                 </Element>
               );
             })}
