@@ -237,18 +237,14 @@ export default ({ providers, session, accounts, lists, baseUrl, facebookAppId })
         <Element marginBottom={24}>
           <h3>Connect another account</h3>
           {providers &&
-            Object.values(providers).map((provider) => {
-              if (
-                accounts.find(
-                  (account) => account.providerId.toLowerCase() === provider.name.toLowerCase()
-                )
-              ) {
+            Object.entries(providers).map(([providerId, provider]) => {
+              if (accounts.find((account) => account.providerId === providerId)) {
                 // Do not display a button if this provider is already linked to the user
                 return null;
               }
               return (
                 <Element key={provider.name} marginY={12}>
-                  <ProviderButton provider={provider} redirect />
+                  <ProviderButton provider={{ ...provider, providerId }} redirect />
                 </Element>
               );
             })}

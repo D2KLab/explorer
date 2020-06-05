@@ -37,7 +37,7 @@ export const ProviderButton = ({ provider, redirect = false }) => {
         redirect
           ? (e) => {
               e.preventDefault();
-              NextAuth.signin(provider.name.toLowerCase());
+              NextAuth.signin(provider.id);
             }
           : null
       }
