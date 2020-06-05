@@ -5,7 +5,7 @@ import Router from 'next/router';
 import { useDialogState, DialogDisclosure } from 'reakit/Dialog';
 import Moment from 'react-moment';
 
-import { uriToId } from '@helpers/utils';
+import { uriToId, generateMediaUrl } from '@helpers/utils';
 import {
   Header,
   Footer,
@@ -53,7 +53,7 @@ export default withTheme(({ isOwner, list, shareLink, error, theme }) => {
                     key={item.id}
                     title={item.title}
                     subtitle={item.subtitle}
-                    thumbnail={item.image}
+                    thumbnail={generateMediaUrl(item.image, 150)}
                     direction="column"
                     link={`/${item.route}/${uriToId(item.id)}`}
                     uri={item.graph}

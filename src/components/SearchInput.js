@@ -5,7 +5,7 @@ import Autosuggest from 'react-autosuggest';
 import AutosuggestHighlightMatch from 'autosuggest-highlight/match';
 import AutosuggestHighlightParse from 'autosuggest-highlight/parse';
 
-import { uriToId } from '@helpers/utils';
+import { uriToId, generateMediaUrl } from '@helpers/utils';
 import config from '~/config';
 
 const sparqlTransformer = require('sparql-transformer').default;
@@ -122,7 +122,7 @@ const renderSuggestion = (suggestion, { query }) => {
 
   return (
     <SuggestionContent>
-      <SuggestionImage src={mainImage} alt="" />
+      <SuggestionImage src={generateMediaUrl(mainImage, 150)} alt="" />
       <SuggestionName>
         {parts.map((part, index) => {
           const className = part.highlight ? 'highlight' : null;

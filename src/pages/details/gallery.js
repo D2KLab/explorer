@@ -10,7 +10,7 @@ import Debug from '@components/Debug';
 import SaveButton from '@components/SaveButton';
 import PageTitle from '@components/PageTitle';
 import { breakpoints } from '@styles';
-import { uriToId, idToUri } from '@helpers/utils';
+import { uriToId, idToUri, generateMediaUrl } from '@helpers/utils';
 import config from '~/config';
 import { withTranslation } from '~/i18n';
 const { Carousel } = require('react-responsive-carousel');
@@ -237,7 +237,7 @@ const GalleryDetailsPage = ({ result, t }) => {
             <Carousel showArrows {...config.gallery.options}>
               {images.map((image) => (
                 <div key={image}>
-                  <img src={image} alt={label} />
+                  <img src={generateMediaUrl(image, 1024)} alt={label} />
                   <p className="legend">{label}</p>
                 </div>
               ))}

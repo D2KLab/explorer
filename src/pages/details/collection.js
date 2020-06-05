@@ -7,7 +7,7 @@ import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import PageTitle from '@components/PageTitle';
 import { breakpoints } from '@styles';
-import { uriToId, idToUri } from '@helpers/utils';
+import { uriToId, idToUri, generateMediaUrl } from '@helpers/utils';
 import config from '~/config';
 
 const sparqlTransformer = require('sparql-transformer').default;
@@ -102,7 +102,7 @@ const CollectionDetailsPage = ({ result }) => {
                       key={object['@id']}
                       title={object.label}
                       subtitle=""
-                      thumbnail={mainImage}
+                      thumbnail={generateMediaUrl(mainImage, 150)}
                       direction="column"
                       link={`/objects/${uriToId(object['@id'])}`}
                       uri={result['@graph']}
