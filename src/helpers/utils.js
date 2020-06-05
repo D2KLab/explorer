@@ -15,3 +15,17 @@ export function uriToId(uri) {
 export function idToUri(id, base) {
   return `${base}/${id}`;
 }
+
+export function generateMediaUrl(url, width, height) {
+  const urlParts = [];
+  if (typeof url === 'string') {
+    urlParts.push(`url=${encodeURIComponent(url)}`);
+  }
+  if (typeof width === 'number') {
+    urlParts.push(`width=${encodeURIComponent(width)}`);
+  }
+  if (typeof height === 'number') {
+    urlParts.push(`height=${encodeURIComponent(height)}`);
+  }
+  return `/api/media${urlParts.length > 0 ? `?${urlParts.join('&')}` : ''}`;
+}

@@ -13,7 +13,7 @@ import PageTitle from '@components/PageTitle';
 
 import { withTranslation } from '~/i18n';
 import config from '~/config';
-import { uriToId } from '@helpers/utils';
+import { uriToId, generateMediaUrl } from '@helpers/utils';
 
 const sparqlTransformer = require('sparql-transformer').default;
 
@@ -139,7 +139,7 @@ class BrowsePage extends Component {
               <Media
                 title={label}
                 subtitle={result.time.label}
-                thumbnail={mainImage}
+                thumbnail={generateMediaUrl(mainImage, 150)}
                 direction="column"
                 graphUri={result['@graph']}
               />

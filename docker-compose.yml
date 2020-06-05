@@ -16,5 +16,15 @@ services:
       - '27017:27017'
     volumes:
       - mongo:/data/db
+  imaginary:
+    image: h2non/imaginary:latest
+    volumes:
+      - images:/mnt/data
+    environment:
+      PORT: 9000
+    command: -enable-url-source -mount /mnt/data -allowed-origins ${IMAGINARY_ALLOWED_ORIGINS} -http-cache-ttl 31556926
+    ports:
+      - '9000:9000'
 volumes:
   mongo: {}
+  images: {}
