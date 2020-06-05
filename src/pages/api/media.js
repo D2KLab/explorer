@@ -3,9 +3,9 @@ export default async (req, res) => {
 
   let requestUrl = url;
 
-  // Check if imaginery is configured
-  const imagineryEndpoint = process.env.IMAGINARY_URL;
-  if (typeof imagineryEndpoint !== 'undefined') {
+  // Check if imaginary is configured
+  const imaginaryEndpoint = process.env.IMAGINARY_URL;
+  if (typeof imaginaryEndpoint !== 'undefined') {
     const urlParts = [];
     if (typeof url !== 'undefined') {
       urlParts.push(`url=${encodeURIComponent(url)}`);
@@ -16,7 +16,7 @@ export default async (req, res) => {
     if (typeof height !== 'undefined') {
       urlParts.push(`height=${encodeURIComponent(height)}`);
     }
-    requestUrl = `${imagineryEndpoint}/resize${
+    requestUrl = `${imaginaryEndpoint}/resize${
       urlParts.length > 0 ? `?${urlParts.join('&')}` : ''
     }`;
   }
