@@ -39,7 +39,7 @@ const TabButton = styled.button`
 const TabList = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: end;
+  align-items: flex-end;
   width: 100%;
   & > div,
   & > div > button {
@@ -70,11 +70,11 @@ class Tabs extends Component {
     super();
 
     this.state = {
-      selectedTab: 0
+      selectedTab: 0,
     };
   }
 
-  selectTab = tabIndex => {
+  selectTab = (tabIndex) => {
     this.setState({ selectedTab: tabIndex });
   };
 
@@ -112,7 +112,7 @@ class Tabs extends Component {
 }
 
 Tabs.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 export default Tabs;

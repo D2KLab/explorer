@@ -29,7 +29,7 @@ const Hero = styled.div`
 const Title = styled.h1`
   padding-left: 80px;
   padding-bottom: 60px;
-  align-self: end;
+  align-self: flex-end;
   text-shadow: 0px 4px 3px rgba(0, 0, 0, 0.2), 0px 8px 13px rgba(0, 0, 0, 0.1),
     0px 18px 23px rgba(0, 0, 0, 0.1);
   word-break: break-all;

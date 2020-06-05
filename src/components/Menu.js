@@ -52,7 +52,7 @@ export const StyledMenu = styled.nav`
 `;
 
 const StyledLanguageSwitch = styled(LanguageSwitch)`
-  align-self: end;
+  align-self: flex-end;
   font-weight: bold;
   color: #fff;
 `;
