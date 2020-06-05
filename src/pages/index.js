@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
-import { Helmet } from 'react-helmet';
 import { useDialogState, Dialog, DialogDisclosure } from 'reakit/Dialog';
 import { useDropzone } from 'react-dropzone';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
@@ -10,6 +9,7 @@ import { Camera } from '@styled-icons/boxicons-solid/Camera';
 import { Layout, Header, Footer, Body } from '@components';
 import { breakpoints } from '@styles';
 import SearchInput from '@components/SearchInput';
+import PageTitle from '@components/PageTitle';
 import { withTranslation } from '~/i18n';
 import config from '~/config';
 
@@ -266,7 +266,7 @@ const HomePage = ({ t }) => {
 
   return (
     <Layout>
-      <Helmet title="Home" />
+      <PageTitle title="Home" />
       <Header />
       <Body>
         <Hero>

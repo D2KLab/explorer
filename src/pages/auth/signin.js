@@ -1,15 +1,15 @@
 import styled from 'styled-components';
-import { Helmet } from 'react-helmet';
 import NextAuth from 'next-auth/client';
 
 import Button from '@components/Button';
 import { Layout, Header, Body, Content, Title, Footer, Element } from '@components';
 import { ProviderButton } from '@components/ProviderButton';
+import PageTitle from '@components/PageTitle';
 
 const SignInPage = ({ providers }) => {
   return (
     <Layout>
-      <Helmet title={`Sign in`} />
+      <PageTitle title={`Sign in`} />
       <Header />
       <Body>
         <Element

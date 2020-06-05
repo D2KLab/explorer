@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { Img } from 'react-image';
 import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
-import { Helmet } from 'react-helmet';
 import Link from 'next/link';
 import NextAuth from 'next-auth/client';
 import Moment from 'react-moment';
@@ -14,6 +13,7 @@ import ListSettings from '@components/ListSettings';
 import ListDeletion from '@components/ListDeletion';
 import ListShare from '@components/ListShare';
 import { ProviderButton } from '@components/ProviderButton';
+import PageTitle from '@components/PageTitle';
 import { Header, Footer, Layout, Body, Content, Title, Element, Button } from '@components';
 import { breakpoints } from '@styles';
 
@@ -261,7 +261,7 @@ export default ({ providers, session, accounts, lists, baseUrl, facebookAppId })
 
   return (
     <Layout>
-      <Helmet title="Profile" />
+      <PageTitle title="Profile" />
       <Header />
       <Body hasSidebar>
         <Content>

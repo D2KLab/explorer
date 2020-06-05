@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import styled, { css } from 'styled-components';
 import { withRouter } from 'next/router';
-import { Helmet } from 'react-helmet';
 import Link from 'next/link';
 import StickyBox from 'react-sticky-box';
 import 'intersection-observer';
@@ -9,6 +8,7 @@ import 'intersection-observer';
 import { Header, Footer, Layout, Body, Content } from '@components';
 import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
+import PageTitle from '@components/PageTitle';
 import { breakpoints } from '@styles';
 import config from '~/config';
 import { withTranslation } from '~/i18n';
@@ -152,7 +152,7 @@ class VocabularyPage extends Component {
 
     return (
       <Layout>
-        <Helmet title={`Vocabulary: ${query.type}`} />
+        <PageTitle title={`Vocabulary: ${query.type}`} />
         <Header />
         <Body>
           <Hero image={`/images/pages/${query.type}.jpg`}>

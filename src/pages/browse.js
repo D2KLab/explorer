@@ -2,7 +2,6 @@ import { Component } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import Router, { withRouter } from 'next/router';
-import { Helmet } from 'react-helmet';
 
 import { Header, Footer, Sidebar, Layout, Body, Content, Media } from '@components';
 import Metadata from '@components/Metadata';
@@ -10,6 +9,7 @@ import Debug from '@components/Debug';
 import Select from '@components/Select';
 import Pagination from '@components/Pagination';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
+import PageTitle from '@components/PageTitle';
 
 import { withTranslation } from '~/i18n';
 import config from '~/config';
@@ -155,7 +155,7 @@ class BrowsePage extends Component {
 
     return (
       <Layout>
-        <Helmet title={t('labels.browse', { type: query.type })} />
+        <PageTitle title={t('labels.browse', { type: query.type })} />
         <Header />
         <Body hasSidebar>
           <Sidebar type={query.type} query={query} filters={filters} onSearch={this.onSearch} />

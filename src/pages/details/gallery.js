@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { Helmet } from 'react-helmet';
 import NextAuth from 'next-auth/client';
 
 import { Header, Footer, Layout, Body, Media, Element } from '@components';
@@ -9,6 +8,7 @@ import Tabs, { Tab } from '@components/TabBar';
 import GraphIcon from '@components/GraphIcon';
 import Debug from '@components/Debug';
 import SaveButton from '@components/SaveButton';
+import PageTitle from '@components/PageTitle';
 import { breakpoints } from '@styles';
 import { uriToId, idToUri } from '@helpers/utils';
 import config from '~/config';
@@ -228,7 +228,7 @@ const GalleryDetailsPage = ({ result, t }) => {
 
   return (
     <Layout>
-      <Helmet title={`${label}`} />
+      <PageTitle title={`${label}`} />
       <Header />
       <Body>
         <Columns>

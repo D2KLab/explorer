@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { Helmet } from 'react-helmet';
 import LazyLoad from 'react-lazyload';
 
 import { Header, Footer, Layout, Body, Media } from '@components';
 import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
+import PageTitle from '@components/PageTitle';
 import { breakpoints } from '@styles';
 import { uriToId, idToUri } from '@helpers/utils';
 import config from '~/config';
@@ -75,7 +75,7 @@ const CollectionDetailsPage = ({ result }) => {
 
   return (
     <Layout>
-      <Helmet title={`${label}`} />
+      <PageTitle title={`${label}`} />
       <Header />
       <Body>
         <Columns>

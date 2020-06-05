@@ -1,10 +1,10 @@
 import { Layout } from '@components';
-import { Helmet } from 'react-helmet';
+import PageTitle from '@components/PageTitle';
 
 const AboutPage = () => {
   return (
     <Layout>
-      <Helmet title="About" />
+      <PageTitle title="About" />
       About
     </Layout>
   );

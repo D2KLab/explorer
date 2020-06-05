@@ -1,10 +1,10 @@
 import { Layout, Header, Body, Content } from '@components';
-import { Helmet } from 'react-helmet';
+import PageTitle from '@components/PageTitle';
 
 const TermsOfServicePage = () => {
   return (
     <Layout>
-      <Helmet title="Terms of Service" />
+      <PageTitle title="Terms of Service" />
       <Header />
       <Body>
         <Content>

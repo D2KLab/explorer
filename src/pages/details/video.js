@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { Helmet } from 'react-helmet';
 
 import { Header, Footer, Layout, Body, Media } from '@components';
 import Metadata from '@components/Metadata';
 import Tabs, { Tab } from '@components/TabBar';
+import PageTitle from '@components/PageTitle';
 import { breakpoints } from '@styles';
 import { uriToId, idToUri } from '@helpers/utils';
 import config from '~/config';
@@ -86,7 +86,7 @@ const VideoDetailsPage = ({ result }) => {
 
   return (
     <Layout>
-      <Helmet title={`${label}`} />
+      <PageTitle title={`${label}`} />
       <Header />
       <Body>
         <Columns>

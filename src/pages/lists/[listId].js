@@ -1,6 +1,5 @@
 import styled, { withTheme } from 'styled-components';
 import { useState } from 'react';
-import { Helmet } from 'react-helmet';
 import Link from 'next/link';
 import Router from 'next/router';
 import { useDialogState, DialogDisclosure } from 'reakit/Dialog';
@@ -22,6 +21,7 @@ import {
 import Button from '@components/Button';
 import ListSettings from '@components/ListSettings';
 import ListDeletion from '@components/ListDeletion';
+import PageTitle from '@components/PageTitle';
 import config from '~/config';
 
 const sparqlTransformer = require('sparql-transformer').default;
@@ -92,7 +92,7 @@ export default withTheme(({ isOwner, list, shareLink, error, theme }) => {
       <Body>
         {(list && (
           <>
-            <Helmet title={list.name} />
+            <PageTitle title={list.name} />
             <Content>
               <Navbar>
                 <NavItem>
@@ -126,7 +126,7 @@ export default withTheme(({ isOwner, list, shareLink, error, theme }) => {
           </>
         )) || (
           <>
-            <Helmet title={error.message} />
+            <PageTitle title={error.message} />
             <Title>List not found</Title>
             <Content>
               <p>{error.message}</p>
