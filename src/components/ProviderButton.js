@@ -28,13 +28,19 @@ export const TwitterButton = styled(Button)`
   color: #fff;
 `;
 
-export const ProviderButton = ({ provider, redirect = false }) => {
+export const ProviderButton = ({ provider, redirectUrl }) => {
   const Container = providersButtons[provider.name] || Button;
+
+  let { signinUrl } = provider;
+  if (typeof redirectUrl === 'string') {
+    signinUrl += `?callbackUrl=${redirectUrl}`;
+  }
+
   return (
     <Container
-      href={provider.signinUrl}
+      href={signinUrl}
       onClick={
-        redirect
+        !redirectUrl // @TODO: NextAuth doesn't allow passing a callbackUrl to NextAuth.signin() as of 2.0.0-beta.61
           ? (e) => {
               e.preventDefault();
               NextAuth.signin(provider.id);
