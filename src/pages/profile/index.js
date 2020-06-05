@@ -248,7 +248,7 @@ export default ({ providers, session, accounts, lists, baseUrl, facebookAppId })
               }
               return (
                 <Element key={provider.name} marginY={12}>
-                  <ProviderButton provider={provider} />
+                  <ProviderButton provider={provider} redirect />
                 </Element>
               );
             })}

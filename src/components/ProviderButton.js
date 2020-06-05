@@ -28,15 +28,19 @@ export const TwitterButton = styled(Button)`
   color: #fff;
 `;
 
-export const ProviderButton = ({ provider }) => {
+export const ProviderButton = ({ provider, redirect = false }) => {
   const Container = providersButtons[provider.name] || Button;
   return (
     <Container
       href={provider.signinUrl}
-      onClick={(e) => {
-        e.preventDefault();
-        NextAuth.signin(provider.name.toLowerCase());
-      }}
+      onClick={
+        redirect
+          ? (e) => {
+              e.preventDefault();
+              NextAuth.signin(provider.name.toLowerCase());
+            }
+          : null
+      }
     >
       Sign in with {provider.name}
     </Container>
