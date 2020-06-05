@@ -189,7 +189,7 @@ export const removeUserAccount = async (user, account) => {
   return db.collection('account').remove(
     {
       _id: account._id,
-      user: new ObjectID(user._id),
+      userId: new ObjectID(user._id),
     },
     {
       justOne: true,
