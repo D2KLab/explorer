@@ -41,7 +41,8 @@ export function withRequestValidation(options = {}) {
       validateRequest(req, res, options)
         .then(() => WrappedFunction(req, res))
         .catch((err) => {
-          res.status(err.statusCode).json({
+          const statusCode = err.statusCode || 500;
+          res.status(statusCode).json({
             error: {
               status: err.statusCode,
               message: err.message,
