@@ -147,6 +147,20 @@ class BrowsePage extends Component {
     });
   };
 
+  onSortChange = (selectedOption) => {
+    const { pathname, query } = this.props.router;
+    const { value } = selectedOption;
+
+    this.setState({ isLoading: true });
+    Router.push({
+      pathname,
+      query: {
+        ...query,
+        sort: value,
+      },
+    });
+  };
+
   render() {
     const { results, filters, totalResults, router, t } = this.props;
     const { isLoading } = this.state;
@@ -158,7 +172,12 @@ class BrowsePage extends Component {
       return <DefaultErrorPage statusCode={404} title="Route not found" />;
     }
 
-    const options = [{ label: 'Alphabetically', value: '0' }];
+    const sortOptions = route.filters
+      .filter((filter) => filter.isSortable === true)
+      .map((filter) => ({
+        label: t(`filters.${filter.id}`, filter.label),
+        value: filter.id,
+      }));
 
     const renderResults = () => {
       return results.map((result) => {
@@ -197,25 +216,26 @@ class BrowsePage extends Component {
     };
 
     const renderEmptyResults = () => {
-      return <p>{t('labels.no_results')}</p>;
+      return <p>{t('search:labels.no_results')}</p>;
     };
 
     return (
       <Layout>
-        <PageTitle title={t('labels.browse', { type: query.type })} />
+        <PageTitle title={t('search:labels.browse', { type: query.type })} />
         <Header />
         <Body hasSidebar>
           <Sidebar type={query.type} query={query} filters={filters} onSearch={this.onSearch} />
           <Content>
-            <StyledTitle>{t('labels.search_results')}</StyledTitle>
+            <StyledTitle>{t('search:labels.search_results')}</StyledTitle>
             <OptionsBar>
               <Option>
-                <Label htmlFor="select_sort">{t('labels.sort_by')}</Label>
+                <Label htmlFor="select_sort">{t('search:labels.sort_by')}</Label>
                 <StyledSelect
                   inputId="select_sort"
                   name="sort"
                   placeholder={t('search:labels.select')}
-                  options={options}
+                  options={sortOptions}
+                  onChange={this.onSortChange}
                   theme={(theme) => ({
                     ...theme,
                     borderRadius: 0,
@@ -261,7 +281,7 @@ class BrowsePage extends Component {
               </Metadata>
               <Metadata label="SPARQL Query">
                 <SPARQLQueryLink query={this.props.debugSparqlQuery}>
-                  {t('edit_query')}
+                  {t('search:edit_query')}
                 </SPARQLQueryLink>
                 <pre>{this.props.debugSparqlQuery}</pre>
               </Metadata>
@@ -363,6 +383,16 @@ export async function getServerSideProps({ query, res }) {
     );
   }
 
+  // Sort by
+  let orderByVariable = null;
+  if (query.sort) {
+    const sortFilter = route.filters.find((filter) => filter.id === query.sort);
+    if (sortFilter && typeof sortFilter.whereFunc === 'function') {
+      extraWhere.push(...sortFilter.whereFunc());
+      orderByVariable = query.sort;
+    }
+  }
+
   // Pagination
   const itemsPerPage = 20;
   // searchQuery.$limit = itemsPerPage;
@@ -383,6 +413,7 @@ export async function getServerSideProps({ query, res }) {
         ${whereCondition}
       }
       GROUP BY ?id
+      ${orderByVariable ? `ORDER BY ?${orderByVariable}` : ''}
       OFFSET ${itemsPerPage * ((parseInt(query.page, 10) || 1) - 1)}
       LIMIT ${itemsPerPage}
     }
@@ -441,4 +472,4 @@ export async function getServerSideProps({ query, res }) {
   return { props: { results, filters, totalResults, debugSparqlQuery } };
 }
 
-export default withTranslation('search')(withRouter(BrowsePage));
+export default withTranslation(['common', 'search'])(withRouter(BrowsePage));

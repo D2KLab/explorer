@@ -72,6 +72,7 @@ module.exports = {
         {
           id: 'time',
           isMulti: false,
+          isSortable: true,
           query: {
             '@graph': [
               {
@@ -97,6 +98,7 @@ module.exports = {
         {
           id: 'location',
           isMulti: true,
+          isSortable: true,
           query: {
             '@graph': [
               {
@@ -127,6 +129,7 @@ module.exports = {
         {
           id: 'material',
           isMulti: true,
+          isSortable: true,
           query: {
             '@graph': [
               {
@@ -153,6 +156,7 @@ module.exports = {
         {
           id: 'technique',
           isMulti: true,
+          isSortable: true,
           query: {
             '@graph': [
               {
@@ -179,6 +183,7 @@ module.exports = {
         {
           id: 'composed',
           isMulti: true,
+          isSortable: true,
           query: {
             '@graph': [
               {
