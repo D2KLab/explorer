@@ -16,7 +16,6 @@ export { default as SearchBox } from './SearchBox';
 export { default as Select } from './Select';
 export { default as Sidebar } from './Sidebar';
 export { default as TabBar } from './TabBar';
-export { default as Pagination } from './Pagination';
 export { default as LanguageSwitch } from './LanguageSwitch';
 export { default as ProfileButton } from './ProfileButton';
 export { default as GraphIcon } from './GraphIcon';

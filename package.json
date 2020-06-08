@@ -36,6 +36,7 @@
     "react-lazy-load-image-component": "^1.4.3",
     "react-lazyload": "^2.6.7",
     "react-moment": "^0.9.7",
+    "react-paginate": "^6.3.2",
     "react-responsive-carousel": "^3.2.7",
     "react-select": "^3.1.0",
     "react-share": "^4.1.0",
