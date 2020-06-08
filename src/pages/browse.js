@@ -57,9 +57,7 @@ const Results = styled.div`
 const PaginationContainer = styled.div`
   li {
     display: inline-block;
-    padding: 7px 12px;
     margin-left: -1px;
-    font-size: 13px;
     white-space: nowrap;
     vertical-align: middle;
     cursor: pointer;
@@ -68,6 +66,8 @@ const PaginationContainer = styled.div`
     transition: background-color 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
 
     a {
+      display: inline-block;
+      padding: 7px 12px;
       transition: color 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
       color: ${({ theme }) => theme.colors.primary};
     }
@@ -78,7 +78,7 @@ const PaginationContainer = styled.div`
     &.active {
       background-color: ${({ theme }) => theme.colors.primary};
       a {
-        color: ${({ theme }) => theme.colors.secondary};
+        color: #fff;
       }
     }
   }
