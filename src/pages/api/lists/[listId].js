@@ -8,13 +8,15 @@ import {
   removeUserList,
   updateList,
 } from '@helpers/database';
+import { withRequestValidation } from '@helpers/api';
 
-export default async (req, res) => {
+export default withRequestValidation({
+  allowedMethods: ['GET', 'PUT', 'DELETE'],
+})(async (req, res) => {
   const list = await getListById(req.query.listId);
 
   if (!list) {
-    res.statusCode = 404;
-    res.json({
+    res.status(404).json({
       error: {
         status: 404,
         message: 'List not found',
@@ -24,7 +26,7 @@ export default async (req, res) => {
   }
 
   // Get user informations
-  const session = await NextAuth.session({ req });
+  const session = await NextAuth.getSession({ req });
   const user = await getSessionUser(session);
 
   const isOwner = user && list && list.user.equals(user._id);
@@ -33,8 +35,7 @@ export default async (req, res) => {
     res.status(200).json(list);
 
     if (!list.is_public && !isOwner) {
-      res.statusCode = 403;
-      res.json({
+      res.status(403).json({
         error: {
           status: 403,
           message: 'Forbidden',
@@ -46,8 +47,7 @@ export default async (req, res) => {
 
   // Owner operations
   if (!isOwner) {
-    res.statusCode = 403;
-    res.json({
+    res.status(403).json({
       error: {
         status: 403,
         message: 'Forbidden',
@@ -85,4 +85,4 @@ export default async (req, res) => {
     await removeUserList(user, list);
     res.status(200).json({});
   }
-};
+});

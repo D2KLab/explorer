@@ -333,8 +333,8 @@ export default ({ providers, session, accounts, lists, baseUrl, facebookAppId })
 
 export async function getServerSideProps(ctx) {
   const { req, res } = ctx;
-  const providers = await NextAuth.providers(ctx);
-  const session = await NextAuth.session({ req });
+  const providers = await NextAuth.getProviders(ctx);
+  const session = await NextAuth.getSession(ctx);
 
   if (!session) {
     res.setHeader('location', '/auth/signin');

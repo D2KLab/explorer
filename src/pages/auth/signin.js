@@ -42,7 +42,7 @@ const SignInPage = ({ providers }) => {
 export default SignInPage;
 
 export async function getServerSideProps(ctx) {
-  const providers = await NextAuth.providers(ctx);
+  const providers = await NextAuth.getProviders(ctx);
   return {
     props: {
       providers,

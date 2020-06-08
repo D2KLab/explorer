@@ -1,19 +1,13 @@
 import NextAuth from 'next-auth/client';
 
 import { getSessionUser, getUserAccounts, removeUserAccount } from '@helpers/database';
+import { withRequestValidation } from '@helpers/api';
 
-export default async (req, res) => {
-  const session = await NextAuth.session({ req });
-
-  if (!session) {
-    res.status(403).json({
-      error: {
-        status: 403,
-        message: 'Session not found',
-      },
-    });
-    return;
-  }
+export default withRequestValidation({
+  useSession: true,
+  allowedMethods: ['GET', 'DELETE'],
+})(async (req, res) => {
+  const session = await NextAuth.getSession({ req });
 
   // Get user
   const user = await getSessionUser(session);
@@ -60,10 +54,10 @@ export default async (req, res) => {
 
     await removeUserAccount(user, accountToUnlink);
     res.status(200).json({});
-    return;
   } else if (req.method === 'GET') {
     // Get details for an account
-    const account = accounts.find((account) => account._id.equals(accountId));
+    const account = accounts.find((acc) => acc._id.equals(accountId));
+
     if (!account) {
       res.status(404).json({
         error: {
@@ -75,13 +69,5 @@ export default async (req, res) => {
     }
 
     res.status(200).json(account);
-    return;
   }
-
-  res.status(405).json({
-    error: {
-      status: 405,
-      message: 'Method not allowed',
-    },
-  });
-};
+});

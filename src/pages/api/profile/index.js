@@ -1,19 +1,13 @@
 import NextAuth from 'next-auth/client';
 
 import { getSessionUser, deleteUser } from '@helpers/database';
+import { withRequestValidation } from '@helpers/api';
 
-export default async (req, res) => {
-  const session = await NextAuth.session({ req });
-
-  if (!session) {
-    res.status(403).json({
-      error: {
-        status: 403,
-        message: 'Session not found',
-      },
-    });
-    return;
-  }
+export default withRequestValidation({
+  useSession: true,
+  allowedMethods: ['GET', 'DELETE'],
+})(async (req, res) => {
+  const session = await NextAuth.getSession({ req });
 
   // Get user informations
   const user = await getSessionUser(session);
@@ -21,18 +15,9 @@ export default async (req, res) => {
   if (req.method === 'GET') {
     // Return user informations
     res.status(200).json({ ...user });
-    return;
   } else if (req.method === 'DELETE') {
     // Delete user account
     await deleteUser(user);
     res.status(200).json({});
-    return;
   }
-
-  res.status(405).json({
-    error: {
-      status: 405,
-      message: 'Method not allowed',
-    },
-  });
-};
+});

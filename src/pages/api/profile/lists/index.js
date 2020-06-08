@@ -1,20 +1,13 @@
 import NextAuth from 'next-auth/client';
 
 import { getSessionUser, getUserLists, createUserList } from '@helpers/database';
+import { withRequestValidation } from '@helpers/api';
 
-export default async (req, res) => {
-  const session = await NextAuth.session({ req });
-
-  if (!session) {
-    res.statusCode = 403;
-    res.json({
-      error: {
-        status: 403,
-        message: 'Session not found',
-      },
-    });
-    return;
-  }
+export default withRequestValidation({
+  useSession: true,
+  allowedMethods: ['GET', 'POST'],
+})(async (req, res) => {
+  const session = await NextAuth.getSession({ req });
 
   // Get user informations
   const user = await getSessionUser(session);
@@ -36,4 +29,4 @@ export default async (req, res) => {
 
     res.status(200).json(list);
   }
-};
+});

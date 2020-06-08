@@ -1,4 +1,8 @@
-export default async (req, res) => {
+import { withRequestValidation } from '@helpers/api';
+
+export default withRequestValidation({
+  allowedMethods: ['GET'],
+})(async (req, res) => {
   const { url, width, height } = req.query;
 
   let requestUrl = url;
@@ -25,4 +29,4 @@ export default async (req, res) => {
   const fetchRes = await fetch(requestUrl);
   res.writeHead(fetchRes.status, Object.fromEntries(fetchRes.headers.entries()));
   return fetchRes.body.pipe(res);
-};
+});
