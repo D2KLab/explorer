@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { Img } from 'react-image';
 import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
-import Link from 'next/link';
 import NextAuth from 'next-auth/client';
 import Moment from 'react-moment';
 import Router from 'next/router';
@@ -14,7 +13,7 @@ import ListDeletion from '@components/ListDeletion';
 import ListShare from '@components/ListShare';
 import { ProviderButton } from '@components/ProviderButton';
 import PageTitle from '@components/PageTitle';
-import { Header, Footer, Layout, Body, Content, Title, Element, Button } from '@components';
+import { Header, Footer, Layout, Body, Content, Element, Button } from '@components';
 import { breakpoints } from '@styles';
 
 const StyledDialogDisclosure = styled(DialogDisclosure)`
@@ -91,7 +90,7 @@ const Avatar = styled.img`
 `;
 
 const ListItem = styled.li`
-  display: flex
+  display: flex;
   align-items: center;
   transition: box-shadow 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
 
@@ -137,13 +136,13 @@ const StyledTrashIcon = styled(TrashIcon)`
 `;
 
 export default ({ providers, session, accounts, lists, baseUrl, facebookAppId }) => {
-  const deleteAccountDialog = useDialogState();
+  const deleteProfileDialog = useDialogState();
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [isUnlinkingAccount, setIsUnlinkingAccount] = useState(false);
   const deleteListDialog = useDialogState();
   const shareListDialog = useDialogState();
 
-  const deleteAccount = async () => {
+  const deleteProfile = async () => {
     setIsDeletingAccount(true);
     await fetch(`/api/profile`, {
       method: 'DELETE',
@@ -164,7 +163,7 @@ export default ({ providers, session, accounts, lists, baseUrl, facebookAppId })
       <Element marginY={24} display="flex" flexDirection="column">
         <h3 style={{ color: '#dc3535', fontWeight: 'bold' }}>Delete account</h3>
         <DialogDisclosure
-          {...deleteAccountDialog}
+          {...deleteProfileDialog}
           as={DeleteButton}
           bg="#fff"
           text="#dc3545"
@@ -172,8 +171,8 @@ export default ({ providers, session, accounts, lists, baseUrl, facebookAppId })
         >
           Delete account
         </DialogDisclosure>
-        <StyledDialogBackdrop {...deleteAccountDialog}>
-          <StyledDialog {...deleteAccountDialog} modal aria-label="Delete account">
+        <StyledDialogBackdrop {...deleteProfileDialog}>
+          <StyledDialog {...deleteProfileDialog} modal aria-label="Delete account">
             <h2>Delete account</h2>
             <p>
               Are you sure you wish to <strong>permanently delete</strong> your account?{' '}
@@ -191,7 +190,7 @@ export default ({ providers, session, accounts, lists, baseUrl, facebookAppId })
                 type="button"
                 secondary
                 onClick={() => {
-                  deleteAccountDialog.hide();
+                  deleteProfileDialog.hide();
                 }}
               >
                 Cancel account deletion
@@ -201,7 +200,7 @@ export default ({ providers, session, accounts, lists, baseUrl, facebookAppId })
                 bg="#dc3545"
                 text="#fff"
                 loading={isDeletingAccount}
-                onClick={deleteAccount}
+                onClick={deleteProfile}
               >
                 Yes, delete my account
               </Button>
