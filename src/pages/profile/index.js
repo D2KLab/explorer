@@ -211,7 +211,7 @@ export default ({ providers, session, accounts, lists, baseUrl, facebookAppId })
     );
   };
 
-  const renderAccounts = (accounts, providers) => {
+  const renderAccounts = () => {
     return (
       <>
         <Element marginBottom={24}>
@@ -236,17 +236,14 @@ export default ({ providers, session, accounts, lists, baseUrl, facebookAppId })
         <Element marginBottom={24}>
           <h3>Connect another account</h3>
           {providers &&
-            Object.entries(providers).map(([providerId, provider]) => {
-              if (accounts.find((account) => account.providerId === providerId)) {
+            Object.values(providers).map((provider) => {
+              if (accounts.find((account) => account.providerId === provider.id)) {
                 // Do not display a button if this provider is already linked to the user
                 return null;
               }
               return (
                 <Element key={provider.name} marginY={12}>
-                  <ProviderButton
-                    provider={{ ...provider, providerId }}
-                    redirectUrl={`${baseUrl}/profile`}
-                  />
+                  <ProviderButton provider={provider} redirectUrl={`${baseUrl}/profile`} />
                 </Element>
               );
             })}
