@@ -181,31 +181,6 @@ module.exports = {
           },
         },
         {
-          id: 'composed',
-          isMulti: true,
-          isSortable: true,
-          query: {
-            '@graph': [
-              {
-                '@id': '?id',
-                label: '?label',
-              },
-            ],
-            $where: [
-              '?id a <http://erlangen-crm.org/current/E78_Collection>',
-              '?id <http://www.w3.org/2000/01/rdf-schema#label> ?label',
-            ],
-            $filter: ['langmatches(lang(?label), "en") || lang(?label) = ""'],
-            $langTag: 'hide',
-          },
-          whereFunc: () => [
-            '?collection <http://erlangen-crm.org/current/P106_is_composed_of> ?id',
-          ],
-          filterFunc: (values) => {
-            return [values.map((val) => `?collection = <${val}>`).join(' || ')];
-          },
-        },
-        {
           id: 'show-only-fabric',
           isOption: true,
         },
