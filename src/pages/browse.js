@@ -192,7 +192,9 @@ class BrowsePage extends Component {
             result.representation[0]['@id'] ||
             result.representation[0];
         }
-        const label = route.labelFunc(result);
+        const label = typeof route.labelFunc === 'function' ? route.labelFunc(result) : null;
+        const subtitle =
+          typeof route.subtitleFunc === 'function' ? route.subtitleFunc(result) : null;
 
         return (
           <Link
@@ -206,7 +208,7 @@ class BrowsePage extends Component {
             <a>
               <Media
                 title={label}
-                subtitle={result.time.label}
+                subtitle={subtitle}
                 thumbnail={generateMediaUrl(mainImage, 150)}
                 direction="column"
                 graphUri={result['@graph']}
