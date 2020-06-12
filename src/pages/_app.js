@@ -7,7 +7,7 @@ import { Reset } from 'styled-reset';
 import Head from 'next/head';
 
 import NProgress from '@components/NProgress';
-import theme from '@styles/theme';
+import theme from '~/theme';
 import { appWithTranslation } from '~/i18n';
 
 class MyApp extends App {

@@ -10,8 +10,18 @@ const theme = {
     background: '#f7f7ef',
     primary: '#f38468',
     secondary: '#144168',
-    linkHover: '#b56653',
+    linkHover: '#a02a0c',
     light: '#f5b1a1',
+  },
+  home: {
+    textSearchButton: {
+      background: '#f38468',
+      text: '#fff',
+    },
+    imageSearchButton: {
+      background: '#9ca4d3',
+      text: '#fff',
+    },
   },
   header: {
     height: '80px',
