@@ -168,11 +168,16 @@ class SearchInput extends Component {
   };
 
   onSuggestionSelected = (event, { suggestion }) => {
-    const type = 'objects'; // TODO: do not hardcode the type
-    Router.push({
-      pathname: `/${type}/${uriToId(suggestion['@id'])}`,
-      // shallow: true
-    });
+    const [routeName, route] =
+      Object.entries(config.routes).find(([, r]) => {
+        return r.rdfType && r.rdfType === suggestion['@type'];
+      }) || [];
+    if (route) {
+      Router.push({
+        pathname: `/${routeName}/${uriToId(suggestion['@id'], { encoding: !route.uriBase })}`,
+        // shallow: true
+      });
+    }
   };
 
   render() {
