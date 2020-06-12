@@ -39,7 +39,7 @@ const Results = styled.div`
   margin: 0 calc(-1 * var(--card-margin));
 `;
 
-export default withTheme(({ isOwner, list, shareLink, error, theme }) => {
+export default ({ isOwner, list, shareLink, error }) => {
   const renderListItems = () => {
     return (
       <Element marginY={24}>
