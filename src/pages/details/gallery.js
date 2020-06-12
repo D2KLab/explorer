@@ -145,14 +145,15 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
     return <>{meta}</>;
   }
 
-  const type = Object.entries(config.routes).find(([, route]) => {
-    return route.rdfType && route.rdfType === meta['@type'];
-  });
+  const [routeName, route] =
+    Object.entries(config.routes).find(([, r]) => {
+      return r.rdfType && r.rdfType === meta['@type'];
+    }) || [];
   const isKnownType = typeof type !== 'undefined';
 
   let url = meta['@id'];
-  if (type) {
-    url = `/${type[0]}/${uriToId(meta['@id'])}`;
+  if (route) {
+    url = `/${routeName}/${uriToId(meta['@id'], { encoding: !route.uriBase })}`;
   } else if (
     currentRoute &&
     Array.isArray(currentRoute.filters) &&
@@ -185,7 +186,6 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
       rel={isKnownType ? '' : 'noopener noreferrer'}
     >
       {printableValue}
-      {JSON.stringify(type)}
     </a>
   );
 }
@@ -338,7 +338,10 @@ const GalleryDetailsPage = ({ result, t }) => {
 GalleryDetailsPage.getInitialProps = async ({ query }) => {
   const route = config.routes[query.type];
   const searchQuery = JSON.parse(JSON.stringify(route.query));
-  searchQuery.$filter = `?id = <${idToUri(query.id, route.uriBase)}>`;
+  searchQuery.$filter = `?id = <${idToUri(query.id, {
+    base: route.uriBase,
+    encoding: !route.uriBase,
+  })}>`;
 
   try {
     if (config.debug) {

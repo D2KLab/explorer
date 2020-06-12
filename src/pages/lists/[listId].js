@@ -48,16 +48,31 @@ export default withTheme(({ isOwner, list, shareLink, error, theme }) => {
           {list.items.length > 0 ? (
             <Results>
               {list.items.map((item) => {
+                const [, route] =
+                  Object.entries(config.routes).find(([routeName]) => {
+                    return routeName === item.route;
+                  }) || [];
+
                 return (
-                  <StyledMedia
+                  <Link
                     key={item.id}
-                    title={item.title}
-                    subtitle={item.subtitle}
-                    thumbnail={generateMediaUrl(item.image, 150)}
-                    direction="column"
-                    link={`/${item.route}/${uriToId(item.id)}`}
-                    uri={item.graph}
-                  />
+                    href={`/details/${route.details.view}?id=${uriToId(item.id, {
+                      encoding: !route.uriBase,
+                    })}&type=${item.route}`}
+                    as={`/${item.route}/${uriToId(item.id, { encoding: !route.uriBase })}`}
+                    passHref
+                  >
+                    <a>
+                      <StyledMedia
+                        title={item.title}
+                        subtitle={item.subtitle}
+                        thumbnail={generateMediaUrl(item.image, 150)}
+                        direction="column"
+                        link={`/${item.route}/${uriToId(item.id, { encoding: !route.uriBase })}`}
+                        uri={item.graph}
+                      />
+                    </a>
+                  </Link>
                 );
               })}
             </Results>
@@ -137,7 +152,7 @@ export default withTheme(({ isOwner, list, shareLink, error, theme }) => {
       <Footer />
     </Layout>
   );
-});
+};
 
 export async function getServerSideProps({ req, res, query }) {
   // Fetch the list
@@ -178,9 +193,10 @@ export async function getServerSideProps({ req, res, query }) {
   // Get details (title, image, ...) for each item in the list
   for (let i = 0; i < list.items.length; i += 1) {
     const item = list.items[i];
-    const [routeName, route] = Object.entries(config.routes).find(([, r]) => {
-      return r.uriBase && item.startsWith(r.uriBase);
-    });
+    const [routeName, route] =
+      Object.entries(config.routes).find(([, r]) => {
+        return r.uriBase && item.startsWith(r.uriBase);
+      }) || [];
 
     if (route) {
       const searchQuery = JSON.parse(JSON.stringify(route.query));

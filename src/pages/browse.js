@@ -197,8 +197,10 @@ class BrowsePage extends Component {
         return (
           <Link
             key={result['@id']}
-            href={`/details/${route.details.view}?id=${uriToId(result['@id'])}&type=${query.type}`}
-            as={`/${query.type}/${uriToId(result['@id'])}`}
+            href={`/details/${route.details.view}?id=${uriToId(result['@id'], {
+              encoding: !route.uriBase,
+            })}&type=${query.type}`}
+            as={`/${query.type}/${uriToId(result['@id'], { encoding: !route.uriBase })}`}
             passHref
           >
             <a>
