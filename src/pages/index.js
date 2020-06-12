@@ -191,7 +191,8 @@ const SearchButton = styled.button`
   appearance: none;
   border: none;
   height: 80%;
-  background-color: ${({ theme }) => theme.colors.primary};
+  background-color: ${({ theme }) => theme.home.textSearchButton.background};
+  color: ${({ theme }) => theme.home.textSearchButton.text};
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12),
     0 1px 5px 0 rgba(0, 0, 0, 0.2);
   margin-right: 10px;
@@ -204,16 +205,15 @@ const SearchButton = styled.button`
 `;
 
 const CameraButton = styled(SearchButton)`
-  background-color: #9ca4d1;
+  background-color: ${({ theme }) => theme.home.imageSearchButton.background};
+  color: ${({ theme }) => theme.home.imageSearchButton.text};
 `;
 
 const SearchIcon = styled(SearchAlt2)`
-  color: #fff;
   height: 32px;
 `;
 
 const CameraIcon = styled(Camera)`
-  color: #fff;
   height: 32px;
 `;
 
