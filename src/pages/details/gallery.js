@@ -125,17 +125,8 @@ const MetadataList = styled.div`
   margin-bottom: 24px;
 `;
 
-const RelatedVideos = styled.div`
-  background-color: #eee;
-  padding: 16px;
-  border: 1px solid #dcdcdc;
-
-  h2 {
-    text-transform: uppercase;
-    font-weight: bold;
-    color: ${({ theme }) => theme.colors.primary};
-    margin-bottom: 1em;
-  }
+const VirtualLoomButton = styled.a`
+  display: block;
 `;
 
 const RelatedVideosList = styled.div``;
@@ -190,7 +181,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
   );
 }
 
-const GalleryDetailsPage = ({ result, t }) => {
+const GalleryDetailsPage = ({ result, t, i18n }) => {
   const { query } = useRouter();
   const [session] = NextAuth.useSession();
   const route = config.routes[query.type];
@@ -198,33 +189,74 @@ const GalleryDetailsPage = ({ result, t }) => {
   const images = [];
   const representations = Array.isArray(result.representation)
     ? result.representation
-    : [result.representation];
+    : [result.representation].filter((x) => x);
   representations.forEach((repres) => {
     const imgs = Array.isArray(repres.image) ? repres.image : [repres.image];
     images.push(...imgs.filter((img) => img && new URL(img).hostname === 'silknow.org'));
   });
 
-  const metadata = Object.entries(result).filter(([metaName, meta]) => {
+  const metadata = Object.entries(result).filter(([metaName]) => {
     return !['@type', '@id', '@graph', 'label', 'representation'].includes(metaName);
   });
 
-  // TODO: used to test the Analysis section, remove later
-  const lipsum = (
-    <>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-        labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo
-        viverra maecenas accumsan lacus vel facilisisda.
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-        labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo
-        viverra maecenas accumsan lacus vel facilisisda.
-      </p>
-    </>
-  );
-
+  console.log('result=', result);
   const label = route.labelFunc(result);
+
+  const onClickVirtualLoomButton = (e) => {
+    e.stopPropagation();
+
+    const lang = i18n.language.toUpperCase();
+    const data = {
+      language: lang,
+      imgUri: generateMediaUrl(images[0], 1024),
+      dimension: {
+        // @TODO: do not hardcode dimensions
+        x: 12.0,
+        y: 8.0,
+      },
+      technique: Array.isArray(result.technique)
+        ? result.technique.map((v) => v.label)
+        : [result.technique.label].filter((x) => x),
+      weaving: 'Plain', // @TODO: do not hardcode weaving
+      backgroundColor: {
+        r: 0.7075471878051758,
+        g: 0.2302865833044052,
+        b: 0.2302865833044052,
+        a: 0.0,
+      },
+      materials: Array.isArray(result.material)
+        ? result.material.map((v) => v.label)
+        : [result.material.label].filter((x) => x),
+    };
+
+    const params = [];
+    params.push(`lang=${encodeURIComponent(lang)}`);
+    params.push(`data=${encodeURIComponent(JSON.stringify(data))}`);
+
+    const width = 960;
+    const height = 720;
+    let top = window.screen.height - height;
+    top = top > 0 ? top / 2 : 0;
+    let left = window.screen.width - width;
+    left = left > 0 ? left / 2 : 0;
+    const url = `https://explorer.silknow.org/vloom/?${params.join('&')}`;
+
+    const win = window.open(
+      url,
+      'Virtual Loom',
+      `width=${width},height=${height},top=${top},left=${left}`
+    );
+    win.moveTo(left, top);
+    win.focus();
+  };
+
+  const customRenderThumb = (children) => {
+    return Carousel.defaultProps.renderThumbs(children).concat(
+      <VirtualLoomButton key="virtual-loom" onClick={onClickVirtualLoomButton}>
+        <img src="/images/virtual-loom-button.png" alt="Virtual Loom" />
+      </VirtualLoomButton>
+    );
+  };
 
   return (
     <Layout>
@@ -234,7 +266,7 @@ const GalleryDetailsPage = ({ result, t }) => {
         <Columns>
           <Primary>
             <MobileTitle>{label}</MobileTitle>
-            <Carousel showArrows {...config.gallery.options}>
+            <Carousel showArrows {...config.gallery.options} renderThumbs={customRenderThumb}>
               {images.map((image) => (
                 <div key={image}>
                   <img src={generateMediaUrl(image, 1024)} alt={label} />
