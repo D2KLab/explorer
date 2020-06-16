@@ -45,7 +45,7 @@
     "react-swipeable-views": "^0.13.9",
     "react-switch": "^5.0.1",
     "reakit": "^1.0.2",
-    "sparql-transformer": "^2.3.2",
+    "sparql-transformer": "^2.4.0",
     "sqlite3": "^4.2.0",
     "styled-components": "^5.1.0",
     "styled-icons": "^10.2.1",
