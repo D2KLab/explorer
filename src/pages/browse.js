@@ -305,16 +305,6 @@ export async function getServerSideProps({ query, res }) {
     return { props: {} };
   }
 
-  for (let i = 0; i < route.filters.length; i += 1) {
-    const filter = route.filters[i];
-    if (filter.id) {
-      const vocabularyConfig = config.vocabularies.find((v) => v.id === filter.id);
-      if (vocabularyConfig) {
-        console.log('vocabularyConfig:', vocabularyConfig);
-      }
-    }
-  }
-
   const results = [];
   const filters = [];
 
