@@ -94,7 +94,9 @@ const Header = ({ className, t }) => {
   return (
     <Container className={className}>
       <Link href="/" passHref>
-        <Logo as="a" />
+        <a>
+          <Logo src={config.metadata.logo} title={config.metadata.title} alt={config.metadata.title} />
+        </a>
       </Link>
       <NavContainer>
         <NavList>
