@@ -323,7 +323,7 @@ const HomePage = ({ t }) => {
                       background={config.routes[routeName].backgroundColor || '#c6c6c6'}
                       color={config.routes[routeName].textColor || '#000000'}
                     >
-                      {t(`routes.${routeName}`)}
+                      {t(`routes.${routeName}`, routeName.substr(0, 1).toUpperCase() + routeName.substr(1))}
                     </BigButton>
                   </Link>
                 ))}
