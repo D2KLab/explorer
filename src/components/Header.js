@@ -37,13 +37,9 @@ const StyledProfileButton = styled(ProfileButton)`
   `}
 `;
 
-const Logo = styled.div`
-  width: 128px;
-  height: 54px;
-  background-image: url(${config.metadata.logo});
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
+const Logo = styled.img`
+  max-width: 128px;
+  max-height: 54px;
   flex: 0 0 auto;
   margin-right: 0;
   margin-left: 5em;

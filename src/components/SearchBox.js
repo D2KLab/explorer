@@ -18,6 +18,7 @@ const StyledSearchInput = styled(SearchInput)`
     background-color: transparent;
     border: none;
     font-size: 0.9em;
+    outline: 0;
   }
 `;
 

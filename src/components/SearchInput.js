@@ -62,6 +62,7 @@ const Container = styled.div`
   }
 
   .react-autosuggest__container {
+    position: relative;
     display: flex;
     min-width: 0;
     width: 100%;
@@ -70,7 +71,7 @@ const Container = styled.div`
   .react-autosuggest__container--open .react-autosuggest__suggestions-container {
     display: block;
     position: absolute;
-    top: 51px;
+    top: 30px;
     right: 0;
     max-width: 560px;
     border: 1px solid #aaa;

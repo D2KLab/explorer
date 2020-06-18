@@ -164,6 +164,7 @@ const StyledSearchInput = styled(SearchInput)`
     padding: 0 10px;
     min-width: 0;
     width: 100%;
+    outline: 0;
   }
 
   .react-autosuggest__container--open .react-autosuggest__suggestions-container {
