@@ -1,6 +1,8 @@
 import styled from 'styled-components';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import LazyLoad from 'react-lazyload';
+import DefaultErrorPage from 'next/error';
+import NextAuth from 'next-auth/client';
 
 import { Header, Footer, Layout, Body, Media } from '@components';
 import Metadata from '@components/Metadata';
@@ -9,6 +11,7 @@ import PageTitle from '@components/PageTitle';
 import { breakpoints } from '@styles';
 import { uriToId, idToUri, generateMediaUrl } from '@helpers/utils';
 import config from '~/config';
+import { withTranslation } from '~/i18n';
 
 const sparqlTransformer = require('sparql-transformer').default;
 
@@ -64,14 +67,30 @@ const StyledMedia = styled(Media)`
 `;
 
 const CollectionDetailsPage = ({ result }) => {
-  const { query } = useRouter();
-  const route = config.routes[query.type];
-
-  if (typeof result.objects === 'object' && !Array.isArray(result.objects)) {
-    result.objects = [result.objects];
+  if (!result) {
+    return <DefaultErrorPage statusCode={404} title="Result not found" />;
   }
 
+  const { query } = useRouter();
+  const [session] = NextAuth.useSession();
+  const route = config.routes[query.type];
+
+  const images = [];
+  const representations = Array.isArray(result.representation)
+    ? result.representation
+    : [result.representation].filter(x => x);
+  representations.forEach((repres) => {
+    const imgs = Array.isArray(repres.image) ? repres.image : [repres.image];
+    images.push(...imgs.filter((img) => img && new URL(img).hostname === 'silknow.org'));
+  });
+
+  const metadata = Object.entries(result).filter(([metaName, meta]) => {
+    return !['@type', '@id', '@graph', 'label', 'representation'].includes(metaName);
+  });
+
   const label = route.labelFunc(result);
+
+  result.items = Array.isArray(result.items) ? result.items : [result.items].filter((x) => x && (typeof x !== 'object' || x.constructor !== Object || Object.keys(x).length > 0));
 
   return (
     <Layout>
@@ -82,34 +101,54 @@ const CollectionDetailsPage = ({ result }) => {
           <Primary>
             <h1>{label}</h1>
             <p>{result.description || 'No description for this collection'}</p>
-            <h2>Objects in the collection</h2>
+            <h2>Items in the collection</h2>
             <Results>
-              <LazyLoad>
-                {result.objects.map((object) => {
-                  let mainImage = null;
-                  if (object.representation && object.representation.image) {
-                    mainImage = Array.isArray(object.representation.image)
-                      ? object.representation.image.shift()
-                      : object.representation.image;
-                  } else if (Array.isArray(object.representation)) {
-                    mainImage =
-                      object.representation[0].image ||
-                      object.representation[0]['@id'] ||
-                      object.representation[0];
-                  }
-                  return (
-                    <StyledMedia
-                      key={object['@id']}
-                      title={object.label}
-                      subtitle=""
-                      thumbnail={generateMediaUrl(mainImage, 150)}
-                      direction="column"
-                      link={`/objects/${uriToId(object['@id'])}`}
-                      uri={result['@graph']}
-                    />
+              {result.items.map((item) => {
+                let mainImage = null;
+                if (item.representation && item.representation.image) {
+                  mainImage = Array.isArray(item.representation.image)
+                    ? item.representation.image.shift()
+                    : item.representation.image;
+                } else if (Array.isArray(item.representation)) {
+                  mainImage =
+                    item.representation[0].image ||
+                    item.representation[0]['@id'] ||
+                    item.representation[0];
+                }
+
+                const [itemRouteName, itemRoute] = Object.entries(config.routes).find(([, r]) => {
+                  return r.rdfType && r.rdfType === item['@type'];
+                }) || [];
+
+                let element = (
+                  <StyledMedia
+                    key={item['@id']}
+                    title={item.label}
+                    subtitle=""
+                    thumbnail={generateMediaUrl(mainImage, 150)}
+                    direction="column"
+                    uri={result['@graph']}
+                  />
+                );
+
+                if (itemRoute) {
+                  // Wrap the element around a link
+                  element = (
+                    <Link
+                      key={item['@id']}
+                      href={`/details/${itemRoute.details.view}?id=${uriToId(item['@id'], { encoding: !itemRoute.uriBase })}&type=${itemRouteName}`}
+                      as={`/${itemRouteName}/${uriToId(item['@id'], { encoding: !itemRoute.uriBase })}`}
+                      passHref
+                    >
+                      <a>
+                        {element}
+                      </a>
+                    </Link>
                   );
-                })}
-              </LazyLoad>
+                }
+
+                return element;
+              })}
             </Results>
             <Debug>
               <Metadata label="HTTP Parameters">
@@ -131,7 +170,7 @@ const CollectionDetailsPage = ({ result }) => {
 CollectionDetailsPage.getInitialProps = async ({ query }) => {
   const route = config.routes[query.type];
   const searchQuery = JSON.parse(JSON.stringify(route.query));
-  searchQuery.$filter = `?id = <${idToUri(query.id, route.uriBase)}>`;
+  searchQuery.$filter = `?id = <${idToUri(query.id, { base: route.uriBase, encoding: !route.uriBase })}>`;
 
   try {
     if (config.debug) {
@@ -141,7 +180,11 @@ CollectionDetailsPage.getInitialProps = async ({ query }) => {
       endpoint: config.api.endpoint,
       debug: config.debug,
     });
-    return { result: res['@graph'][0] };
+    const result = res['@graph'][0];
+    if (!result) {
+      res.statusCode = 404;
+    }
+    return { result };
   } catch (err) {
     console.error(err);
   }
@@ -149,4 +192,4 @@ CollectionDetailsPage.getInitialProps = async ({ query }) => {
   return { result: null };
 };
 
-export default CollectionDetailsPage;
+export default withTranslation()(CollectionDetailsPage);
