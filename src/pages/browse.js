@@ -157,6 +157,7 @@ class BrowsePage extends Component {
       query: {
         ...query,
         sort: value,
+        page: undefined, // Reset page index
       },
     });
   };
