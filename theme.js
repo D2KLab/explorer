@@ -8,18 +8,18 @@ const theme = {
   colors: {
     text: '#333',
     background: '#f7f7ef',
-    primary: '#f38468',
+    primary: '#2b4253',
     secondary: '#144168',
     linkHover: '#a02a0c',
     light: '#f5b1a1',
   },
   home: {
     textSearchButton: {
-      background: '#f38468',
+      background: '#61b791',
       text: '#fff',
     },
     imageSearchButton: {
-      background: '#9ca4d3',
+      background: '#61b791',
       text: '#fff',
     },
   },

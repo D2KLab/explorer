@@ -1,7 +1,7 @@
 {
   "search": "Rechercher",
   "footer": {
-    "text": "The data contained in SILKNOW Explorer comes from the archives of ...\nThe Virtual Loom has been developed by UVEG.\nKG Explorer has been developed at EURECOM and includes scientific contribution from ..."
+    "text": "The data contained in Exploratory Search comes from DBpedia.\nThe Search Explorer has been developed at EURECOM."
   },
   "metadata": {
     "identifier": "Identifiant",
