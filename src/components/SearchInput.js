@@ -19,7 +19,11 @@ async function getSuggestions(value) {
 
   const searchQuery = JSON.parse(JSON.stringify(config.search.textSearchQuery));
   searchQuery.$filter = searchQuery.$filter || [];
-  searchQuery.$filter.push(`bif:contains(?label, '"${value}"')`);
+  if (typeof config.search.filterFunc === 'function') {
+    searchQuery.$filter.push(...config.search.filterFunc(value));
+  } else {
+    searchQuery.$filter.push(`regex(?label, "${value}", "i")`);
+  }
 
   try {
     const res = await sparqlTransformer(searchQuery, {
