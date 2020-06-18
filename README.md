@@ -17,7 +17,7 @@ Repository for Exploratory Search Engine, made with Next.js and React.
 - Download this repository:
 
 ```bash
-git clone https://github.com/silknow/explorer
+git clone https://github.com/D2KLab/explorer
 cd explorer
 ```
 
@@ -56,4 +56,4 @@ docker-composer -f docker-compose.yml -f docker-compose.prod.yml up
 
 ## License
 
-Exploratory Search Engine is [Apache licensed](https://github.com/silknow/explorer/blob/master/LICENSE).
+Exploratory Search Engine is [Apache licensed](https://github.com/D2KLab/explorer/blob/master/LICENSE).
