@@ -76,7 +76,7 @@ const CollectionDetailsPage = ({ result }) => {
   const images = [];
   const representations = Array.isArray(result.representation)
     ? result.representation
-    : [result.representation].filter(x => x);
+    : [result.representation].filter((x) => x);
   representations.forEach((repres) => {
     const imgs = Array.isArray(repres.image) ? repres.image : [repres.image];
     images.push(...imgs.filter((img) => img && new URL(img).hostname === 'silknow.org'));
@@ -88,7 +88,11 @@ const CollectionDetailsPage = ({ result }) => {
 
   const label = route.labelFunc(result);
 
-  result.items = Array.isArray(result.items) ? result.items : [result.items].filter((x) => x && (typeof x !== 'object' || x.constructor !== Object || Object.keys(x).length > 0));
+  result.items = Array.isArray(result.items)
+    ? result.items
+    : [result.items].filter(
+        (x) => x && (typeof x !== 'object' || x.constructor !== Object || Object.keys(x).length > 0)
+      );
 
   return (
     <Layout>
@@ -114,9 +118,10 @@ const CollectionDetailsPage = ({ result }) => {
                     item.representation[0];
                 }
 
-                const [itemRouteName, itemRoute] = Object.entries(config.routes).find(([, r]) => {
-                  return r.rdfType && r.rdfType === item['@type'];
-                }) || [];
+                const [itemRouteName, itemRoute] =
+                  Object.entries(config.routes).find(([, r]) => {
+                    return r.rdfType && r.rdfType === item['@type'];
+                  }) || [];
 
                 let element = (
                   <StyledMedia
@@ -134,13 +139,15 @@ const CollectionDetailsPage = ({ result }) => {
                   element = (
                     <Link
                       key={item['@id']}
-                      href={`/details/${itemRoute.details.view}?id=${uriToId(item['@id'], { encoding: !itemRoute.uriBase })}&type=${itemRouteName}`}
-                      as={`/${itemRouteName}/${uriToId(item['@id'], { encoding: !itemRoute.uriBase })}`}
+                      href={`/details/${itemRoute.details.view}?id=${uriToId(item['@id'], {
+                        encoding: !itemRoute.uriBase,
+                      })}&type=${itemRouteName}`}
+                      as={`/${itemRouteName}/${uriToId(item['@id'], {
+                        encoding: !itemRoute.uriBase,
+                      })}`}
                       passHref
                     >
-                      <a>
-                        {element}
-                      </a>
+                      <a>{element}</a>
                     </Link>
                   );
                 }
@@ -169,7 +176,10 @@ CollectionDetailsPage.getInitialProps = async ({ query }) => {
   const route = config.routes[query.type];
   const jsonQuery = route.details && route.details.query ? route.details.query : route.query;
   const searchQuery = JSON.parse(JSON.stringify(jsonQuery));
-  searchQuery.$filter = `?id = <${idToUri(query.id, { base: route.uriBase, encoding: !route.uriBase })}>`;
+  searchQuery.$filter = `?id = <${idToUri(query.id, {
+    base: route.uriBase,
+    encoding: !route.uriBase,
+  })}>`;
 
   try {
     const res = await SparqlClient.query(searchQuery, {
