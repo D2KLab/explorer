@@ -164,7 +164,6 @@ const CollectionDetailsPage = ({ result }) => {
               </Metadata>
             </Debug>
           </Primary>
-          <Secondary />
         </Columns>
       </Body>
       <Footer />
