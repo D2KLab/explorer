@@ -31,11 +31,10 @@ const StyledMedia = styled(Media)`
 `;
 
 const Results = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-
-  --card-margin: 12px;
-  margin: 0 calc(-1 * var(--card-margin));
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 150px);
+  grid-gap: 1rem;
+  margin-bottom: 24px;
 `;
 
 export default ({ isOwner, list, shareLink, error }) => {

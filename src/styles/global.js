@@ -33,8 +33,14 @@ export default createGlobalStyle`
   pre {
     font-family: ${theme.fontFamily.mono};
     font-size: 0.7em;
+    outline: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
     overflow: auto;
     white-space: pre-wrap;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-all;
     max-height: 280px;
   }
 

@@ -53,11 +53,10 @@ const Secondary = styled.div`
 `;
 
 const Results = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-
-  --card-margin: 12px;
-  margin: 24px calc(-1 * var(--card-margin));
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 150px);
+  grid-gap: 1rem;
+  margin-bottom: 24px;
 `;
 
 const StyledMedia = styled(Media)`
