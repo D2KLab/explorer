@@ -11,11 +11,10 @@ import SaveButton from '@components/SaveButton';
 import PageTitle from '@components/PageTitle';
 import { breakpoints } from '@styles';
 import { uriToId, idToUri, generateMediaUrl } from '@helpers/utils';
+import SparqlClient from '@helpers/sparql';
 import config from '~/config';
 import { withTranslation } from '~/i18n';
 const { Carousel } = require('react-responsive-carousel');
-
-const sparqlTransformer = require('sparql-transformer').default;
 
 const Columns = styled.div`
   display: flex;
@@ -199,7 +198,6 @@ const GalleryDetailsPage = ({ result, t, i18n }) => {
     return !['@type', '@id', '@graph', 'label', 'representation'].includes(metaName);
   });
 
-  console.log('result=', result);
   const label = route.labelFunc(result);
 
   const onClickVirtualLoomButton = (e) => {
@@ -369,17 +367,15 @@ const GalleryDetailsPage = ({ result, t, i18n }) => {
 
 GalleryDetailsPage.getInitialProps = async ({ query }) => {
   const route = config.routes[query.type];
-  const searchQuery = JSON.parse(JSON.stringify(route.query));
+  const jsonQuery = route.details && route.details.query ? route.details.query : route.query;
+  const searchQuery = JSON.parse(JSON.stringify(jsonQuery));
   searchQuery.$filter = `?id = <${idToUri(query.id, {
     base: route.uriBase,
     encoding: !route.uriBase,
   })}>`;
 
   try {
-    if (config.debug) {
-      console.log('searchQuery:', JSON.stringify(searchQuery, null, 2));
-    }
-    const res = await sparqlTransformer(searchQuery, {
+    const res = await SparqlClient.query(searchQuery, {
       endpoint: config.api.endpoint,
       debug: config.debug,
     });

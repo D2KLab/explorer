@@ -6,6 +6,7 @@ import { useDialogState, DialogDisclosure } from 'reakit/Dialog';
 import Moment from 'react-moment';
 
 import { uriToId, generateMediaUrl } from '@helpers/utils';
+import SparqlClient from '@helpers/sparql';
 import {
   Header,
   Footer,
@@ -23,8 +24,6 @@ import ListSettings from '@components/ListSettings';
 import ListDeletion from '@components/ListDeletion';
 import PageTitle from '@components/PageTitle';
 import config from '~/config';
-
-const sparqlTransformer = require('sparql-transformer').default;
 
 const StyledMedia = styled(Media)`
   margin-left: var(--card-margin);
@@ -203,10 +202,7 @@ export async function getServerSideProps({ req, res, query }) {
       searchQuery.$filter = `?id = <${item}>`;
 
       try {
-        if (config.debug) {
-          console.log('searchQuery:', JSON.stringify(searchQuery, null, 2));
-        }
-        const res = await sparqlTransformer(searchQuery, {
+        const res = await SparqlClient.query(searchQuery, {
           endpoint: config.api.endpoint,
           debug: config.debug,
         });

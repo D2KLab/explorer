@@ -6,9 +6,8 @@ import AutosuggestHighlightMatch from 'autosuggest-highlight/match';
 import AutosuggestHighlightParse from 'autosuggest-highlight/parse';
 
 import { uriToId, generateMediaUrl } from '@helpers/utils';
+import SparqlClient from '@helpers/sparql';
 import config from '~/config';
-
-const sparqlTransformer = require('sparql-transformer').default;
 
 function getSuggestionValue(suggestion) {
   return `${suggestion.label}`;
@@ -25,15 +24,11 @@ async function getSuggestions(value) {
     searchQuery.$filter.push(`regex(?label, "${value}", "i")`);
   }
 
-  try {
-    const res = await sparqlTransformer(searchQuery, {
-      endpoint: config.api.endpoint,
-      debug: config.debug,
-    });
-    results.push(...res['@graph']);
-  } catch (err) {
-    console.error(err);
-  }
+  const res = await SparqlClient.query(searchQuery, {
+    endpoint: config.api.endpoint,
+    debug: config.debug,
+  });
+  results.push(...res['@graph']);
 
   return results;
 }

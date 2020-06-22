@@ -12,11 +12,10 @@ import ReactPaginate from 'react-paginate';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import PageTitle from '@components/PageTitle';
 import { uriToId, generateMediaUrl } from '@helpers/utils';
+import SparqlClient from '@helpers/sparql';
 
 import { withTranslation } from '~/i18n';
 import config from '~/config';
-
-const sparqlTransformer = require('sparql-transformer').default;
 
 const StyledSelect = styled(Select)`
   flex: 0 1 240px;
@@ -316,18 +315,14 @@ export async function getServerSideProps({ query, res }) {
     let filterValues = [];
 
     if (filterQuery) {
-      try {
-        const res = await sparqlTransformer(filterQuery, {
-          endpoint: config.api.endpoint,
-          debug: config.debug,
-        });
-        filterValues = res['@graph'].map((row) => ({
-          label: row.label ? row.label['@value'] || row.label : row['@id']['@value'] || row['@id'],
-          value: row['@id']['@value'] || row['@id'],
-        }));
-      } catch (err) {
-        console.error(err);
-      }
+      const res = await SparqlClient.query(filterQuery, {
+        endpoint: config.api.endpoint,
+        debug: config.debug,
+      });
+      filterValues = res['@graph'].map((row) => ({
+        label: row.label ? row.label['@value'] || row.label : row['@id']['@value'] || row['@id'],
+        value: row['@id']['@value'] || row['@id'],
+      }));
     }
 
     filters.push({
@@ -418,32 +413,16 @@ export async function getServerSideProps({ query, res }) {
   // Execute the query
   let debugSparqlQuery = null;
   if (config.debug) {
-    try {
-      // If debug is enabled, get the raw SPARQL query (this does not call the endpoint)
-      await sparqlTransformer(JSON.parse(JSON.stringify(searchQuery)), {
-        debug: false,
-        sparqlFunction: (sparql) => {
-          debugSparqlQuery = sparql.trim();
-          return Promise.reject();
-        },
-      });
-    } catch (err) {
-      // eslint-disable-next-line no-empty
-    }
+    debugSparqlQuery = await SparqlClient.getSparqlQuery(searchQuery);
   }
-  try {
-    // Call the endpoint with the search query
-    const res = await sparqlTransformer(searchQuery, {
-      endpoint: config.api.endpoint,
-      debug: config.debug,
-    });
-    results.push(...res['@graph']);
-  } catch (err) {
-    console.error(err);
-  }
+  // Call the endpoint with the search query
+  const resSearch = await SparqlClient.query(searchQuery, {
+    endpoint: config.api.endpoint,
+    debug: config.debug,
+  });
+  results.push(...resSearch['@graph']);
 
   // Compute the total number of pages (used for pagination)
-  let totalResults = 0;
   const paginationQuery = {
     proto: {
       id: '?count',
@@ -454,15 +433,11 @@ export async function getServerSideProps({ query, res }) {
       }
     `,
   };
-  try {
-    const resPagination = await sparqlTransformer(paginationQuery, {
-      endpoint: config.api.endpoint,
-      debug: config.debug,
-    });
-    totalResults = resPagination[0].id;
-  } catch (err) {
-    console.error(err);
-  }
+  const resPagination = await SparqlClient.query(paginationQuery, {
+    endpoint: config.api.endpoint,
+    debug: config.debug,
+  });
+  const totalResults = resPagination && resPagination[0] ? parseInt(resPagination[0].id, 10) : 0;
 
   return { props: { results, filters, totalResults, debugSparqlQuery } };
 }

@@ -10,10 +10,9 @@ import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import PageTitle from '@components/PageTitle';
 import { breakpoints } from '@styles';
+import SparqlClient from '@helpers/sparql';
 import config from '~/config';
 import { withTranslation } from '~/i18n';
-
-const sparqlTransformer = require('sparql-transformer').default;
 
 const Hero = styled.div`
   width: 100%;
@@ -265,21 +264,12 @@ export async function getServerSideProps({ query }) {
   const results = [];
 
   if (route) {
-    const searchQuery = JSON.parse(JSON.stringify(route.query));
-
     // Execute the query
-    try {
-      if (config.debug) {
-        console.log('searchQuery:', JSON.stringify(searchQuery, null, 2));
-      }
-      const res = await sparqlTransformer(searchQuery, {
-        endpoint: config.api.endpoint,
-        debug: config.debug,
-      });
-      results.push(...res['@graph']);
-    } catch (err) {
-      console.error(err);
-    }
+    const res = await SparqlClient.query(route.query, {
+      endpoint: config.api.endpoint,
+      debug: config.debug,
+    });
+    results.push(...res['@graph']);
   }
 
   return { props: { results } };
