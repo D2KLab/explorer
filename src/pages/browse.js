@@ -356,7 +356,11 @@ export async function getServerSideProps({ query, res }) {
 
   // Text search
   if (query.q) {
-    extraWhere.push('?id <http://www.w3.org/2000/01/rdf-schema#label> ?label');
+    const labelProp =
+      typeof route.labelProp === 'string'
+        ? route.labelProp
+        : 'http://www.w3.org/2000/01/rdf-schema#label';
+    extraWhere.push(`?id <${labelProp}> ?label`);
     extraFilter.push(`CONTAINS(LCASE(STR(?label)), LCASE("${query.q}"))`);
   }
 
@@ -367,7 +371,11 @@ export async function getServerSideProps({ query, res }) {
 
   // Languages
   if (query.field_languages) {
-    extraWhere.push('?id <http://www.w3.org/2000/01/rdf-schema#label> ?label');
+    const labelProp =
+      typeof route.labelProp === 'string'
+        ? route.labelProp
+        : 'http://www.w3.org/2000/01/rdf-schema#label';
+    extraWhere.push(`?id <${labelProp}> ?label`);
     extraFilter.push(
       query.field_languages.map((lang) => `LANGMATCHES(LANG(?label), "${lang}")`).join(' || ')
     );
