@@ -9,6 +9,7 @@ Repository for Exploratory Search Engine, made with Next.js and React.
 - [React](https://facebook.github.io/react) rendering
 - [styled-components](https://styled-components.com/) scoped CSS as React components
 - [Next.js](https://zeit.co/blog/next) webapp framework (server side rendering, single-page experience)
+- [next-auth](https://github.com/iaincollins/next-auth) OAuth authentication for Next.js
 - [next-i18next](https://github.com/isaachinman/next-i18next) internationalization based on i18next
 - [sparql-transformer](https://github.com/D2KLab/sparql-transformer) JSON based SPARQL requests
 
