@@ -3,7 +3,6 @@ const sparqlTransformer = require('sparql-transformer').default;
 
 class SparqlClient {
   constructor() {
-    console.log('New Sparql Client');
     this.cache = new NodeCache();
   }
 
