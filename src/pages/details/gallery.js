@@ -399,21 +399,25 @@ GalleryDetailsPage.getInitialProps = async ({ req, query }) => {
       endpoint: config.api.endpoint,
       debug: config.debug,
     });
+
     const result = res && res['@graph'][0];
     if (!result) {
       res.statusCode = 404;
     } else {
-      // Check if this item is in a user list and flag it accordingly.
-      const resLists = await fetch(`${absoluteUrl(req)}/api/profile/lists`, {
-        headers:
-          req && req.headers
-            ? {
-                cookie: req.headers.cookie,
-              }
-            : undefined,
-      });
-      const loadedLists = await resLists.json();
-      inList = loadedLists.some((list) => list.items.includes(result['@id']));
+      const session = await NextAuth.getSession({ req });
+      if (session) {
+        // Check if this item is in a user list and flag it accordingly.
+        const resLists = await fetch(`${absoluteUrl(req)}/api/profile/lists`, {
+          headers:
+            req && req.headers
+              ? {
+                  cookie: req.headers.cookie,
+                }
+              : undefined,
+        });
+        const loadedLists = await resLists.json();
+        inList = loadedLists.some((list) => list.items.includes(result['@id']));
+      }
     }
     return { result, inList };
   } catch (err) {
