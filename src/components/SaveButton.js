@@ -18,8 +18,11 @@ const StyledDialog = styled(Dialog)`
   margin-right: auto;
   max-width: 568px;
   width: 90vw;
+  height: 60vh;
   overflow: visible;
   padding: 32px;
+  display: flex;
+  flex-direction: column;
 
   ${Input} {
     width: 100%;
@@ -32,6 +35,8 @@ const StyledDialogDisclosure = styled(DialogDisclosure)`
   border: none;
   cursor: pointer;
   text-decoration: underline;
+  display: flex;
+  align-items: center;
 
   &:hover {
     font-weight: bold;
@@ -63,7 +68,6 @@ const StyledLabel = styled.span`
 `;
 
 const StyledList = styled.ul`
-  height: 50vh;
   overflow: auto;
 `;
 
@@ -74,6 +78,8 @@ const StyledItem = styled.li`
   border-color: #e1e4e8;
   border-bottom-width: 1px;
   transition: border-color 0.24s ease-in-out;
+  display: flex;
+  align-items: center;
 
   &:first-child {
     border-top-width: 1px;
