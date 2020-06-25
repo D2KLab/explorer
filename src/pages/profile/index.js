@@ -98,6 +98,10 @@ const ListItem = styled.li`
   &:hover {
     box-shadow: 0px 0px 50px -30px;
   }
+
+  &:not(:last-child) {
+    margin-bottom: 20px;
+  }
 `;
 
 const ListItemTitle = styled.div`
