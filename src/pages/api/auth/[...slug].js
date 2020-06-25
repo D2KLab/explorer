@@ -49,7 +49,7 @@ const options = {
   // see https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md
   database: {
     type: 'mongodb',
-    url: process.env.MONGODB_URI || 'mongodb://localhost/explorer',
+    url: process.env.MONGODB_URI,
     // The `synchronize: true` option automatically creates tables/collections.
     // You should use this in development or on first run only as it may result
     // in data loss if used in production.
