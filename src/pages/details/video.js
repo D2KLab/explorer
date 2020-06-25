@@ -305,14 +305,16 @@ VideoDetailsPage.getInitialProps = async ({ query }) => {
       endpoint: config.api.endpoint,
       debug: config.debug,
     });
-    const result = res['@graph'][0];
+    const result = res && res['@graph'][0];
     let mediaUrl = null;
-
-    if (result && result.mediaLocator) {
-      // Get media url from the media provider
-      mediaUrl = await locatorToVideo(result.mediaLocator);
+    if (!result) {
+      res.statusCode = 404;
+    } else {
+      if (result && result.mediaLocator) {
+        // Get media url from the media provider
+        mediaUrl = await locatorToVideo(result.mediaLocator);
+      }
     }
-
     return { result, mediaUrl };
   } catch (err) {
     console.error(err);

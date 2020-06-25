@@ -269,7 +269,9 @@ export async function getServerSideProps({ query }) {
       endpoint: config.api.endpoint,
       debug: config.debug,
     });
-    results.push(...res['@graph']);
+    if (res) {
+      results.push(...res['@graph']);
+    }
   }
 
   return { props: { results } };

@@ -185,7 +185,7 @@ CollectionDetailsPage.getInitialProps = async ({ query }) => {
       endpoint: config.api.endpoint,
       debug: config.debug,
     });
-    const result = res['@graph'][0];
+    const result = res && res['@graph'][0];
     if (!result) {
       res.statusCode = 404;
     }

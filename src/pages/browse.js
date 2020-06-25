@@ -319,10 +319,12 @@ export async function getServerSideProps({ query, res }) {
         endpoint: config.api.endpoint,
         debug: config.debug,
       });
-      filterValues = res['@graph'].map((row) => ({
-        label: row.label ? row.label['@value'] || row.label : row['@id']['@value'] || row['@id'],
-        value: row['@id']['@value'] || row['@id'],
-      }));
+      if (res) {
+        filterValues = res['@graph'].map((row) => ({
+          label: row.label ? row.label['@value'] || row.label : row['@id']['@value'] || row['@id'],
+          value: row['@id']['@value'] || row['@id'],
+        }));
+      }
     }
 
     filters.push({
@@ -428,7 +430,9 @@ export async function getServerSideProps({ query, res }) {
     endpoint: config.api.endpoint,
     debug: config.debug,
   });
-  results.push(...resSearch['@graph']);
+  if (resSearch) {
+    results.push(...resSearch['@graph']);
+  }
 
   // Compute the total number of pages (used for pagination)
   const paginationQuery = {

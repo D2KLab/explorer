@@ -41,8 +41,8 @@ class SparqlClient {
       return res;
     } catch (err) {
       console.error(err);
-      return { '@graph': [] };
     }
+    return null;
   }
 }
 
