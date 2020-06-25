@@ -317,7 +317,7 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
           </Primary>
           <Secondary>
             <Title>{label}</Title>
-            <Element marginY={12} display="flex">
+            <Element marginY={12} display="flex" justifyContent="space-between">
               <StyledGraphIcon uri={result['@graph']} />
               {session && (
                 <SaveButton
