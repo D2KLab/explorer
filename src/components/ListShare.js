@@ -1,14 +1,10 @@
 import styled, { withTheme } from 'styled-components';
-import { useEffect, useState } from 'react';
-import Router from 'next/router';
 import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
-import { Edit as SettingsIcon } from '@styled-icons/material/Edit';
 import {
   EmailShareButton,
   FacebookShareButton,
   FacebookMessengerShareButton,
   LinkedinShareButton,
-  PinterestShareButton,
   RedditShareButton,
   TelegramShareButton,
   TumblrShareButton,
@@ -18,17 +14,14 @@ import {
   FacebookIcon,
   FacebookMessengerIcon,
   LinkedinIcon,
-  PinterestIcon,
   RedditIcon,
   TelegramIcon,
   TumblrIcon,
   TwitterIcon,
   WhatsappIcon,
 } from 'react-share';
-import Switch from 'react-switch';
 
 import { Element } from '@components';
-import Input from '@components/Input';
 import Button from '@components/Button';
 
 const StyledDialogBackdrop = styled(DialogBackdrop)`
@@ -53,24 +46,16 @@ const StyledDialog = styled(Dialog)`
   outline: 0;
 `;
 
-const StyledDialogDisclosure = styled(DialogDisclosure)`
-  appearance: none;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-`;
-
-export default withTheme(({ list, dialogState, children, shareUrl, facebookAppId, theme }) => {
+export default withTheme(({ list, dialogState, children, shareUrl, facebookAppId }) => {
   const shareDialog = dialogState || useDialogState();
-
   const title = list.name;
 
   return (
     <>
       {(children && children) || (
-        <StyledDialogDisclosure {...shareDialog} as={Button} primary>
+        <DialogDisclosure {...shareDialog} as={Button} primary>
           Share list
-        </StyledDialogDisclosure>
+        </DialogDisclosure>
       )}
       <StyledDialogBackdrop {...shareDialog}>
         <StyledDialog {...shareDialog} modal aria-label="Share">

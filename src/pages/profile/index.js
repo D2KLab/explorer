@@ -144,8 +144,6 @@ export default ({ providers, session, accounts, lists, baseUrl, facebookAppId })
   const deleteProfileDialog = useDialogState();
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [isUnlinkingAccount, setIsUnlinkingAccount] = useState(false);
-  const deleteListDialog = useDialogState();
-  const shareListDialog = useDialogState();
 
   const deleteProfile = async () => {
     setIsDeletingAccount(true);
@@ -183,13 +181,11 @@ export default ({ providers, session, accounts, lists, baseUrl, facebookAppId })
               Are you sure you wish to <strong>permanently delete</strong> your account?{' '}
               <strong>This action cannot be undone!</strong>
             </p>
-            <p>
-              Deleting this account will also remove:
-              <ul style={{ listStyleType: 'disc', paddingLeft: 20 }}>
-                <li>All user created lists</li>
-                <li>All connected social accounts and sessions</li>
-              </ul>
-            </p>
+            <p>Deleting this account will also remove:</p>
+            <ul style={{ listStyleType: 'disc', paddingLeft: 20, margin: '1em 0' }}>
+              <li>All user created lists</li>
+              <li>All connected social accounts and sessions</li>
+            </ul>
             <Element display="flex" alignItems="center" justifyContent="space-between">
               <Button
                 type="button"
@@ -282,46 +278,51 @@ export default ({ providers, session, accounts, lists, baseUrl, facebookAppId })
             <ProfileContent>
               <h2 style={{ marginBottom: 24, textTransform: 'uppercase' }}>My lists</h2>
               <ul>
-                {lists.map((list) => (
-                  <ListItem key={list._id}>
-                    <Element>
-                      <ListItemTitle>
-                        <h1>{list.name}</h1>
-                        <ListSettings list={list} />
-                      </ListItemTitle>
-                      <ListItemSubtitle>
-                        {list.items.length} objects | last edit on{' '}
-                        <Moment format="DD/MM/YYYY">{list.updated_at}</Moment>
-                      </ListItemSubtitle>
-                    </Element>
-                    <Element display="flex" alignItems="center" marginLeft="auto">
-                      <ListItemButton>
-                        <ListShare
-                          list={list}
-                          dialogState={shareListDialog}
-                          facebookAppId={facebookAppId}
-                          shareUrl={`${baseUrl}/lists/${list._id}`}
-                        >
-                          <StyledDialogDisclosure {...shareListDialog}>
-                            <StyledShareIcon />
-                          </StyledDialogDisclosure>
-                        </ListShare>
-                      </ListItemButton>
-                      <ListItemButton>
-                        <ListDeletion list={list} dialogState={deleteListDialog}>
-                          <StyledDialogDisclosure {...deleteListDialog}>
-                            <StyledTrashIcon />
-                          </StyledDialogDisclosure>
-                        </ListDeletion>
-                      </ListItemButton>
-                      <ListItemButton>
-                        <Button primary href={`/lists/${list._id}`}>
-                          Open
-                        </Button>
-                      </ListItemButton>
-                    </Element>
-                  </ListItem>
-                ))}
+                {lists.map((list) => {
+                  const shareListDialog = useDialogState();
+                  const deleteListDialog = useDialogState();
+
+                  return (
+                    <ListItem key={list._id}>
+                      <Element>
+                        <ListItemTitle>
+                          <h1>{list.name}</h1>
+                          <ListSettings list={list} />
+                        </ListItemTitle>
+                        <ListItemSubtitle>
+                          {list.items.length} objects | last edit on{' '}
+                          <Moment format="DD/MM/YYYY">{list.updated_at}</Moment>
+                        </ListItemSubtitle>
+                      </Element>
+                      <Element display="flex" alignItems="center" marginLeft="auto">
+                        <ListItemButton>
+                          <ListShare
+                            list={list}
+                            facebookAppId={facebookAppId}
+                            shareUrl={`${baseUrl}/lists/${list._id}`}
+                            dialogState={shareListDialog}
+                          >
+                            <StyledDialogDisclosure {...shareListDialog}>
+                              <StyledShareIcon />
+                            </StyledDialogDisclosure>
+                          </ListShare>
+                        </ListItemButton>
+                        <ListItemButton>
+                          <ListDeletion list={list} dialogState={deleteListDialog}>
+                            <StyledDialogDisclosure {...deleteListDialog}>
+                              <StyledTrashIcon />
+                            </StyledDialogDisclosure>
+                          </ListDeletion>
+                        </ListItemButton>
+                        <ListItemButton>
+                          <Button primary href={`/lists/${list._id}`}>
+                            Open
+                          </Button>
+                        </ListItemButton>
+                      </Element>
+                    </ListItem>
+                  );
+                })}
               </ul>
             </ProfileContent>
           </ProfileContainer>

@@ -1,11 +1,9 @@
+import { useState } from 'react';
 import styled, { withTheme } from 'styled-components';
-import { useEffect, useState } from 'react';
 import Router from 'next/router';
 import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
-import Switch from 'react-switch';
 
 import { Element } from '@components';
-import Input from '@components/Input';
 import Button from '@components/Button';
 
 const StyledDialogBackdrop = styled(DialogBackdrop)`
@@ -30,14 +28,7 @@ const StyledDialog = styled(Dialog)`
   outline: 0;
 `;
 
-const StyledDialogDisclosure = styled(DialogDisclosure)`
-  appearance: none;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-`;
-
-export default withTheme(({ list, dialogState, children, theme }) => {
+export default withTheme(({ list, dialogState, children }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const deleteListDialog = dialogState || useDialogState();
 
@@ -46,17 +37,15 @@ export default withTheme(({ list, dialogState, children, theme }) => {
     await fetch(`/api/lists/${list._id}`, {
       method: 'DELETE',
     });
-    Router.push({
-      pathname: '/profile',
-    });
+    Router.reload();
   };
 
   return (
     <>
       {(children && children) || (
-        <StyledDialogDisclosure {...deleteListDialog} as={Button} primary loading={isDeleting}>
+        <DialogDisclosure {...deleteListDialog} as={Button} primary loading={isDeleting}>
           Delete list
-        </StyledDialogDisclosure>
+        </DialogDisclosure>
       )}
       <StyledDialogBackdrop {...deleteListDialog}>
         <StyledDialog {...deleteListDialog} modal aria-label="Delete list">

@@ -83,37 +83,35 @@ export default withTheme(({ list, theme }) => {
             <h2>Settings</h2>
           </Element>
           <Element display="flex" alignItems="center" marginBottom={24}>
-            <Element paddingRight={12}>
-              <label htmlFor="list_name">Name</label>
-            </Element>
-            <Input
-              id="list_name"
-              name="list_name"
-              type="text"
-              placeholder="List name"
-              value={listName}
-              onChange={(e) => setListName(e.target.value)}
-            />
+            <label>
+              <Element paddingRight={12}>Name</Element>
+              <Input
+                name="list_name"
+                type="text"
+                placeholder="List name"
+                value={listName}
+                onChange={(e) => setListName(e.target.value)}
+              />
+            </label>
           </Element>
           <Element display="flex" alignItems="center" marginBottom={24}>
-            <Element paddingRight={12}>
-              <label htmlFor="list_public">Public?</label>
-            </Element>
-            <Switch
-              onChange={(checked) => setListPublic(checked)}
-              checked={listPublic}
-              onColor={theme.colors.light}
-              offHandleColor="#f0f0f0"
-              onHandleColor={theme.colors.primary}
-              handleDiameter={24}
-              uncheckedIcon={false}
-              checkedIcon={false}
-              boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-              activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-              height={16}
-              width={36}
-              id="list_public"
-            />
+            <label>
+              <Element paddingRight={12}>Public?</Element>
+              <Switch
+                onChange={(checked) => setListPublic(checked)}
+                checked={listPublic}
+                onColor={theme.colors.light}
+                offHandleColor="#f0f0f0"
+                onHandleColor={theme.colors.primary}
+                handleDiameter={24}
+                uncheckedIcon={false}
+                checkedIcon={false}
+                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                height={16}
+                width={36}
+              />
+            </label>
           </Element>
           <Element display="flex" justifyContent="space-between" marginTop={24}>
             <Button

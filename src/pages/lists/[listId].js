@@ -1,8 +1,5 @@
-import styled, { withTheme } from 'styled-components';
-import { useState } from 'react';
+import styled from 'styled-components';
 import Link from 'next/link';
-import Router from 'next/router';
-import { useDialogState, DialogDisclosure } from 'reakit/Dialog';
 import Moment from 'react-moment';
 
 import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
@@ -19,7 +16,6 @@ import {
   NavItem,
   Element,
 } from '@components';
-import Button from '@components/Button';
 import ListSettings from '@components/ListSettings';
 import ListDeletion from '@components/ListDeletion';
 import PageTitle from '@components/PageTitle';
@@ -87,13 +83,11 @@ export default ({ isOwner, list, shareLink, error }) => {
       return null;
     }
 
-    const deleteListDialog = useDialogState();
-
     return (
       <Element marginY={24}>
         <h2>Operations</h2>
         <Element marginY={12}>
-          <ListDeletion list={list} dialogState={deleteListDialog} />
+          <ListDeletion list={list} />
         </Element>
       </Element>
     );
