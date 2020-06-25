@@ -5,7 +5,7 @@ import Router from 'next/router';
 import { useDialogState, DialogDisclosure } from 'reakit/Dialog';
 import Moment from 'react-moment';
 
-import { uriToId, generateMediaUrl } from '@helpers/utils';
+import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import SparqlClient from '@helpers/sparql';
 import {
   Header,
@@ -154,7 +154,7 @@ export default ({ isOwner, list, shareLink, error }) => {
 
 export async function getServerSideProps({ req, res, query }) {
   // Fetch the list
-  const listApiRes = await fetch(`${process.env.SITE}/api/lists/${query.listId}`, {
+  const listApiRes = await fetch(`${absoluteUrl(req)}/api/lists/${query.listId}`, {
     headers: {
       cookie: req.headers.cookie,
     },
@@ -172,7 +172,7 @@ export async function getServerSideProps({ req, res, query }) {
   }
 
   // Get current user
-  const userApiRes = await fetch(`${process.env.SITE}/api/profile`, {
+  const userApiRes = await fetch(`${absoluteUrl(req)}/api/profile`, {
     headers: {
       cookie: req.headers.cookie,
     },
@@ -238,7 +238,7 @@ export async function getServerSideProps({ req, res, query }) {
     props: {
       list,
       isOwner,
-      shareLink: `${process.env.SITE}/lists/${list._id}`,
+      shareLink: `${absoluteUrl(req)}/lists/${list._id}`,
     },
   };
 }

@@ -15,6 +15,7 @@ import { ProviderButton } from '@components/ProviderButton';
 import PageTitle from '@components/PageTitle';
 import { Header, Footer, Layout, Body, Content, Element, Button } from '@components';
 import { breakpoints } from '@styles';
+import { absoluteUrl } from '@helpers/utils';
 
 const StyledDialogDisclosure = styled(DialogDisclosure)`
   appearance: none;
@@ -340,7 +341,7 @@ export async function getServerSideProps(ctx) {
   }
 
   // Get user lists
-  const listsRes = await fetch(`${process.env.SITE}/api/profile/lists`, {
+  const listsRes = await fetch(`${absoluteUrl(req)}/api/profile/lists`, {
     headers: {
       cookie: req.headers.cookie,
     },
@@ -348,7 +349,7 @@ export async function getServerSideProps(ctx) {
   const lists = await listsRes.json();
 
   // Get user accounts
-  const accountsRes = await fetch(`${process.env.SITE}/api/profile/accounts`, {
+  const accountsRes = await fetch(`${absoluteUrl(req)}/api/profile/accounts`, {
     headers: {
       cookie: req.headers.cookie,
     },
@@ -361,7 +362,7 @@ export async function getServerSideProps(ctx) {
       session,
       accounts,
       lists,
-      baseUrl: process.env.SITE,
+      baseUrl: absoluteUrl(req),
       facebookAppId: process.env.FACEBOOK_ID,
     },
   };

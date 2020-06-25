@@ -10,7 +10,7 @@ import Debug from '@components/Debug';
 import SaveButton from '@components/SaveButton';
 import PageTitle from '@components/PageTitle';
 import { breakpoints } from '@styles';
-import { uriToId, idToUri, generateMediaUrl } from '@helpers/utils';
+import { absoluteUrl, uriToId, idToUri, generateMediaUrl } from '@helpers/utils';
 import SparqlClient from '@helpers/sparql';
 import config from '~/config';
 import { withTranslation } from '~/i18n';
@@ -372,7 +372,7 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
   );
 };
 
-GalleryDetailsPage.getInitialProps = async ({ query }) => {
+GalleryDetailsPage.getInitialProps = async ({ req, query }) => {
   const route = config.routes[query.type];
   const jsonQuery = route.details && route.details.query ? route.details.query : route.query;
   const searchQuery = JSON.parse(JSON.stringify(jsonQuery));
