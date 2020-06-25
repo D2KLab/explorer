@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import NextAuth from 'next-auth/client';
+import DefaultErrorPage from 'next/error';
 
 import { Header, Footer, Layout, Body, Element } from '@components';
 import Metadata from '@components/Metadata';
@@ -185,6 +186,10 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
   const { query } = useRouter();
   const [session] = NextAuth.useSession();
   const route = config.routes[query.type];
+
+  if (!result) {
+    return <DefaultErrorPage statusCode={404} title="Result not found" />;
+  }
 
   const images = [];
   const representations = Array.isArray(result.representation)
