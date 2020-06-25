@@ -67,7 +67,7 @@ const Container = styled.button`
 
 const Button = ({ loading = false, href, children, ...props }) => {
   return (
-    <Container {...props} as={href ? 'a' : null} href={href} loading={loading}>
+    <Container {...props} as={href ? 'a' : null} href={href} loading={loading ? 1 : undefined}>
       {loading && (
         <StyledSpinner viewBox="0 0 50 50">
           <circle className="path" cx="25" cy="25" r="20" fill="none" strokeWidth="2" />
