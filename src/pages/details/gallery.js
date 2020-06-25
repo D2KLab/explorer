@@ -314,7 +314,14 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
             <Title>{label}</Title>
             <Element marginY={12} display="flex">
               <StyledGraphIcon uri={result['@graph']} />
-              {session && <SaveButton type={query.type} item={result} saved={isItemSaved} onChange={onItemSaveChange} />}
+              {session && (
+                <SaveButton
+                  type={query.type}
+                  item={result}
+                  saved={isItemSaved}
+                  onChange={onItemSaveChange}
+                />
+              )}
             </Element>
             <MetadataList>
               {metadata.flatMap(([metaName, meta]) => {
@@ -381,17 +388,31 @@ GalleryDetailsPage.getInitialProps = async ({ req, query }) => {
     encoding: !route.uriBase,
   })}>`;
 
+  let inList = false;
   try {
     const res = await SparqlClient.query(searchQuery, {
       endpoint: config.api.endpoint,
       debug: config.debug,
     });
-    return { result: res['@graph'][0] };
+    const result = res && res['@graph'][0];
+    if (!result) {
+      res.statusCode = 404;
+    } else {
+      // Check if this item is in a user list and flag it accordingly.
+      const resLists = await fetch(`${absoluteUrl(req)}/api/profile/lists`, {
+        headers: {
+          cookie: req.headers.cookie,
+        },
+      });
+      const loadedLists = await resLists.json();
+      inList = loadedLists.some((list) => list.items.includes(result['@id']));
+    }
+    return { result, inList };
   } catch (err) {
     console.error(err);
   }
 
-  return { result: null };
+  return { result: null, inList };
 };
 
 export default withTranslation('common')(GalleryDetailsPage);
