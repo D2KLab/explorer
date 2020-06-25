@@ -24,12 +24,12 @@ export const connectToDatabase = async () => {
 
 export const getListById = async (listId) => {
   const db = await connectToDatabase();
-  return db.collection('list').findOne({ _id: new ObjectID(listId) });
+  return db.collection('lists').findOne({ _id: new ObjectID(listId) });
 };
 
 export const updateList = async (list, newValues) => {
   const db = await connectToDatabase();
-  const res = await db.collection('list').findOneAndUpdate(
+  const res = await db.collection('lists').findOneAndUpdate(
     {
       _id: new ObjectID(list._id),
     },
@@ -45,7 +45,7 @@ export const updateList = async (list, newValues) => {
 
 export const removeItemFromList = async (itemUri, list) => {
   const db = await connectToDatabase();
-  const res = await db.collection('list').findOneAndUpdate(
+  const res = await db.collection('lists').findOneAndUpdate(
     {
       _id: new ObjectID(list._id),
     },
@@ -62,7 +62,7 @@ export const removeItemFromList = async (itemUri, list) => {
 
 export const addItemToList = async (itemUri, list) => {
   const db = await connectToDatabase();
-  const res = await db.collection('list').findOneAndUpdate(
+  const res = await db.collection('lists').findOneAndUpdate(
     {
       _id: new ObjectID(list._id),
     },
@@ -85,11 +85,11 @@ export const getSessionUser = async (session) => {
   const db = await connectToDatabase();
 
   const users = await db
-    .collection('user')
+    .collection('users')
     .aggregate([
       {
         $lookup: {
-          from: 'session',
+          from: 'sessions',
           localField: '_id',
           foreignField: 'userId',
           as: 'session',
@@ -119,7 +119,7 @@ export const getSessionUser = async (session) => {
 export const getUserLists = async (user) => {
   const db = await connectToDatabase();
   return db
-    .collection('list')
+    .collection('lists')
     .find({ user: new ObjectID(user._id) })
     .sort({ updated_at: 1 })
     .toArray();
@@ -127,7 +127,7 @@ export const getUserLists = async (user) => {
 
 export const createUserList = async (user, list) => {
   const db = await connectToDatabase();
-  const res = await db.collection('list').insertOne({
+  const res = await db.collection('lists').insertOne({
     ...list,
     user: new ObjectID(user._id),
     created_at: new Date(),
@@ -138,7 +138,7 @@ export const createUserList = async (user, list) => {
 
 export const removeUserList = async (user, list) => {
   const db = await connectToDatabase();
-  return db.collection('list').remove(
+  return db.collection('lists').remove(
     {
       _id: list._id,
       user: new ObjectID(user._id),
@@ -153,22 +153,22 @@ export const deleteUser = async (user) => {
   const db = await connectToDatabase();
 
   // Delete all user lists
-  await db.collection('list').remove({
+  await db.collection('lists').remove({
     user: new ObjectID(user._id),
   });
 
   // Delete user session
-  await db.collection('session').remove({
+  await db.collection('sessions').remove({
     userId: new ObjectID(user._id),
   });
 
   // Delete user account
-  await db.collection('account').remove({
+  await db.collection('accounts').remove({
     userId: new ObjectID(user._id),
   });
 
   // Delete user profile
-  await db.collection('user').remove({
+  await db.collection('users').remove({
     _id: new ObjectID(user._id),
   });
 };
@@ -176,8 +176,8 @@ export const deleteUser = async (user) => {
 export const getUserAccounts = async (user) => {
   const db = await connectToDatabase();
 
-  return await db
-    .collection('account')
+  return db
+    .collection('accounts')
     .find({
       userId: new ObjectID(user._id),
     })
@@ -186,7 +186,7 @@ export const getUserAccounts = async (user) => {
 
 export const removeUserAccount = async (user, account) => {
   const db = await connectToDatabase();
-  return db.collection('account').remove(
+  return db.collection('accounts').remove(
     {
       _id: account._id,
       userId: new ObjectID(user._id),

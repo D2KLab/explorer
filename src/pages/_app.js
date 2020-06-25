@@ -34,7 +34,7 @@ class MyApp extends App {
             />
           </Head>
           <NProgress />
-          <NextAuth.Provider session={session}>
+          <NextAuth.Provider options={{ site: process.env.SITE }} session={session}>
             <Component {...pageProps} />
           </NextAuth.Provider>
         </ReakitProvider>
