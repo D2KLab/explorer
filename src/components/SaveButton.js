@@ -58,8 +58,13 @@ const StyledDialogBackdrop = styled(DialogBackdrop)`
   justify-content: center;
 `;
 
-const StyledHeartIcon = styled.span`
+const StyledHeartIcon = styled(HeartIcon)`
   color: #222;
+  height: 16px;
+`;
+
+const StyledHeartSolidIcon = styled(HeartSolidIcon)`
+  color: red;
   height: 16px;
 `;
 
@@ -161,7 +166,7 @@ const SaveButton = ({ item, saved, onChange }) => {
   return (
     <div>
       <StyledDialogDisclosure onClick={useAllCallbacks(loadLists, dialog.onClick)} {...dialog}>
-        <StyledHeartIcon as={saved ? HeartSolidIcon : HeartIcon} />
+        {saved ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
         <StyledLabel>Save</StyledLabel>
       </StyledDialogDisclosure>
       <StyledDialogBackdrop {...dialog}>
@@ -220,7 +225,7 @@ const SaveButton = ({ item, saved, onChange }) => {
                     key={list._id}
                     onClick={() => (isItemInList ? removeFromList(list) : addToList(list))}
                   >
-                    <StyledHeartIcon as={isItemInList ? HeartSolidIcon : HeartIcon} />
+                    {isItemInList ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
                     <StyledLabel>{list.name}</StyledLabel>
                   </StyledItem>
                 );
