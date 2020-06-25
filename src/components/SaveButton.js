@@ -85,7 +85,7 @@ const StyledItem = styled.li`
   }
 `;
 
-const SaveButton = ({ item }) => {
+const SaveButton = ({ item, saved, onChange }) => {
   const [loading, setLoading] = useState(false);
   const [lists, setLists] = useState([]);
   const [newListName, setNewListName] = useState('');
@@ -104,6 +104,10 @@ const SaveButton = ({ item }) => {
     // Show new list form if the user has no lists yet
     if (!listFormVisible) {
       setListFormVisible(loadedLists.length === 0);
+    }
+
+    if (typeof onChange === 'function') {
+      onChange(loadedLists.some((list) => list.items.includes(item['@id'])));
     }
   };
 
@@ -151,7 +155,7 @@ const SaveButton = ({ item }) => {
   return (
     <div>
       <StyledDialogDisclosure onClick={useAllCallbacks(loadLists, dialog.onClick)} {...dialog}>
-        <StyledHeartIcon as={HeartIcon} />
+        <StyledHeartIcon as={saved ? HeartSolidIcon : HeartIcon} />
         <StyledLabel>Save</StyledLabel>
       </StyledDialogDisclosure>
       <StyledDialogBackdrop {...dialog}>

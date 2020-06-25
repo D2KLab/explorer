@@ -1,10 +1,10 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import NextAuth from 'next-auth/client';
 
-import { Header, Footer, Layout, Body, Media, Element } from '@components';
+import { Header, Footer, Layout, Body, Element } from '@components';
 import Metadata from '@components/Metadata';
-import Tabs, { Tab } from '@components/TabBar';
 import GraphIcon from '@components/GraphIcon';
 import Debug from '@components/Debug';
 import SaveButton from '@components/SaveButton';
@@ -14,6 +14,7 @@ import { uriToId, idToUri, generateMediaUrl } from '@helpers/utils';
 import SparqlClient from '@helpers/sparql';
 import config from '~/config';
 import { withTranslation } from '~/i18n';
+
 const { Carousel } = require('react-responsive-carousel');
 
 const Columns = styled.div`
@@ -180,7 +181,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
   );
 }
 
-const GalleryDetailsPage = ({ result, t, i18n }) => {
+const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
   const { query } = useRouter();
   const [session] = NextAuth.useSession();
   const route = config.routes[query.type];
@@ -256,6 +257,12 @@ const GalleryDetailsPage = ({ result, t, i18n }) => {
     );
   };
 
+  const [isItemSaved, setIsItemSaved] = useState(inList);
+
+  const onItemSaveChange = (status) => {
+    setIsItemSaved(status);
+  };
+
   return (
     <Layout>
       <PageTitle title={`${label}`} />
@@ -307,7 +314,7 @@ const GalleryDetailsPage = ({ result, t, i18n }) => {
             <Title>{label}</Title>
             <Element marginY={12} display="flex">
               <StyledGraphIcon uri={result['@graph']} />
-              {session && <SaveButton type={query.type} item={result} />}
+              {session && <SaveButton type={query.type} item={result} saved={isItemSaved} onChange={onItemSaveChange} />}
             </Element>
             <MetadataList>
               {metadata.flatMap(([metaName, meta]) => {

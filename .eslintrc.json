@@ -37,7 +37,8 @@
     "jsx-a11y/label-has-associated-control": [
       2,
       {
-        "assert": "nesting"
+        "assert": "nesting",
+        "controlComponents": ["Input", "Switch"]
       }
     ],
     "no-underscore-dangle": [
