@@ -400,9 +400,11 @@ GalleryDetailsPage.getInitialProps = async ({ req, query }) => {
     } else {
       // Check if this item is in a user list and flag it accordingly.
       const resLists = await fetch(`${absoluteUrl(req)}/api/profile/lists`, {
-        headers: {
-          cookie: req.headers.cookie,
-        },
+        headers: req.headers
+          ? {
+              cookie: req.headers.cookie,
+            }
+          : undefined,
       });
       const loadedLists = await resLists.json();
       inList = loadedLists.some((list) => list.items.includes(result['@id']));
