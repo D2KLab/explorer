@@ -142,7 +142,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
     Array.isArray(currentRoute.filters) &&
     currentRoute.filters.find((f) => f.id === metaName)
   ) {
-    url = `/${currentRouteName}/?field_filter_${metaName}=${encodeURIComponent(meta['@id'])}`;
+    url = `/${currentRouteName}?field_filter_${metaName}=${encodeURIComponent(meta['@id'])}`;
   }
 
   let printableValue = '<unk>';
