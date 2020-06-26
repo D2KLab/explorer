@@ -6,10 +6,11 @@ import DefaultErrorPage from 'next/error';
 import queryString from 'query-string';
 import useSWR from 'swr';
 
-import { Header, Footer, Sidebar, Layout, Body, Content, Media } from '@components';
+import { Header, Footer, Sidebar, Layout, Body, Content, Media, Button } from '@components';
 import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import Select from '@components/Select';
+import SpatioTemporalMaps from '@components/SpatioTemporalMaps';
 import ReactPaginate from 'react-paginate';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import PageTitle from '@components/PageTitle';
@@ -21,7 +22,7 @@ import config from '~/config';
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 const StyledSelect = styled(Select)`
-  flex: 0 1 240px;
+  min-width: 200px;
 `;
 
 const StyledTitle = styled.h1`
@@ -30,11 +31,18 @@ const StyledTitle = styled.h1`
 
 const OptionsBar = styled.div`
   margin-bottom: 24px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
 
 const Option = styled.div`
   display: flex;
   align-items: center;
+
+  &:not(:last-child) {
+    margin-right: 20px;
+  }
 `;
 
 const Results = styled.div`
@@ -93,6 +101,7 @@ const Label = styled.label`
 
 const BrowsePage = ({ initialData, router, t }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isMapVisible, setIsMapVisible] = useState(false);
 
   useEffect(() => {
     const onDoneLoading = () => {
@@ -156,6 +165,10 @@ const BrowsePage = ({ initialData, router, t }) => {
         page: undefined, // Reset page index
       },
     });
+  };
+
+  const showMap = () => {
+    setIsMapVisible(!isMapVisible);
   };
 
   const { req, query } = router;
@@ -251,27 +264,36 @@ const BrowsePage = ({ initialData, router, t }) => {
                 })}
               />
             </Option>
+            <Option>
+              <Button primary onClick={showMap}>
+                Show on the map
+              </Button>
+            </Option>
           </OptionsBar>
           {results.length > 0 ? (
-            <>
-              <Results loading={isLoading}>{renderResults()}</Results>
-              <PaginationContainer>
-                <ReactPaginate
-                  previousLabel="Previous"
-                  nextLabel="Next"
-                  breakLabel="..."
-                  breakClassName="break"
-                  pageCount={Math.ceil(totalResults / 20)}
-                  initialPage={page}
-                  marginPagesDisplayed={2}
-                  pageRangeDisplayed={5}
-                  onPageChange={onPageChange}
-                  containerClassName="pagination"
-                  subContainerClassName="pages pagination"
-                  activeClassName="active"
-                />
-              </PaginationContainer>
-            </>
+            isMapVisible ? (
+              <SpatioTemporalMaps query={query} />
+            ) : (
+              <>
+                <Results loading={isLoading}>{renderResults()}</Results>
+                <PaginationContainer>
+                  <ReactPaginate
+                    previousLabel="Previous"
+                    nextLabel="Next"
+                    breakLabel="..."
+                    breakClassName="break"
+                    pageCount={Math.ceil(totalResults / 20)}
+                    initialPage={page}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={5}
+                    onPageChange={onPageChange}
+                    containerClassName="pagination"
+                    subContainerClassName="pages pagination"
+                    activeClassName="active"
+                  />
+                </PaginationContainer>
+              </>
+            )
           ) : (
             renderEmptyResults()
           )}
