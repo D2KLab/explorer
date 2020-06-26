@@ -1,8 +1,10 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import Router, { withRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
+import queryString from 'query-string';
+import useSWR from 'swr';
 
 import { Header, Footer, Sidebar, Layout, Body, Content, Media } from '@components';
 import Metadata from '@components/Metadata';
@@ -11,11 +13,12 @@ import Select from '@components/Select';
 import ReactPaginate from 'react-paginate';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import PageTitle from '@components/PageTitle';
-import { uriToId, generateMediaUrl } from '@helpers/utils';
-import SparqlClient from '@helpers/sparql';
+import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 
 import { withTranslation } from '~/i18n';
 import config from '~/config';
+
+const fetcher = (url) => fetch(url).then((r) => r.json());
 
 const StyledSelect = styled(Select)`
   flex: 0 1 240px;
@@ -88,31 +91,25 @@ const Label = styled.label`
   margin-right: 12px;
 `;
 
-class BrowsePage extends Component {
-  constructor(props) {
-    super(props);
+const BrowsePage = ({ initialData, router, t }) => {
+  const [isLoading, setIsLoading] = useState(false);
 
-    this.state = { isLoading: false };
-  }
+  useEffect(() => {
+    const onDoneLoading = () => {
+      setIsLoading(false);
+    };
 
-  componentDidMount() {
-    Router.events.on('routeChangeComplete', this.onDoneLoading);
-    Router.events.on('routeChangeError', this.onDoneLoading);
-  }
+    Router.events.on('routeChangeComplete', onDoneLoading);
+    Router.events.on('routeChangeError', onDoneLoading);
+    return () => {
+      Router.events.off('routeChangeComplete', onDoneLoading);
+      Router.events.off('routeChangeError', onDoneLoading);
+    };
+  }, []);
 
-  componentWillUnmount() {
-    Router.events.off('routeChangeComplete', this.onDoneLoading);
-    Router.events.off('routeChangeError', this.onDoneLoading);
-  }
-
-  onDoneLoading = () => {
-    this.setState({ isLoading: false });
-  };
-
-  onSearch = (fields) => {
-    const { router } = this.props;
+  const onSearch = (fields) => {
     const { pathname, query } = router;
-    this.setState({ isLoading: true });
+    setIsLoading(true);
     router.push({
       pathname,
       query: {
@@ -123,34 +120,34 @@ class BrowsePage extends Component {
     });
   };
 
-  onPageChange = (pageItem) => {
+  const onPageChange = (pageItem) => {
     const pageIndex = parseInt(pageItem.selected, 10);
     if (Number.isNaN(pageIndex)) {
       return;
     }
 
-    const { pathname, query } = this.props.router;
+    const { pathname, query } = router;
     const pageNumber = pageIndex + 1;
     const currentPage = parseInt(query.page, 10);
     if (pageNumber === currentPage) {
       return;
     }
 
-    this.setState({ isLoading: true });
+    setIsLoading(true);
     Router.push({
       pathname,
       query: {
         ...query,
         page: pageNumber,
       },
-    });
+    }).then(() => window.scrollTo(0, 0));
   };
 
-  onSortChange = (selectedOption) => {
-    const { pathname, query } = this.props.router;
+  const onSortChange = (selectedOption) => {
+    const { pathname, query } = router;
     const { value } = selectedOption;
 
-    this.setState({ isLoading: true });
+    setIsLoading(true);
     Router.push({
       pathname,
       query: {
@@ -161,297 +158,150 @@ class BrowsePage extends Component {
     });
   };
 
-  render() {
-    const { results, filters, totalResults, router, t } = this.props;
-    const { isLoading } = this.state;
-    const query = { ...router.query };
-    const { page } = query;
-    const route = config.routes[query.type];
-
-    if (!route) {
-      return <DefaultErrorPage statusCode={404} title="Route not found" />;
-    }
-
-    const sortOptions = route.filters
-      .filter((filter) => filter.isSortable === true)
-      .map((filter) => ({
-        label: t(`filters.${filter.id}`, filter.label),
-        value: filter.id,
-      }));
-
-    const renderResults = () => {
-      return results.map((result) => {
-        let mainImage = null;
-        if (result.representation && result.representation.image) {
-          mainImage = Array.isArray(result.representation.image)
-            ? result.representation.image.shift()
-            : result.representation.image;
-        } else if (Array.isArray(result.representation)) {
-          mainImage =
-            result.representation[0].image ||
-            result.representation[0]['@id'] ||
-            result.representation[0];
-        }
-        const label = typeof route.labelFunc === 'function' ? route.labelFunc(result) : null;
-        const subtitle =
-          typeof route.subtitleFunc === 'function' ? route.subtitleFunc(result) : null;
-
-        return (
-          <Link
-            key={result['@id']}
-            href={`/details/${route.details.view}?id=${uriToId(result['@id'], {
-              encoding: !route.uriBase,
-            })}&type=${query.type}`}
-            as={`/${query.type}/${uriToId(result['@id'], { encoding: !route.uriBase })}`}
-            passHref
-          >
-            <a>
-              <Media
-                title={label}
-                subtitle={subtitle}
-                thumbnail={generateMediaUrl(mainImage, 150)}
-                direction="column"
-                graphUri={result['@graph']}
-              />
-            </a>
-          </Link>
-        );
-      });
-    };
-
-    const renderEmptyResults = () => {
-      return <p>{t('search:labels.no_results')}</p>;
-    };
-
-    return (
-      <Layout>
-        <PageTitle title={t('search:labels.browse', { type: query.type })} />
-        <Header />
-        <Body hasSidebar>
-          <Sidebar type={query.type} query={query} filters={filters} onSearch={this.onSearch} />
-          <Content>
-            <StyledTitle>{t('search:labels.search_results')}</StyledTitle>
-            <OptionsBar>
-              <Option>
-                <Label htmlFor="select_sort">{t('search:labels.sort_by')}</Label>
-                <StyledSelect
-                  inputId="select_sort"
-                  name="sort"
-                  placeholder={t('search:labels.select')}
-                  options={sortOptions}
-                  onChange={this.onSortChange}
-                  theme={(theme) => ({
-                    ...theme,
-                    borderRadius: 0,
-                    colors: {
-                      ...theme.colors,
-                      primary: '#000',
-                      neutral0: '#eee',
-                      primary25: '#ddd',
-                    },
-                  })}
-                />
-              </Option>
-            </OptionsBar>
-            {results.length > 0 ? (
-              <>
-                <Results loading={isLoading}>{renderResults()}</Results>
-                <PaginationContainer>
-                  <ReactPaginate
-                    previousLabel="Previous"
-                    nextLabel="Next"
-                    breakLabel="..."
-                    breakClassName="break"
-                    pageCount={Math.ceil(totalResults / 20)}
-                    initialPage={page}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={5}
-                    onPageChange={this.onPageChange}
-                    containerClassName="pagination"
-                    subContainerClassName="pages pagination"
-                    activeClassName="active"
-                  />
-                </PaginationContainer>
-              </>
-            ) : (
-              renderEmptyResults()
-            )}
-            <Debug>
-              <Metadata label="HTTP Parameters">
-                <pre>{JSON.stringify(query, null, 2)}</pre>
-              </Metadata>
-              <Metadata label="Results">
-                <pre>{JSON.stringify(results, null, 2)}</pre>
-              </Metadata>
-              <Metadata label="SPARQL Query">
-                <SPARQLQueryLink query={this.props.debugSparqlQuery}>
-                  {t('search:edit_query')}
-                </SPARQLQueryLink>
-                <pre>{this.props.debugSparqlQuery}</pre>
-              </Metadata>
-            </Debug>
-          </Content>
-        </Body>
-        <Footer />
-      </Layout>
-    );
-  }
-}
-
-export async function getServerSideProps({ query, res }) {
+  const { req, query } = router;
+  const { data } = useSWR(
+    `${absoluteUrl(req)}/api/search?${queryString.stringify(query)}`,
+    fetcher,
+    { initialData }
+  );
+  const { results = [], filters = [], totalResults = 0, debugSparqlQuery = null } = data;
+  const { page } = query;
   const route = config.routes[query.type];
+
   if (!route) {
-    res.statusCode = 404;
-    return { props: {} };
+    return <DefaultErrorPage statusCode={404} title="Route not found" />;
   }
 
-  const results = [];
-  const filters = [];
+  const sortOptions = route.filters
+    .filter((filter) => filter.isSortable === true)
+    .map((filter) => ({
+      label: t(`filters.${filter.id}`, filter.label),
+      value: filter.id,
+    }));
 
-  // Fetch filters
-  for (let i = 0; i < route.filters.length; i += 1) {
-    const filter = route.filters[i];
-    const filterQuery = { ...filter.query };
-    let filterValues = [];
-
-    if (filterQuery) {
-      const res = await SparqlClient.query(filterQuery, {
-        endpoint: config.api.endpoint,
-        debug: config.debug,
-      });
-      if (res) {
-        filterValues = res['@graph'].map((row) => ({
-          label: row.label ? row.label['@value'] || row.label : row['@id']['@value'] || row['@id'],
-          value: row['@id']['@value'] || row['@id'],
-        }));
+  const renderResults = () => {
+    return results.map((result) => {
+      let mainImage = null;
+      if (result.representation && result.representation.image) {
+        mainImage = Array.isArray(result.representation.image)
+          ? result.representation.image.shift()
+          : result.representation.image;
+      } else if (Array.isArray(result.representation)) {
+        mainImage =
+          result.representation[0].image ||
+          result.representation[0]['@id'] ||
+          result.representation[0];
       }
-    }
+      const label = typeof route.labelFunc === 'function' ? route.labelFunc(result) : null;
+      const subtitle = typeof route.subtitleFunc === 'function' ? route.subtitleFunc(result) : null;
 
-    filters.push({
-      id: filter.id,
-      label: filter.label || null,
-      isOption: !!filter.isOption,
-      isMulti: !!filter.isMulti,
-      values: filterValues,
+      return (
+        <Link
+          key={result['@id']}
+          href={`/details/${route.details.view}?id=${uriToId(result['@id'], {
+            encoding: !route.uriBase,
+          })}&type=${query.type}`}
+          as={`/${query.type}/${uriToId(result['@id'], { encoding: !route.uriBase })}`}
+          passHref
+        >
+          <a>
+            <Media
+              title={label}
+              subtitle={subtitle}
+              thumbnail={generateMediaUrl(mainImage, 150)}
+              direction="column"
+              graphUri={result['@graph']}
+            />
+          </a>
+        </Link>
+      );
     });
-  }
-
-  const searchQuery = JSON.parse(JSON.stringify(route.query));
-  searchQuery.$where = searchQuery.$where || [];
-  searchQuery.$filter = searchQuery.$filter || [];
-
-  const extraWhere = [];
-  const extraFilter = [];
-
-  // Props filter
-  for (let i = 0; i < route.filters.length; i += 1) {
-    const filter = route.filters[i];
-    if (filter.id && query[`field_filter_${filter.id}`]) {
-      const val =
-        filter.isMulti && !Array.isArray(query[`field_filter_${filter.id}`])
-          ? [query[`field_filter_${filter.id}`]]
-          : query[`field_filter_${filter.id}`];
-      extraWhere.push(...filter.whereFunc(val));
-      extraFilter.push(...filter.filterFunc(val));
-    }
-  }
-
-  // Text search
-  if (query.q) {
-    const labelProp =
-      typeof route.labelProp === 'string'
-        ? route.labelProp
-        : 'http://www.w3.org/2000/01/rdf-schema#label';
-    extraWhere.push(`?id <${labelProp}> ?label`);
-    extraFilter.push(`CONTAINS(LCASE(STR(?label)), LCASE("${query.q}"))`);
-  }
-
-  // Graph
-  if (query.graph) {
-    extraFilter.push(`?g = <${query.graph}>`);
-  }
-
-  // Languages
-  if (query.field_languages) {
-    const labelProp =
-      typeof route.labelProp === 'string'
-        ? route.labelProp
-        : 'http://www.w3.org/2000/01/rdf-schema#label';
-    extraWhere.push(`?id <${labelProp}> ?label`);
-    extraFilter.push(
-      query.field_languages.map((lang) => `LANGMATCHES(LANG(?label), "${lang}")`).join(' || ')
-    );
-  }
-
-  // Sort by
-  let orderByVariable = null;
-  if (query.sort) {
-    const sortFilter = route.filters.find((filter) => filter.id === query.sort);
-    if (sortFilter && typeof sortFilter.whereFunc === 'function') {
-      extraWhere.push(...sortFilter.whereFunc());
-      orderByVariable = query.sort;
-    }
-  }
-
-  // Pagination
-  const itemsPerPage = 20;
-  // searchQuery.$limit = itemsPerPage;
-  // searchQuery.$offset = itemsPerPage * ((parseInt(query.page, 10) || 1) - 1);
-  // We cannoy use sparql-transformer $limit/$offset/$orderby because the $limit property limits the whole
-  // query results, while we actually need to limit the number of unique ?id results
-  // The subquery is also used to compute the total number of pages for the pagination component
-  const whereCondition = `
-    ${route.baseWhere.join('.')}
-    ${route.baseWhere.length > 1 ? '.' : ''}
-    ${extraWhere.join('.')}
-    ${extraWhere.length > 1 ? '.' : ''}
-    ${extraFilter.length > 0 ? `FILTER(${extraFilter.join(' && ')})` : ''}
-  `;
-  searchQuery.$where.push(`
-    {
-      SELECT DISTINCT ?id WHERE {
-        ${whereCondition}
-      }
-      GROUP BY ?id
-      ${orderByVariable ? `ORDER BY ?${orderByVariable}` : ''}
-      OFFSET ${itemsPerPage * ((parseInt(query.page, 10) || 1) - 1)}
-      LIMIT ${itemsPerPage}
-    }
-  `);
-  searchQuery.$filter = []; // clear the filters since they are included in the sub-select query
-
-  // Execute the query
-  let debugSparqlQuery = null;
-  if (config.debug) {
-    debugSparqlQuery = await SparqlClient.getSparqlQuery(searchQuery);
-  }
-  // Call the endpoint with the search query
-  const resSearch = await SparqlClient.query(searchQuery, {
-    endpoint: config.api.endpoint,
-    debug: config.debug,
-  });
-  if (resSearch) {
-    results.push(...resSearch['@graph']);
-  }
-
-  // Compute the total number of pages (used for pagination)
-  const paginationQuery = {
-    proto: {
-      id: '?count',
-    },
-    $where: `
-      SELECT (COUNT(DISTINCT ?id) AS ?count) WHERE {
-        ${whereCondition}
-      }
-    `,
   };
-  const resPagination = await SparqlClient.query(paginationQuery, {
-    endpoint: config.api.endpoint,
-    debug: config.debug,
-  });
-  const totalResults = resPagination && resPagination[0] ? parseInt(resPagination[0].id, 10) : 0;
 
-  return { props: { results, filters, totalResults, debugSparqlQuery } };
+  const renderEmptyResults = () => {
+    return <p>{t('search:labels.no_results')}</p>;
+  };
+
+  return (
+    <Layout>
+      <PageTitle title={t('search:labels.browse', { type: query.type })} />
+      <Header />
+      <Body hasSidebar>
+        <Sidebar type={query.type} query={query} filters={filters} onSearch={onSearch} />
+        <Content>
+          <StyledTitle>{t('search:labels.search_results')}</StyledTitle>
+          <OptionsBar>
+            <Option>
+              <Label htmlFor="select_sort">{t('search:labels.sort_by')}</Label>
+              <StyledSelect
+                inputId="select_sort"
+                name="sort"
+                placeholder={t('search:labels.select')}
+                options={sortOptions}
+                onChange={onSortChange}
+                theme={(theme) => ({
+                  ...theme,
+                  borderRadius: 0,
+                  colors: {
+                    ...theme.colors,
+                    primary: '#000',
+                    neutral0: '#eee',
+                    primary25: '#ddd',
+                  },
+                })}
+              />
+            </Option>
+          </OptionsBar>
+          {results.length > 0 ? (
+            <>
+              <Results loading={isLoading}>{renderResults()}</Results>
+              <PaginationContainer>
+                <ReactPaginate
+                  previousLabel="Previous"
+                  nextLabel="Next"
+                  breakLabel="..."
+                  breakClassName="break"
+                  pageCount={Math.ceil(totalResults / 20)}
+                  initialPage={page}
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={5}
+                  onPageChange={onPageChange}
+                  containerClassName="pagination"
+                  subContainerClassName="pages pagination"
+                  activeClassName="active"
+                />
+              </PaginationContainer>
+            </>
+          ) : (
+            renderEmptyResults()
+          )}
+          <Debug>
+            <Metadata label="HTTP Parameters">
+              <pre>{JSON.stringify(query, null, 2)}</pre>
+            </Metadata>
+            <Metadata label="Results">
+              <pre>{JSON.stringify(results, null, 2)}</pre>
+            </Metadata>
+            <Metadata label="SPARQL Query">
+              <SPARQLQueryLink query={debugSparqlQuery}>{t('search:edit_query')}</SPARQLQueryLink>
+              <pre>{debugSparqlQuery}</pre>
+            </Metadata>
+          </Debug>
+        </Content>
+      </Body>
+      <Footer />
+    </Layout>
+  );
+};
+
+export async function getServerSideProps({ query, req }) {
+  const searchRes = await fetch(`${absoluteUrl(req)}/api/search?${queryString.stringify(query)}`, {
+    headers: {
+      cookie: req.headers.cookie,
+    },
+  });
+  const { results, filters, totalResults, debugSparqlQuery } = await searchRes.json();
+  return { props: { initialData: { results, filters, totalResults, debugSparqlQuery } } };
 }
 
 export default withTranslation(['common', 'search'])(withRouter(BrowsePage));

@@ -33,7 +33,14 @@ export function generateMediaUrl(url, width, height) {
 }
 
 export function absoluteUrl(req, localhostAddress = 'localhost:3000') {
-  let host = (req?.headers ? req.headers.host : window.location.host) || localhostAddress;
+  let host = '';
+  if (typeof window !== 'undefined' && window.location) {
+    host = window.location.host;
+  } else if (req && req.headers) {
+    host = req.headers.host;
+  } else {
+    host = localhostAddress;
+  }
   let protocol = /^localhost(:\d+)?$/.test(host) ? 'http:' : 'https:';
 
   if (
