@@ -243,7 +243,7 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
     top = top > 0 ? top / 2 : 0;
     let left = window.screen.width - width;
     left = left > 0 ? left / 2 : 0;
-    const url = `https://explorer.silknow.org/vloom/?${params.join('&')}`;
+    const url = `${config.plugins.virtualLoom.url}?${params.join('&')}`;
 
     const win = window.open(
       url,
