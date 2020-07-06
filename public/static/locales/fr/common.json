@@ -3,30 +3,9 @@
   "footer": {
     "text": "The data contained in Exploratory Search comes from DBpedia.\nThe Search Explorer has been developed at EURECOM."
   },
-  "metadata": {
-    "identifier": "Identifiant",
-    "composed": "Collection",
-    "material": "Matériel",
-    "technique": "Technique",
-    "time": "Date de production",
-    "location": "Lieu de production"
-  },
-  "routes": {
-    "objects": "Objets",
-    "techniques": "Techniques",
-    "materials": "Matériaux",
-    "depictions": "Représentations"
-  },
-  "filters": {
-    "time": "Date de production",
-    "location": "Lieu de production",
-    "technique": "Technique",
-    "material": "Matériau",
-    "composed": "Collection",
-    "show-only-fabric": "En tissu uniquement",
-    "show-only-images": "Avec images uniquement",
-    "show-only-vloom": "Compatible Virtual Loom"
-  },
+  "metadata": {},
+  "routes": {},
+  "filters": {},
   "labels": {
     "edit_query": "Modifier la requête"
   }
