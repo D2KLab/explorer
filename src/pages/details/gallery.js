@@ -191,7 +191,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
 }
 
 const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
-  const { query } = useRouter();
+  const { req, query } = useRouter();
   const [session] = NextAuth.useSession();
   const route = config.routes[query.type];
 
@@ -220,7 +220,7 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
     const lang = i18n.language.toUpperCase();
     const data = {
       language: lang,
-      imgUri: generateMediaUrl(images[0], 1024),
+      imgUri: `${absoluteUrl(req)}${generateMediaUrl(images[0], 1024)}`,
       dimension: {
         // @TODO: do not hardcode dimensions
         x: 12.0,
