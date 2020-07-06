@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import NextAuth from 'next-auth/client';
 import DefaultErrorPage from 'next/error';
 import queryString from 'query-string';
+import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
+import { saveAs } from 'file-saver';
 
 import { Header, Footer, Layout, Body, Element } from '@components';
 import Metadata from '@components/Metadata';
@@ -11,6 +13,7 @@ import GraphIcon from '@components/GraphIcon';
 import Debug from '@components/Debug';
 import SaveButton from '@components/SaveButton';
 import PageTitle from '@components/PageTitle';
+import Button from '@components/Button';
 import { breakpoints } from '@styles';
 import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import config from '~/config';
@@ -24,6 +27,7 @@ const Columns = styled.div`
   margin: 0 auto;
   flex-direction: column;
   justify-content: center;
+  margin-bottom: 24px;
 
   ${breakpoints.desktop`
     flex-direction: row;
@@ -79,6 +83,18 @@ const Primary = styled.div`
   .carousel .control-prev.control-arrow::before {
     transform: rotate(135deg);
   }
+`;
+
+const StyledMenu = styled(Menu)`
+  background: #fff;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12),
+    0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  outline: none;
+  z-index: 999;
+  display: grid;
+  grid-gap: 10px;
+  position: absolute;
 `;
 
 const Secondary = styled.div`
@@ -239,10 +255,17 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
       materials: Array.isArray(result.material)
         ? result.material.map((v) => v.label)
         : [result.material.label].filter((x) => x),
+      endpoint: 'https://grlc.eurecom.fr/api-git/silknow/api/',
     };
+  };
+
+  const onClickVirtualLoomButton = (e) => {
+    e.stopPropagation();
+
+    const data = generateVirtualLoomData();
 
     const params = [];
-    params.push(`lang=${encodeURIComponent(lang)}`);
+    params.push(`lang=${encodeURIComponent(data.lang)}`);
     params.push(`data=${encodeURIComponent(JSON.stringify(data))}`);
 
     const width = 960;
@@ -262,6 +285,8 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
     win.focus();
   };
 
+  const downloadMenu = useMenuState();
+
   const customRenderThumb = (children) => {
     return Carousel.defaultProps.renderThumbs(children).concat(
       <VirtualLoomButton key="virtual-loom" onClick={onClickVirtualLoomButton}>
@@ -274,6 +299,32 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
 
   const onItemSaveChange = (status) => {
     setIsItemSaved(status);
+  };
+
+  const download = (format) => {
+    switch (format) {
+      case 'vljson': {
+        const virtualLoomData = generateVirtualLoomData();
+        const blob = new Blob([JSON.stringify(virtualLoomData)], { type: 'application/json' });
+        saveAs(blob, `${result.identifier || 'Object'}.${format}`);
+        break;
+      }
+      case 'json': {
+        const blob = new Blob([JSON.stringify(result)], { type: 'application/json' });
+        saveAs(blob, `${result.identifier || 'Object'}.${format}`);
+        break;
+      }
+      case 'image': {
+        const imageUrl = images[currentSlide] || images[0];
+        if (imageUrl) {
+          const filename = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+          saveAs(generateMediaUrl(imageUrl, 1024), filename);
+        }
+        break;
+      }
+      default:
+        break;
+    }
   };
 
   return (
@@ -378,6 +429,22 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
                 );
               })}
             </MetadataList>
+            <Element>
+              <MenuButton {...downloadMenu} as={Button} primary>
+                Download
+              </MenuButton>
+              <StyledMenu {...downloadMenu} aria-label="Download">
+                <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('vljson')}>
+                  Virtual Loom
+                </MenuItem>
+                <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('json')}>
+                  Linked Data JSON
+                </MenuItem>
+                <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('image')}>
+                  Download selected image
+                </MenuItem>
+              </StyledMenu>
+            </Element>
             {/* <RelatedVideos>
               <h2>Related</h2>
               <RelatedVideosList>
