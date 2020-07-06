@@ -224,7 +224,6 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
       language: lang,
       imgUri: `${absoluteUrl(req)}${generateMediaUrl(images[currentSlide] || images[0], 1024)}`,
       dimension: {
-        // @TODO: do not hardcode dimensions
         x: result.dimension?.width,
         y: result.dimension?.height,
       },
