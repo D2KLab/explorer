@@ -223,8 +223,8 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
       imgUri: `${absoluteUrl(req)}${generateMediaUrl(images[0], 1024)}`,
       dimension: {
         // @TODO: do not hardcode dimensions
-        x: 12.0,
-        y: 8.0,
+        x: result.dimension?.width,
+        y: result.dimension?.height,
       },
       technique: Array.isArray(result.technique)
         ? result.technique.map((v) => v.label)
