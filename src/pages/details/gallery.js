@@ -214,13 +214,15 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
 
   const label = route.labelFunc(result);
 
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   const onClickVirtualLoomButton = (e) => {
     e.stopPropagation();
 
     const lang = i18n.language.toUpperCase();
     const data = {
       language: lang,
-      imgUri: `${absoluteUrl(req)}${generateMediaUrl(images[0], 1024)}`,
+      imgUri: `${absoluteUrl(req)}${generateMediaUrl(images[currentSlide] || images[0], 1024)}`,
       dimension: {
         // @TODO: do not hardcode dimensions
         x: result.dimension?.width,
@@ -284,7 +286,12 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
         <Columns>
           <Primary>
             <MobileTitle>{label}</MobileTitle>
-            <Carousel showArrows {...config.gallery.options} renderThumbs={customRenderThumb}>
+            <Carousel
+              showArrows
+              {...config.gallery.options}
+              renderThumbs={customRenderThumb}
+              onChange={setCurrentSlide}
+            >
               {images.map((image) => (
                 <div key={image}>
                   <img src={generateMediaUrl(image, 1024)} alt={label} />
