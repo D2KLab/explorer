@@ -2,15 +2,14 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
-import NextAuth from 'next-auth/client';
+import queryString from 'query-string';
 
 import { Header, Footer, Layout, Body, Media } from '@components';
 import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import PageTitle from '@components/PageTitle';
 import { breakpoints } from '@styles';
-import { uriToId, idToUri, generateMediaUrl } from '@helpers/utils';
-import SparqlClient from '@helpers/sparql';
+import { uriToId, absoluteUrl, generateMediaUrl } from '@helpers/utils';
 import config from '~/config';
 import { withTranslation } from '~/i18n';
 
@@ -40,18 +39,6 @@ const Primary = styled.div`
   }
 `;
 
-const Secondary = styled.div`
-  flex: 1;
-  padding-top: 24px;
-  margin-left: 24px;
-
-  ${breakpoints.desktop`
-    padding-right: 24px;
-    margin-left: 0;
-    max-width: 30%;
-  `}
-`;
-
 const Results = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, 150px);
@@ -70,7 +57,6 @@ const CollectionDetailsPage = ({ result }) => {
   }
 
   const { query } = useRouter();
-  const [session] = NextAuth.useSession();
   const route = config.routes[query.type];
 
   const images = [];
@@ -80,10 +66,6 @@ const CollectionDetailsPage = ({ result }) => {
   representations.forEach((repres) => {
     const imgs = Array.isArray(repres.image) ? repres.image : [repres.image];
     images.push(...imgs.filter((img) => img && new URL(img).hostname === 'silknow.org'));
-  });
-
-  const metadata = Object.entries(result).filter(([metaName, meta]) => {
-    return !['@type', '@id', '@graph', 'label', 'representation'].includes(metaName);
   });
 
   const label = route.labelFunc(result);
@@ -171,30 +153,20 @@ const CollectionDetailsPage = ({ result }) => {
   );
 };
 
-CollectionDetailsPage.getInitialProps = async ({ query }) => {
-  const route = config.routes[query.type];
-  const jsonQuery = route.details && route.details.query ? route.details.query : route.query;
-  const searchQuery = JSON.parse(JSON.stringify(jsonQuery));
-  searchQuery.$filter = `?id = <${idToUri(query.id, {
-    base: route.uriBase,
-    encoding: !route.uriBase,
-  })}>`;
+CollectionDetailsPage.getInitialProps = async ({ req, res, query }) => {
+  const { result, inList } = await (
+    await fetch(`${absoluteUrl(req)}/api/entity/${query.id}?${queryString.stringify(query)}`, {
+      headers: {
+        cookie: req.headers.cookie,
+      },
+    })
+  ).json();
 
-  try {
-    const res = await SparqlClient.query(searchQuery, {
-      endpoint: config.api.endpoint,
-      debug: config.debug,
-    });
-    const result = res && res['@graph'][0];
-    if (!result) {
-      res.statusCode = 404;
-    }
-    return { result };
-  } catch (err) {
-    console.error(err);
+  if (!result) {
+    res.statusCode = 404;
   }
 
-  return { result: null };
+  return { result, inList };
 };
 
 export default withTranslation()(CollectionDetailsPage);

@@ -317,12 +317,13 @@ const BrowsePage = ({ initialData, router, t }) => {
 };
 
 export async function getServerSideProps({ query, req }) {
-  const searchRes = await fetch(`${absoluteUrl(req)}/api/search?${queryString.stringify(query)}`, {
-    headers: {
-      cookie: req.headers.cookie,
-    },
-  });
-  const { results, filters, totalResults, debugSparqlQuery } = await searchRes.json();
+  const { results, filters, totalResults, debugSparqlQuery } = await (
+    await fetch(`${absoluteUrl(req)}/api/search?${queryString.stringify(query)}`, {
+      headers: {
+        cookie: req.headers.cookie,
+      },
+    })
+  ).json();
   return { props: { initialData: { results, filters, totalResults, debugSparqlQuery } } };
 }
 

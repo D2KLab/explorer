@@ -1,19 +1,16 @@
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
-import NextAuth from 'next-auth/client';
 import ReactPlayer from 'react-player';
+import queryString from 'query-string';
 
 import { Header, Footer, Layout, Body, Media } from '@components';
 import Metadata from '@components/Metadata';
-import Tabs, { Tab } from '@components/TabBar';
 import PageTitle from '@components/PageTitle';
 import Debug from '@components/Debug';
 import { breakpoints } from '@styles';
-import { idToUri, uriToId } from '@helpers/utils';
-import SparqlClient from '@helpers/sparql';
+import { uriToId, absoluteUrl } from '@helpers/utils';
 import { locatorToVideo } from '@helpers/connectors/limecraft';
-
 import { withTranslation } from '~/i18n';
 import config from '~/config';
 
@@ -103,20 +100,6 @@ const Title = styled.h1`
   `}
 `;
 
-const MobileTitle = styled(Title)`
-  display: block;
-
-  ${breakpoints.desktop`
-    display: none;
-  `};
-`;
-
-const Analysis = styled.div`
-  /* background-color: red; */
-
-  margin-bottom: 8px;
-`;
-
 const MetadataList = styled.div`
   margin-bottom: 24px;
 `;
@@ -179,7 +162,6 @@ const VideoDetailsPage = ({ result, mediaUrl, t }) => {
   }
 
   const { query } = useRouter();
-  const [session] = NextAuth.useSession();
   const route = config.routes[query.type];
 
   const images = [];
@@ -191,7 +173,7 @@ const VideoDetailsPage = ({ result, mediaUrl, t }) => {
     images.push(...imgs.filter((img) => img && new URL(img).hostname === 'silknow.org'));
   });
 
-  const metadata = Object.entries(result).filter(([metaName, meta]) => {
+  const metadata = Object.entries(result).filter(([metaName]) => {
     return !['@type', '@id', '@graph', 'label', 'representation', 'mediaLocator'].includes(
       metaName
     );
@@ -204,7 +186,7 @@ const VideoDetailsPage = ({ result, mediaUrl, t }) => {
       <PageTitle title={`${label}`} />
       <Header />
       <Body>
-        <ReactPlayer url={mediaUrl} width={null} height="50vh" controls={true} playing={true} />
+        <ReactPlayer url={mediaUrl} width={null} height="50vh" controls playing />
         <Columns>
           <Primary>
             <Title>{label}</Title>
@@ -291,36 +273,24 @@ const VideoDetailsPage = ({ result, mediaUrl, t }) => {
   );
 };
 
-VideoDetailsPage.getInitialProps = async ({ query }) => {
-  const route = config.routes[query.type];
-  const jsonQuery = route.details && route.details.query ? route.details.query : route.query;
-  const searchQuery = JSON.parse(JSON.stringify(jsonQuery));
-  searchQuery.$filter = `?id = <${idToUri(query.id, {
-    base: route.uriBase,
-    encoding: !route.uriBase,
-  })}>`;
+VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
+  const { result, inList } = await (
+    await fetch(`${absoluteUrl(req)}/api/entity/${query.id}?${queryString.stringify(query)}`, {
+      headers: {
+        cookie: req.headers.cookie,
+      },
+    })
+  ).json();
 
-  try {
-    const res = await SparqlClient.query(searchQuery, {
-      endpoint: config.api.endpoint,
-      debug: config.debug,
-    });
-    const result = res && res['@graph'][0];
-    let mediaUrl = null;
-    if (!result) {
-      res.statusCode = 404;
-    } else {
-      if (result && result.mediaLocator) {
-        // Get media url from the media provider
-        mediaUrl = await locatorToVideo(result.mediaLocator);
-      }
-    }
-    return { result, mediaUrl };
-  } catch (err) {
-    console.error(err);
+  let mediaUrl = null;
+  if (!result) {
+    res.statusCode = 404;
+  } else if (result && result.mediaLocator) {
+    // Get media url from the media provider
+    mediaUrl = await locatorToVideo(result.mediaLocator);
   }
 
-  return { result: null, mediaUrl: null };
+  return { result, inList, mediaUrl };
 };
 
 export default withTranslation('common')(VideoDetailsPage);

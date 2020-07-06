@@ -1,5 +1,6 @@
 import { withRequestValidation } from '@helpers/api';
 import SparqlClient from '@helpers/sparql';
+import { fillWithVocabularies } from '@helpers/explorer';
 import config from '~/config';
 
 export default withRequestValidation({
@@ -19,10 +20,19 @@ export default withRequestValidation({
   // Fetch filters
   for (let i = 0; i < route.filters.length; i += 1) {
     const filter = route.filters[i];
-    const filterQuery = { ...filter.query };
-    let filterValues = [];
+    let filterQuery = null;
+    if (filter.query) {
+      filterQuery = { ...filter.query };
+    } else if (filter.vocabulary) {
+      const vocabulary = config.vocabularies[filter.vocabulary];
+      if (vocabulary) {
+        filterQuery = { ...vocabulary.query };
+      }
+    }
 
+    let filterValues = [];
     if (filterQuery) {
+      // eslint-disable-next-line no-await-in-loop
       const resQuery = await SparqlClient.query(filterQuery, {
         endpoint: config.api.endpoint,
         debug: config.debug,
@@ -140,6 +150,11 @@ export default withRequestValidation({
   });
   if (resSearch) {
     results.push(...resSearch['@graph']);
+  }
+
+  for (let i = 0; i < results.length; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    await results.map(fillWithVocabularies);
   }
 
   // Compute the total number of pages (used for pagination)

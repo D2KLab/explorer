@@ -346,20 +346,22 @@ export async function getServerSideProps(ctx) {
   }
 
   // Get user lists
-  const listsRes = await fetch(`${absoluteUrl(req)}/api/profile/lists`, {
-    headers: {
-      cookie: req.headers.cookie,
-    },
-  });
-  const lists = await listsRes.json();
+  const lists = await (
+    await fetch(`${absoluteUrl(req)}/api/profile/lists`, {
+      headers: {
+        cookie: req.headers.cookie,
+      },
+    })
+  ).json();
 
   // Get user accounts
-  const accountsRes = await fetch(`${absoluteUrl(req)}/api/profile/accounts`, {
-    headers: {
-      cookie: req.headers.cookie,
-    },
-  });
-  const accounts = await accountsRes.json();
+  const accounts = await (
+    await fetch(`${absoluteUrl(req)}/api/profile/accounts`, {
+      headers: {
+        cookie: req.headers.cookie,
+      },
+    })
+  ).json();
 
   return {
     props: {

@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 const NodeCache = require('node-cache');
 const sparqlTransformer = require('sparql-transformer').default;
 

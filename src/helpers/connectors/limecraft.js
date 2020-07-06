@@ -13,15 +13,16 @@ export const login = async () => {
     rememberMe: false,
     useCookies: false,
   };
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: queryString.stringify(payload),
-  });
-  const data = await response.json();
+  const data = await (
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: queryString.stringify(payload),
+    })
+  ).json();
   sessionToken = data.token;
   sessionTokenExp = new Date();
   sessionTokenExp.setTime(sessionTokenExp.getTime() + 1 * 60 * 60 * 1000);
@@ -44,14 +45,16 @@ export const locatorToVideo = async (locator) => {
   console.log('locatorToVideo', `${locator}?${queryString.stringify({ access_token: token })}`);
 
   // moa
-  const r = await fetch(`${locator}?${queryString.stringify({ access_token: token })}`);
-  const data = await r.json();
+  const data = await (
+    await fetch(`${locator}?${queryString.stringify({ access_token: token })}`)
+  ).json();
   console.log('data=', data);
   const { moi } = data.hrefs;
 
   // moi
-  const r2 = await fetch(`${moi}?${queryString.stringify({ access_token: token })}`);
-  const data2 = await r2.json();
+  const data2 = await (
+    await fetch(`${moi}?${queryString.stringify({ access_token: token })}`)
+  ).json();
   const videos = data2.filter((d) => d.mimeType.startsWith('video'));
   if (videos.length === 0) {
     return null;
@@ -59,6 +62,8 @@ export const locatorToVideo = async (locator) => {
   const { downloadLink } = videos[0].hrefs;
 
   // downloadLink
-  const r3 = await fetch(`${downloadLink}?${queryString.stringify({ access_token: token })}`);
-  return r3.text();
+  const text = await (
+    await fetch(`${downloadLink}?${queryString.stringify({ access_token: token })}`)
+  ).text();
+  return text;
 };

@@ -106,8 +106,7 @@ const SaveButton = ({ item, saved, onChange }) => {
   const loadLists = async () => {
     setLoading(true);
 
-    const res = await fetch('/api/profile/lists');
-    const loadedLists = await res.json();
+    const loadedLists = await (await fetch('/api/profile/lists')).json();
 
     setLists(loadedLists);
     setLoading(false);
@@ -144,13 +143,14 @@ const SaveButton = ({ item, saved, onChange }) => {
 
   const createListWithItem = async () => {
     // Create list
-    const res = await fetch('/api/profile/lists', {
-      method: 'POST',
-      body: JSON.stringify({
-        name: newListName,
-      }),
-    });
-    const newList = await res.json();
+    const newList = await (
+      await fetch('/api/profile/lists', {
+        method: 'POST',
+        body: JSON.stringify({
+          name: newListName,
+        }),
+      })
+    ).json();
 
     // Reset form
     setNewListName('');

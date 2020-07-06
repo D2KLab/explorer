@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import NextAuth from 'next-auth/client';
 import DefaultErrorPage from 'next/error';
+import queryString from 'query-string';
 
 import { Header, Footer, Layout, Body, Element } from '@components';
 import Metadata from '@components/Metadata';
@@ -11,8 +12,7 @@ import Debug from '@components/Debug';
 import SaveButton from '@components/SaveButton';
 import PageTitle from '@components/PageTitle';
 import { breakpoints } from '@styles';
-import { absoluteUrl, uriToId, idToUri, generateMediaUrl } from '@helpers/utils';
-import SparqlClient from '@helpers/sparql';
+import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import config from '~/config';
 import { withTranslation } from '~/i18n';
 
@@ -133,7 +133,7 @@ const VirtualLoomButton = styled.a`
 const RelatedVideosList = styled.div``;
 
 function generateValue(currentRouteName, currentRoute, metaName, meta) {
-  if (typeof meta === 'string') {
+  if (typeof meta !== 'object') {
     return <>{meta}</>;
   }
 
@@ -216,20 +216,19 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const onClickVirtualLoomButton = (e) => {
-    e.stopPropagation();
-
+  const generateVirtualLoomData = () => {
     const lang = i18n.language.toUpperCase();
-    const data = {
+    return {
       language: lang,
       imgUri: `${absoluteUrl(req)}${generateMediaUrl(images[currentSlide] || images[0], 1024)}`,
       dimension: {
         x: result.dimension?.width,
         y: result.dimension?.height,
       },
-      technique: Array.isArray(result.technique)
+      technique: (Array.isArray(result.technique)
         ? result.technique.map((v) => v.label)
-        : [result.technique.label].filter((x) => x),
+        : [result.technique.label]
+      ).filter((x) => x),
       weaving: 'Plain', // @TODO: do not hardcode weaving
       backgroundColor: {
         r: 0.7075471878051758,
@@ -398,47 +397,20 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
   );
 };
 
-GalleryDetailsPage.getInitialProps = async ({ req, query }) => {
-  const route = config.routes[query.type];
-  const jsonQuery = route.details && route.details.query ? route.details.query : route.query;
-  const searchQuery = JSON.parse(JSON.stringify(jsonQuery));
-  searchQuery.$filter = `?id = <${idToUri(query.id, {
-    base: route.uriBase,
-    encoding: !route.uriBase,
-  })}>`;
+GalleryDetailsPage.getInitialProps = async ({ req, res, query }) => {
+  const { result, inList } = await (
+    await fetch(`${absoluteUrl(req)}/api/entity/${query.id}?${queryString.stringify(query)}`, {
+      headers: {
+        cookie: req.headers.cookie,
+      },
+    })
+  ).json();
 
-  let inList = false;
-  try {
-    const res = await SparqlClient.query(searchQuery, {
-      endpoint: config.api.endpoint,
-      debug: config.debug,
-    });
-
-    const result = res && res['@graph'][0];
-    if (!result) {
-      res.statusCode = 404;
-    } else {
-      const session = await NextAuth.getSession({ req });
-      if (session) {
-        // Check if this item is in a user list and flag it accordingly.
-        const resLists = await fetch(`${absoluteUrl(req)}/api/profile/lists`, {
-          headers:
-            req && req.headers
-              ? {
-                  cookie: req.headers.cookie,
-                }
-              : undefined,
-        });
-        const loadedLists = await resLists.json();
-        inList = loadedLists.some((list) => list.items.includes(result['@id']));
-      }
-    }
-    return { result, inList };
-  } catch (err) {
-    console.error(err);
+  if (!result) {
+    res.statusCode = 404;
   }
 
-  return { result: null, inList };
+  return { result, inList };
 };
 
 export default withTranslation('common')(GalleryDetailsPage);

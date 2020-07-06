@@ -148,12 +148,13 @@ export default ({ isOwner, list, shareLink, error }) => {
 
 export async function getServerSideProps({ req, res, query }) {
   // Fetch the list
-  const listApiRes = await fetch(`${absoluteUrl(req)}/api/lists/${query.listId}`, {
-    headers: {
-      cookie: req.headers.cookie,
-    },
-  });
-  const list = await listApiRes.json();
+  const list = await (
+    await fetch(`${absoluteUrl(req)}/api/lists/${query.listId}`, {
+      headers: {
+        cookie: req.headers.cookie,
+      },
+    })
+  ).json();
 
   if (list.error) {
     // List not found
@@ -166,12 +167,13 @@ export async function getServerSideProps({ req, res, query }) {
   }
 
   // Get current user
-  const userApiRes = await fetch(`${absoluteUrl(req)}/api/profile`, {
-    headers: {
-      cookie: req.headers.cookie,
-    },
-  });
-  const user = await userApiRes.json();
+  const user = await (
+    await fetch(`${absoluteUrl(req)}/api/profile`, {
+      headers: {
+        cookie: req.headers.cookie,
+      },
+    })
+  ).json();
 
   const isOwner = user && list.user === user._id;
 
