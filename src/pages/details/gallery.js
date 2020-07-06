@@ -155,7 +155,15 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
   }
 
   let printableValue = '<unk>';
-  if (typeof meta.label === 'object') {
+
+  if (
+    currentRoute &&
+    currentRoute.metadata &&
+    typeof currentRoute.metadata[metaName] === 'function'
+  ) {
+    url = null;
+    printableValue = currentRoute.metadata[metaName](meta);
+  } else if (typeof meta.label === 'object') {
     // If $langTag is set to 'show' in sparql-transformer
     printableValue = meta.label['@value'];
   } else if (typeof meta.label === 'string') {
