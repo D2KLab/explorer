@@ -1,6 +1,8 @@
 import SparqlClient from '@helpers/sparql';
 import config from '~/config';
 
+const vocabulariesCache = {};
+
 export async function getVocabularyItems(vocabularyId) {
   const vocabulary = config.vocabularies[vocabularyId];
 
@@ -32,9 +34,11 @@ export async function fillWithVocabularies(item) {
   for (let i = 0; i < keys.length; i += 1) {
     const key = keys[i];
     if (config.vocabularies[key]) {
-      // eslint-disable-next-line no-await-in-loop
-      const vocabularies = await getVocabularyItems(key);
-
+      if (!vocabulariesCache[key]) {
+        // eslint-disable-next-line no-await-in-loop
+        vocabulariesCache[key] = await getVocabularyItems(key);
+      }
+      const vocabularies = vocabulariesCache[key];
       const itemVocabs = Array.isArray(item[key]) ? item[key] : [item[key]].filter((x) => x);
       itemVocabs.forEach((itemVocab, j) => {
         itemVocabs[j] = vocabularies.find((v) => v['@id'] === itemVocab['@id']);

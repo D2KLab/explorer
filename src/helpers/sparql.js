@@ -1,50 +1,50 @@
-/* eslint-disable class-methods-use-this */
 const NodeCache = require('node-cache');
 const sparqlTransformer = require('sparql-transformer').default;
 
-class SparqlClient {
-  constructor() {
-    this.cache = new NodeCache();
-  }
-
-  async getSparqlQuery(query) {
-    let sparqlQuery = null;
-    try {
-      await sparqlTransformer(query, {
-        debug: false,
-        sparqlFunction: (sparql) => {
-          sparqlQuery = sparql.trim();
-          return Promise.reject();
-        },
-      });
-    } catch (err) {
-      // eslint-disable-next-line no-empty
-    }
-    return sparqlQuery;
-  }
-
-  async query(query, { endpoint, debug, ttl = 0 } = {}) {
-    const sparqlQuery = await this.getSparqlQuery(query);
-    if (sparqlQuery) {
-      const cachedRes = this.cache.get(sparqlQuery);
-      if (typeof cachedRes !== 'undefined') {
-        return cachedRes;
-      }
-    }
-    try {
-      const res = await sparqlTransformer(query, {
-        endpoint,
-        debug,
-      });
-      if (sparqlQuery) {
-        this.cache.set(sparqlQuery, res, ttl);
-      }
-      return res;
-    } catch (err) {
-      console.error(err);
-    }
-    return null;
-  }
+if (!(global.sparqlCache instanceof NodeCache)) {
+  global.sparqlCache = global.sparqlCache || new NodeCache();
 }
 
-module.exports = new SparqlClient();
+export const getSparqlQuery = async (query) => {
+  let sparqlQuery = null;
+  try {
+    await sparqlTransformer(query, {
+      debug: false,
+      sparqlFunction: (sparql) => {
+        sparqlQuery = sparql.trim();
+        return Promise.reject();
+      },
+    });
+  } catch (err) {
+    // eslint-disable-next-line no-empty
+  }
+  return sparqlQuery;
+};
+
+export const query = async (queryObject, { endpoint, debug, ttl = 0 } = {}) => {
+  const sparqlQuery = await getSparqlQuery(queryObject);
+  if (sparqlQuery) {
+    const cachedRes = global.sparqlCache.get(sparqlQuery);
+    if (typeof cachedRes !== 'undefined') {
+      return cachedRes;
+    }
+  }
+  try {
+    const res = await sparqlTransformer(queryObject, {
+      endpoint,
+      debug,
+    });
+    if (sparqlQuery) {
+      global.sparqlCache.set(sparqlQuery, res, ttl);
+    }
+    return res;
+  } catch (err) {
+    console.error(err);
+  }
+  return null;
+};
+
+export default {
+  getSparqlQuery,
+  query,
+};
