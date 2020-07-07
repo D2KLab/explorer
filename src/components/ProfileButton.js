@@ -217,7 +217,7 @@ const ProfileButton = ({ className }) => {
   );
 
   return (
-    <Element className={className} display="flex">
+    <Element className={className} display="flex" overflow={loading ? 'hidden' : 'visible'}>
       {loading ? <Spinner size="24" /> : renderMenu()}
     </Element>
   );
