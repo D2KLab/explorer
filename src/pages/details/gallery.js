@@ -236,7 +236,7 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
     const lang = i18n.language.toUpperCase();
     return {
       language: lang,
-      imgUri: `${absoluteUrl(req)}${generateMediaUrl(images[currentSlide] || images[0], 1024)}`,
+      imgUri: images[currentSlide] || images[0],
       dimension: {
         x: result.dimension?.width,
         y: result.dimension?.height,
