@@ -265,7 +265,7 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
     const data = generateVirtualLoomData();
 
     const params = [];
-    params.push(`lang=${encodeURIComponent(data.lang)}`);
+    params.push(`lang=${encodeURIComponent(data.language)}`);
     params.push(`data=${encodeURIComponent(JSON.stringify(data))}`);
 
     const width = 960;
