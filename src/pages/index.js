@@ -56,6 +56,8 @@ const Title = styled.h1`
   ${breakpoints.desktop`
     font-size: 4em;
   `}
+
+  ${({ theme }) => theme?.pages?.HomePage?.Title};
 `;
 
 const Logo = styled.div`
