@@ -255,7 +255,7 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
       materials: Array.isArray(result.material)
         ? result.material.map((v) => v.label)
         : [result.material.label].filter((x) => x),
-      endpoint: 'https://grlc.eurecom.fr/api-git/silknow/api/',
+      endpoint: 'http://grlc.eurecom.fr/api-git/silknow/api/',
     };
   };
 
