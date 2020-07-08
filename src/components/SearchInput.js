@@ -6,7 +6,7 @@ import AutosuggestHighlightMatch from 'autosuggest-highlight/match';
 import AutosuggestHighlightParse from 'autosuggest-highlight/parse';
 
 import { uriToId, generateMediaUrl } from '@helpers/utils';
-import SparqlClient from '@helpers/sparql';
+import { query } from '@helpers/sparql';
 import config from '~/config';
 
 function getSuggestionValue(suggestion) {
@@ -24,7 +24,7 @@ async function getSuggestions(value) {
     searchQuery.$filter.push(`regex(?label, "${value}", "i")`);
   }
 
-  const res = await SparqlClient.query(searchQuery, {
+  const res = await query(searchQuery, {
     endpoint: config.api.endpoint,
     debug: config.debug,
   });
@@ -105,9 +105,9 @@ const Container = styled.div`
   }
 `;
 
-const renderSuggestion = (suggestion, { query }) => {
+const renderSuggestion = (suggestion, { searchQuery }) => {
   const suggestionText = `${suggestion.label}`;
-  const matches = AutosuggestHighlightMatch(suggestionText, query);
+  const matches = AutosuggestHighlightMatch(suggestionText, searchQuery);
   const parts = AutosuggestHighlightParse(suggestionText, matches);
 
   let mainImage = null;
@@ -130,6 +130,7 @@ const renderSuggestion = (suggestion, { query }) => {
           const className = part.highlight ? 'highlight' : null;
 
           return (
+            // eslint-disable-next-line react/no-array-index-key
             <span className={className} key={index}>
               {part.text}
             </span>
@@ -179,6 +180,8 @@ class SearchInput extends Component {
         pathname: `/${routeName}/${uriToId(suggestion['@id'], { encoding: !route.uriBase })}`,
         // shallow: true
       });
+    } else {
+      console.warn('Route not found:', routeName, 'for suggestion type:', suggestion['@type']);
     }
   };
 
