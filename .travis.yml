@@ -1,0 +1,13 @@
+language: shell
+
+services:
+  - docker
+
+script:
+  - docker-composer -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+
+after_script:
+  - docker-compose down
+
+after_success:
+  - curl -X POST "$DEPLOY_WEBHOOK_URL"
