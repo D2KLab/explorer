@@ -2,7 +2,7 @@ services:
   - docker
 
 script:
-  - docker-composer -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+  - docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 
 after_script:
   - docker-compose down
