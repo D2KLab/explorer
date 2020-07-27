@@ -75,8 +75,12 @@ export default withRequestValidation({
           ? [query[`field_filter_${filter.id}`]]
           : query[`field_filter_${filter.id}`];
       }
-      extraWhere.push(...filter.whereFunc(val));
-      extraFilter.push(...filter.filterFunc(val));
+      if (typeof filter.whereFunc === 'function') {
+        extraWhere.push(...filter.whereFunc(val));
+      }
+      if (typeof filter.filterFunc === 'function') {
+        extraFilter.push(...filter.filterFunc(val));
+      }
     }
   }
 
