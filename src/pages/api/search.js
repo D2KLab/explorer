@@ -65,10 +65,16 @@ export default withRequestValidation({
   for (let i = 0; i < route.filters.length; i += 1) {
     const filter = route.filters[i];
     if (filter.id && query[`field_filter_${filter.id}`]) {
-      const val =
-        filter.isMulti && !Array.isArray(query[`field_filter_${filter.id}`])
+      let val;
+      if (filter.isOption) {
+        // Since options are checkboxes, get a boolean value (which should always be `true` in that case anyway)
+        val = !!query[`field_filter_${filter.id}`];
+      } else if (filter.isMulti) {
+        // Make sure that the value is an array when isMulti is set
+        val = !Array.isArray(query[`field_filter_${filter.id}`])
           ? [query[`field_filter_${filter.id}`]]
           : query[`field_filter_${filter.id}`];
+      }
       extraWhere.push(...filter.whereFunc(val));
       extraFilter.push(...filter.filterFunc(val));
     }

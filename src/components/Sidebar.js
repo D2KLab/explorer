@@ -255,7 +255,7 @@ class Sidebar extends Component {
         <span>{t(`filters.${filter.id}`, filter.label)}</span>
         <StyledSwitch
           onChange={this.handleSwitchChange}
-          checked={fields[`field_option_${filter.id}`] || false}
+          checked={fields[`field_filter_${filter.id}`] || false}
           onColor={theme.colors.light}
           offHandleColor="#f0f0f0"
           onHandleColor={theme.colors.primary}
@@ -266,7 +266,7 @@ class Sidebar extends Component {
           activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
           height={16}
           width={36}
-          id={`field_option_${filter.id}`}
+          id={`field_filter_${filter.id}`}
         />
       </Option>
     );
