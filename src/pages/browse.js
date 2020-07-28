@@ -5,6 +5,8 @@ import Router, { withRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
 import queryString from 'query-string';
 import useSWR from 'swr';
+import { Grid as GridIcon } from '@styled-icons/boxicons-solid/Grid';
+import { MapMarkedAlt as MapIcon } from '@styled-icons/fa-solid/MapMarkedAlt';
 
 import {
   Header,
@@ -211,7 +213,7 @@ const BrowsePage = ({ initialData, router, t }) => {
     });
   };
 
-  const showMap = () => {
+  const toggleMap = () => {
     setIsMapVisible(!isMapVisible);
   };
 
@@ -323,11 +325,13 @@ const BrowsePage = ({ initialData, router, t }) => {
                 })}
               />
             </Option>
-            <Option>
-              <Button primary onClick={showMap}>
-                Show on the map
-              </Button>
-            </Option>
+            {config.plugins.virtualLoom && (
+              <Option style={{ marginLeft: 'auto' }}>
+                <Button primary onClick={toggleMap}>
+                  {isMapVisible ? <GridIcon height="20" /> : <MapIcon height="20" />}
+                </Button>
+              </Option>
+            )}
           </OptionsBar>
           {results.length > 0 ? (
             isMapVisible ? (
