@@ -1,1 +1,1 @@
-export { default as breakpoints } from './breakpoints';
+export { breakpoints, sizes } from './breakpoints';

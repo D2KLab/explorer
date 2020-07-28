@@ -6,7 +6,17 @@ import DefaultErrorPage from 'next/error';
 import queryString from 'query-string';
 import useSWR from 'swr';
 
-import { Header, Footer, Sidebar, Layout, Body, Content, Media, Button } from '@components';
+import {
+  Header,
+  Footer,
+  Sidebar,
+  Layout,
+  Body,
+  Content,
+  Media,
+  Button,
+  Element,
+} from '@components';
 import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import Select from '@components/Select';
@@ -15,6 +25,8 @@ import ReactPaginate from 'react-paginate';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import PageTitle from '@components/PageTitle';
 import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
+import { breakpoints, sizes } from '@styles';
+import useDebounce from '@helpers/useDebounce';
 
 import { withTranslation } from '~/i18n';
 import config from '~/config';
@@ -43,6 +55,26 @@ const Option = styled.div`
   &:not(:last-child) {
     margin-right: 20px;
   }
+`;
+
+const CollapseSidebarButton = styled(Button)`
+  width: 100%;
+  background: #a6a6a6;
+  color: #000;
+  text-transform: uppercase;
+
+  ${breakpoints.mobile`
+    display: none;
+  `}
+`;
+
+const StyledSidebar = styled(Sidebar)`
+  display: ${({ collapsed }) => (collapsed ? 'none' : 'block')};
+
+  ${breakpoints.mobile`
+    display: block;
+    height: 100%;
+  `}
 `;
 
 const Results = styled.div`
@@ -102,6 +134,17 @@ const Label = styled.label`
 const BrowsePage = ({ initialData, router, t }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isMapVisible, setIsMapVisible] = useState(false);
+  const [isSidebarCollapsed, setSidebarCollapsed] = useState(true);
+
+  const debouncedHandleResize = useDebounce(function handleResize() {
+    setSidebarCollapsed(window.innerWidth <= sizes.mobile);
+  }, 1000);
+  useEffect(() => {
+    window.addEventListener('resize', debouncedHandleResize);
+    return () => {
+      window.removeEventListener('resize', debouncedHandleResize);
+    };
+  });
 
   useEffect(() => {
     const onDoneLoading = () => {
@@ -240,7 +283,22 @@ const BrowsePage = ({ initialData, router, t }) => {
       <PageTitle title={t('search:labels.browse', { type: query.type })} />
       <Header />
       <Body hasSidebar>
-        <Sidebar type={query.type} query={query} filters={filters} onSearch={onSearch} />
+        <CollapseSidebarButton
+          onClick={() => {
+            setSidebarCollapsed(!isSidebarCollapsed);
+          }}
+        >
+          {isSidebarCollapsed ? 'Show filters' : 'Hide filters'}
+        </CollapseSidebarButton>
+        <Element>
+          <StyledSidebar
+            type={query.type}
+            query={query}
+            filters={filters}
+            onSearch={onSearch}
+            collapsed={isSidebarCollapsed}
+          />
+        </Element>
         <Content>
           <StyledTitle>{t('search:labels.search_results')}</StyledTitle>
           <OptionsBar>
