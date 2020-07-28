@@ -53,6 +53,7 @@ const LogoContainer = styled.div`
 
 const Logo = styled.img`
   max-height: 100px;
+  max-width: 100%;
 `;
 
 const Footer = ({ className, t }) => {
