@@ -37,6 +37,12 @@ const ButtonsBar = styled.div`
   margin-bottom: 24px;
 `;
 
+const MobileButtonsBar = styled(ButtonsBar)`
+  ${breakpoints.mobile`
+    display: none;
+  `}
+`;
+
 const ClearButton = styled(Button)`
   background-color: #a6a6a6;
   color: #000;
@@ -331,6 +337,11 @@ class Sidebar extends Component {
             ) : null}
           </Fields>
         </form>
+
+        <MobileButtonsBar>
+          <ClearButton onClick={this.clearSearch}>{t('search:buttons.clear')}</ClearButton>
+          <FilterButton onClick={this.doSearch}>{t('search:buttons.filter')}</FilterButton>
+        </MobileButtonsBar>
       </Container>
     );
   }
