@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Button as ReakitButton } from 'reakit';
 
 const StyledSpinner = styled.svg`
   animation: rotate 1s linear infinite;
@@ -33,11 +34,12 @@ const StyledSpinner = styled.svg`
   }
 `;
 
-const Container = styled.button`
+const Container = styled(ReakitButton)`
   font-size: 1rem;
   padding: 0.5em;
   appearance: none;
   border: none;
+  border-radius: 0;
   cursor: pointer;
   text-decoration: none;
   background-color: ${({ bg, theme, primary, secondary }) => {
@@ -49,13 +51,13 @@ const Container = styled.button`
     }
     return bg || '#000';
   }};
-  color: ${({ text, theme }) => text || '#fff'};
+  color: ${({ text }) => text || '#fff'};
   display: flex;
   align-items: center;
   justify-content: ${({ loading }) => (loading ? 'space-between' : 'center')};
 
   &:hover {
-    color: ${({ text, theme }) => text || '#fff'};
+    color: ${({ text }) => text || '#fff'};
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
       0px 2px 1px -1px rgba(0, 0, 0, 0.12);
   }
