@@ -82,6 +82,7 @@ const Results = styled.div`
   grid-template-columns: repeat(auto-fit, 150px);
   grid-gap: 1rem;
   margin-bottom: 24px;
+  justify-content: space-between;
 
   transition: opacity 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
   opacity: ${({ loading }) => (loading ? 0.25 : 1)};
