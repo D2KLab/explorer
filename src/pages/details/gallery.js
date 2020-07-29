@@ -36,8 +36,7 @@ const Columns = styled.div`
 
 const Primary = styled.div`
   flex: auto;
-  overflow: hidden;
-  min-width: 50%;
+  min-width: 75%;
   padding-right: 24px;
   padding-top: 24px;
   margin-left: 24px;
@@ -45,43 +44,93 @@ const Primary = styled.div`
   display: flex;
   flex-direction: column;
 
-  .carousel .thumbs {
-    /* TODO: HACK: react-responsive-carousel doesn't support vertical thumbnails as of 2020-04-27 */
-    white-space: normal;
-    transform: none !important;
-  }
-  .carousel .thumb.selected,
-  .carousel .thumb:hover {
-    border: 3px solid ${({ theme }) => theme.colors.primary};
-  }
-  .carousel .slide {
-    background: #d9d9d9;
-
-    img {
-      width: auto;
-      max-width: 100%;
+  .carousel {
+    &.carousel-slider {
+      height: 50vh;
     }
-  }
-  .carousel .carousel-status {
-    font-size: 16px;
-    color: #d4d3ce;
-    top: 16px;
-    left: 16px;
-  }
-  .carousel .control-arrow::before {
-    border-width: 0 3px 3px 0;
-    border: solid #000;
-    display: inline-block;
-    padding: 3px;
-    border-width: 0 3px 3px 0;
-    width: 20px;
-    height: 20px;
-  }
-  .carousel .control-next.control-arrow::before {
-    transform: rotate(-45deg);
-  }
-  .carousel .control-prev.control-arrow::before {
-    transform: rotate(135deg);
+    .thumbs-wrapper {
+      overflow: visible;
+    }
+    .thumbs {
+      display: flex;
+      flex-wrap: wrap;
+
+      /* TODO: HACK: react-responsive-carousel doesn't support vertical thumbnails as of 2020-04-27 */
+      white-space: normal;
+      transform: none !important;
+    }
+    .thumb {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #fff;
+
+      &.selected,
+      &:hover {
+        border: 3px solid ${({ theme }) => theme.colors.primary};
+      }
+
+      img {
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
+
+    .slide {
+      background: #d9d9d9;
+      display: flex;
+      justify-content: center;
+
+      .legend {
+        transition: background-color 0.5s ease-in-out;
+        background-color: rgba(0, 0, 0, 0.25);
+        color: #fff;
+        opacity: 1;
+
+        &:hover {
+          background-color: #000;
+        }
+      }
+
+      img {
+        width: auto;
+        max-width: 100%;
+        max-height: 50vh;
+      }
+    }
+
+    .carousel-status {
+      font-size: 16px;
+      color: #fff;
+      top: 16px;
+      left: 16px;
+    }
+
+    .control-arrow::before {
+      border-width: 0 3px 3px 0;
+      border: solid #000;
+      display: inline-block;
+      padding: 3px;
+      border-width: 0 3px 3px 0;
+      width: 20px;
+      height: 20px;
+    }
+    .control-next.control-arrow::before {
+      transform: rotate(-45deg);
+    }
+    .control-prev.control-arrow::before {
+      transform: rotate(135deg);
+    }
+
+    .slider-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      height: 100%;
+    }
   }
 `;
 
@@ -99,6 +148,7 @@ const StyledMenu = styled(Menu)`
 
 const Secondary = styled.div`
   flex: auto;
+  min-width: 25%;
   padding-top: 24px;
   margin-left: 24px;
 
@@ -207,7 +257,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
 }
 
 const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
-  const { req, query } = useRouter();
+  const { query } = useRouter();
   const [session] = NextAuth.useSession();
   const route = config.routes[query.type];
 
