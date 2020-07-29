@@ -111,7 +111,7 @@ const ListItemTitle = styled.div`
 
 const ListItemSubtitle = styled.span`
   font-size: 16px;
-  color: #aaa;
+  color: #666;
 `;
 
 const ListItemButton = styled.div`
@@ -126,7 +126,7 @@ const StyledShareIcon = styled(ShareIcon)`
   transition: color 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
 
   &:hover {
-    color: #444;
+    color: #666;
   }
 `;
 
@@ -136,7 +136,7 @@ const StyledTrashIcon = styled(TrashIcon)`
   transition: color 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
 
   &:hover {
-    color: #444;
+    color: #666;
   }
 `;
 

@@ -59,10 +59,10 @@ const Results = styled.div`
 const Anchor = styled.a`
   display: block;
   text-decoration: none;
-  color: #aaa;
+  color: #666;
   line-height: 2em;
   padding-left: 10px;
-  border-left: 2px solid #aaa;
+  border-left: 2px solid #666;
   transition: color 0.3s ease-in-out, border-left-color 0.3s ease-in-out;
 
   &:hover {

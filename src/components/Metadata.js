@@ -13,7 +13,7 @@ import { Element } from '@components';
 
 const Label = styled.span`
   display: block;
-  color: #aaa;
+  color: #666;
   font-size: 0.7em;
   text-transform: uppercase;
 `;

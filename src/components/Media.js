@@ -46,7 +46,7 @@ const Title = styled.span`
 `;
 
 const Subtitle = styled.span`
-  color: #aaa;
+  color: #666;
 `;
 
 const Container = styled.div`
