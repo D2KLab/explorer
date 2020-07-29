@@ -1,7 +1,8 @@
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Router from 'next/router';
+import { Button as ReakitButton } from 'reakit';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
+
 import SearchInput from '@components/SearchInput';
 
 const Form = styled.div`
@@ -22,7 +23,7 @@ const StyledSearchInput = styled(SearchInput)`
   }
 `;
 
-const SearchButton = styled.div`
+const SearchButton = styled(ReakitButton)`
   display: flex;
   appearance: none;
   background-color: transparent;
@@ -34,7 +35,7 @@ const SearchIcon = styled(SearchAlt2)`
   height: 24px;
 `;
 
-const handleSubmit = event => {
+const handleSubmit = (event) => {
   const searchInput = event.target.elements.q;
   Router.pushRoute('search', { q: searchInput.value });
   event.preventDefault();
@@ -43,7 +44,7 @@ const handleSubmit = event => {
 const SearchBox = ({ className, placeholder = 'Search', onSubmit = handleSubmit }) => {
   return (
     <Form className={className} action="/browse" method="POST" onSubmit={onSubmit}>
-      <SearchButton as="button" type="submit">
+      <SearchButton aria-label="Search" type="submit">
         <SearchIcon />
       </SearchButton>
       <StyledSearchInput type="search" name="q" placeholder={placeholder} />

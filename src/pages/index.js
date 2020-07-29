@@ -5,6 +5,7 @@ import { useDialogState, Dialog, DialogDisclosure } from 'reakit/Dialog';
 import { useDropzone } from 'react-dropzone';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
 import { Camera } from '@styled-icons/boxicons-solid/Camera';
+import { Button as ReakitButton } from 'reakit';
 
 import { Layout, Header, Footer, Body } from '@components';
 import { breakpoints } from '@styles';
@@ -187,7 +188,7 @@ const StyledSearchInput = styled(SearchInput)`
   }
 `;
 
-const SearchButton = styled.button`
+const SearchButton = styled(ReakitButton)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -282,7 +283,7 @@ const HomePage = ({ t }) => {
                 {config.search.allowTextSearch ? (
                   <>
                     <StyledSearchInput name="q" placeholder={t('home:search.placeholder')} />
-                    <SearchButton as="button" type="submit">
+                    <SearchButton aria-label="Search by text" type="submit">
                       <SearchIcon />
                     </SearchButton>
                   </>
