@@ -6,6 +6,7 @@ import DefaultErrorPage from 'next/error';
 import queryString from 'query-string';
 import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
 import { saveAs } from 'file-saver';
+import Lightbox from 'react-image-lightbox';
 
 import { Header, Footer, Layout, Body, Element } from '@components';
 import Metadata from '@components/Metadata';
@@ -278,7 +279,7 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
     return !['@type', '@id', '@graph', 'label', 'representation'].includes(metaName);
   });
 
-  const label = route.labelFunc(result);
+  const pageTitle = route.labelFunc(result);
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -380,27 +381,50 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
     }
   };
 
+  const [lightboxIsOpen, setLightboxIsOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
+
+  const showLightbox = (index) => {
+    setLightboxIndex(Math.min(images.length - 1, Math.max(0, index)));
+    setLightboxIsOpen(true);
+  };
+
   return (
     <Layout>
-      <PageTitle title={`${label}`} />
+      <PageTitle title={`${pageTitle}`} />
       <Header />
       <Body>
         <Columns>
           <Primary>
-            <MobileTitle>{label}</MobileTitle>
+            {lightboxIsOpen && (
+              <Lightbox
+                imageTitle={pageTitle}
+                mainSrc={images[lightboxIndex]}
+                nextSrc={images[(lightboxIndex + 1) % images.length]}
+                prevSrc={images[(lightboxIndex + images.length - 1) % images.length]}
+                onCloseRequest={() => setLightboxIsOpen(false)}
+                onMovePrevRequest={() =>
+                  setLightboxIndex((lightboxIndex + images.length - 1) % images.length)
+                }
+                onMoveNextRequest={() => setLightboxIndex((lightboxIndex + 1) % images.length)}
+              />
+            )}
+
+            <MobileTitle>{pageTitle}</MobileTitle>
             <Carousel
               showArrows
               {...config.gallery.options}
               renderThumbs={customRenderThumb}
               onChange={setCurrentSlide}
             >
-              {images.map((image) => (
-                <div key={image}>
-                  <img src={generateMediaUrl(image, 1024)} alt={label} />
-                  <p className="legend">{label}</p>
+              {images.map((image, i) => (
+                <div key={image} onClick={() => showLightbox(i, pageTitle)} aria-hidden="true">
+                  <img src={generateMediaUrl(image, 1024)} alt={pageTitle} />
+                  <p className="legend">{pageTitle}</p>
                 </div>
               ))}
             </Carousel>
+
             {/*
             <Analysis>
               <Tabs>
@@ -433,7 +457,7 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
             </Debug>
           </Primary>
           <Secondary>
-            <Title>{label}</Title>
+            <Title>{pageTitle}</Title>
             <Element marginY={12} display="flex" justifyContent="space-between">
               <StyledGraphIcon uri={result['@graph']} />
               {session && (
