@@ -5,6 +5,7 @@ import NextAuth from 'next-auth/client';
 import DefaultErrorPage from 'next/error';
 import queryString from 'query-string';
 import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
+import { useAllCallbacks } from 'reakit-utils';
 import { saveAs } from 'file-saver';
 import Lightbox from 'react-image-lightbox';
 
@@ -341,20 +342,6 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
 
   const downloadMenu = useMenuState();
 
-  const customRenderThumb = (children) => {
-    return Carousel.defaultProps.renderThumbs(children).concat(
-      <VirtualLoomButton key="virtual-loom" onClick={onClickVirtualLoomButton}>
-        <img src="/images/virtual-loom-button.png" alt="Virtual Loom" />
-      </VirtualLoomButton>
-    );
-  };
-
-  const [isItemSaved, setIsItemSaved] = useState(inList);
-
-  const onItemSaveChange = (status) => {
-    setIsItemSaved(status);
-  };
-
   const download = (format) => {
     switch (format) {
       case 'vljson': {
@@ -379,6 +366,33 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
       default:
         break;
     }
+  };
+
+  const virtualLoomMenu = useMenuState();
+  const virtualLoomOnClick = useAllCallbacks((e) => e.stopPropagation(), virtualLoomMenu.show);
+
+  const customRenderThumb = (children) => {
+    return Carousel.defaultProps.renderThumbs(children).concat(
+      <Element>
+        <VirtualLoomButton key="virtual-loom" onClick={virtualLoomOnClick} {...virtualLoomMenu}>
+          <img src="/images/virtual-loom-button.png" alt="Virtual Loom" />
+        </VirtualLoomButton>
+        <StyledMenu {...virtualLoomMenu} aria-label="Virtual Loom">
+          <MenuItem {...virtualLoomMenu} as={Button} primary onClick={onClickVirtualLoomButton}>
+            Web
+          </MenuItem>
+          <MenuItem {...virtualLoomMenu} as={Button} primary onClick={() => download('vljson')}>
+            Desktop
+          </MenuItem>
+        </StyledMenu>
+      </Element>
+    );
+  };
+
+  const [isItemSaved, setIsItemSaved] = useState(inList);
+
+  const onItemSaveChange = (status) => {
+    setIsItemSaved(status);
   };
 
   const [lightboxIsOpen, setLightboxIsOpen] = useState(false);
@@ -506,22 +520,20 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
                 );
               })}
             </MetadataList>
-            <Element>
-              <MenuButton {...downloadMenu} as={Button} primary>
-                Download
-              </MenuButton>
-              <StyledMenu {...downloadMenu} aria-label="Download">
-                <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('vljson')}>
-                  Virtual Loom
-                </MenuItem>
-                <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('json')}>
-                  Linked Data JSON
-                </MenuItem>
-                <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('image')}>
-                  Download selected image
-                </MenuItem>
-              </StyledMenu>
-            </Element>
+            <MenuButton {...downloadMenu} as={Button} primary>
+              Download
+            </MenuButton>
+            <StyledMenu {...downloadMenu} aria-label="Download">
+              <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('vljson')}>
+                Virtual Loom
+              </MenuItem>
+              <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('json')}>
+                Linked Data JSON
+              </MenuItem>
+              <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('image')}>
+                Download selected image
+              </MenuItem>
+            </StyledMenu>
             {/* <RelatedVideos>
               <h2>Related</h2>
               <RelatedVideosList>
