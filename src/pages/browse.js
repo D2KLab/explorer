@@ -241,7 +241,10 @@ const BrowsePage = ({ initialData, router, t }) => {
   const renderResults = () => {
     return results.map((result) => {
       let mainImage = null;
-      if (result.representation && result.representation.image) {
+
+      if (typeof route.imageFunc === 'function') {
+        mainImage = route.imageFunc(result);
+      } else if (result.representation && result.representation.image) {
         mainImage = Array.isArray(result.representation.image)
           ? result.representation.image.shift()
           : result.representation.image;

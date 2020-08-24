@@ -164,13 +164,19 @@ const VideoDetailsPage = ({ result, mediaUrl, t }) => {
   const route = config.routes[query.type];
 
   const images = [];
-  const representations = Array.isArray(result.representation)
-    ? result.representation
-    : [result.representation].filter((x) => x);
-  representations.forEach((repres) => {
-    const imgs = Array.isArray(repres.image) ? repres.image : [repres.image];
-    images.push(...imgs.filter((img) => img && new URL(img).hostname === 'silknow.org'));
-  });
+
+  if (typeof route.imageFunc === 'function') {
+    images.push(route.imageFunc(result));
+  } else {
+    // Get images from SPARQL result
+    const representations = Array.isArray(result.representation)
+      ? result.representation
+      : [result.representation].filter((x) => x);
+    representations.forEach((repres) => {
+      const imgs = Array.isArray(repres.image) ? repres.image : [repres.image];
+      images.push(...imgs.filter((img) => img && new URL(img).hostname === 'silknow.org'));
+    });
+  }
 
   const metadata = Object.entries(result).filter(([metaName]) => {
     return !['@type', '@id', '@graph', 'label', 'representation', 'mediaLocator'].includes(
