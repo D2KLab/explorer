@@ -10,7 +10,6 @@ import PageTitle from '@components/PageTitle';
 import Debug from '@components/Debug';
 import { breakpoints } from '@styles';
 import { uriToId, absoluteUrl } from '@helpers/utils';
-import { locatorToVideo } from '@helpers/connectors/limecraft';
 import { withTranslation } from '~/i18n';
 import config from '~/config';
 
@@ -186,7 +185,7 @@ const VideoDetailsPage = ({ result, mediaUrl, t }) => {
       <PageTitle title={`${label}`} />
       <Header />
       <Body>
-        <ReactPlayer url={mediaUrl} width={null} height="50vh" controls playing />
+        {mediaUrl && <ReactPlayer url={mediaUrl} width={null} height="50vh" controls playing />}
         <Columns>
           <Primary>
             <Title>{label}</Title>
@@ -257,12 +256,7 @@ const VideoDetailsPage = ({ result, mediaUrl, t }) => {
             <div>
               <h2>Related</h2>
               <RelatedVideosList>
-                <Media
-                  title="Video Title"
-                  subtitle="Program Title"
-                  thumbnail="/images/thumbnail.jpg"
-                  direction="row"
-                />
+                <Media title={label} subtitle="" thumbnail={images[0]} direction="row" />
               </RelatedVideosList>
             </div>
           </Secondary>
@@ -285,12 +279,16 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
     })
   ).json();
 
+  const route = config.routes[query.type];
+
   let mediaUrl = null;
-  if (!result) {
-    res.statusCode = 404;
+  if (route && route.details && typeof route.details.mediaFunc === 'function') {
+    mediaUrl = route.details.mediaFunc(result);
   } else if (result && result.mediaLocator) {
     // Get media url from the media provider
-    mediaUrl = await locatorToVideo(result.mediaLocator);
+    mediaUrl = result.mediaLocator;
+  } else if (!result && res) {
+    res.statusCode = 404;
   }
 
   return { result, inList, mediaUrl };
