@@ -121,12 +121,16 @@ const CollectionDetailsPage = ({ result }) => {
                   element = (
                     <Link
                       key={item['@id']}
-                      href={`/details/${itemRoute.details.view}?id=${uriToId(item['@id'], {
-                        encoding: !itemRoute.uriBase,
-                      })}&type=${itemRouteName}`}
-                      as={`/${itemRouteName}/${uriToId(item['@id'], {
-                        encoding: !itemRoute.uriBase,
-                      })}`}
+                      href={`/details/${itemRoute.details.view}?id=${encodeURIComponent(
+                        uriToId(item['@id'], {
+                          encoding: !itemRoute.uriBase,
+                        })
+                      )}&type=${itemRouteName}`}
+                      as={`/${itemRouteName}/${encodeURIComponent(
+                        uriToId(item['@id'], {
+                          encoding: !itemRoute.uriBase,
+                        })
+                      )}`}
                       passHref
                     >
                       <a>{element}</a>

@@ -251,16 +251,21 @@ const BrowsePage = ({ initialData, router, t }) => {
           result.representation[0]['@id'] ||
           result.representation[0];
       }
+
       const label = typeof route.labelFunc === 'function' ? route.labelFunc(result) : null;
       const subtitle = typeof route.subtitleFunc === 'function' ? route.subtitleFunc(result) : null;
 
       return (
         <Link
           key={result['@id']}
-          href={`/details/${route.details.view}?id=${uriToId(result['@id'], {
-            encoding: !route.uriBase,
-          })}&type=${query.type}`}
-          as={`/${query.type}/${uriToId(result['@id'], { encoding: !route.uriBase })}`}
+          href={`/details/${route.details.view}?id=${encodeURIComponent(
+            uriToId(result['@id'], {
+              encoding: !route.uriBase,
+            })
+          )}&type=${query.type}`}
+          as={`/${query.type}/${encodeURIComponent(
+            uriToId(result['@id'], { encoding: !route.uriBase })
+          )}`}
           passHref
         >
           <a>

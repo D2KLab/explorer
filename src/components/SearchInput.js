@@ -177,7 +177,9 @@ class SearchInput extends Component {
       }) || [];
     if (route) {
       Router.push({
-        pathname: `/${routeName}/${uriToId(suggestion['@id'], { encoding: !route.uriBase })}`,
+        pathname: `/${routeName}/${encodeURIComponent(
+          uriToId(suggestion['@id'], { encoding: !route.uriBase })
+        )}`,
         // shallow: true
       });
     } else {

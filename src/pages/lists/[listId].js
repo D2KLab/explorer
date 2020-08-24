@@ -50,10 +50,14 @@ export default ({ isOwner, list, shareLink, error }) => {
                 return (
                   <Link
                     key={item.id}
-                    href={`/details/${route.details.view}?id=${uriToId(item.id, {
-                      encoding: !route.uriBase,
-                    })}&type=${item.route}`}
-                    as={`/${item.route}/${uriToId(item.id, { encoding: !route.uriBase })}`}
+                    href={`/details/${route.details.view}?id=${encodeURIComponent(
+                      uriToId(item.id, {
+                        encoding: !route.uriBase,
+                      })
+                    )}&type=${item.route}`}
+                    as={`/${item.route}/${encodeURIComponent(
+                      uriToId(item.id, { encoding: !route.uriBase })
+                    )}`}
                     passHref
                   >
                     <a>
@@ -62,7 +66,9 @@ export default ({ isOwner, list, shareLink, error }) => {
                         subtitle={item.subtitle}
                         thumbnail={generateMediaUrl(item.image, 150)}
                         direction="column"
-                        link={`/${item.route}/${uriToId(item.id, { encoding: !route.uriBase })}`}
+                        link={`/${item.route}/${encodeURIComponent(
+                          uriToId(item.id, { encoding: !route.uriBase })
+                        )}`}
                         uri={item.graph}
                       />
                     </a>
