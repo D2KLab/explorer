@@ -200,7 +200,7 @@ class Sidebar extends Component {
           fields[key] = val.value;
         } else if (Array.isArray(val)) {
           fields[key] = val.map((v) => v.value || v);
-        } else if (val === true) {
+        } else {
           fields[key] = val;
         }
       });
