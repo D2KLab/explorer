@@ -8,3 +8,5 @@ services:
     network_mode: bridge
   mongo:
     network_mode: bridge
+  imaginary:
+    network_mode: bridge
