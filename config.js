@@ -83,9 +83,7 @@ module.exports = {
             $filter: ['langmatches(lang(?label), "en") || lang(?label) = ""'],
             $langTag: 'hide',
           },
-          whereFunc: () => [
-            '?id <http://dbpedia.org/ontology/language> ?language',
-          ],
+          whereFunc: () => ['?id <http://dbpedia.org/ontology/language> ?language'],
           filterFunc: (values) => {
             return [values.map((val) => `?language = <${val}>`).join(' || ')];
           },
@@ -93,8 +91,7 @@ module.exports = {
         {
           id: 'show-only-images',
           isOption: true,
-          whereFunc: () => [
-          ],
+          whereFunc: () => [],
         },
       ],
       labelFunc: (props) => props.label || props.identifier,
@@ -148,4 +145,6 @@ module.exports = {
     },
   },
   graphs: [],
+  vocabularies: {},
+  plugins: {},
 };
