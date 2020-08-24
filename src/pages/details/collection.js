@@ -169,7 +169,7 @@ CollectionDetailsPage.getInitialProps = async ({ req, res, query }) => {
     })
   ).json();
 
-  if (!result) {
+  if (!result && res) {
     res.statusCode = 404;
   }
 

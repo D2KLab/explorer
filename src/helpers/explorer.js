@@ -4,9 +4,13 @@ import config from '~/config';
 const vocabulariesCache = {};
 
 export async function getVocabularyItems(vocabularyId) {
-  const vocabulary = config.vocabularies[vocabularyId];
-
   const results = [];
+
+  const vocabulary = config.vocabularies[vocabularyId];
+  if (!vocabulary) {
+    console.warn('Tried to get non-existing vocabulary with id:', vocabularyId);
+    return [];
+  }
 
   // Call the endpoint with the search query
   const resSearch = await SparqlClient.query(vocabulary.query, {
@@ -33,7 +37,7 @@ export async function fillWithVocabularies(item) {
   const keys = Object.keys(item);
   for (let i = 0; i < keys.length; i += 1) {
     const key = keys[i];
-    if (config.vocabularies[key]) {
+    if (key in config.vocabularies) {
       if (!vocabulariesCache[key]) {
         // eslint-disable-next-line no-await-in-loop
         vocabulariesCache[key] = await getVocabularyItems(key);

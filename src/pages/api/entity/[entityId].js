@@ -12,6 +12,11 @@ export default withRequestValidation({
   const { query } = req;
 
   const route = config.routes[query.type];
+  if (!route) {
+    res.status(404).json({ error: { message: 'Route not found' } });
+    return;
+  }
+
   const jsonQuery = route.details && route.details.query ? route.details.query : route.query;
   const searchQuery = JSON.parse(JSON.stringify(jsonQuery));
   searchQuery.$filter = `?id = <${idToUri(query.id, {

@@ -10,8 +10,8 @@ export default withRequestValidation({
 
   const route = config.routes[query.type];
   if (!route) {
-    res.statusCode = 404;
-    return { props: {} };
+    res.status(404).json({ error: { message: 'Route not found' } });
+    return;
   }
 
   const results = [];
