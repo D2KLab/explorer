@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
 import ReactPlayer from 'react-player';
 import queryString from 'query-string';
+import NextAuth from 'next-auth/client';
 
-import { Header, Footer, Layout, Body, Media } from '@components';
+import { Header, Footer, Layout, Body, Media, Element } from '@components';
+import SaveButton from '@components/SaveButton';
 import Metadata from '@components/Metadata';
 import PageTitle from '@components/PageTitle';
 import Debug from '@components/Debug';
@@ -155,10 +158,12 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
   );
 }
 
-const VideoDetailsPage = ({ result, mediaUrl, t }) => {
+const VideoDetailsPage = ({ result, inList, mediaUrl, t }) => {
   if (!result) {
     return <DefaultErrorPage statusCode={404} title="Result not found" />;
   }
+
+  const [session] = NextAuth.useSession();
 
   const { query } = useRouter();
   const route = config.routes[query.type];
@@ -186,6 +191,11 @@ const VideoDetailsPage = ({ result, mediaUrl, t }) => {
 
   const label = route.labelFunc(result);
 
+  const [isItemSaved, setIsItemSaved] = useState(inList);
+  const onItemSaveChange = (status) => {
+    setIsItemSaved(status);
+  };
+
   return (
     <Layout>
       <PageTitle title={`${label}`} />
@@ -195,6 +205,16 @@ const VideoDetailsPage = ({ result, mediaUrl, t }) => {
         <Columns>
           <Primary>
             <Title>{label}</Title>
+            {session && (
+              <Element marginBottom={12}>
+                <SaveButton
+                  type={query.type}
+                  item={result}
+                  saved={isItemSaved}
+                  onChange={onItemSaveChange}
+                />
+              </Element>
+            )}
             <MetadataList>
               {metadata.flatMap(([metaName, meta]) => {
                 const values = [];

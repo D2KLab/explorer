@@ -390,7 +390,6 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
   };
 
   const [isItemSaved, setIsItemSaved] = useState(inList);
-
   const onItemSaveChange = (status) => {
     setIsItemSaved(status);
   };

@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
 import queryString from 'query-string';
+import NextAuth from 'next-auth/client';
 
 import { Header, Footer, Layout, Body, Media } from '@components';
+import SaveButton from '@components/SaveButton';
 import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import PageTitle from '@components/PageTitle';
@@ -51,10 +54,12 @@ const StyledMedia = styled(Media)`
   margin-right: var(--card-margin);
 `;
 
-const CollectionDetailsPage = ({ result }) => {
+const CollectionDetailsPage = ({ result, inList }) => {
   if (!result) {
     return <DefaultErrorPage statusCode={404} title="Result not found" />;
   }
+
+  const [session] = NextAuth.useSession();
 
   const { query } = useRouter();
   const route = config.routes[query.type];
@@ -76,6 +81,11 @@ const CollectionDetailsPage = ({ result }) => {
         (x) => x && (typeof x !== 'object' || x.constructor !== Object || Object.keys(x).length > 0)
       );
 
+  const [isItemSaved, setIsItemSaved] = useState(inList);
+  const onItemSaveChange = (status) => {
+    setIsItemSaved(status);
+  };
+
   return (
     <Layout>
       <PageTitle title={`${label}`} />
@@ -84,6 +94,14 @@ const CollectionDetailsPage = ({ result }) => {
         <Columns>
           <Primary>
             <h1>{label}</h1>
+            {session && (
+              <SaveButton
+                type={query.type}
+                item={result}
+                saved={isItemSaved}
+                onChange={onItemSaveChange}
+              />
+            )}
             <p>{result.description || 'No description for this collection'}</p>
             <h2>Items in the collection</h2>
             <Results>
