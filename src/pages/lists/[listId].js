@@ -47,6 +47,10 @@ export default ({ isOwner, list, shareLink, error }) => {
                     return routeName === item.route;
                   }) || [];
 
+                if (!route) {
+                  return null;
+                }
+
                 return (
                   <Link
                     key={item.id}
@@ -194,13 +198,13 @@ export async function getServerSideProps({ req, res, query }) {
   for (let i = 0; i < list.items.length; i += 1) {
     const item = list.items[i];
     const [routeName, route] =
-      Object.entries(config.routes).find(([, r]) => {
-        return r.uriBase && item.startsWith(r.uriBase);
+      Object.entries(config.routes).find(([rName]) => {
+        return rName === item.type;
       }) || [];
 
     if (route) {
       const searchQuery = JSON.parse(JSON.stringify(route.query));
-      searchQuery.$filter = `?id = <${item}>`;
+      searchQuery.$filter = `?id = <${item.uri}>`;
 
       try {
         const res = await SparqlClient.query(searchQuery, {
@@ -227,7 +231,7 @@ export async function getServerSideProps({ req, res, query }) {
           title: label,
           subtitle: result.time && result.time.label ? result.time.label : '',
           image: mainImage,
-          graph: result['@graph'],
+          graph: result['@graph'] || null,
           route: routeName,
         };
       } catch (err) {

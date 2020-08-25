@@ -61,12 +61,12 @@ export default withRequestValidation({
     const body = JSON.parse(req.body);
 
     // List items
-    if (body.item) {
-      const inList = list.items.includes(body.item);
+    if (body.item && body.type) {
+      const inList = list.items.some((item) => item.uri === body.item && item.type === body.type);
       if (inList) {
-        await removeItemFromList(body.item, list);
+        await removeItemFromList(body.item, body.type, list);
       } else {
-        await addItemToList(body.item, list);
+        await addItemToList(body.item, body.type, list);
       }
     }
 

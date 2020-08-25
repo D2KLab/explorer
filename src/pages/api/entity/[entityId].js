@@ -49,7 +49,9 @@ export default withRequestValidation({
                 : undefined,
           })
         ).json();
-        inList = loadedLists.some((list) => list.items.includes(result['@id']));
+        inList = loadedLists.some((list) =>
+          list.items.some((it) => it.uri === result['@id'] && it.type === query.type)
+        );
       }
     }
   }

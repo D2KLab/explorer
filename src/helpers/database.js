@@ -43,14 +43,14 @@ export const updateList = async (list, newValues) => {
   return res.value;
 };
 
-export const removeItemFromList = async (itemUri, list) => {
+export const removeItemFromList = async (itemUri, itemType, list) => {
   const db = await connectToDatabase();
   const res = await db.collection('lists').findOneAndUpdate(
     {
       _id: new ObjectID(list._id),
     },
     {
-      $pull: { items: itemUri },
+      $pull: { items: { uri: itemUri, type: itemType } },
       $set: { updated_at: new Date() },
     },
     {
@@ -60,14 +60,14 @@ export const removeItemFromList = async (itemUri, list) => {
   return res.value;
 };
 
-export const addItemToList = async (itemUri, list) => {
+export const addItemToList = async (itemUri, itemType, list) => {
   const db = await connectToDatabase();
   const res = await db.collection('lists').findOneAndUpdate(
     {
       _id: new ObjectID(list._id),
     },
     {
-      $push: { items: itemUri },
+      $push: { items: { uri: itemUri, type: itemType } },
       $set: { updated_at: new Date() },
     },
     {

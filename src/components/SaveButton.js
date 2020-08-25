@@ -96,7 +96,7 @@ const StyledItem = styled.li`
   }
 `;
 
-const SaveButton = ({ item, saved, onChange }) => {
+const SaveButton = ({ item, type, saved, onChange }) => {
   const [loading, setLoading] = useState(false);
   const [lists, setLists] = useState([]);
   const [newListName, setNewListName] = useState('');
@@ -117,7 +117,11 @@ const SaveButton = ({ item, saved, onChange }) => {
     }
 
     if (typeof onChange === 'function') {
-      onChange(loadedLists.some((list) => list.items.includes(item['@id'])));
+      onChange(
+        loadedLists.some((list) =>
+          list.items.some((it) => it.uri === item['@id'] && it.type === type)
+        )
+      );
     }
   };
 
@@ -126,6 +130,7 @@ const SaveButton = ({ item, saved, onChange }) => {
       method: 'PUT',
       body: JSON.stringify({
         item: item['@id'],
+        type,
       }),
     });
     await loadLists();
@@ -136,6 +141,7 @@ const SaveButton = ({ item, saved, onChange }) => {
       method: 'PUT',
       body: JSON.stringify({
         item: item['@id'],
+        type,
       }),
     });
     await loadLists();
@@ -219,7 +225,9 @@ const SaveButton = ({ item, saved, onChange }) => {
           ) : (
             <StyledList>
               {lists.map((list) => {
-                const isItemInList = list.items.includes(item['@id']);
+                const isItemInList = list.items.some(
+                  (it) => it.uri === item['@id'] && it.type === type
+                );
                 return (
                   <StyledItem
                     key={list._id}
