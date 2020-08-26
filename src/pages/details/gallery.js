@@ -284,14 +284,11 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const httpToHttps = (url) =>
-    typeof url === 'string' ? url.replace(/^http:\/\//i, 'https://') : undefined;
-
   const generateVirtualLoomData = () => {
     const lang = i18n.language.toUpperCase();
     return {
       language: lang,
-      imgUri: httpToHttps(images[currentSlide] || images[0]),
+      imgUri: images[currentSlide] || images[0],
       dimension: {
         x: result.dimension?.width,
         y: result.dimension?.height,
