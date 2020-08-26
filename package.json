@@ -52,7 +52,7 @@
     "styled-icons": "^10.6.0",
     "styled-reset": "^4.2.0",
     "styled-system": "^5.1.5",
-    "swr": "^0.2.3"
+    "swr": "^0.3.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
