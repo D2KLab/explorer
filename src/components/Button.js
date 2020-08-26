@@ -55,7 +55,7 @@ const Container = styled(ReakitButton)`
   color: ${({ text }) => text || '#fff'};
   display: flex;
   align-items: center;
-  justify-content: ${({ loading }) => (loading ? 'space-between' : 'center')};
+  justify-content: center;
 
   &:hover {
     color: ${({ text }) => text || '#fff'};
