@@ -2,7 +2,7 @@ import queryString from 'query-string';
 
 import config from '~/config';
 
-const SpatioTemporalMaps = ({ query }) => {
+const SpatioTemporalMaps = ({ mapRef, query }) => {
   return (
     <div>
       <iframe
@@ -10,6 +10,7 @@ const SpatioTemporalMaps = ({ query }) => {
         src={`${config.plugins.spatioTemporalMaps.url}?${queryString.stringify(query)}`}
         width="100%"
         height="600"
+        ref={mapRef}
       />
     </div>
   );
