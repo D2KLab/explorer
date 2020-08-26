@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import Router, { withRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
 import queryString from 'query-string';
-import useSWR from 'swr';
+import { useSWRInfinite } from 'swr';
 import { Grid as GridIcon } from '@styled-icons/boxicons-solid/Grid';
 import { MapMarkedAlt as MapIcon } from '@styled-icons/fa-solid/MapMarkedAlt';
 
@@ -29,6 +29,7 @@ import PageTitle from '@components/PageTitle';
 import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import { breakpoints, sizes } from '@styles';
 import useDebounce from '@helpers/useDebounce';
+import useOnScreen from '@helpers/useOnScreen';
 
 import { withTranslation } from '~/i18n';
 import config from '~/config';
@@ -138,16 +139,52 @@ const BrowsePage = ({ initialData, router, t }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(true);
+  const mapRef = useRef(null);
 
-  const debouncedHandleResize = useDebounce(function handleResize() {
-    setSidebarCollapsed(window.innerWidth <= sizes.mobile);
-  }, 1000);
-  useEffect(() => {
-    window.addEventListener('resize', debouncedHandleResize);
-    return () => {
-      window.removeEventListener('resize', debouncedHandleResize);
-    };
+  const { req, query, pathname } = router;
+  const currentPage = parseInt(query.page, 10) || 1;
+
+  // Store the initial start page on load, because `currentPage`
+  // gets updated during infinite scroll.
+  const [initialPage, setInitialPage] = useState(currentPage);
+
+  // A function to get the SWR key of each page,
+  // its return value will be accepted by `fetcher`.
+  // If `null` is returned, the request of that page won't start.
+  const getKey = (pageIndex, previousPageData) => {
+    if (previousPageData && !previousPageData.results.length) return null; // reached the end
+    const q = { ...query, page: initialPage + pageIndex };
+    return `${absoluteUrl(req)}/api/search?${queryString.stringify(q)}`; // SWR key
+  };
+
+  const PAGE_SIZE = 20;
+  const { data = [initialData], error, size, setSize } = useSWRInfinite(getKey, fetcher, {
+    persistSize: true,
   });
+  const isLoadingInitialData = !data && !error;
+  const isLoadingMore = isLoadingInitialData || (data && typeof data[size - 1] === 'undefined');
+  const isReachingEnd = data && data[data.length - 1]?.results.length < PAGE_SIZE;
+
+  let filters = [];
+  let totalPages = 0;
+  let debugSparqlQuery = null;
+  if (data && data[0]) {
+    filters = data[0].filters;
+    totalPages = Math.ceil(data[0].totalResults / PAGE_SIZE);
+    debugSparqlQuery = data[0].debugSparqlQuery;
+  }
+
+  if (typeof window !== 'undefined') {
+    const debouncedHandleResize = useDebounce(function handleResize() {
+      setSidebarCollapsed(window.innerWidth <= sizes.mobile);
+    }, 1000);
+    useEffect(() => {
+      window.addEventListener('resize', debouncedHandleResize);
+      return () => {
+        window.removeEventListener('resize', debouncedHandleResize);
+      };
+    });
+  }
 
   useEffect(() => {
     const onDoneLoading = () => {
@@ -163,15 +200,33 @@ const BrowsePage = ({ initialData, router, t }) => {
   }, []);
 
   const onSearch = (fields) => {
-    const { pathname, query } = router;
-    setIsLoading(true);
-    router.push({
-      pathname,
-      query: {
+    if (isMapVisible && mapRef.current?.src?.startsWith(window.location.origin)) {
+      console.log(mapRef.current.contentWindow);
+      mapRef.current.contentWindow.setQuery({
         type: query.type,
         ...fields,
+      });
+    } else {
+      Router.push({
+        pathname,
+        query: {
+          type: query.type,
+          ...fields,
+        },
+      });
+    }
+  };
+
+  const loadPage = (pageNumber) => {
+    setIsLoading(true);
+    setSize(1);
+    setInitialPage(pageNumber);
+    return Router.push({
+      pathname,
+      query: {
+        ...query,
+        page: pageNumber,
       },
-      // shallow: true
     });
   };
 
@@ -181,25 +236,15 @@ const BrowsePage = ({ initialData, router, t }) => {
       return;
     }
 
-    const { pathname, query } = router;
     const pageNumber = pageIndex + 1;
-    const currentPage = parseInt(query.page, 10);
     if (pageNumber === currentPage) {
       return;
     }
 
-    setIsLoading(true);
-    Router.push({
-      pathname,
-      query: {
-        ...query,
-        page: pageNumber,
-      },
-    }).then(() => window.scrollTo(0, 0));
+    loadPage(pageNumber).then(() => window.scrollTo(0, 0));
   };
 
   const onSortChange = (selectedOption) => {
-    const { pathname, query } = router;
     const { value } = selectedOption;
 
     setIsLoading(true);
@@ -217,14 +262,31 @@ const BrowsePage = ({ initialData, router, t }) => {
     setIsMapVisible(!isMapVisible);
   };
 
-  const { req, query } = router;
-  const { data } = useSWR(
-    `${absoluteUrl(req)}/api/search?${queryString.stringify(query)}`,
-    fetcher,
-    { initialData }
-  );
-  const { results = [], filters = [], totalResults = 0, debugSparqlQuery = null } = data;
-  const { page } = query;
+  const loadMore = () => {
+    if (currentPage + 1 > totalPages) return;
+
+    setSize(size + 1);
+
+    Router.push(
+      {
+        pathname: router.pathname,
+        query: {
+          ...query,
+          page: currentPage + 1,
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
+
+  const $loadMoreButton = useRef(null);
+  const isOnScreen = useOnScreen($loadMoreButton, '200px');
+
+  useEffect(() => {
+    if (isOnScreen) loadMore();
+  }, [isOnScreen]);
+
   const route = config.routes[query.type];
 
   if (!route) {
@@ -238,7 +300,7 @@ const BrowsePage = ({ initialData, router, t }) => {
       value: filter.id,
     }));
 
-  const renderResults = () => {
+  const renderResults = (results) => {
     return results.map((result) => {
       let mainImage = null;
 
@@ -341,23 +403,43 @@ const BrowsePage = ({ initialData, router, t }) => {
               </Option>
             )}
           </OptionsBar>
-          {results.length > 0 ? (
+          {data && data.length > 0 ? (
             isMapVisible ? (
-              <SpatioTemporalMaps query={query} />
+              <SpatioTemporalMaps mapRef={mapRef} query={query} />
             ) : (
               <>
-                <Results loading={isLoading}>{renderResults()}</Results>
+                <Results className="infinite-scroll" loading={isLoading}>
+                  {data.map((page) => {
+                    return renderResults(page.results);
+                  })}
+                </Results>
+                <Element marginBottom={24}>
+                  <Button
+                    primary
+                    style={{ width: '100%' }}
+                    ref={$loadMoreButton}
+                    loading={isLoadingMore}
+                    disabled={isReachingEnd}
+                    onClick={() => {
+                      loadMore();
+                    }}
+                  >
+                    {isLoadingMore ? 'Loading...' : 'Load More'}
+                  </Button>
+                </Element>
                 <PaginationContainer>
                   <ReactPaginate
                     previousLabel="Previous"
                     nextLabel="Next"
                     breakLabel="..."
                     breakClassName="break"
-                    pageCount={Math.ceil(totalResults / 20)}
-                    initialPage={page}
+                    pageCount={totalPages}
+                    initialPage={initialPage - 1}
+                    forcePage={currentPage - 1}
                     marginPagesDisplayed={2}
                     pageRangeDisplayed={5}
                     onPageChange={onPageChange}
+                    disableInitialCallback
                     containerClassName="pagination"
                     subContainerClassName="pages pagination"
                     activeClassName="active"
@@ -373,7 +455,17 @@ const BrowsePage = ({ initialData, router, t }) => {
               <pre>{JSON.stringify(query, null, 2)}</pre>
             </Metadata>
             <Metadata label="Results">
-              <pre>{JSON.stringify(results, null, 2)}</pre>
+              <pre>
+                {Array.isArray(data) &&
+                  JSON.stringify(
+                    data.reduce((prev, curr) => {
+                      prev.push(...curr.results);
+                      return prev;
+                    }, []),
+                    null,
+                    2
+                  )}
+              </pre>
             </Metadata>
             <Metadata label="SPARQL Query">
               <SPARQLQueryLink query={debugSparqlQuery}>{t('search:edit_query')}</SPARQLQueryLink>
