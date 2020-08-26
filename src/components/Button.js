@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import styled from 'styled-components';
 import { Button as ReakitButton } from 'reakit';
 
@@ -62,14 +63,26 @@ const Container = styled(ReakitButton)`
       0px 2px 1px -1px rgba(0, 0, 0, 0.12);
   }
 
+  &:disabled {
+    cursor: default;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
   transition: opacity 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
   opacity: ${({ loading }) => (loading ? 0.5 : 1)};
   pointer-events: ${({ loading }) => (loading ? 'none' : 'auto')};
 `;
 
-const Button = ({ loading = false, href, children, ...props }) => {
+const Button = forwardRef(({ loading = false, href, children, ...props }, ref) => {
   return (
-    <Container {...props} as={href ? 'a' : null} href={href} loading={loading ? 1 : undefined}>
+    <Container
+      {...props}
+      as={href ? 'a' : null}
+      href={href}
+      loading={loading ? 1 : undefined}
+      ref={ref}
+    >
       {loading && (
         <StyledSpinner viewBox="0 0 50 50">
           <circle className="path" cx="25" cy="25" r="20" fill="none" strokeWidth="2" />
@@ -78,6 +91,6 @@ const Button = ({ loading = false, href, children, ...props }) => {
       {children}
     </Container>
   );
-};
+});
 
 export default Button;
