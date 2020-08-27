@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
@@ -6,13 +6,14 @@ import ReactPlayer from 'react-player';
 import queryString from 'query-string';
 import NextAuth from 'next-auth/client';
 
-import { Header, Footer, Layout, Body, Media, Element } from '@components';
+import { Header, Footer, Layout, Body, Media, Button, Element } from '@components';
 import SaveButton from '@components/SaveButton';
 import Metadata from '@components/Metadata';
 import PageTitle from '@components/PageTitle';
 import Debug from '@components/Debug';
 import { breakpoints } from '@styles';
 import { uriToId, absoluteUrl } from '@helpers/utils';
+import SparqlClient from '@helpers/sparql';
 import { withTranslation } from '~/i18n';
 import config from '~/config';
 
@@ -108,6 +109,39 @@ const MetadataList = styled.div`
 
 const RelatedVideosList = styled.div``;
 
+const VideoSegment = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+`;
+
+const SegmentButton = styled(Button)`
+  background: transparent;
+  color: ${({ theme }) => theme.colors.primary};
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary};
+    box-shadow: none;
+  }
+`;
+
+const SegmentTime = styled.div`
+  width: 240px;
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: 1rem;
+  line-height: 2rem;
+  font-weight: bold;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const SegmentText = styled.div`
+  flex: 1;
+`;
+
 function generateValue(currentRouteName, currentRoute, metaName, meta) {
   if (typeof meta === 'string') {
     return <>{meta}</>;
@@ -158,7 +192,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
   );
 }
 
-const VideoDetailsPage = ({ result, inList, mediaUrl, t }) => {
+const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments, t }) => {
   if (!result) {
     return <DefaultErrorPage statusCode={404} title="Result not found" />;
   }
@@ -196,12 +230,51 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, t }) => {
     setIsItemSaved(status);
   };
 
+  const $videoPlayer = useRef(null);
+
+  const seekVideoTo = (time) => {
+    let seconds;
+    if (typeof time === 'string' && time.indexOf(':') > -1) {
+      const timeArray = time.split(':');
+      seconds = +timeArray[0] * 60 * 60 + +timeArray[1] * 60 + +timeArray[2];
+    } else {
+      seconds = parseFloat(time);
+    }
+    if (typeof seconds === 'number') {
+      $videoPlayer.current.seekTo(seconds, 'seconds');
+      $videoPlayer.current.wrapper.scrollIntoView();
+    }
+  };
+
+  const renderVideoSegment = (segment) => {
+    return (
+      <VideoSegment key={segment['@id']}>
+        <SegmentButton onClick={() => seekVideoTo(segment.start)}>
+          &#9654;{' '}
+          <SegmentTime>
+            {segment.start} - {segment.end}
+          </SegmentTime>
+        </SegmentButton>
+        <SegmentText>{segment.description}</SegmentText>
+      </VideoSegment>
+    );
+  };
+
   return (
     <Layout>
       <PageTitle title={`${label}`} />
       <Header />
       <Body>
-        {mediaUrl && <ReactPlayer url={mediaUrl} width={null} height="50vh" controls playing />}
+        {mediaUrl && (
+          <ReactPlayer
+            ref={$videoPlayer}
+            url={mediaUrl}
+            width={null}
+            height="50vh"
+            controls
+            playing
+          />
+        )}
         <Columns>
           <Primary>
             <Title>{label}</Title>
@@ -269,6 +342,12 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, t }) => {
                 </Tab>
               </Tabs>
             </Analysis> */}
+            {config?.plugins?.videoSegments && (
+              <Element>
+                <h2>Video segments</h2>
+                {videoSegments.map(renderVideoSegment)}
+              </Element>
+            )}
             <Debug>
               <Metadata label="HTTP Parameters">
                 <pre>{JSON.stringify(query, null, 2)}</pre>
@@ -309,7 +388,7 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
 
   let mediaUrl = null;
   if (route && route.details && typeof route.details.mediaFunc === 'function') {
-    mediaUrl = route.details.mediaFunc(result);
+    mediaUrl = await (await fetch(`${absoluteUrl(req)}${route.details.mediaFunc(result)}`)).text();
   } else if (result && result.mediaLocator) {
     // Get media url from the media provider
     mediaUrl = result.mediaLocator;
@@ -317,7 +396,21 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
     res.statusCode = 404;
   }
 
-  return { result, inList, mediaUrl };
+  // Video segments
+  const videoSegments = [];
+  if (config?.plugins?.videoSegments) {
+    const videoSegmentsQuery = { ...config.plugins.videoSegments.query };
+    videoSegmentsQuery.$filter = videoSegmentsQuery.$filter || [];
+    videoSegmentsQuery.$filter.push(`?video = <${result['@id']}>`);
+
+    const resp = await SparqlClient.query(videoSegmentsQuery, {
+      endpoint: config.api.endpoint,
+      debug: config.debug,
+    });
+    videoSegments.push(...resp['@graph']);
+  }
+
+  return { result, inList, mediaUrl, videoSegments };
 };
 
 export default withTranslation('common')(VideoDetailsPage);
