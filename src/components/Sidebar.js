@@ -195,7 +195,9 @@ class Sidebar extends Component {
     if (typeof onSearch === 'function') {
       const fields = {};
       Object.entries(this.state.fields).forEach(([key, val]) => {
-        if (val.value) {
+        if (val === null || typeof val === 'undefined') {
+          delete fields[key];
+        } else if (val.value) {
           fields[key] = val.value;
         } else if (Array.isArray(val)) {
           fields[key] = val.map((v) => v.value || v);
