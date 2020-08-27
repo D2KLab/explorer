@@ -240,6 +240,7 @@ class Sidebar extends Component {
       <Field key={filter.id}>
         <label htmlFor="field_filter">{t(`filters.${filter.id}`, filter.label)}</label>
         <FilterInput
+          isClearable
           inputId={`field_filter_${filter.id}`}
           name={`field_filter_${filter.id}`}
           options={filter.values}
@@ -319,6 +320,7 @@ class Sidebar extends Component {
                   {config.search.graphFieldLabel[i18n.language] || t('search:fields.graph')}
                 </label>
                 <Select
+                  isClearable
                   inputId="graph"
                   name="graph"
                   options={graphOptions}

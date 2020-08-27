@@ -78,6 +78,7 @@ export default class MultiSelect extends Component {
       <Container className={className}>
         <div>
           <Select
+            isClearable={false}
             isMulti={false}
             controlShouldRenderValue={false}
             inputId={id}
