@@ -76,7 +76,15 @@ const Container = styled(ReakitButton)`
 
 const Button = forwardRef(({ loading, primary, secondary, href, children, ...props }, ref) => {
   return (
-    <Container {...props} as={href ? 'a' : null} href={href} ref={ref}>
+    <Container
+      {...props}
+      as={href ? 'a' : null}
+      href={href}
+      ref={ref}
+      loading={loading ? 1 : undefined}
+      primary={primary ? 1 : undefined}
+      secondary={secondary ? 1 : undefined}
+    >
       {loading && (
         <StyledSpinner viewBox="0 0 50 50">
           <circle className="path" cx="25" cy="25" r="20" fill="none" strokeWidth="2" />
