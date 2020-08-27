@@ -1,18 +1,11 @@
+/* eslint-disable import/no-named-as-default-member */
 import { withRequestValidation } from '@helpers/api';
 import SparqlClient from '@helpers/sparql';
 import { fillWithVocabularies } from '@helpers/explorer';
 import config from '~/config';
 
-export default withRequestValidation({
-  allowedMethods: ['GET'],
-})(async (req, res) => {
-  const { query } = req;
-
+export const search = async (query) => {
   const route = config.routes[query.type];
-  if (!route) {
-    res.status(404).json({ error: { message: 'Route not found' } });
-    return;
-  }
 
   const results = [];
   const filters = [];
@@ -186,10 +179,25 @@ export default withRequestValidation({
   });
   const totalResults = resPagination && resPagination[0] ? parseInt(resPagination[0].id, 10) : 0;
 
-  res.status(200).json({
+  return {
     results,
     filters,
     totalResults,
     debugSparqlQuery,
-  });
+  };
+};
+
+export default withRequestValidation({
+  allowedMethods: ['GET'],
+})(async (req, res) => {
+  const { query } = req;
+
+  const route = config.routes[query.type];
+  if (!route) {
+    res.status(404).json({ error: { message: 'Route not found' } });
+    return;
+  }
+
+  const data = await search(query);
+  res.status(200).json(data);
 });

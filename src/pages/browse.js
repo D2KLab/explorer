@@ -30,6 +30,7 @@ import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import { breakpoints, sizes } from '@styles';
 import useDebounce from '@helpers/useDebounce';
 import useOnScreen from '@helpers/useOnScreen';
+import { search } from '@pages/api/search';
 
 import { withTranslation } from '~/i18n';
 import config from '~/config';
@@ -491,15 +492,9 @@ const BrowsePage = ({ initialData, router, t }) => {
   );
 };
 
-export async function getServerSideProps({ query, req }) {
-  const { results, filters, totalResults, debugSparqlQuery } = await (
-    await fetch(`${absoluteUrl(req)}/api/search?${queryString.stringify(query)}`, {
-      headers: {
-        cookie: req.headers.cookie,
-      },
-    })
-  ).json();
-  return { props: { initialData: { results, filters, totalResults, debugSparqlQuery } } };
+export async function getServerSideProps({ query }) {
+  const searchData = await search(query);
+  return { props: { initialData: searchData } };
 }
 
 export default withTranslation(['common', 'search'])(withRouter(BrowsePage));
