@@ -14,7 +14,7 @@ const ThumbnailContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 150px;
-  height: 150px;
+  max-height: 150px;
   position: relative;
 `;
 
@@ -52,13 +52,12 @@ const Subtitle = styled.span`
 const Container = styled.div`
   display: flex;
   flex-direction: ${({ direction }) => direction};
-  max-width: 150px;
 
   ${ThumbnailContainer} {
-    max-width: ${({ direction }) => (direction === 'row' ? '50%' : '100%')};
+    max-width: 100%;
+    height: 150px;
     margin-right: ${({ direction }) => (direction === 'row' ? '8px' : 0)};
     margin-bottom: ${({ direction }) => (direction === 'row' ? 0 : '8px')};
-    height: 150px;
   }
 `;
 
