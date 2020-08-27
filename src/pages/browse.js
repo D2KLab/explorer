@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import Router, { withRouter } from 'next/router';
@@ -136,13 +136,17 @@ const Label = styled.label`
 `;
 
 const BrowsePage = ({ initialData, router, t }) => {
+  const { req, query, pathname } = router;
   const [isLoading, setIsLoading] = useState(false);
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(true);
+  const currentPage = parseInt(query.page, 10) || 1;
   const mapRef = useRef(null);
 
-  const { req, query, pathname } = router;
-  const currentPage = parseInt(query.page, 10) || 1;
+  // Memoize the initial query to prevent re-rendering the map
+  // (reloading the iframe) every time the search query changes.
+  // Instead, we rely on `setQuery` from the iframe's contentWindow.
+  const mapInitialQuery = useMemo(() => query, []);
 
   // Store the initial start page on load, because `currentPage`
   // gets updated during infinite scroll.
@@ -200,21 +204,29 @@ const BrowsePage = ({ initialData, router, t }) => {
   }, []);
 
   const onSearch = (fields) => {
-    if (isMapVisible && mapRef.current?.src?.startsWith(window.location.origin)) {
-      mapRef.current.contentWindow.setQuery({
-        type: query.type,
-        ...fields,
-      });
+    const isMapSearch = isMapVisible; // && mapRef.current?.src?.startsWith(window.location.origin);
+    if (isMapSearch) {
+      if (typeof mapRef?.current?.contentWindow?.setQuery === 'function') {
+        mapRef.current.contentWindow.setQuery({
+          type: query.type,
+          ...fields,
+        });
+      }
       mapRef.current.focus();
-    } else {
-      Router.push({
+    }
+    Router.push(
+      {
         pathname,
         query: {
           type: query.type,
           ...fields,
         },
-      });
-    }
+      },
+      undefined,
+      {
+        shallow: isMapSearch,
+      }
+    );
   };
 
   const loadPage = (pageNumber) => {
@@ -405,7 +417,7 @@ const BrowsePage = ({ initialData, router, t }) => {
           </OptionsBar>
           {data && data.length > 0 ? (
             isMapVisible ? (
-              <SpatioTemporalMaps mapRef={mapRef} query={query} />
+              <SpatioTemporalMaps mapRef={mapRef} query={mapInitialQuery} />
             ) : (
               <>
                 <Results className="infinite-scroll" loading={isLoading}>
