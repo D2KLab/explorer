@@ -275,8 +275,8 @@ const HomePage = ({ t }) => {
       <Body>
         <Hero>
           <HeroTop>
-            {config.home.hero.headline ? <Title>{config.home.hero.headline}</Title> : null}
-            {config.home.hero.showLogo ? <Logo /> : null}
+            {config.home.hero.showHeadline && <Title>{t('home:hero.headline')}</Title>}
+            {config.home.hero.showLogo && <Logo />}
             <HeroMiddle>
               <SearchForm method="GET" action="/browse">
                 <input type="hidden" name="type" value="objects" />

@@ -6,7 +6,7 @@ module.exports = {
   },
   home: {
     hero: {
-      headline: 'Welcome to D2KLab Exploratory Search Engine Demo',
+      showHeadline: true,
       showLogo: true,
     },
   },

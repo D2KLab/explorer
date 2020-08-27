@@ -1,4 +1,7 @@
 {
+  "hero": {
+    "headline": "Demo"
+  },
   "search": {
     "placeholder": "Search for countries within DBpedia ..."
   },

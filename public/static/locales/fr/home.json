@@ -1,4 +1,7 @@
 {
+  "hero": {
+    "headline": "Démo"
+  },
   "search": {
     "placeholder": "Rechercher un pays depuis DBpedia ..."
   },
