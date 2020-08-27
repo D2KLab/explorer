@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
 import { useAllCallbacks } from 'reakit-utils';
@@ -171,7 +171,13 @@ const SaveButton = ({ item, type, saved, onChange }) => {
 
   return (
     <div>
-      <StyledDialogDisclosure onClick={useAllCallbacks(loadLists, dialog.onClick)} {...dialog}>
+      <StyledDialogDisclosure
+        onClick={useCallback((event) => {
+          loadLists(event);
+          dialog.onClick(event);
+        })}
+        {...dialog}
+      >
         {saved ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
         <StyledLabel>Save</StyledLabel>
       </StyledDialogDisclosure>

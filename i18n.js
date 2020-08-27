@@ -1,4 +1,5 @@
 const NextI18Next = require('next-i18next').default;
+const path = require('path');
 
 const config = require('./config');
 
@@ -11,6 +12,7 @@ module.exports = new NextI18Next({
     langs[l] = l;
     return langs;
   }, {}),
+  localePath: path.resolve('./public/static/locales'),
   detection: {
     order: ['cookie', 'localStorage'],
     lookupCookie: 'lang',

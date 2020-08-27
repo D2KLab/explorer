@@ -5,7 +5,6 @@ import NextAuth from 'next-auth/client';
 import DefaultErrorPage from 'next/error';
 import queryString from 'query-string';
 import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
-import { useAllCallbacks } from 'reakit-utils';
 import { saveAs } from 'file-saver';
 import Lightbox from 'react-image-lightbox';
 
@@ -366,7 +365,10 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
   };
 
   const virtualLoomMenu = useMenuState();
-  const virtualLoomOnClick = useAllCallbacks((e) => e.stopPropagation(), virtualLoomMenu.show);
+  const virtualLoomOnClick = useCallback((e) => {
+    e.stopPropagation();
+    virtualLoomMenu.show(e);
+  });
 
   const customRenderThumb = (children) => {
     return Carousel.defaultProps.renderThumbs(children).concat(
