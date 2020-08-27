@@ -46,7 +46,8 @@ export default class MultiSelect extends Component {
     const values = this.getValues();
     const newValues = Array.isArray(value) ? value : [value].filter((x) => x);
     values.push(...newValues);
-    this.triggerOnChange(values);
+    const uniqueValues = Array.from(new Set(values));
+    this.triggerOnChange(uniqueValues);
   };
 
   getValues = () => {
