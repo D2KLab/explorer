@@ -308,7 +308,7 @@ class Sidebar extends Component {
                 id="field_languages"
                 name="field_languages"
                 options={languages}
-                value={fields.field_languages}
+                value={languages.find(o => o.value === fields.field_languages)}
                 onChange={this.handleInputChange}
               />
             </Field> */}
@@ -322,7 +322,7 @@ class Sidebar extends Component {
                   inputId="graph"
                   name="graph"
                   options={graphOptions}
-                  value={fields.graph}
+                  value={graphOptions.find((o) => o.value === fields.graph)}
                   onChange={this.handleInputChange}
                   placeholder={t('search:labels.select')}
                 />
