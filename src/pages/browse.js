@@ -201,11 +201,11 @@ const BrowsePage = ({ initialData, router, t }) => {
 
   const onSearch = (fields) => {
     if (isMapVisible && mapRef.current?.src?.startsWith(window.location.origin)) {
-      console.log(mapRef.current.contentWindow);
       mapRef.current.contentWindow.setQuery({
         type: query.type,
         ...fields,
       });
+      mapRef.current.focus();
     } else {
       Router.push({
         pathname,
