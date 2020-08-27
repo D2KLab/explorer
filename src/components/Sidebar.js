@@ -139,35 +139,34 @@ class Sidebar extends Component {
   }
 
   handleInputChange = (event, meta) => {
+    let fieldName;
+    let fieldValue;
     if (meta) {
       // react-select doesn't return the same parameters as other inputs
       // the first parameter "event" contains the selected label/value
       // the second parameter "meta" contains the input name
-      this.setState({
-        fields: {
-          ...this.state.fields,
-          [meta.name]: event,
-        },
-      });
+      fieldName = meta.name;
+      fieldValue = event;
     } else {
       const { target } = event;
-      const value = target.type === 'checkbox' ? target.checked : target.value;
-      this.setState({
-        fields: {
-          ...this.state.fields,
-          [target.name]: value,
-        },
-      });
+      fieldName = target.name;
+      fieldValue = target.type === 'checkbox' ? target.checked : target.value;
     }
+    this.setState((prevState) => ({
+      fields: {
+        ...prevState.fields,
+        [fieldName]: fieldValue,
+      },
+    }));
   };
 
   handleSwitchChange = (checked, event, id) => {
-    this.setState({
+    this.setState((prevState) => ({
       fields: {
-        ...this.state.fields,
+        ...prevState.fields,
         [id]: checked,
       },
-    });
+    }));
   };
 
   clearSearch = () => {
