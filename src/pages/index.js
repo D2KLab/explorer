@@ -290,7 +290,12 @@ const HomePage = ({ t }) => {
                 ) : null}
                 {config.search.allowImageSearch ? (
                   <>
-                    <CameraButton as={DialogDisclosure} type="button" {...dialog}>
+                    <CameraButton
+                      as={DialogDisclosure}
+                      type="button"
+                      aria-label="Search by image"
+                      {...dialog}
+                    >
                       <CameraIcon />
                     </CameraButton>
                     <StyledUploadDialog
