@@ -421,7 +421,7 @@ const BrowsePage = ({ initialData, router, t }) => {
               <SpatioTemporalMaps mapRef={mapRef} query={mapInitialQuery} />
             ) : (
               <>
-                <Results className="infinite-scroll" loading={isLoading}>
+                <Results className="infinite-scroll" loading={isLoading ? 1 : 0}>
                   {data.map((page) => {
                     return renderResults(page.results);
                   })}

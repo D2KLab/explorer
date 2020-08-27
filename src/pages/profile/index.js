@@ -140,7 +140,7 @@ const StyledTrashIcon = styled(TrashIcon)`
   }
 `;
 
-export default ({ providers, session, accounts, lists, baseUrl, facebookAppId }) => {
+const ProfilePage = ({ providers, session, accounts, lists, baseUrl, facebookAppId }) => {
   const deleteProfileDialog = useDialogState();
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [isUnlinkingAccount, setIsUnlinkingAccount] = useState(false);
@@ -374,3 +374,5 @@ export async function getServerSideProps(ctx) {
     },
   };
 }
+
+export default ProfilePage;

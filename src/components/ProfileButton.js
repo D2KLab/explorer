@@ -72,7 +72,6 @@ const StyledMenuItem = styled(MenuItem)`
 const StyledDivider = styled.div`
   display: block;
   height: 0;
-  margin: 8px 0;
   border-top: 1px solid #e1e4e8;
 `;
 
@@ -201,7 +200,6 @@ const ProfileButton = ({ className }) => {
         ) : (
           <StyledMenuItem
             {...menu}
-            as="a"
             href="/api/signin"
             onClick={(e) => {
               e.preventDefault();

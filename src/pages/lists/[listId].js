@@ -33,7 +33,7 @@ const Results = styled.div`
   margin-bottom: 24px;
 `;
 
-export default ({ isOwner, list, shareLink, error }) => {
+const ListsPage = ({ isOwner, list, shareLink, error }) => {
   const renderListItems = () => {
     return (
       <Element marginY={24}>
@@ -248,3 +248,5 @@ export async function getServerSideProps({ req, res, query }) {
     },
   };
 }
+
+export default ListsPage;

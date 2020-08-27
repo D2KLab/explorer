@@ -74,15 +74,9 @@ const Container = styled(ReakitButton)`
   pointer-events: ${({ loading }) => (loading ? 'none' : 'auto')};
 `;
 
-const Button = forwardRef(({ loading = false, href, children, ...props }, ref) => {
+const Button = forwardRef(({ loading, primary, secondary, href, children, ...props }, ref) => {
   return (
-    <Container
-      {...props}
-      as={href ? 'a' : null}
-      href={href}
-      loading={loading ? 1 : undefined}
-      ref={ref}
-    >
+    <Container {...props} as={href ? 'a' : null} href={href} ref={ref}>
       {loading && (
         <StyledSpinner viewBox="0 0 50 50">
           <circle className="path" cx="25" cy="25" r="20" fill="none" strokeWidth="2" />
