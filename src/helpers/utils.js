@@ -19,10 +19,11 @@ export function idToUri(id, { base, encoding } = {}) {
 }
 
 export function generateMediaUrl(url, width, height) {
-  const urlParts = [];
-  if (typeof url === 'string') {
-    urlParts.push(`url=${encodeURIComponent(url)}`);
+  if (typeof url !== 'string') {
+    return null;
   }
+
+  const urlParts = [`url=${encodeURIComponent(url)}`];
   if (typeof width === 'number') {
     urlParts.push(`width=${encodeURIComponent(width)}`);
   }
