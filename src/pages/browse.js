@@ -30,7 +30,7 @@ import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import { breakpoints, sizes } from '@styles';
 import useDebounce from '@helpers/useDebounce';
 import useOnScreen from '@helpers/useOnScreen';
-import { search } from '@pages/api/search';
+import { search, getFilters } from '@pages/api/search';
 
 import { withTranslation } from '~/i18n';
 import config from '~/config';
@@ -170,11 +170,10 @@ const BrowsePage = ({ initialData, router, t }) => {
   const isLoadingMore = isLoadingInitialData || (data && typeof data[size - 1] === 'undefined');
   const isReachingEnd = data && data[data.length - 1]?.results.length < PAGE_SIZE;
 
-  let filters = [];
+  const { filters } = initialData;
   let totalPages = 0;
   let debugSparqlQuery = null;
   if (data && data[0]) {
-    filters = data[0].filters;
     totalPages = Math.ceil(data[0].totalResults / PAGE_SIZE);
     debugSparqlQuery = data[0].debugSparqlQuery;
   }
@@ -493,8 +492,18 @@ const BrowsePage = ({ initialData, router, t }) => {
 };
 
 export async function getServerSideProps({ query }) {
+  const filters = await getFilters(query);
   const searchData = await search(query);
-  return { props: { initialData: searchData } };
+  return {
+    props: {
+      initialData: {
+        results: searchData.results,
+        totalResults: searchData.totalResults,
+        debugSparqlQuery: searchData.debugSparqlQuery,
+        filters,
+      },
+    },
+  };
 }
 
 export default withTranslation(['common', 'search'])(withRouter(BrowsePage));

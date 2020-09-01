@@ -68,6 +68,14 @@ export const getFilters = async (query) => {
     });
   }
 
+  return filters;
+};
+
+export const search = async (query) => {
+  const route = config.routes[query.type];
+
+  const results = [];
+
   const searchQuery = JSON.parse(JSON.stringify(route.query));
   searchQuery.$where = searchQuery.$where || [];
   searchQuery.$filter = searchQuery.$filter || [];
@@ -202,7 +210,6 @@ export const getFilters = async (query) => {
 
   return {
     results,
-    filters,
     totalResults,
     debugSparqlQuery,
   };
