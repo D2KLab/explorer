@@ -10,3 +10,5 @@ services:
     network_mode: bridge
   imaginary:
     network_mode: bridge
+  redis:
+    network_mode: bridge

@@ -1,42 +1,63 @@
 /* eslint-disable import/no-named-as-default-member */
+import redis from 'redis';
+import { promisify } from 'util';
+
 import { withRequestValidation } from '@helpers/api';
 import SparqlClient from '@helpers/sparql';
 import { fillWithVocabularies } from '@helpers/explorer';
 import config from '~/config';
 
-export const search = async (query) => {
-  const route = config.routes[query.type];
+const client = redis.createClient(process.env.REDIS_URL);
+const existsAsync = promisify(client.exists).bind(client);
+const getAsync = promisify(client.get).bind(client);
+const setAsync = promisify(client.set).bind(client);
 
-  const results = [];
+export const getFilters = async (query) => {
+  const route = config.routes[query.type];
   const filters = [];
 
   // Fetch filters
   for (let i = 0; i < route.filters.length; i += 1) {
     const filter = route.filters[i];
-    let filterQuery = null;
-    if (filter.query) {
-      filterQuery = { ...filter.query };
-    } else if (filter.vocabulary) {
-      const vocabulary = config.vocabularies[filter.vocabulary];
-      if (vocabulary) {
-        filterQuery = { ...vocabulary.query };
-      }
-    }
-
     let filterValues = [];
-    if (filterQuery) {
-      // eslint-disable-next-line no-await-in-loop
-      const resQuery = await SparqlClient.query(filterQuery, {
-        endpoint: config.api.endpoint,
-        debug: config.debug,
-      });
-      if (resQuery) {
-        filterValues = resQuery['@graph'].map((row) => ({
-          label: row.label ? row.label['@value'] || row.label : row['@id']['@value'] || row['@id'],
-          value: row['@id']['@value'] || row['@id'],
-        }));
+
+    // Check if filter values are already cached
+    const cacheKey = `route_${query.type}_filter_${filter.id}`;
+    // eslint-disable-next-line no-await-in-loop
+    await existsAsync(cacheKey).then(async (reply) => {
+      if (reply !== 1) {
+        let filterQuery = null;
+        if (filter.query) {
+          filterQuery = { ...filter.query };
+        } else if (filter.vocabulary) {
+          const vocabulary = config.vocabularies[filter.vocabulary];
+          if (vocabulary) {
+            filterQuery = { ...vocabulary.query };
+          }
+        }
+
+        if (filterQuery) {
+          const resQuery = await SparqlClient.query(filterQuery, {
+            endpoint: config.api.endpoint,
+            debug: config.debug,
+          });
+          if (resQuery) {
+            filterValues = resQuery['@graph'].map((row) => ({
+              label: row.label
+                ? row.label['@value'] || row.label
+                : row['@id']['@value'] || row['@id'],
+              value: row['@id']['@value'] || row['@id'],
+            }));
+
+            // Cache filter values
+            await setAsync(cacheKey, JSON.stringify(filterValues));
+          }
+        }
+      } else {
+        // Use cached version of filter values when available
+        filterValues = JSON.parse(await getAsync(cacheKey));
       }
-    }
+    });
 
     filters.push({
       id: filter.id,
