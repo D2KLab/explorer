@@ -342,12 +342,14 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments, t }) => {
                 </Tab>
               </Tabs>
             </Analysis> */}
-            {config?.plugins?.videoSegments && (
-              <Element>
-                <h2>Video segments</h2>
-                {videoSegments.map(renderVideoSegment)}
-              </Element>
-            )}
+            {config?.plugins?.videoSegments &&
+              Array.isArray(videoSegments) &&
+              videoSegments.lenght > 0 && (
+                <Element>
+                  <h2>Video segments</h2>
+                  {videoSegments.map(renderVideoSegment)}
+                </Element>
+              )}
             <Debug>
               <Metadata label="HTTP Parameters">
                 <pre>{JSON.stringify(query, null, 2)}</pre>
