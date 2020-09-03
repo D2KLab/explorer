@@ -109,14 +109,31 @@ const MetadataList = styled.div`
 
 const RelatedVideosList = styled.div``;
 
-const VideoSegment = styled.div`
+const SegmentIcon = styled.span`
+  width: 24px;
+  visibility: ${({ active }) => (active ? 'visible' : 'hidden')};
+`;
+
+const Segment = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
+  background-color: #f0f0f0;
+  padding: 0 24px;
+  border-bottom: 1px solid #e8e8e7;
+
+  &:hover {
+    background-color: #fff;
+
+    ${SegmentIcon} {
+      visibility: visible;
+    }
+  }
 `;
 
 const SegmentButton = styled(Button)`
+  outline: 0;
   background: transparent;
   color: ${({ theme }) => theme.colors.primary};
 
@@ -126,12 +143,12 @@ const SegmentButton = styled(Button)`
   }
 `;
 
-const SegmentTime = styled.div`
-  width: 240px;
+const SegmentTime = styled.span`
   color: ${({ theme }) => theme.colors.primary};
   font-size: 1rem;
   line-height: 2rem;
   font-weight: bold;
+  padding-left: 12px;
 
   &:hover {
     text-decoration: underline;
@@ -139,8 +156,36 @@ const SegmentTime = styled.div`
 `;
 
 const SegmentText = styled.div`
+  padding-left: 24px;
   flex: 1;
 `;
+
+const VideoWrapper = styled.div`
+  ${breakpoints.desktop`
+    height: 50vh;
+    display: flex;
+    flex-direction: row;
+    background-color: #f0f0f0;
+    padding-left: 24px;
+  `};
+`;
+
+const StyledReactPlayer = styled(ReactPlayer)`
+  flex: 1;
+`;
+
+const VideoSegments = styled.div`
+  ${breakpoints.desktop`
+    padding: 24px 0;
+    width: 50%;
+    overflow-y: auto;
+  `};
+`;
+
+function humanTimeToSeconds(humanTime) {
+  const time = humanTime.split(':');
+  return +time[0] * 60 * 60 + +time[1] * 60 + +time[2];
+}
 
 function generateValue(currentRouteName, currentRoute, metaName, meta) {
   if (typeof meta === 'string') {
@@ -237,33 +282,38 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments, t }) => {
   };
 
   const $videoPlayer = useRef(null);
+  const [videoPlayedSeconds, setVideoPlayedSeconds] = useState(0);
 
-  const seekVideoTo = (time) => {
-    let seconds;
-    if (typeof time === 'string' && time.indexOf(':') > -1) {
-      const timeArray = time.split(':');
-      seconds = +timeArray[0] * 60 * 60 + +timeArray[1] * 60 + +timeArray[2];
-    } else {
-      seconds = parseFloat(time);
-    }
+  const seekVideoTo = (seconds) => {
     if (typeof seconds === 'number') {
       $videoPlayer.current.seekTo(seconds, 'seconds');
       $videoPlayer.current.wrapper.scrollIntoView();
+      setVideoPlayedSeconds(seconds);
     }
   };
 
   const renderVideoSegment = (segment) => {
     return (
-      <VideoSegment key={segment['@id']}>
-        <SegmentButton onClick={() => seekVideoTo(segment.start)}>
-          &#9654;{' '}
+      <Segment key={segment['@id']}>
+        <SegmentButton onClick={() => seekVideoTo(segment.startSeconds)}>
+          <SegmentIcon
+            active={
+              videoPlayedSeconds >= segment.startSeconds && videoPlayedSeconds < segment.endSeconds
+            }
+          >
+            &#9654;{' '}
+          </SegmentIcon>
           <SegmentTime>
             {segment.start} - {segment.end}
           </SegmentTime>
         </SegmentButton>
         <SegmentText>{segment.description}</SegmentText>
-      </VideoSegment>
+      </Segment>
     );
+  };
+
+  const onVideoProgress = ({ playedSeconds }) => {
+    setVideoPlayedSeconds(playedSeconds);
   };
 
   return (
@@ -271,16 +321,24 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments, t }) => {
       <PageTitle title={`${label}`} />
       <Header />
       <Body>
-        {mediaUrl && (
-          <ReactPlayer
-            ref={$videoPlayer}
-            url={mediaUrl}
-            width={null}
-            height="50vh"
-            controls
-            playing
-          />
-        )}
+        <VideoWrapper>
+          {mediaUrl && (
+            <StyledReactPlayer
+              ref={$videoPlayer}
+              url={mediaUrl}
+              onProgress={onVideoProgress}
+              width="100%"
+              height="100%"
+              controls
+              playing
+            />
+          )}
+          {config?.plugins?.videoSegments &&
+            Array.isArray(videoSegments) &&
+            videoSegments.length > 0 && (
+              <VideoSegments>{videoSegments.map(renderVideoSegment)}</VideoSegments>
+            )}
+        </VideoWrapper>
         <Columns>
           <Primary>
             <Title>{label}</Title>
@@ -348,14 +406,6 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments, t }) => {
                 </Tab>
               </Tabs>
             </Analysis> */}
-            {config?.plugins?.videoSegments &&
-              Array.isArray(videoSegments) &&
-              videoSegments.length > 0 && (
-                <Element>
-                  <h2>Video segments</h2>
-                  {videoSegments.map(renderVideoSegment)}
-                </Element>
-              )}
             <Debug>
               <Metadata label="HTTP Parameters">
                 <pre>{JSON.stringify(query, null, 2)}</pre>
@@ -417,7 +467,17 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
         endpoint: config.api.endpoint,
         debug: config.debug,
       });
-      videoSegments.push(...resp['@graph']);
+
+      resp['@graph'].forEach((segment) => {
+        videoSegments.push({
+          ...segment,
+          startSeconds: humanTimeToSeconds(segment.start),
+          endSeconds: humanTimeToSeconds(segment.end),
+        });
+      });
+
+      // Sort segments by time
+      videoSegments.sort((a, b) => a.startSeconds - b.startSeconds);
     }
   } else if (res) {
     res.statusCode = 404;
