@@ -384,33 +384,35 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
     })
   ).json();
 
-  const route = config.routes[query.type];
-
   let mediaUrl = null;
-  if (route && route.details && typeof route.details.mediaFunc === 'function') {
-    const mediaFuncRet = route.details.mediaFunc(result);
-    if (mediaFuncRet) {
-      mediaUrl = await (await fetch(mediaFuncRet)).text();
-    }
-  } else if (result && result.mediaLocator) {
-    // Get media url from the media provider
-    mediaUrl = result.mediaLocator;
-  } else if (!result && res) {
-    res.statusCode = 404;
-  }
-
-  // Video segments
   const videoSegments = [];
-  if (config?.plugins?.videoSegments) {
-    const videoSegmentsQuery = { ...config.plugins.videoSegments.query };
-    videoSegmentsQuery.$filter = videoSegmentsQuery.$filter || [];
-    videoSegmentsQuery.$filter.push(`?video = <${result['@id']}>`);
 
-    const resp = await SparqlClient.query(videoSegmentsQuery, {
-      endpoint: config.api.endpoint,
-      debug: config.debug,
-    });
-    videoSegments.push(...resp['@graph']);
+  if (result) {
+    const route = config.routes[query.type];
+
+    if (route && route.details && typeof route.details.mediaFunc === 'function') {
+      const mediaFuncRet = route.details.mediaFunc(result);
+      if (mediaFuncRet) {
+        mediaUrl = await (await fetch(mediaFuncRet)).text();
+      }
+    } else if (result && result.mediaLocator) {
+      // Get media url from the media provider
+      mediaUrl = result.mediaLocator;
+    }
+    // Video segments
+    if (config?.plugins?.videoSegments) {
+      const videoSegmentsQuery = { ...config.plugins.videoSegments.query };
+      videoSegmentsQuery.$filter = videoSegmentsQuery.$filter || [];
+      videoSegmentsQuery.$filter.push(`?video = <${result['@id']}>`);
+
+      const resp = await SparqlClient.query(videoSegmentsQuery, {
+        endpoint: config.api.endpoint,
+        debug: config.debug,
+      });
+      videoSegments.push(...resp['@graph']);
+    }
+  } else if (res) {
+    res.statusCode = 404;
   }
 
   return { result, inList, mediaUrl, videoSegments };
