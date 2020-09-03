@@ -390,7 +390,7 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
   if (route && route.details && typeof route.details.mediaFunc === 'function') {
     const mediaFuncRet = route.details.mediaFunc(result);
     if (mediaFuncRet) {
-      mediaUrl = await (await fetch(`${absoluteUrl(req)}${mediaFuncRet}`)).text();
+      mediaUrl = await (await fetch(mediaFuncRet)).text();
     }
   } else if (result && result.mediaLocator) {
     // Get media url from the media provider
