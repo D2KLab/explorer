@@ -20,7 +20,9 @@ export default withRequestValidation({
     if (typeof height !== 'undefined') {
       urlParts.push(`height=${encodeURIComponent(height)}`);
     }
-    requestUrl = `${imaginaryEndpoint}/resize${
+    const type =
+      typeof width !== 'undefined' && typeof height !== 'undefined' ? 'enlarge' : 'resize';
+    requestUrl = `${imaginaryEndpoint}/${type}${
       urlParts.length > 0 ? `?${urlParts.join('&')}` : ''
     }`;
   }

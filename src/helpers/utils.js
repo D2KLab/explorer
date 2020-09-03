@@ -29,6 +29,8 @@ export function generateMediaUrl(url, width, height) {
   }
   if (typeof height === 'number') {
     urlParts.push(`height=${encodeURIComponent(height)}`);
+  } else {
+    urlParts.push(`height=${encodeURIComponent(width)}`);
   }
   return `/api/media${urlParts.length > 0 ? `?${urlParts.join('&')}` : ''}`;
 }
