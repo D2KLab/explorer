@@ -216,7 +216,6 @@ const BrowsePage = ({ initialData, router, t }) => {
     }
     Router.push(
       {
-        pathname,
         query: {
           type: query.type,
           ...fields,
