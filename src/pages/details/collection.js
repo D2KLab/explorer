@@ -19,6 +19,7 @@ import { withTranslation } from '~/i18n';
 const Columns = styled.div`
   display: flex;
   max-width: 1024px;
+  width: 100%;
   margin: 0 auto;
   flex-direction: column;
   justify-content: center;
