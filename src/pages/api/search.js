@@ -96,6 +96,8 @@ export const search = async (query) => {
         val = !Array.isArray(query[`field_filter_${filter.id}`])
           ? [query[`field_filter_${filter.id}`]]
           : query[`field_filter_${filter.id}`];
+      } else {
+        val = query[`field_filter_${filter.id}`];
       }
       if (typeof filter.whereFunc === 'function') {
         extraWhere.push(...filter.whereFunc(val));
