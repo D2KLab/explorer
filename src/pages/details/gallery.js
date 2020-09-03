@@ -207,7 +207,13 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
 
   const [routeName, route] =
     Object.entries(config.routes).find(([, r]) => {
-      return r.rdfType && r.rdfType === meta['@type'];
+      if (Array.isArray(r.rdfType)) {
+        return r.rdfType.includes(meta['@type']);
+      }
+      if (typeof r.rdfType === 'string') {
+        return r.rdfType === meta['@type'];
+      }
+      return false;
     }) || [];
   const isKnownType = typeof type !== 'undefined';
 

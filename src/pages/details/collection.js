@@ -121,7 +121,13 @@ const CollectionDetailsPage = ({ result, inList }) => {
 
                 const [itemRouteName, itemRoute] =
                   Object.entries(config.routes).find(([, r]) => {
-                    return r.rdfType && r.rdfType === item['@type'];
+                    if (Array.isArray(r.rdfType)) {
+                      return r.rdfType.includes(item['@type']);
+                    }
+                    if (typeof r.rdfType === 'string') {
+                      return r.rdfType === item['@type'];
+                    }
+                    return false;
                   }) || [];
 
                 let element = (

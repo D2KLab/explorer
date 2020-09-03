@@ -173,7 +173,13 @@ class SearchInput extends Component {
   onSuggestionSelected = (event, { suggestion }) => {
     const [routeName, route] =
       Object.entries(config.routes).find(([, r]) => {
-        return r.rdfType && r.rdfType === suggestion['@type'];
+        if (Array.isArray(r.rdfType)) {
+          return r.rdfType.includes(suggestion['@type']);
+        }
+        if (typeof r.rdfType === 'string') {
+          return r.rdfType === suggestion['@type'];
+        }
+        return false;
       }) || [];
     if (route) {
       Router.push({
