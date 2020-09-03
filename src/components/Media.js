@@ -9,7 +9,6 @@ import config from '~/config';
  */
 
 const ThumbnailContainer = styled.div`
-  border: 2px solid ${({ theme }) => theme.colors.secondary};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,9 +18,10 @@ const ThumbnailContainer = styled.div`
 `;
 
 const Thumbnail = styled.img`
-  max-width: 100%;
-  max-height: 100%;
-  height: auto;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 2px solid ${({ theme }) => theme.colors.secondary};
 `;
 
 const GraphIconContainer = styled.div`
@@ -54,7 +54,6 @@ const Container = styled.div`
   flex-direction: ${({ direction }) => direction};
 
   ${ThumbnailContainer} {
-    max-width: 100%;
     height: 150px;
     margin-right: ${({ direction }) => (direction === 'row' ? '8px' : 0)};
     margin-bottom: ${({ direction }) => (direction === 'row' ? 0 : '8px')};
