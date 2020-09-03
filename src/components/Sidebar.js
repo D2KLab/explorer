@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import styled, { withTheme } from 'styled-components';
 import Switch from 'react-switch';
 
@@ -84,61 +84,22 @@ const Option = styled.div`
   }
 `;
 
-class Sidebar extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleSwitchChange = this.handleSwitchChange.bind(this);
-
-    const graphOptions = Object.entries(config.graphs).map(([graphURI, graphObj]) => ({
-      value: graphURI,
-      label: graphObj.label,
-    }));
-
-    const getValue = (opts, val) => opts.find((o) => o.value === val);
-    const fields = {};
-
-    // Text search
-    fields.q = props.query.q || '';
-
-    // Graph search
-    fields.graph = props.query.graph || '';
-
-    // Languages
-    const languages = Object.entries(config.search.languages).map(([langKey, langLabel]) => ({
+const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) => {
+  const [fields, setFields] = useState({});
+  const [languages] = useState(
+    Object.entries(config.search.languages).map(([langKey, langLabel]) => ({
       label: langLabel,
       value: langKey,
-    }));
-    if (fields.field_languages) {
-      fields.field_languages = Array.isArray(fields.field_languages)
-        ? fields.field_languages
-        : [fields.field_languages];
-      fields.field_languages = fields.field_languages
-        .map((val) => getValue(languages, val))
-        .filter((v) => v);
-    }
+    }))
+  );
+  const [graphOptions] = useState(
+    Object.entries(config.graphs).map(([graphURI, graphObj]) => ({
+      value: graphURI,
+      label: graphObj.label,
+    }))
+  );
 
-    // Props Filters
-    Object.keys(props.query).forEach((key) => {
-      const filter = props.filters.find((f) => key === `field_filter_${f.id}`);
-      if (filter) {
-        if (filter.isMulti) {
-          fields[key] = Array.isArray(props.query[key]) ? props.query[key] : [props.query[key]];
-          fields[key] = fields[key].map((val) => getValue(filter.values, val)).filter((v) => v);
-        } else {
-          fields[key] = props.query[key];
-        }
-      }
-    });
-
-    this.state = {
-      fields,
-      languages,
-      graphOptions,
-    };
-  }
-
-  handleInputChange = (event, meta) => {
+  const handleInputChange = (event, meta) => {
     let fieldName;
     let fieldValue;
     if (meta) {
@@ -152,67 +113,54 @@ class Sidebar extends Component {
       fieldName = target.name;
       fieldValue = target.type === 'checkbox' ? target.checked : target.value;
     }
-    this.setState((prevState) => ({
-      fields: {
-        ...prevState.fields,
-        [fieldName]: fieldValue,
-      },
+    setFields((prevFields) => ({
+      ...prevFields,
+      [fieldName]: fieldValue,
     }));
   };
 
-  handleSwitchChange = (checked, event, id) => {
-    this.setState((prevState) => ({
-      fields: {
-        ...prevState.fields,
-        [id]: checked,
-      },
+  const handleSwitchChange = (checked, event, id) => {
+    setFields((prevFields) => ({
+      ...prevFields,
+      [id]: checked,
     }));
   };
 
-  clearSearch = () => {
-    const fields = {};
-    fields.q = '';
-    fields.graph = '';
-    Object.keys(this.state.fields).forEach((f) => {
-      if (Array.isArray(this.state.fields[f])) {
-        fields[f] = [];
-      } else if (typeof this.state.fields[f] === 'object') {
-        fields[f] = {};
-      } else {
-        fields[f] = '';
-      }
-    });
-    this.setState(
-      {
-        fields,
-      },
-      this.doSearch
-    );
-  };
-
-  doSearch = () => {
-    const { onSearch } = this.props;
+  const doSearch = () => {
     if (typeof onSearch === 'function') {
-      const fields = {};
-      Object.entries(this.state.fields).forEach(([key, val]) => {
+      const newFields = {};
+      Object.entries(fields).forEach(([key, val]) => {
         if (val === null || typeof val === 'undefined') {
-          delete fields[key];
+          delete newFields[key];
         } else if (val.value) {
-          fields[key] = val.value;
+          newFields[key] = val.value;
         } else if (Array.isArray(val)) {
-          fields[key] = val.map((v) => v.value || v);
+          newFields[key] = val.map((v) => v.value || v);
         } else {
-          fields[key] = val;
+          newFields[key] = val;
         }
       });
-      onSearch(fields);
+      onSearch(newFields);
     }
   };
 
-  renderFilter = (filter) => {
-    const { t } = this.props;
-    const { fields } = this.state;
+  const clearSearch = () => {
+    const newFields = {};
+    newFields.q = '';
+    newFields.graph = '';
+    Object.keys(fields).forEach((f) => {
+      if (Array.isArray(fields[f])) {
+        newFields[f] = [];
+      } else if (typeof fields[f] === 'object') {
+        newFields[f] = {};
+      } else {
+        newFields[f] = '';
+      }
+    });
+    setFields(newFields, doSearch);
+  };
 
+  const renderFilter = (filter) => {
     const field = fields[`field_filter_${filter.id}`];
     const FilterInput = filter.isMulti ? MultiSelect : Select;
 
@@ -248,21 +196,18 @@ class Sidebar extends Component {
           options={filter.values}
           value={value}
           placeholder={t('search:labels.select')}
-          onChange={this.handleInputChange}
+          onChange={handleInputChange}
         />
       </Field>
     );
   };
 
-  renderOption = (filter) => {
-    const { fields } = this.state;
-    const { theme, t } = this.props;
-
+  const renderOption = (filter) => {
     return (
       <Option key={filter.id}>
         <span>{t(`filters.${filter.id}`, filter.label)}</span>
         <StyledSwitch
-          onChange={this.handleSwitchChange}
+          onChange={handleSwitchChange}
           checked={fields[`field_filter_${filter.id}`] || false}
           onColor={theme.colors.light}
           offHandleColor="#f0f0f0"
@@ -280,74 +225,112 @@ class Sidebar extends Component {
     );
   };
 
-  render() {
-    const { className, type, filters, t, i18n } = this.props;
-    const { fields, languages, graphOptions } = this.state;
+  useEffect(() => {
+    const getValue = (opts, val) => opts.find((o) => o.value === val);
 
-    const route = config.routes[type];
+    const newFields = {};
 
-    return (
-      <Container className={className}>
+    // Text search
+    newFields.q = query.q || '';
+
+    // Graph search
+    newFields.graph = query.graph || '';
+
+    // Languages
+    if (newFields.field_languages) {
+      newFields.field_languages = Array.isArray(newFields.field_languages)
+        ? newFields.field_languages
+        : [newFields.field_languages];
+      newFields.field_languages = newFields.field_languages
+        .map((val) => getValue(languages, val))
+        .filter((v) => v);
+    }
+
+    // Props Filters
+    Object.keys(query).forEach((key) => {
+      const filter = filters.find((f) => key === `field_filter_${f.id}`);
+      if (filter) {
+        if (filter.isMulti) {
+          newFields[key] = Array.isArray(query[key]) ? query[key] : [query[key]];
+          newFields[key] = newFields[key]
+            .map((val) => getValue(filter.values, val))
+            .filter((v) => v);
+        } else {
+          newFields[key] = query[key];
+        }
+      }
+    });
+
+    setFields(newFields);
+  }, []);
+
+  const route = config.routes[type];
+
+  return (
+    <Container className={className}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          doSearch();
+          return false;
+        }}
+      >
         <ButtonsBar>
-          <ClearButton onClick={this.clearSearch}>{t('search:buttons.clear')}</ClearButton>
-          <FilterButton onClick={this.doSearch}>{t('search:buttons.filter')}</FilterButton>
+          <ClearButton onClick={clearSearch}>{t('search:buttons.clear')}</ClearButton>
+          <FilterButton type="submit" onClick={doSearch}>
+            {t('search:buttons.filter')}
+          </FilterButton>
         </ButtonsBar>
 
-        <form>
-          <Fields>
+        <Fields>
+          <Field>
+            <label htmlFor="q">{t('search:fields.q')}</label>
+            <Input id="q" name="q" type="text" value={fields.q} onChange={handleInputChange} />
+          </Field>
+          {/* <Field>
+            <label htmlFor="field_languages">{t('search:fields.languages')}</label>
+            <MultiSelect
+              id="field_languages"
+              name="field_languages"
+              options={languages}
+              value={languages.find(o => o.value === fields.field_languages)}
+              onChange={this.handleInputChange}
+            />
+          </Field> */}
+          {filters.filter((filter) => !filter.isOption).map(renderFilter)}
+          {route.filterByGraph && (
             <Field>
-              <label htmlFor="q">{t('search:fields.q')}</label>
-              <Input
-                id="q"
-                name="q"
-                type="text"
-                value={fields.q}
-                onChange={this.handleInputChange}
+              <label htmlFor="graph">
+                {config.search.graphFieldLabel[i18n.language] || t('search:fields.graph')}
+              </label>
+              <Select
+                isClearable
+                inputId="graph"
+                name="graph"
+                options={graphOptions}
+                value={graphOptions.find((o) => o.value === fields.graph)}
+                onChange={handleInputChange}
+                placeholder={t('search:labels.select')}
               />
             </Field>
-            {/* <Field>
-              <label htmlFor="field_languages">{t('search:fields.languages')}</label>
-              <MultiSelect
-                id="field_languages"
-                name="field_languages"
-                options={languages}
-                value={languages.find(o => o.value === fields.field_languages)}
-                onChange={this.handleInputChange}
-              />
-            </Field> */}
-            {filters.filter((filter) => !filter.isOption).map(this.renderFilter)}
-            {route.filterByGraph && (
-              <Field>
-                <label htmlFor="graph">
-                  {config.search.graphFieldLabel[i18n.language] || t('search:fields.graph')}
-                </label>
-                <Select
-                  isClearable
-                  inputId="graph"
-                  name="graph"
-                  options={graphOptions}
-                  value={graphOptions.find((o) => o.value === fields.graph)}
-                  onChange={this.handleInputChange}
-                  placeholder={t('search:labels.select')}
-                />
-              </Field>
-            )}
-            {filters.some((filter) => filter.isOption) ? (
-              <Field>
-                <label>{t('search:fields.options')}</label>
-                {filters.filter((filter) => filter.isOption).map(this.renderOption)}
-              </Field>
-            ) : null}
-          </Fields>
-        </form>
+          )}
+          {filters.some((filter) => filter.isOption) ? (
+            <Field>
+              <label>{t('search:fields.options')}</label>
+              {filters.filter((filter) => filter.isOption).map(renderOption)}
+            </Field>
+          ) : null}
+        </Fields>
 
         <MobileButtonsBar>
-          <ClearButton onClick={this.clearSearch}>{t('search:buttons.clear')}</ClearButton>
-          <FilterButton onClick={this.doSearch}>{t('search:buttons.filter')}</FilterButton>
+          <ClearButton onClick={clearSearch}>{t('search:buttons.clear')}</ClearButton>
+          <FilterButton type="submit" onClick={doSearch}>
+            {t('search:buttons.filter')}
+          </FilterButton>
         </MobileButtonsBar>
-      </Container>
-    );
-  }
-}
+      </form>
+    </Container>
+  );
+};
 
 export default withTranslation(['common', 'search'])(withTheme(Sidebar));
