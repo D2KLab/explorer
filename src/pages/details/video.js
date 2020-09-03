@@ -344,7 +344,7 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments, t }) => {
             </Analysis> */}
             {config?.plugins?.videoSegments &&
               Array.isArray(videoSegments) &&
-              videoSegments.lenght > 0 && (
+              videoSegments.length > 0 && (
                 <Element>
                   <h2>Video segments</h2>
                   {videoSegments.map(renderVideoSegment)}
