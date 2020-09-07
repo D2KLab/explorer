@@ -21,7 +21,6 @@ export default withRequestValidation({
   const searchQuery = JSON.parse(JSON.stringify(jsonQuery));
   searchQuery.$filter = `?id = <${idToUri(query.id, {
     base: route.uriBase,
-    encoding: !route.uriBase,
   })}>`;
 
   let inList = false;

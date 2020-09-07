@@ -148,12 +148,12 @@ const CollectionDetailsPage = ({ result, inList }) => {
                       key={item['@id']}
                       href={`/details/${itemRoute.details.view}?id=${encodeURIComponent(
                         uriToId(item['@id'], {
-                          encoding: !itemRoute.uriBase,
+                          base: itemRoute.uriBase,
                         })
                       )}&type=${itemRouteName}`}
                       as={`/${itemRouteName}/${encodeURIComponent(
                         uriToId(item['@id'], {
-                          encoding: !itemRoute.uriBase,
+                          base: itemRoute.uriBase,
                         })
                       )}`}
                       passHref

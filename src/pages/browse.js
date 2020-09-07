@@ -336,11 +336,11 @@ const BrowsePage = ({ initialData, router, t }) => {
           key={result['@id']}
           href={`/details/${route.details.view}?id=${encodeURIComponent(
             uriToId(result['@id'], {
-              encoding: !route.uriBase,
+              base: route.uriBase,
             })
           )}&type=${query.type}`}
           as={`/${query.type}/${encodeURIComponent(
-            uriToId(result['@id'], { encoding: !route.uriBase })
+            uriToId(result['@id'], { base: route.uriBase })
           )}`}
           passHref
         >

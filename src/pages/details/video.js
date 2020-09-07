@@ -6,7 +6,8 @@ import ReactPlayer from 'react-player';
 import queryString from 'query-string';
 import NextAuth from 'next-auth/client';
 
-import { Header, Footer, Layout, Body, Media, Button, Element } from '@components';
+import { Header, Footer, Layout, Body, Button, Element } from '@components';
+import Media, { ThumbnailContainer } from '@components/Media';
 import SaveButton from '@components/SaveButton';
 import Metadata from '@components/Metadata';
 import PageTitle from '@components/PageTitle';
@@ -27,6 +28,12 @@ const Columns = styled.div`
   ${breakpoints.desktop`
     flex-direction: row;
   `}
+`;
+
+const StyledMedia = styled(Media)`
+  ${ThumbnailContainer} {
+    height: auto;
+  }
 `;
 
 const Primary = styled.div`
@@ -92,15 +99,10 @@ const Secondary = styled.div`
 `;
 
 const Title = styled.h1`
-  display: none;
   border-bottom: 3px solid ${({ theme }) => theme.colors.primary};
   font-size: 48px;
   line-height: 1.25;
   margin-bottom: 24px;
-
-  ${breakpoints.desktop`
-    display: block;
-  `}
 `;
 
 const MetadataList = styled.div`
@@ -120,7 +122,6 @@ const Segment = styled.div`
   flex-wrap: wrap;
   align-items: center;
   background-color: #f0f0f0;
-  padding: 0 24px;
   border-bottom: 1px solid #e8e8e7;
 
   &:hover {
@@ -156,7 +157,6 @@ const SegmentTime = styled.span`
 `;
 
 const SegmentText = styled.div`
-  padding-left: 24px;
   flex: 1;
 `;
 
@@ -172,6 +172,9 @@ const VideoWrapper = styled.div`
 
 const StyledReactPlayer = styled(ReactPlayer)`
   flex: 1;
+  ${breakpoints.desktop`
+    padding: 24px;
+  `};
 `;
 
 const VideoSegments = styled.div`
@@ -206,7 +209,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
 
   let url = meta['@id'];
   if (route) {
-    url = `/${routeName}/${encodeURIComponent(uriToId(meta['@id'], { encoding: !route.uriBase }))}`;
+    url = `/${routeName}/${encodeURIComponent(uriToId(meta['@id'], { base: route.uriBase }))}`;
   } else if (
     currentRoute &&
     Array.isArray(currentRoute.filters) &&
@@ -321,8 +324,8 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments, t }) => {
       <PageTitle title={`${label}`} />
       <Header />
       <Body>
-        <VideoWrapper>
-          {mediaUrl && (
+        {mediaUrl && (
+          <VideoWrapper>
             <StyledReactPlayer
               ref={$videoPlayer}
               url={mediaUrl}
@@ -332,13 +335,13 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments, t }) => {
               controls
               playing
             />
-          )}
-          {config?.plugins?.videoSegments &&
-            Array.isArray(videoSegments) &&
-            videoSegments.length > 0 && (
-              <VideoSegments>{videoSegments.map(renderVideoSegment)}</VideoSegments>
-            )}
-        </VideoWrapper>
+            {config?.plugins?.videoSegments &&
+              Array.isArray(videoSegments) &&
+              videoSegments.length > 0 && (
+                <VideoSegments>{videoSegments.map(renderVideoSegment)}</VideoSegments>
+              )}
+          </VideoWrapper>
+        )}
         <Columns>
           <Primary>
             <Title>{label}</Title>
@@ -419,7 +422,7 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments, t }) => {
             <div>
               <h2>Related</h2>
               <RelatedVideosList>
-                <Media title={label} subtitle="" thumbnail={images[0]} direction="row" />
+                <StyledMedia title={label} subtitle="" thumbnail={images[0]} direction="row" />
               </RelatedVideosList>
             </div>
           </Secondary>

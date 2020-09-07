@@ -8,7 +8,7 @@ import config from '~/config';
  * Media card with title, subtitle, thumbnail, link
  */
 
-const ThumbnailContainer = styled.div`
+export const ThumbnailContainer = styled.div`
   border: 2px solid ${({ theme }) => theme.colors.secondary};
   display: flex;
   align-items: center;
@@ -18,13 +18,13 @@ const ThumbnailContainer = styled.div`
   position: relative;
 `;
 
-const Thumbnail = styled.img`
+export const Thumbnail = styled.img`
   max-width: 100%;
   max-height: 100%;
   height: auto;
 `;
 
-const GraphIconContainer = styled.div`
+export const GraphIconContainer = styled.div`
   position: absolute;
   bottom: 0;
   right: 0;
@@ -35,21 +35,21 @@ const GraphIconContainer = styled.div`
   justify-content: center;
 `;
 
-const TextContainer = styled.div`
+export const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-const Title = styled.span`
+export const Title = styled.span`
   color: #000;
   font-weight: bold;
 `;
 
-const Subtitle = styled.span`
+export const Subtitle = styled.span`
   color: #666;
 `;
 
-const Container = styled.div`
+export const Container = styled.div`
   display: flex;
   flex-direction: ${({ direction }) => direction};
 

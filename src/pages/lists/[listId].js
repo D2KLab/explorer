@@ -56,11 +56,11 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
                     key={item.id}
                     href={`/details/${route.details.view}?id=${encodeURIComponent(
                       uriToId(item.id, {
-                        encoding: !route.uriBase,
+                        base: route.uriBase,
                       })
                     )}&type=${item.route}`}
                     as={`/${item.route}/${encodeURIComponent(
-                      uriToId(item.id, { encoding: !route.uriBase })
+                      uriToId(item.id, { base: route.uriBase })
                     )}`}
                     passHref
                   >
@@ -71,7 +71,7 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
                         thumbnail={generateMediaUrl(item.image, 150)}
                         direction="column"
                         link={`/${item.route}/${encodeURIComponent(
-                          uriToId(item.id, { encoding: !route.uriBase })
+                          uriToId(item.id, { base: route.uriBase })
                         )}`}
                         uri={item.graph}
                       />

@@ -184,7 +184,7 @@ class SearchInput extends Component {
     if (route) {
       Router.push({
         pathname: `/${routeName}/${encodeURIComponent(
-          uriToId(suggestion['@id'], { encoding: !route.uriBase })
+          uriToId(suggestion['@id'], { base: route.uriBase })
         )}`,
         // shallow: true
       });
