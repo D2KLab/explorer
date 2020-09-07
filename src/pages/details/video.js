@@ -310,7 +310,11 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments, t }) => {
             {segment.start} - {segment.end}
           </SegmentTime>
         </SegmentButton>
-        <SegmentText>{segment.description}</SegmentText>
+        <SegmentText>
+          {segment.title}
+          <br />
+          {segment.description}
+        </SegmentText>
       </Segment>
     );
   };
