@@ -7,7 +7,13 @@ import SparqlClient from '@helpers/sparql';
 import { fillWithVocabularies } from '@helpers/explorer';
 import config from '~/config';
 
-const client = redis.createClient(process.env.REDIS_URL);
+const client = redis.createClient(process.env.REDIS_URL, {
+  retry_strategy: (options) => {
+    const { error } = options;
+    console.log(error);
+    return Math.min(options.attempt * 100, 3000);
+  },
+});
 const existsAsync = promisify(client.exists).bind(client);
 const getAsync = promisify(client.get).bind(client);
 const setAsync = promisify(client.set).bind(client);
