@@ -38,7 +38,7 @@ const options = {
     */
   ],
   pages: {
-    signin: '/auth/signin',
+    signIn: '/auth/signin',
   },
   // Database configuration can be a JavaScript object or database connection
   // string. By default, NextAuth loads TypeORM which is compatible with MySQL,
