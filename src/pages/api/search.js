@@ -1,22 +1,10 @@
 /* eslint-disable import/no-named-as-default-member */
-import redis from 'redis';
-import { promisify } from 'util';
 
 import { withRequestValidation } from '@helpers/api';
 import SparqlClient from '@helpers/sparql';
 import { fillWithVocabularies } from '@helpers/explorer';
+import cache from '@helpers/cache';
 import config from '~/config';
-
-const client = redis.createClient(process.env.REDIS_URL, {
-  retry_strategy: (options) => {
-    const { error } = options;
-    console.log(error);
-    return Math.min(options.attempt * 100, 3000);
-  },
-});
-const existsAsync = promisify(client.exists).bind(client);
-const getAsync = promisify(client.get).bind(client);
-const setAsync = promisify(client.set).bind(client);
 
 export const getFilters = async (query) => {
   const route = config.routes[query.type];
@@ -34,7 +22,7 @@ export const getFilters = async (query) => {
     // Check if filter values are already cached
     const cacheKey = `route_${query.type}_filter_${filter.id}`;
     // eslint-disable-next-line no-await-in-loop
-    await existsAsync(cacheKey).then(async (reply) => {
+    await cache.exists(cacheKey).then(async (reply) => {
       if (reply !== 1) {
         let filterQuery = null;
         if (filter.query) {
@@ -60,12 +48,12 @@ export const getFilters = async (query) => {
             }));
 
             // Cache filter values
-            await setAsync(cacheKey, JSON.stringify(filterValues));
+            await cache.set(cacheKey, JSON.stringify(filterValues));
           }
         }
       } else {
         // Use cached version of filter values when available
-        filterValues = JSON.parse(await getAsync(cacheKey));
+        filterValues = JSON.parse(await cache.get(cacheKey));
       }
     });
 
