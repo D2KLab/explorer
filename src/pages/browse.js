@@ -406,7 +406,7 @@ const BrowsePage = ({ initialData, router, t }) => {
               />
             </Option>
             {config.plugins.virtualLoom && (
-              <Option style={{ marginLeft: 'auto' }}>
+              <Option>
                 <Button primary onClick={toggleMap}>
                   {isMapVisible ? <GridIcon height="20" /> : <MapIcon height="20" />}
                 </Button>
