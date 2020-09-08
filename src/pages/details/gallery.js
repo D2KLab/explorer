@@ -8,15 +8,22 @@ import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
 import { saveAs } from 'file-saver';
 import Lightbox from 'react-image-lightbox';
 
-import { Header, Footer, Layout, Body, Element } from '@components';
-import Metadata from '@components/Metadata';
-import GraphIcon from '@components/GraphIcon';
-import Debug from '@components/Debug';
-import SaveButton from '@components/SaveButton';
-import PageTitle from '@components/PageTitle';
-import Button from '@components/Button';
+import {
+  Header,
+  Footer,
+  Layout,
+  Body,
+  Element,
+  MetadataList,
+  Metadata,
+  GraphIcon,
+  Debug,
+  SaveButton,
+  PageTitle,
+  Button,
+} from '@components';
 import { breakpoints } from '@styles';
-import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
+import { absoluteUrl, generateMediaUrl } from '@helpers/utils';
 import config from '~/config';
 import { withTranslation } from '~/i18n';
 
@@ -186,86 +193,9 @@ const Analysis = styled.div`
   margin-bottom: 8px;
 `;
 
-const MetadataList = styled.div`
-  margin-bottom: 24px;
-`;
-
 const VirtualLoomButton = styled.a`
   display: block;
 `;
-
-const RelatedVideosList = styled.div``;
-
-function generateValue(currentRouteName, currentRoute, metaName, meta) {
-  if (typeof meta !== 'object') {
-    if (['http://', 'https://'].some((protocol) => meta.startsWith(protocol))) {
-      return (
-        <a href={meta} target="_blank" rel="noopener noreferrer">
-          {meta}
-        </a>
-      );
-    }
-    return <>{meta}</>;
-  }
-
-  const [routeName, route] =
-    Object.entries(config.routes).find(([, r]) => {
-      if (Array.isArray(r.rdfType)) {
-        return r.rdfType.includes(meta['@type']);
-      }
-      if (typeof r.rdfType === 'string') {
-        return r.rdfType === meta['@type'];
-      }
-      return false;
-    }) || [];
-  const isKnownType = typeof type !== 'undefined';
-
-  let url = meta['@id'];
-  if (route) {
-    url = `/${routeName}/${encodeURIComponent(uriToId(meta['@id'], { base: route.uriBase }))}`;
-  } else if (
-    currentRoute &&
-    Array.isArray(currentRoute.filters) &&
-    currentRoute.filters.find((f) => f.id === metaName)
-  ) {
-    url = `/${currentRouteName}?field_filter_${metaName}=${encodeURIComponent(meta['@id'])}`;
-  }
-
-  let printableValue = '<unk>';
-
-  if (
-    currentRoute &&
-    currentRoute.metadata &&
-    typeof currentRoute.metadata[metaName] === 'function'
-  ) {
-    url = null;
-    printableValue = currentRoute.metadata[metaName](meta);
-  } else if (typeof meta.label === 'object') {
-    // If $langTag is set to 'show' in sparql-transformer
-    printableValue = meta.label['@value'];
-  } else if (typeof meta.label === 'string') {
-    // Example: {"@id":"http://data.silknow.org/collection/ec0f9a6f-7b69-31c4-80a6-c0a9cde663a5","@type":"http://erlangen-crm.org/current/E78_Collection","label":"European Sculpture and Decorative Arts"}
-    printableValue = meta.label;
-  } else {
-    // Example: {"@id":"Textiles"}
-    printableValue = meta['@id'];
-    url = null;
-  }
-
-  if (!url) {
-    return <>{printableValue}</>;
-  }
-
-  return (
-    <a
-      href={url}
-      target={isKnownType ? '_self' : '_blank'}
-      rel={isKnownType ? '' : 'noopener noreferrer'}
-    >
-      {printableValue}
-    </a>
-  );
-}
 
 const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
   const { query } = useRouter();
@@ -492,43 +422,9 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
                 />
               )}
             </Element>
-            <MetadataList>
-              {metadata.flatMap(([metaName, meta]) => {
-                const values = [];
-                if (Array.isArray(meta)) {
-                  /* Example:
-                    [
-                      { '@id': { '@language': 'en', '@value': 'linen' } },
-                      { '@id': 'http://data.silknow.org/vocabulary/277', label: [ { '@language': 'en', '@value': 'silk thread' } ] }
-                    ]
-                  */
-                  meta.forEach((subMeta) => {
-                    const value = generateValue(query.type, route, metaName, subMeta);
-                    if (value) {
-                      values.push(value);
-                    }
-                  });
-                } else if (typeof meta['@id'] === 'object') {
-                  // Example: { '@id': { '@language': 'en', '@value': 'hand embroidery' } }
-                  values.push(<span>{meta['@id']['@value']}</span>);
-                } else {
-                  // Example: { '@id': 'http://data.silknow.org/collection/4051dfc9-1267-3530-bac8-40011f2e3daa', '@type': 'E78_Collection', label: 'Textiles and Fashion Collection' }
-                  const value = generateValue(query.type, route, metaName, meta);
-                  if (value) {
-                    values.push(value);
-                  }
-                }
-
-                return (
-                  <Metadata key={metaName} label={t(`metadata.${metaName}`)}>
-                    {values.map((value, i) => (
-                      // eslint-disable-next-line react/no-array-index-key
-                      <div key={i}>{value}</div>
-                    ))}
-                  </Metadata>
-                );
-              })}
-            </MetadataList>
+            <Element marginBottom={24}>
+              <MetadataList metadata={metadata} query={query} route={route} />
+            </Element>
             <MenuButton {...downloadMenu} as={Button} primary>
               Download
             </MenuButton>
