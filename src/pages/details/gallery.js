@@ -198,6 +198,13 @@ const RelatedVideosList = styled.div``;
 
 function generateValue(currentRouteName, currentRoute, metaName, meta) {
   if (typeof meta !== 'object') {
+    if (['http://', 'https://'].some((protocol) => meta.startsWith(protocol))) {
+      return (
+        <a href={meta} target="_blank" rel="noopener noreferrer">
+          {meta}
+        </a>
+      );
+    }
     return <>{meta}</>;
   }
 
@@ -279,7 +286,8 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
   });
 
   const metadata = Object.entries(result).filter(([metaName]) => {
-    return !['@type', '@id', '@graph', 'label', 'representation'].includes(metaName);
+    if (metaName === '@id' && !route.details.showPermalink) return false;
+    return !['@type', '@graph', 'label', 'representation'].includes(metaName);
   });
 
   const pageTitle = route.labelFunc(result);

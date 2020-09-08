@@ -192,7 +192,14 @@ function humanTimeToSeconds(humanTime) {
 }
 
 function generateValue(currentRouteName, currentRoute, metaName, meta) {
-  if (typeof meta === 'string') {
+  if (typeof meta !== 'object') {
+    if (['http://', 'https://'].some((protocol) => meta.startsWith(protocol))) {
+      return (
+        <a href={meta} target="_blank" rel="noopener noreferrer">
+          {meta}
+        </a>
+      );
+    }
     return <>{meta}</>;
   }
 
@@ -273,9 +280,8 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments, t }) => {
   }
 
   const metadata = Object.entries(result).filter(([metaName]) => {
-    return !['@type', '@id', '@graph', 'label', 'representation', 'mediaLocator'].includes(
-      metaName
-    );
+    if (metaName === '@id' && !route.details.showPermalink) return false;
+    return !['@type', '@graph', 'label', 'representation'].includes(metaName);
   });
 
   const label = route.labelFunc(result);
