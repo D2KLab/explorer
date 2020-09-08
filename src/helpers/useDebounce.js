@@ -1,21 +1,33 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
-export default function useDebounce(func, delay) {
-  const [id, setId] = useState(null);
+export default function useDebounce(value, delay) {
+  if (typeof value === 'function') {
+    const [id, setId] = useState(null);
+    return useMemo(
+      (...args) => {
+        if (id) {
+          clearTimeout(id);
+        } else {
+          setId(
+            setTimeout(() => {
+              setId(null);
+              value(...args);
+            }, delay)
+          );
+        }
+      },
+      [value]
+    );
+  }
 
-  return useMemo(
-    (...args) => {
-      if (id) {
-        clearTimeout(id);
-      } else {
-        setId(
-          setTimeout(() => {
-            setId(null);
-            func(...args);
-          }, delay)
-        );
-      }
-    },
-    [func]
-  );
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+  return debouncedValue;
 }

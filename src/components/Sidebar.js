@@ -7,6 +7,7 @@ import MultiSelect from '@components/MultiSelect';
 import { breakpoints } from '@styles';
 import Button from '@components/Button';
 import Input from '@components/Input';
+import useDebounce from '@helpers/useDebounce';
 
 import { withTranslation } from '~/i18n';
 import config from '~/config';
@@ -157,7 +158,7 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
         newFields[f] = '';
       }
     });
-    setFields(newFields, doSearch);
+    setFields(newFields);
   };
 
   const renderFilter = (filter) => {
@@ -263,6 +264,12 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
 
     setFields(newFields);
   }, []);
+
+  // Execute search when fields change
+  const debouncedFields = useDebounce(fields, 500);
+  useEffect(() => {
+    doSearch();
+  }, [debouncedFields]);
 
   const route = config.routes[type];
 
