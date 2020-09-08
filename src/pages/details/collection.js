@@ -6,9 +6,10 @@ import DefaultErrorPage from 'next/error';
 import queryString from 'query-string';
 import NextAuth from 'next-auth/client';
 
-import { Header, Footer, Layout, Body, Media } from '@components';
+import { Header, Footer, Layout, Body, Media, Element } from '@components';
 import SaveButton from '@components/SaveButton';
 import Metadata from '@components/Metadata';
+import GraphIcon from '@components/GraphIcon';
 import Debug from '@components/Debug';
 import PageTitle from '@components/PageTitle';
 import { breakpoints } from '@styles';
@@ -95,14 +96,17 @@ const CollectionDetailsPage = ({ result, inList }) => {
         <Columns>
           <Primary>
             <h1>{label}</h1>
-            {session && (
-              <SaveButton
-                type={query.type}
-                item={result}
-                saved={isItemSaved}
-                onChange={onItemSaveChange}
-              />
-            )}
+            <Element marginBottom={12} display="flex" justifyContent="space-between">
+              <GraphIcon uri={result['@graph']} />
+              {session && (
+                <SaveButton
+                  type={query.type}
+                  item={result}
+                  saved={isItemSaved}
+                  onChange={onItemSaveChange}
+                />
+              )}
+            </Element>
             <p>{result.description || 'No description for this collection'}</p>
             <h2>Items in the collection</h2>
             <Results>

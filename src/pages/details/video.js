@@ -10,6 +10,7 @@ import { Header, Footer, Layout, Body, Button, Element } from '@components';
 import Media, { ThumbnailContainer } from '@components/Media';
 import SaveButton from '@components/SaveButton';
 import Metadata from '@components/Metadata';
+import GraphIcon from '@components/GraphIcon';
 import PageTitle from '@components/PageTitle';
 import Debug from '@components/Debug';
 import { breakpoints } from '@styles';
@@ -349,16 +350,17 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments, t }) => {
         <Columns>
           <Primary>
             <Title>{label}</Title>
-            {session && (
-              <Element marginBottom={12}>
+            <Element marginBottom={12} display="flex" justifyContent="space-between">
+              <GraphIcon uri={result['@graph']} />
+              {session && (
                 <SaveButton
                   type={query.type}
                   item={result}
                   saved={isItemSaved}
                   onChange={onItemSaveChange}
                 />
-              </Element>
-            )}
+              )}
+            </Element>
             <MetadataList>
               {metadata.flatMap(([metaName, meta]) => {
                 const values = [];

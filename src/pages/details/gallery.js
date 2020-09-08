@@ -172,10 +172,6 @@ const Title = styled.h1`
   `}
 `;
 
-const StyledGraphIcon = styled(GraphIcon)`
-  margin-bottom: 1em;
-`;
-
 const MobileTitle = styled(Title)`
   display: block;
 
@@ -477,8 +473,8 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
           </Primary>
           <Secondary>
             <Title>{pageTitle}</Title>
-            <Element marginY={12} display="flex" justifyContent="space-between">
-              <StyledGraphIcon uri={result['@graph']} />
+            <Element marginBottom={12} display="flex" justifyContent="space-between">
+              <GraphIcon uri={result['@graph']} />
               {session && (
                 <SaveButton
                   type={query.type}
