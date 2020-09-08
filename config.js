@@ -17,11 +17,13 @@ module.exports = {
     endpoint: 'https://dbpedia.org/sparql',
   },
   search: {
+    route: 'countries',
     allowTextSearch: true,
     textSearchQuery: {
       '@graph': [
         {
           '@id': '?id',
+          '@type': '?rdfType',
           label: '?label',
           representation: {
             '@id': '?image$sample',
@@ -30,8 +32,11 @@ module.exports = {
         },
       ],
       $where: [
-        '?id a <http://dbpedia.org/ontology/Country>',
-        '?id a <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations>',
+        '?id a ?rdfType',
+        `VALUES ?rdfType {
+          <http://dbpedia.org/ontology/Country>
+          <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations>
+        }`,
         '?id dbo:capital ?capital',
         'FILTER NOT EXISTS { ?id <http://dbpedia.org/ontology/dissolutionYear> ?yearEnd }',
         '?id <http://www.w3.org/2000/01/rdf-schema#label> ?label',

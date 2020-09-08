@@ -279,7 +279,7 @@ const HomePage = ({ t }) => {
             {config.home.hero.showLogo && <Logo />}
             <HeroMiddle>
               <SearchForm method="GET" action="/browse">
-                <input type="hidden" name="type" value="objects" />
+                <input type="hidden" name="type" value={config.search.route} />
                 {config.search.allowTextSearch ? (
                   <>
                     <StyledSearchInput name="q" placeholder={t('home:search.placeholder')} />
