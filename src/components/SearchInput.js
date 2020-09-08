@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import Router from 'next/router';
 import styled from 'styled-components';
 import Autosuggest from 'react-autosuggest';
@@ -141,36 +141,23 @@ const renderSuggestion = (suggestion, { searchQuery }) => {
   );
 };
 
-class SearchInput extends Component {
-  constructor() {
-    super();
+const SearchInput = ({ className, placeholder, ariaLabel = 'Search input', ...props }) => {
+  const [inputValue, setInputValue] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
 
-    this.state = {
-      value: '',
-      suggestions: [],
-    };
-  }
-
-  onChange = (event, { newValue }) => {
-    this.setState({
-      value: newValue,
-    });
+  const onChange = (event, { newValue }) => {
+    setInputValue(newValue);
   };
 
-  onSuggestionsFetchRequested = async ({ value }) => {
-    const suggestions = await getSuggestions(value);
-    this.setState({
-      suggestions,
-    });
+  const onSuggestionsFetchRequested = async ({ value }) => {
+    setSuggestions(await getSuggestions(value));
   };
 
-  onSuggestionsClearRequested = () => {
-    this.setState({
-      suggestions: [],
-    });
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([]);
   };
 
-  onSuggestionSelected = (event, { suggestion }) => {
+  const onSuggestionSelected = (event, { suggestion }) => {
     const [routeName, route] =
       Object.entries(config.routes).find(([, r]) => {
         if (Array.isArray(r.rdfType)) {
@@ -193,31 +180,27 @@ class SearchInput extends Component {
     }
   };
 
-  render() {
-    const { value, suggestions } = this.state;
-    const { className, placeholder, ariaLabel = 'Search input' } = this.props;
+  const inputProps = {
+    placeholder,
+    value: inputValue,
+    'aria-label': ariaLabel,
+    onChange,
+    ...props,
+  };
 
-    const inputProps = {
-      placeholder,
-      value,
-      'aria-label': ariaLabel,
-      onChange: this.onChange,
-    };
-
-    return (
-      <Container className={className}>
-        <Autosuggest
-          suggestions={suggestions}
-          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-          onSuggestionSelected={this.onSuggestionSelected}
-          getSuggestionValue={getSuggestionValue}
-          renderSuggestion={renderSuggestion}
-          inputProps={inputProps}
-        />
-      </Container>
-    );
-  }
-}
+  return (
+    <Container className={className}>
+      <Autosuggest
+        suggestions={suggestions}
+        onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+        onSuggestionsClearRequested={onSuggestionsClearRequested}
+        onSuggestionSelected={onSuggestionSelected}
+        getSuggestionValue={getSuggestionValue}
+        renderSuggestion={renderSuggestion}
+        inputProps={inputProps}
+      />
+    </Container>
+  );
+};
 
 export default SearchInput;
