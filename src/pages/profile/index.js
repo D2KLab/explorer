@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { Img } from 'react-image';
 import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
-import NextAuth from 'next-auth/client';
+import { getSession, getProviders, getCsrfToken, signout } from 'next-auth/client';
 import Moment from 'react-moment';
 import Router from 'next/router';
 import { ShareAlt as ShareIcon } from '@styled-icons/boxicons-solid/ShareAlt';
@@ -140,7 +140,15 @@ const StyledTrashIcon = styled(TrashIcon)`
   }
 `;
 
-const ProfilePage = ({ providers, session, accounts, lists, baseUrl, facebookAppId }) => {
+const ProfilePage = ({
+  providers,
+  csrfToken,
+  session,
+  accounts,
+  lists,
+  baseUrl,
+  facebookAppId,
+}) => {
   const deleteProfileDialog = useDialogState();
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [isUnlinkingAccount, setIsUnlinkingAccount] = useState(false);
@@ -150,7 +158,7 @@ const ProfilePage = ({ providers, session, accounts, lists, baseUrl, facebookApp
     await fetch(`/api/profile`, {
       method: 'DELETE',
     });
-    NextAuth.signout();
+    signout();
   };
 
   const unlinkAccount = async (account) => {
@@ -236,18 +244,24 @@ const ProfilePage = ({ providers, session, accounts, lists, baseUrl, facebookApp
         </Element>
         <Element marginBottom={24}>
           <h3>Connect another account</h3>
-          {providers &&
-            Object.values(providers).map((provider) => {
-              if (accounts.find((account) => account.providerId === provider.id)) {
-                // Do not display a button if this provider is already linked to the user
-                return null;
-              }
-              return (
-                <Element key={provider.name} marginY={12}>
-                  <ProviderButton provider={provider} redirectUrl={`${baseUrl}/profile`} />
-                </Element>
-              );
-            })}
+          <Element display="flex" flexDirection="column">
+            {providers &&
+              Object.values(providers).map((provider) => {
+                if (accounts.find((account) => account.providerId === provider.id)) {
+                  // Do not display a button if this provider is already linked to the user
+                  return null;
+                }
+                return (
+                  <Element key={provider.name} marginBottom={12}>
+                    <form action={provider.signinUrl} method="POST">
+                      <input type="hidden" name="csrfToken" defaultValue={csrfToken} />
+                      <input type="hidden" name="callbackUrl" defaultValue={`${baseUrl}/profile`} />
+                      <ProviderButton provider={provider} type="submit" />
+                    </form>
+                  </Element>
+                );
+              })}
+          </Element>
         </Element>
       </>
     );
@@ -335,8 +349,7 @@ const ProfilePage = ({ providers, session, accounts, lists, baseUrl, facebookApp
 
 export async function getServerSideProps(ctx) {
   const { req, res } = ctx;
-  const providers = await NextAuth.getProviders(ctx);
-  const session = await NextAuth.getSession(ctx);
+  const session = await getSession(ctx);
 
   if (!session) {
     res.setHeader('location', '/auth/signin');
@@ -365,7 +378,8 @@ export async function getServerSideProps(ctx) {
 
   return {
     props: {
-      providers,
+      providers: await getProviders(ctx),
+      csrfToken: await getCsrfToken(ctx),
       session,
       accounts,
       lists,

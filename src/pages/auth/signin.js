@@ -1,15 +1,13 @@
-import styled from 'styled-components';
-import NextAuth from 'next-auth/client';
+import { getProviders, getCsrfToken } from 'next-auth/client';
 
-import Button from '@components/Button';
 import { Layout, Header, Body, Content, Title, Footer, Element } from '@components';
 import { ProviderButton } from '@components/ProviderButton';
 import PageTitle from '@components/PageTitle';
 
-const SignInPage = ({ providers }) => {
+const SignInPage = ({ providers, csrfToken }) => {
   return (
     <Layout>
-      <PageTitle title={`Sign in`} />
+      <PageTitle title="Sign in" />
       <Header />
       <Body>
         <Element
@@ -21,12 +19,15 @@ const SignInPage = ({ providers }) => {
         >
           <Title>Sign in</Title>
           <Content>
-            <Element display="flex" flexDirection="column" alignItems="center">
+            <Element display="flex" flexDirection="column">
               {providers &&
                 Object.values(providers).map((provider) => {
                   return (
                     <Element key={provider.name} marginY={12}>
-                      <ProviderButton provider={provider} />
+                      <form action={provider.signinUrl} method="POST">
+                        <input type="hidden" name="csrfToken" defaultValue={csrfToken} />
+                        <ProviderButton provider={provider} type="submit" />
+                      </form>
                     </Element>
                   );
                 })}
@@ -41,11 +42,11 @@ const SignInPage = ({ providers }) => {
 
 export default SignInPage;
 
-export async function getServerSideProps() {
-  const providers = await NextAuth.getProviders();
+export async function getServerSideProps(ctx) {
   return {
     props: {
-      providers,
+      providers: await getProviders(ctx),
+      csrfToken: await getCsrfToken(ctx),
     },
   };
 }

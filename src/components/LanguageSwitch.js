@@ -4,7 +4,7 @@ import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
 import { DownArrow } from '@styled-icons/boxicons-solid/DownArrow';
 
 import { Element } from '@components';
-import { withTranslation } from '~/i18n';
+import { useTranslation } from '~/i18n';
 import config from '~/config';
 
 /**
@@ -56,8 +56,9 @@ const StyledDownArrow = styled(DownArrow)`
   color: inherit;
 `;
 
-const LanguageSwitch = ({ className, i18n }) => {
+const LanguageSwitch = ({ className }) => {
   const menu = useMenuState();
+  const { i18n } = useTranslation();
 
   return (
     <Element className={className}>
@@ -83,4 +84,4 @@ const LanguageSwitch = ({ className, i18n }) => {
   );
 };
 
-export default withTranslation()(LanguageSwitch);
+export default LanguageSwitch;

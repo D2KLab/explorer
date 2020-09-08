@@ -1,31 +1,28 @@
 import styled from 'styled-components';
-import NextAuth from 'next-auth/client';
 
 import Button from '@components/Button';
 
-export const GoogleButton = styled(Button)`
+export const BaseButton = styled(Button)`
+  color: #fff;
+  width: 100%;
+  min-height: 40px;
+
+  &:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+`;
+
+export const GoogleButton = styled(BaseButton)`
   background-color: #db422c;
-  color: #fff;
-
-  &:hover {
-    color: #fff;
-    text-decoration: underline;
-  }
 `;
 
-export const FacebookButton = styled(Button)`
+export const FacebookButton = styled(BaseButton)`
   background-color: #4457a6;
-  color: #fff;
-
-  &:hover {
-    color: #fff;
-    text-decoration: underline;
-  }
 `;
 
-export const TwitterButton = styled(Button)`
+export const TwitterButton = styled(BaseButton)`
   background-color: #1da1f2;
-  color: #fff;
 `;
 
 export const providersButtons = {
@@ -34,15 +31,10 @@ export const providersButtons = {
   Twitter: TwitterButton,
 };
 
-export const ProviderButton = ({ provider, redirectUrl }) => {
+export const ProviderButton = ({ provider, ...props }) => {
   const Container = providersButtons[provider.name] || Button;
 
-  let { signinUrl } = provider;
-  if (typeof redirectUrl === 'string') {
-    signinUrl += `?callbackUrl=${redirectUrl}`;
-  }
-
-  return <Container href={signinUrl}>Sign in with {provider.name}</Container>;
+  return <Container {...props}>Sign in with {provider.name}</Container>;
 };
 
 export default ProviderButton;
