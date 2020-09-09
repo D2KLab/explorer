@@ -131,7 +131,7 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
     if (typeof onSearch === 'function') {
       const newFields = {};
       Object.entries(fields).forEach(([key, val]) => {
-        if (val === null || typeof val === 'undefined') {
+        if (typeof val === 'undefined' || val === null || val === false || val === '') {
           delete newFields[key];
         } else if (val.value) {
           newFields[key] = val.value;
