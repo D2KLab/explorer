@@ -29,7 +29,6 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
       }
       return false;
     }) || [];
-  const isKnownType = typeof type !== 'undefined';
 
   let url = meta['@id'];
   if (route) {
@@ -50,8 +49,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
     // Example: {"@id":"http://data.silknow.org/collection/ec0f9a6f-7b69-31c4-80a6-c0a9cde663a5","@type":"http://erlangen-crm.org/current/E78_Collection","label":"European Sculpture and Decorative Arts"}
     printableValue = meta.label;
   } else {
-    // Example: {"@id":"Textiles"}
-    printableValue = meta['@id'];
+    printableValue = null;
     url = null;
   }
 
@@ -59,15 +57,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
     return <>{printableValue}</>;
   }
 
-  return (
-    <a
-      href={url}
-      target={isKnownType ? '_self' : '_blank'}
-      rel={isKnownType ? '' : 'noopener noreferrer'}
-    >
-      {printableValue}
-    </a>
-  );
+  return <a href={url}>{printableValue}</a>;
 }
 
 const MetadataList = ({ metadata, query, route }) => {
