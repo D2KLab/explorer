@@ -222,7 +222,7 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments }) => {
 
   const metadata = Object.entries(result).filter(([metaName]) => {
     if (metaName === '@id' && !route.details.showPermalink) return false;
-    return !['@type', '@graph', 'label', 'representation'].includes(metaName);
+    return !['@id', '@type', '@graph', 'label', 'representation'].includes(metaName);
   });
 
   const label = route.labelFunc(result);

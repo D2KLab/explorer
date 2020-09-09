@@ -217,7 +217,7 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
 
   const metadata = Object.entries(result).filter(([metaName]) => {
     if (metaName === '@id' && !route.details.showPermalink) return false;
-    return !['@type', '@graph', 'label', 'representation'].includes(metaName);
+    return !['@id', '@type', '@graph', 'label', 'representation'].includes(metaName);
   });
 
   const pageTitle = route.labelFunc(result);
