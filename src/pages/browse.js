@@ -300,7 +300,7 @@ const BrowsePage = ({ initialData, router, t }) => {
   };
 
   const $loadMoreButton = useRef(null);
-  const isOnScreen = useOnScreen($loadMoreButton, '200px');
+  const isOnScreen = useOnScreen($loadMoreButton);
 
   useEffect(() => {
     if (isOnScreen) loadMore();
@@ -427,10 +427,8 @@ const BrowsePage = ({ initialData, router, t }) => {
               <SpatioTemporalMaps mapRef={mapRef} query={mapInitialQuery} />
             ) : (
               <>
-                <Results className="infinite-scroll" loading={isLoading ? 1 : 0}>
-                  {data.map((page) => {
-                    return renderResults(page.results);
-                  })}
+                <Results loading={isLoading ? 1 : 0}>
+                  {data.map((page) => renderResults(page.results))}
                 </Results>
                 <Element marginBottom={24}>
                   <Button
