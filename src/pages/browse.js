@@ -104,7 +104,7 @@ const PaginationContainer = styled.div`
   position: sticky;
   bottom: 0;
   z-index: 100000;
-  background: white;
+  background-color: ${({ theme }) => theme.colors.background};
   padding-bottom: 20px;
   padding-top: 20px;
 
