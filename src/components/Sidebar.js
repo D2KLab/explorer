@@ -314,7 +314,7 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
           {/* <Field>
             <label htmlFor="field_languages">{t('search:fields.languages')}</label>
             <MultiSelect
-              id="field_languages"
+              inputId="field_languages"
               name="field_languages"
               options={languages}
               value={languages.find(o => o.value === fields.field_languages)}
