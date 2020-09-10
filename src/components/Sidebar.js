@@ -112,7 +112,11 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
     } else {
       const { target } = event;
       fieldName = target.name;
-      fieldValue = target.type === 'checkbox' ? target.checked : target.value;
+      if (target.type === 'checkbox') {
+        fieldValue = target.checked ? 1 : 0;
+      } else {
+        fieldValue = target.value;
+      }
     }
     setFields((prevFields) => ({
       ...prevFields,
@@ -123,7 +127,7 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
   const handleSwitchChange = (checked, event, id) => {
     setFields((prevFields) => ({
       ...prevFields,
-      [id]: checked,
+      [id]: checked ? 1 : 0,
     }));
   };
 
@@ -146,16 +150,12 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
   };
 
   const clearSearch = () => {
-    const newFields = {};
-    newFields.q = '';
-    newFields.graph = '';
-    Object.keys(fields).forEach((f) => {
-      if (Array.isArray(fields[f])) {
-        newFields[f] = [];
-      } else if (typeof fields[f] === 'object') {
-        newFields[f] = {};
-      } else {
+    const newFields = { ...fields };
+    Object.keys(newFields).forEach((f) => {
+      if (typeof newFields[f] === 'string') {
         newFields[f] = '';
+      } else {
+        delete newFields[f];
       }
     });
     setFields(newFields);
@@ -232,10 +232,14 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
     const newFields = {};
 
     // Text search
-    newFields.q = query.q || '';
+    if (typeof query.q !== 'undefined') {
+      newFields.q = query.q;
+    }
 
     // Graph search
-    newFields.graph = query.graph || '';
+    if (typeof query.graph !== 'undefined') {
+      newFields.graph = query.graph;
+    }
 
     // Languages
     if (newFields.field_languages) {
@@ -247,6 +251,17 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
         .filter((v) => v);
     }
 
+    // Default values for filters
+    filters.forEach((filter) => {
+      if (typeof filter.defaultValue !== 'undefined' && filter.defaultValue !== null) {
+        if (typeof filter.defaultValue === 'boolean') {
+          newFields[`field_filter_${filter.id}`] = filter.defaultValue ? 1 : 0;
+        } else {
+          newFields[`field_filter_${filter.id}`] = filter.defaultValue;
+        }
+      }
+    });
+
     // Props Filters
     Object.keys(query).forEach((key) => {
       const filter = filters.find((f) => key === `field_filter_${f.id}`);
@@ -256,6 +271,8 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
           newFields[key] = newFields[key]
             .map((val) => getValue(filter.values, val))
             .filter((v) => v);
+        } else if (filter.isOption) {
+          newFields[key] = !!parseInt(query.key, 10);
         } else {
           newFields[key] = query[key];
         }

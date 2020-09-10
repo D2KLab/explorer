@@ -213,12 +213,19 @@ const BrowsePage = ({ initialData, router, t }) => {
       }
       mapRef.current.focus();
     }
+
+    const newQuery = {
+      type: query.type,
+      ...fields,
+    };
+    if (query.page) {
+      newQuery.page = query.page;
+    }
+
     Router.push(
       {
-        query: {
-          type: query.type,
-          ...fields,
-        },
+        pathname,
+        query: newQuery,
       },
       undefined,
       {
@@ -257,14 +264,16 @@ const BrowsePage = ({ initialData, router, t }) => {
   const onSortChange = (selectedOption) => {
     const { value } = selectedOption;
 
+    const newQuery = {
+      ...query,
+      sort: value,
+    };
+    delete newQuery.page; // Reset page index
+
     setIsLoading(true);
     Router.push({
       pathname,
-      query: {
-        ...query,
-        sort: value,
-        page: undefined, // Reset page index
-      },
+      query: newQuery,
     });
   };
 

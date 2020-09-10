@@ -62,6 +62,7 @@ export const getFilters = async (query) => {
       label: filter.label || null,
       isOption: !!filter.isOption,
       isMulti: !!filter.isMulti,
+      defaultValue: filter.defaultValue || null,
       values: filterValues,
     });
   }
@@ -86,24 +87,33 @@ export const search = async (query) => {
     // Props filter
     for (let i = 0; i < route.filters.length; i += 1) {
       const filter = route.filters[i];
-      if (filter.id && query[`field_filter_${filter.id}`]) {
-        let val;
-        if (filter.isOption) {
-          // Since options are checkboxes, get a boolean value (which should always be `true` in that case anyway)
-          val = !!query[`field_filter_${filter.id}`];
-        } else if (filter.isMulti) {
-          // Make sure that the value is an array when isMulti is set
-          val = !Array.isArray(query[`field_filter_${filter.id}`])
-            ? [query[`field_filter_${filter.id}`]]
-            : query[`field_filter_${filter.id}`];
-        } else {
-          val = query[`field_filter_${filter.id}`];
+      if (filter.id) {
+        let val = filter.defaultValue;
+        if (query[`field_filter_${filter.id}`]) {
+          if (filter.isOption) {
+            // Since options are checkboxes, get either 1 for true or 0 for false
+            val = parseInt(query[`field_filter_${filter.id}`], 10) === 1;
+            // Unset the value so we don't trigger whereFunc/filterFunc
+            if (val === false) {
+              val = undefined;
+            }
+          } else if (filter.isMulti) {
+            // Make sure that the value is an array when isMulti is set
+            val = !Array.isArray(query[`field_filter_${filter.id}`])
+              ? [query[`field_filter_${filter.id}`]]
+              : query[`field_filter_${filter.id}`];
+          } else {
+            val = query[`field_filter_${filter.id}`];
+          }
         }
-        if (typeof filter.whereFunc === 'function') {
-          extraWhere.push(...filter.whereFunc(val));
-        }
-        if (typeof filter.filterFunc === 'function') {
-          extraFilter.push(...filter.filterFunc(val));
+
+        if (typeof val !== 'undefined') {
+          if (typeof filter.whereFunc === 'function') {
+            extraWhere.push(...filter.whereFunc(val));
+          }
+          if (typeof filter.filterFunc === 'function') {
+            extraFilter.push(...filter.filterFunc(val));
+          }
         }
       }
     }
