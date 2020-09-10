@@ -289,7 +289,7 @@ const BrowsePage = ({ initialData, router, t }) => {
   };
 
   const loadMore = () => {
-    if (currentPage + 1 > totalPages) return;
+    if (isLoadingMore || currentPage + 1 > totalPages) return;
 
     setSize(size + 1);
 
