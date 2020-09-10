@@ -43,6 +43,8 @@ export const TextContainer = styled.div`
 export const Title = styled.span`
   color: #000;
   font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const Subtitle = styled.span`
