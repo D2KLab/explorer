@@ -101,6 +101,13 @@ const Results = styled.div`
 `;
 
 const PaginationContainer = styled.div`
+  position: sticky;
+  bottom: 0;
+  z-index: 100000;
+  background: white;
+  padding-bottom: 20px;
+  padding-top: 20px;
+
   li {
     display: inline-block;
     margin-left: -1px;
