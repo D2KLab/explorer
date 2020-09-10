@@ -173,7 +173,6 @@ const SearchInput = ({ className, placeholder, ariaLabel = 'Search input', ...pr
         pathname: `/${routeName}/${encodeURIComponent(
           uriToId(suggestion['@id'], { base: route.uriBase })
         )}`,
-        // shallow: true
       });
     } else {
       console.warn('Route not found:', routeName, 'for suggestion type:', suggestion['@type']);
