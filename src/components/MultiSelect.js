@@ -41,67 +41,69 @@ const Container = styled.div`
   }
 `;
 
-export default class MultiSelect extends Component {
-  onSelectChange = (value, meta) => {
-    const values = this.getValues();
-    const newValues = Array.isArray(value) ? value : [value].filter((x) => x);
-    values.push(...newValues);
-    const uniqueValues = Array.from(new Set(values));
-    this.triggerOnChange(uniqueValues);
-  };
-
-  getValues = () => {
-    return Array.isArray(this.props.value) ? this.props.value : [this.props.value].filter((x) => x);
-  };
-
-  removeItem = (item) => {
-    const values = this.getValues().filter((v) => v.value !== item.value);
-    this.triggerOnChange(values);
-  };
-
-  triggerOnChange(values) {
-    const { onChange } = this.props;
+const MultiSelect = ({
+  className,
+  inputId,
+  name,
+  options,
+  placeholder,
+  value,
+  onChange,
+  ...props
+}) => {
+  const triggerOnChange = (values) => {
     if (typeof onChange === 'function') {
       const meta = {
-        name: this.props.name,
+        name,
       };
       onChange(values, meta);
     }
-  }
+  };
 
-  render() {
-    const { className, id, name, options, placeholder } = this.props;
+  const getValues = () => {
+    return Array.isArray(value) ? value : [value].filter((x) => x);
+  };
 
-    const values = this.getValues();
+  const onSelectChange = (newValue /* meta */) => {
+    const values = getValues();
+    const newValues = Array.isArray(newValue) ? newValue : [newValue].filter((x) => x);
+    values.push(...newValues);
+    const uniqueValues = Array.from(new Set(values));
+    triggerOnChange(uniqueValues);
+  };
 
-    return (
-      <Container className={className}>
-        <div>
-          <Select
-            isClearable={false}
-            isMulti={false}
-            controlShouldRenderValue={false}
-            inputId={id}
-            name={name}
-            options={options}
-            onChange={this.onSelectChange}
-            value={values[values.length - 1]}
-            placeholder={placeholder}
-          />
-        </div>
-        <ul className="selected-options">
-          {values.length > 0 &&
-            values.map((item) => (
-              <li key={item.value}>
-                <CrossButton onClick={() => this.removeItem(item)} />
-                <span>{item.label}</span>
-              </li>
-            ))}
-        </ul>
-      </Container>
-    );
-  }
-}
+  const removeItem = (item) => {
+    const values = getValues().filter((v) => v.value !== item.value);
+    triggerOnChange(values);
+  };
+
+  const values = getValues();
+
+  return (
+    <Container className={className} {...props}>
+      <Select
+        isClearable={false}
+        isMulti={false}
+        controlShouldRenderValue={false}
+        inputId={inputId}
+        name={name}
+        options={options}
+        onChange={onSelectChange}
+        value={values[values.length - 1]}
+        placeholder={placeholder}
+      />
+      <ul className="selected-options">
+        {values.length > 0 &&
+          values.map((item) => (
+            <li key={item.value}>
+              <CrossButton onClick={() => removeItem(item)} />
+              <span>{item.label}</span>
+            </li>
+          ))}
+      </ul>
+    </Container>
+  );
+};
 
 MultiSelect.propTypes = {
   id: PropTypes.string,
@@ -114,3 +116,5 @@ MultiSelect.defaultProps = {
   name: '',
   placeholder: '',
 };
+
+export default MultiSelect;
