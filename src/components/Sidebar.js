@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled, { withTheme } from 'styled-components';
 import Switch from 'react-switch';
 
@@ -8,6 +8,7 @@ import { breakpoints } from '@styles';
 import Button from '@components/Button';
 import Input from '@components/Input';
 import useDebounce from '@helpers/useDebounce';
+import useDidMountEffect from '@helpers/useDidMountEffect';
 
 import { withTranslation } from '~/i18n';
 import config from '~/config';
@@ -290,7 +291,7 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
 
   // Execute search when fields change
   const debouncedFields = useDebounce(fields, 500);
-  useEffect(() => {
+  useDidMountEffect(() => {
     doSearch();
   }, [debouncedFields]);
 
