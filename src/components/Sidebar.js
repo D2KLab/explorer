@@ -12,6 +12,8 @@ import useDebounce from '@helpers/useDebounce';
 import { withTranslation } from '~/i18n';
 import config from '~/config';
 
+const getValue = (opts, val) => opts.find((o) => o.value === val);
+
 const Container = styled.div`
   background-color: #d9d9d9;
   display: flex;
@@ -86,7 +88,6 @@ const Option = styled.div`
 `;
 
 const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) => {
-  const [fields, setFields] = useState({});
   const [languages] = useState(
     Object.entries(config.search.languages).map(([langKey, langLabel]) => ({
       label: langLabel,
@@ -99,6 +100,64 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
       label: graphObj.label,
     }))
   );
+
+  // Generate initial fields
+  const initialFields = {};
+
+  // Page
+  if (typeof query.page !== 'undefined') {
+    initialFields.page = query.page;
+  }
+
+  // Text search
+  if (typeof query.q !== 'undefined') {
+    initialFields.q = query.q;
+  }
+
+  // Graph search
+  if (typeof query.graph !== 'undefined') {
+    initialFields.graph = query.graph;
+  }
+
+  // Languages
+  if (initialFields.field_languages) {
+    initialFields.field_languages = Array.isArray(initialFields.field_languages)
+      ? initialFields.field_languages
+      : [initialFields.field_languages];
+    initialFields.field_languages = initialFields.field_languages
+      .map((val) => getValue(languages, val))
+      .filter((v) => v);
+  }
+
+  // Default values for filters
+  filters.forEach((filter) => {
+    if (typeof filter.defaultValue !== 'undefined' && filter.defaultValue !== null) {
+      if (typeof filter.defaultValue === 'boolean') {
+        initialFields[`field_filter_${filter.id}`] = filter.defaultValue ? 1 : 0;
+      } else {
+        initialFields[`field_filter_${filter.id}`] = filter.defaultValue;
+      }
+    }
+  });
+
+  // Props Filters
+  Object.keys(query).forEach((key) => {
+    const filter = filters.find((f) => key === `field_filter_${f.id}`);
+    if (filter) {
+      if (filter.isMulti) {
+        initialFields[key] = Array.isArray(query[key]) ? query[key] : [query[key]];
+        initialFields[key] = initialFields[key]
+          .map((val) => getValue(filter.values, val))
+          .filter((v) => v);
+      } else if (filter.isOption) {
+        initialFields[key] = !!parseInt(query[key], 10);
+      } else {
+        initialFields[key] = query[key];
+      }
+    }
+  });
+
+  const [fields, setFields] = useState(initialFields);
 
   const handleInputChange = (event, meta) => {
     let fieldName;
@@ -133,32 +192,35 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
 
   const doSearch = () => {
     if (typeof onSearch === 'function') {
-      const newFields = {};
+      const searchFields = {};
       Object.entries(fields).forEach(([key, val]) => {
-        if (typeof val === 'undefined' || val === null || val === false || val === '') {
-          delete newFields[key];
+        if (typeof val === 'undefined' || val === null || val === '') {
+          delete searchFields[key];
+        } else if (typeof val === 'boolean') {
+          searchFields[key] = val ? 1 : 0;
         } else if (val.value) {
-          newFields[key] = val.value;
+          searchFields[key] = val.value;
         } else if (Array.isArray(val)) {
-          newFields[key] = val.map((v) => v.value || v);
+          searchFields[key] = val.map((v) => v.value || v);
         } else {
-          newFields[key] = val;
+          searchFields[key] = val;
         }
       });
-      onSearch(newFields);
+
+      onSearch(searchFields);
     }
   };
 
   const clearSearch = () => {
-    const newFields = { ...fields };
-    Object.keys(newFields).forEach((f) => {
-      if (typeof newFields[f] === 'string') {
-        newFields[f] = '';
+    const clearedFields = { ...fields };
+    Object.keys(clearedFields).forEach((f) => {
+      if (typeof clearedFields[f] === 'string') {
+        clearedFields[f] = '';
       } else {
-        delete newFields[f];
+        delete clearedFields[f];
       }
     });
-    setFields(newFields);
+    setFields(clearedFields);
   };
 
   const renderFilter = (filter) => {
@@ -209,7 +271,7 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
         <span>{t(`filters.${filter.id}`, filter.label)}</span>
         <StyledSwitch
           onChange={handleSwitchChange}
-          checked={fields[`field_filter_${filter.id}`] || false}
+          checked={!!fields[`field_filter_${filter.id}`]}
           onColor={theme.colors.light}
           offHandleColor="#f0f0f0"
           onHandleColor={theme.colors.primary}
@@ -225,62 +287,6 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
       </Option>
     );
   };
-
-  useEffect(() => {
-    const getValue = (opts, val) => opts.find((o) => o.value === val);
-
-    const newFields = {};
-
-    // Text search
-    if (typeof query.q !== 'undefined') {
-      newFields.q = query.q;
-    }
-
-    // Graph search
-    if (typeof query.graph !== 'undefined') {
-      newFields.graph = query.graph;
-    }
-
-    // Languages
-    if (newFields.field_languages) {
-      newFields.field_languages = Array.isArray(newFields.field_languages)
-        ? newFields.field_languages
-        : [newFields.field_languages];
-      newFields.field_languages = newFields.field_languages
-        .map((val) => getValue(languages, val))
-        .filter((v) => v);
-    }
-
-    // Default values for filters
-    filters.forEach((filter) => {
-      if (typeof filter.defaultValue !== 'undefined' && filter.defaultValue !== null) {
-        if (typeof filter.defaultValue === 'boolean') {
-          newFields[`field_filter_${filter.id}`] = filter.defaultValue ? 1 : 0;
-        } else {
-          newFields[`field_filter_${filter.id}`] = filter.defaultValue;
-        }
-      }
-    });
-
-    // Props Filters
-    Object.keys(query).forEach((key) => {
-      const filter = filters.find((f) => key === `field_filter_${f.id}`);
-      if (filter) {
-        if (filter.isMulti) {
-          newFields[key] = Array.isArray(query[key]) ? query[key] : [query[key]];
-          newFields[key] = newFields[key]
-            .map((val) => getValue(filter.values, val))
-            .filter((v) => v);
-        } else if (filter.isOption) {
-          newFields[key] = !!parseInt(query.key, 10);
-        } else {
-          newFields[key] = query[key];
-        }
-      }
-    });
-
-    setFields(newFields);
-  }, []);
 
   // Execute search when fields change
   const debouncedFields = useDebounce(fields, 500);

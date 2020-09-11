@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, Fragment } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import Router, { withRouter } from 'next/router';
@@ -144,7 +144,6 @@ const Label = styled.label`
 
 const BrowsePage = ({ initialData, router, t }) => {
   const { req, query, pathname } = router;
-  const [isLoading, setIsLoading] = useState(false);
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(true);
   const currentPage = parseInt(query.page, 10) || 1;
@@ -175,6 +174,7 @@ const BrowsePage = ({ initialData, router, t }) => {
   const isLoadingInitialData = !data && !error;
   const isLoadingMore = isLoadingInitialData || (data && typeof data[size - 1] === 'undefined');
   const isReachingEnd = data && data[data.length - 1]?.results.length < PAGE_SIZE;
+  const isEmpty = data?.[0]?.results.length === 0;
 
   const { filters } = initialData;
   let totalPages = 0;
@@ -196,19 +196,6 @@ const BrowsePage = ({ initialData, router, t }) => {
     });
   }
 
-  useEffect(() => {
-    const onDoneLoading = () => {
-      setIsLoading(false);
-    };
-
-    Router.events.on('routeChangeComplete', onDoneLoading);
-    Router.events.on('routeChangeError', onDoneLoading);
-    return () => {
-      Router.events.off('routeChangeComplete', onDoneLoading);
-      Router.events.off('routeChangeError', onDoneLoading);
-    };
-  }, []);
-
   const onSearch = (fields) => {
     const isMapSearch = isMapVisible; // && mapRef.current?.src?.startsWith(window.location.origin);
     if (isMapSearch) {
@@ -225,9 +212,11 @@ const BrowsePage = ({ initialData, router, t }) => {
       type: query.type,
       ...fields,
     };
-    if (query.page) {
-      newQuery.page = query.page;
-    }
+
+    // Reset page index
+    setSize(1);
+    setInitialPage(1);
+    delete newQuery.page;
 
     Router.push(
       {
@@ -242,16 +231,19 @@ const BrowsePage = ({ initialData, router, t }) => {
   };
 
   const loadPage = (pageNumber) => {
-    setIsLoading(true);
     setSize(1);
     setInitialPage(pageNumber);
-    return Router.push({
-      pathname,
-      query: {
-        ...query,
-        page: pageNumber,
+    return Router.push(
+      {
+        pathname,
+        query: {
+          ...query,
+          page: pageNumber,
+        },
       },
-    });
+      undefined,
+      { shallow: true }
+    );
   };
 
   const onPageChange = (pageItem) => {
@@ -275,9 +267,11 @@ const BrowsePage = ({ initialData, router, t }) => {
       ...query,
       sort: value,
     };
-    delete newQuery.page; // Reset page index
 
-    setIsLoading(true);
+    // Reset page index
+    setSize(0);
+    delete newQuery.page;
+
     Router.push({
       pathname,
       query: newQuery,
@@ -292,18 +286,6 @@ const BrowsePage = ({ initialData, router, t }) => {
     if (isLoadingMore || currentPage + 1 > totalPages) return;
 
     setSize(size + 1);
-
-    Router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          ...query,
-          page: currentPage + 1,
-        },
-      },
-      undefined,
-      { shallow: true }
-    );
   };
 
   const $loadMoreButton = useRef(null);
@@ -429,50 +411,55 @@ const BrowsePage = ({ initialData, router, t }) => {
               </Option>
             )}
           </OptionsBar>
-          {data && data.length > 0 ? (
-            isMapVisible ? (
-              <SpatioTemporalMaps mapRef={mapRef} query={mapInitialQuery} />
-            ) : (
-              <>
-                <Results loading={isLoading ? 1 : 0}>
-                  {data.map((page) => renderResults(page.results))}
-                </Results>
-                <Element marginBottom={24}>
-                  <Button
-                    primary
-                    style={{ width: '100%' }}
-                    ref={$loadMoreButton}
-                    loading={isLoadingMore}
-                    disabled={isReachingEnd}
-                    onClick={() => {
-                      loadMore();
-                    }}
-                  >
-                    {isLoadingMore ? 'Loading...' : 'Load More'}
-                  </Button>
-                </Element>
-                <PaginationContainer>
-                  <ReactPaginate
-                    previousLabel="Previous"
-                    nextLabel="Next"
-                    breakLabel="..."
-                    breakClassName="break"
-                    pageCount={totalPages}
-                    initialPage={initialPage - 1}
-                    forcePage={currentPage - 1}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={5}
-                    onPageChange={onPageChange}
-                    disableInitialCallback
-                    containerClassName="pagination"
-                    subContainerClassName="pages pagination"
-                    activeClassName="active"
-                  />
-                </PaginationContainer>
-              </>
-            )
-          ) : (
+          {isEmpty ? (
             renderEmptyResults()
+          ) : isMapVisible ? (
+            <SpatioTemporalMaps mapRef={mapRef} query={mapInitialQuery} />
+          ) : (
+            <>
+              {data.map((page, i) => {
+                const pageIndex = i;
+                return (
+                  <Fragment key={pageIndex}>
+                    <Results loading={isLoadingInitialData ? 1 : 0}>
+                      {renderResults(page.results)}
+                    </Results>
+                  </Fragment>
+                );
+              })}
+              <Element marginBottom={24}>
+                <Button
+                  primary
+                  style={{ width: '100%' }}
+                  ref={$loadMoreButton}
+                  loading={isLoadingMore}
+                  disabled={isReachingEnd}
+                  onClick={() => {
+                    loadMore();
+                  }}
+                >
+                  {isLoadingMore ? 'Loading...' : 'Load More'}
+                </Button>
+              </Element>
+              <PaginationContainer>
+                <ReactPaginate
+                  previousLabel="Previous"
+                  nextLabel="Next"
+                  breakLabel="..."
+                  breakClassName="break"
+                  pageCount={totalPages}
+                  initialPage={initialPage - 1}
+                  forcePage={currentPage - 1}
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={5}
+                  onPageChange={onPageChange}
+                  disableInitialCallback
+                  containerClassName="pagination"
+                  subContainerClassName="pages pagination"
+                  activeClassName="active"
+                />
+              </PaginationContainer>
+            </>
           )}
           <Debug>
             <Metadata label="HTTP Parameters">
