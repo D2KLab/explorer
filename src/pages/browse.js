@@ -276,13 +276,18 @@ const BrowsePage = ({ initialData, router, t }) => {
     };
 
     // Reset page index
-    setSize(0);
+    setSize(1);
+    setInitialPage(1);
     delete newQuery.page;
 
-    Router.push({
-      pathname,
-      query: newQuery,
-    });
+    return Router.push(
+      {
+        pathname,
+        query: newQuery,
+      },
+      undefined,
+      { shallow: true }
+    );
   };
 
   const toggleMap = () => {
@@ -413,6 +418,7 @@ const BrowsePage = ({ initialData, router, t }) => {
                 name="sort"
                 placeholder={t('search:labels.select')}
                 options={sortOptions}
+                value={sortOptions.find((o) => o.value === query.sort)}
                 onChange={onSortChange}
                 theme={(theme) => ({
                   ...theme,
