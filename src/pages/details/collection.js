@@ -205,4 +205,4 @@ CollectionDetailsPage.getInitialProps = async ({ req, res, query }) => {
   return { result, inList };
 };
 
-export default withTranslation('common')(CollectionDetailsPage);
+export default withTranslation('project')(CollectionDetailsPage);

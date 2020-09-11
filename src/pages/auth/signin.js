@@ -3,11 +3,13 @@ import { getProviders, getCsrfToken } from 'next-auth/client';
 import { Layout, Header, Body, Content, Title, Footer, Element } from '@components';
 import { ProviderButton } from '@components/ProviderButton';
 import PageTitle from '@components/PageTitle';
+import { useTranslation } from '~/i18n';
 
 const SignInPage = ({ providers, csrfToken }) => {
+  const { t } = useTranslation('common');
   return (
     <Layout>
-      <PageTitle title="Sign in" />
+      <PageTitle title={t('profileButton.signIn')} />
       <Header />
       <Body>
         <Element
@@ -17,7 +19,7 @@ const SignInPage = ({ providers, csrfToken }) => {
           flexDirection="column"
           flex={1}
         >
-          <Title>Sign in</Title>
+          <Title>{t('profileButton.signIn')}</Title>
           <Content>
             <Element display="flex" flexDirection="column">
               {providers &&

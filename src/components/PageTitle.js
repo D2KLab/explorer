@@ -10,4 +10,4 @@ const PageTitle = ({ title, t }) => (
   </Head>
 );
 
-export default withTranslation('common')(PageTitle);
+export default withTranslation('project')(PageTitle);

@@ -364,4 +364,4 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
   );
 };
 
-export default withTranslation(['common', 'search'])(withTheme(Sidebar));
+export default withTranslation(['project', 'search'])(withTheme(Sidebar));

@@ -1,12 +1,83 @@
 {
-  "search": "Rechercher",
-  "footer": {
-    "text": "The data contained in Exploratory Search comes from DBpedia.\nThe Search Explorer has been developed at EURECOM."
+  "profileButton": {
+    "label": "Profile",
+    "signIn": "Connexion",
+    "signOut": "Déconnexion",
+    "signedAs": "Connecté en tant que <0>{{name}}</0>",
+    "yourProfile": "Votre profile"
   },
-  "metadata": {},
-  "routes": {},
-  "filters": {},
-  "labels": {
-    "edit_query": "Modifier la requête"
+  "burger": {
+    "label": "Menu"
+  },
+  "listDeletion": {
+    "title": "Supprimer la liste",
+    "deleteButton": "Supprimer la liste",
+    "confirmText": "Êtes-vous certains de vouloir supprimer la liste \"<0>{{name}}</0>\" ? Cette action ne peut pas être annulée !"
+  },
+  "listSettings": {
+    "title": "Paramètres",
+    "labels": {
+      "name": "Nom",
+      "public": "Publique ?"
+    }
+  },
+  "listShare": {
+    "title": "Partager la liste"
+  },
+  "providerButton": {
+    "label": "Connexion avec {{provider}}"
+  },
+  "saveButton": {
+    "title": "Enregistrer la liste",
+    "labels": {
+      "listName": "Nom de la liste"
+    },
+    "createButton": "Créer une nouvelle liste",
+    "loading": "Chargement..."
+  },
+  "buttons": {
+    "save": "Enregistrer",
+    "close": "Fermer",
+    "cancel": "Annuler",
+    "search": "Rechercher"
+  },
+  "list": {
+    "items": "Éléments dans la liste",
+    "empty": "Cette liste est vide !",
+    "notFound": "Liste introuvable",
+    "operations": "Opérations",
+    "created": "Créée le :",
+    "updated": "Mise à jour :",
+    "privacy": {
+      "text": "Cette liste est <0>{{status}}</strong>.",
+      "status": {
+        "public": "publique",
+        "private": "privée"
+      }
+    },
+    "shareLink": "Lien publique : <0>{{link}}</0>"
+  },
+  "profile": {
+    "title": "Profile",
+    "lists": {
+      "title": "Mes listes",
+      "count": "{{count}} éléments",
+      "lastEdit": "dernière modification le",
+      "open": "Ouvrir"
+    },
+    "deleteAccount": {
+      "title": "Supprimer le compte",
+      "text": "Êtes-vous certains de vouloir <0>supprimer définitivement</0> votre compte ? <1>Cette action ne peut pas être annulée !</1>",
+      "consequences": "Le fait de supprimer votre supprimera également :",
+      "lists": "Toutes les listes que vous avez créé.",
+      "sessions": "Toutes les sessions et connexions associées à ce compte",
+      "cancel": "Annuler la suppression",
+      "confirm": "Oui, supprimer mon compte"
+    },
+    "connectedAccounts": {
+      "title": "Comptes associés",
+      "unlink": "Dissocier ce compte",
+      "new": "Associer un autre compte"
+    }
   }
 }

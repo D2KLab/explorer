@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import { breakpoints } from '@styles';
+import { useTranslation } from '~/i18n';
 
 /**
  * Burger menu.
@@ -53,12 +54,13 @@ export const StyledBurger = styled.button`
 `;
 
 const Burger = ({ className, open, setOpen, ...props }) => {
+  const { t } = useTranslation('common');
   const isExpanded = !!open;
 
   return (
     <StyledBurger
       className={className}
-      aria-label="Toggle menu"
+      aria-label={t('burger.label')}
       aria-expanded={isExpanded}
       open={open}
       onClick={() => setOpen(!open)}

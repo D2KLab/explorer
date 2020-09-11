@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import Button from '@components/Button';
+import { useTranslation } from '~/i18n';
 
 export const BaseButton = styled(Button)`
   color: #fff;
@@ -32,9 +33,10 @@ export const providersButtons = {
 };
 
 export const ProviderButton = ({ provider, ...props }) => {
+  const { t } = useTranslation('common');
   const Container = providersButtons[provider.name] || Button;
 
-  return <Container {...props}>Sign in with {provider.name}</Container>;
+  return <Container {...props}>{t('providerButton.label', { provider: provider.name })}</Container>;
 };
 
 export default ProviderButton;

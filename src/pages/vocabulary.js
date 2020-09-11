@@ -277,4 +277,4 @@ export async function getServerSideProps({ query }) {
   return { props: { results } };
 }
 
-export default withTranslation('common')(withRouter(VocabularyPage));
+export default withTranslation('project')(withRouter(VocabularyPage));

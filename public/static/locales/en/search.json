@@ -1,14 +1,18 @@
 {
   "buttons": {
     "clear": "CLEAR",
-    "filter": "FILTER"
+    "filter": "FILTER",
+    "loadMore": "Load more"
   },
   "labels": {
     "search_results": "Search results",
     "sort_by": "Sort by",
     "select": "Select...",
     "browse": "Browse {{type}}",
-    "no_results": "Your search did not match any documents"
+    "no_results": "Your search did not match any documents",
+    "page": "Page {{page}}",
+    "edit_query": "Edit the query",
+    "loading": "Loading..."
   },
   "fields": {
     "graph": "Graph",

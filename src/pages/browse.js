@@ -452,7 +452,9 @@ const BrowsePage = ({ initialData, router, t }) => {
                   <Fragment key={pageIndex}>
                     {page.results.length > 0 && (
                       <ResultPage>
-                        {initialPage + pageIndex > 1 && <>Page {initialPage + pageIndex}</>}
+                        {initialPage + pageIndex > 1 && (
+                          <>{t('search:labels.page', { page: initialPage + pageIndex })}</>
+                        )}
                       </ResultPage>
                     )}
                     <ScrollDetector
@@ -476,7 +478,7 @@ const BrowsePage = ({ initialData, router, t }) => {
                     loadMore();
                   }}
                 >
-                  {isLoadingMore ? 'Loading...' : 'Load More'}
+                  {isLoadingMore ? t('search:labels.loading') : t('search:buttons.loadMore')}
                 </Button>
               </Element>
               <PaginationContainer>
@@ -517,7 +519,9 @@ const BrowsePage = ({ initialData, router, t }) => {
               </pre>
             </Metadata>
             <Metadata label="SPARQL Query">
-              <SPARQLQueryLink query={debugSparqlQuery}>{t('search:edit_query')}</SPARQLQueryLink>
+              <SPARQLQueryLink query={debugSparqlQuery}>
+                {t('search:labels.edit_query')}
+              </SPARQLQueryLink>
               <pre>{debugSparqlQuery}</pre>
             </Metadata>
           </Debug>
@@ -543,4 +547,4 @@ export async function getServerSideProps({ query }) {
   };
 }
 
-export default withTranslation(['common', 'search'])(withRouter(BrowsePage));
+export default withTranslation(['project', 'search'])(withRouter(BrowsePage));

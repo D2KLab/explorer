@@ -8,6 +8,7 @@ import Switch from 'react-switch';
 import { Element } from '@components';
 import Input from '@components/Input';
 import Button from '@components/Button';
+import { useTranslation } from '~/i18n';
 
 const StyledDialogBackdrop = styled(DialogBackdrop)`
   width: 100%;
@@ -49,6 +50,7 @@ const StyledSettingsIcon = styled(SettingsIcon)`
 `;
 
 export default withTheme(({ list, theme }) => {
+  const { t } = useTranslation('common');
   const settingsDialog = useDialogState();
   const [isUpdating, setIsUpdating] = useState(false);
   const [listName, setListName] = useState(list.name);
@@ -78,13 +80,13 @@ export default withTheme(({ list, theme }) => {
         <StyledSettingsIcon />
       </StyledDialogDisclosure>
       <StyledDialogBackdrop {...settingsDialog}>
-        <StyledDialog {...settingsDialog} modal aria-label="Settings">
+        <StyledDialog {...settingsDialog} modal aria-label={t('listSettings.title')}>
           <Element marginBottom={24}>
-            <h2>Settings</h2>
+            <h2>{t('listSettings.title')}</h2>
           </Element>
           <Element display="flex" alignItems="center" marginBottom={24}>
             <label>
-              <Element paddingRight={12}>Name</Element>
+              <Element paddingRight={12}>{t('listSettings.labels.name')}</Element>
               <Input
                 name="list_name"
                 type="text"
@@ -96,7 +98,7 @@ export default withTheme(({ list, theme }) => {
           </Element>
           <Element display="flex" alignItems="center" marginBottom={24}>
             <label>
-              <Element paddingRight={12}>Public?</Element>
+              <Element paddingRight={12}>{t('listSettings.labels.public')}</Element>
               <Switch
                 onChange={(checked) => setListPublic(checked)}
                 checked={listPublic}
@@ -121,7 +123,7 @@ export default withTheme(({ list, theme }) => {
                 settingsDialog.hide();
               }}
             >
-              Cancel
+              {t('buttons.cancel')}
             </Button>
             <Button
               type="button"
@@ -132,7 +134,7 @@ export default withTheme(({ list, theme }) => {
                 settingsDialog.hide();
               }}
             >
-              Save
+              {t('buttons.save')}
             </Button>
           </Element>
         </StyledDialog>

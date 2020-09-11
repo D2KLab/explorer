@@ -477,4 +477,4 @@ GalleryDetailsPage.getInitialProps = async ({ req, res, query }) => {
   return { result, inList };
 };
 
-export default withTranslation('common')(GalleryDetailsPage);
+export default withTranslation('project')(GalleryDetailsPage);

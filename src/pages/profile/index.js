@@ -16,6 +16,7 @@ import PageTitle from '@components/PageTitle';
 import { Header, Footer, Layout, Body, Content, Element, Button } from '@components';
 import { breakpoints } from '@styles';
 import { absoluteUrl } from '@helpers/utils';
+import { useTranslation, Trans } from '~/i18n';
 
 const StyledDialogDisclosure = styled(DialogDisclosure)`
   appearance: none;
@@ -149,6 +150,7 @@ const ProfilePage = ({
   baseUrl,
   facebookAppId,
 }) => {
+  const { t } = useTranslation('common');
   const deleteProfileDialog = useDialogState();
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [isUnlinkingAccount, setIsUnlinkingAccount] = useState(false);
@@ -172,7 +174,7 @@ const ProfilePage = ({
   const renderOperations = () => {
     return (
       <Element marginY={24} display="flex" flexDirection="column">
-        <h3 style={{ color: '#dc3535', fontWeight: 'bold' }}>Delete account</h3>
+        <h3 style={{ color: '#dc3535', fontWeight: 'bold' }}>{t('profile.deleteAccount.title')}</h3>
         <DialogDisclosure
           {...deleteProfileDialog}
           as={DeleteButton}
@@ -180,19 +182,25 @@ const ProfilePage = ({
           text="#dc3545"
           loading={isDeletingAccount}
         >
-          Delete account
+          {t('profile.deleteAccount.title')}
         </DialogDisclosure>
         <StyledDialogBackdrop {...deleteProfileDialog}>
-          <StyledDialog {...deleteProfileDialog} modal aria-label="Delete account">
-            <h2>Delete account</h2>
+          <StyledDialog
+            {...deleteProfileDialog}
+            modal
+            aria-label={t('profile.deleteAccount.title')}
+          >
+            <h2>{t('profile.deleteAccount.title')}</h2>
             <p>
-              Are you sure you wish to <strong>permanently delete</strong> your account?{' '}
-              <strong>This action cannot be undone!</strong>
+              <Trans i18nKey="common:profile.deleteAccount.text">
+                <strong />
+                <strong />
+              </Trans>
             </p>
-            <p>Deleting this account will also remove:</p>
+            <p>{t('profile.deleteAccount.consequences')}</p>
             <ul style={{ listStyleType: 'disc', paddingLeft: 20, margin: '1em 0' }}>
-              <li>All user created lists</li>
-              <li>All connected social accounts and sessions</li>
+              <li>{t('profile.deleteAccount.lists')}</li>
+              <li>{t('profile.deleteAccount.sessions')}</li>
             </ul>
             <Element display="flex" alignItems="center" justifyContent="space-between">
               <Button
@@ -202,7 +210,7 @@ const ProfilePage = ({
                   deleteProfileDialog.hide();
                 }}
               >
-                Cancel account deletion
+                {t('profile.deleteAccount.cancel')}
               </Button>
               <Button
                 type="button"
@@ -211,7 +219,7 @@ const ProfilePage = ({
                 loading={isDeletingAccount}
                 onClick={deleteProfile}
               >
-                Yes, delete my account
+                {t('profile.deleteAccount.confirm')}
               </Button>
             </Element>
           </StyledDialog>
@@ -224,7 +232,7 @@ const ProfilePage = ({
     return (
       <>
         <Element marginBottom={24}>
-          <h3>Connected accounts</h3>
+          <h3>{t('profile.connectedAccounts.title')}</h3>
           <ul>
             {accounts.map((account) => (
               <Element as="li" key={account._id} marginBottom={12}>
@@ -236,14 +244,14 @@ const ProfilePage = ({
                   }}
                   loading={isUnlinkingAccount}
                 >
-                  Unlink this connection
+                  {t('profile.connectedAccounts.unlink')}
                 </Button>
               </Element>
             ))}
           </ul>
         </Element>
         <Element marginBottom={24}>
-          <h3>Connect another account</h3>
+          <h3>{t('profile.connectedAccounts.new')}</h3>
           <Element display="flex" flexDirection="column">
             {providers &&
               Object.values(providers).map((provider) => {
@@ -271,7 +279,7 @@ const ProfilePage = ({
 
   return (
     <Layout>
-      <PageTitle title="Profile" />
+      <PageTitle title={t('profile.title')} />
       <Header />
       <Body hasSidebar>
         <Content>
@@ -290,7 +298,9 @@ const ProfilePage = ({
               {renderOperations()}
             </ProfileSidebar>
             <ProfileContent>
-              <h2 style={{ marginBottom: 24, textTransform: 'uppercase' }}>My lists</h2>
+              <h2 style={{ marginBottom: 24, textTransform: 'uppercase' }}>
+                {t('profile.lists.title')}
+              </h2>
               <ul>
                 {lists.map((list) => {
                   const shareListDialog = useDialogState();
@@ -304,7 +314,8 @@ const ProfilePage = ({
                           <ListSettings list={list} />
                         </ListItemTitle>
                         <ListItemSubtitle>
-                          {list.items.length} objects | last edit on{' '}
+                          {t('profile.lists.count', { count: list.items.length })} |{' '}
+                          {t('profile.lists.lastEdit')}{' '}
                           <Moment format="DD/MM/YYYY">{list.updated_at}</Moment>
                         </ListItemSubtitle>
                       </Element>
@@ -330,7 +341,7 @@ const ProfilePage = ({
                         </ListItemButton>
                         <ListItemButton>
                           <Button primary href={`/lists/${list._id}`}>
-                            Open
+                            {t('profile.lists.open')}
                           </Button>
                         </ListItemButton>
                       </Element>

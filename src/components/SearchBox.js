@@ -4,6 +4,7 @@ import { Button as ReakitButton } from 'reakit';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
 
 import SearchInput from '@components/SearchInput';
+import { useTranslation } from '~/i18n';
 
 const Form = styled.div`
   display: flex;
@@ -42,9 +43,10 @@ const handleSubmit = (event) => {
 };
 
 const SearchBox = ({ className, placeholder = 'Search', onSubmit = handleSubmit }) => {
+  const { t } = useTranslation('common');
   return (
     <Form className={className} action="/browse" method="POST" onSubmit={onSubmit}>
-      <SearchButton aria-label="Search" type="submit">
+      <SearchButton aria-label={t('buttons.search')} type="submit">
         <SearchIcon />
       </SearchButton>
       <StyledSearchInput type="search" name="q" placeholder={placeholder} />

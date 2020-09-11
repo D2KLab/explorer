@@ -75,4 +75,4 @@ const Footer = ({ className, t }) => {
   );
 };
 
-export default withTranslation('common')(Footer);
+export default withTranslation('project')(Footer);

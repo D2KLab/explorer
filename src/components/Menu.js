@@ -79,4 +79,4 @@ Menu.propTypes = {
   open: PropTypes.bool.isRequired,
 };
 
-export default withTranslation('common')(Menu);
+export default withTranslation('project')(Menu);

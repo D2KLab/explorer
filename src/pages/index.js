@@ -347,4 +347,4 @@ const HomePage = ({ t }) => {
   );
 };
 
-export default withTranslation(['common', 'home'])(HomePage);
+export default withTranslation(['project', 'home'])(HomePage);

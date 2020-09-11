@@ -23,6 +23,7 @@ import {
 
 import { Element } from '@components';
 import Button from '@components/Button';
+import { useTranslation } from '~/i18n';
 
 const StyledDialogBackdrop = styled(DialogBackdrop)`
   width: 100%;
@@ -47,6 +48,7 @@ const StyledDialog = styled(Dialog)`
 `;
 
 export default withTheme(({ list, dialogState, children, shareUrl, facebookAppId }) => {
+  const { t } = useTranslation('common');
   const shareDialog = dialogState || useDialogState();
   const title = list.name;
 
@@ -54,13 +56,13 @@ export default withTheme(({ list, dialogState, children, shareUrl, facebookAppId
     <>
       {(children && children) || (
         <DialogDisclosure {...shareDialog} as={Button} primary>
-          Share list
+          {t('listShare.title')}
         </DialogDisclosure>
       )}
       <StyledDialogBackdrop {...shareDialog}>
-        <StyledDialog {...shareDialog} modal aria-label="Share">
+        <StyledDialog {...shareDialog} modal aria-label={t('listShare.title')}>
           <Element marginBottom={24}>
-            <h2>Share</h2>
+            <h2>{t('listShare.title')}</h2>
           </Element>
           <Element display="flex" alignItems="center" marginBottom={24}>
             <FacebookShareButton url={shareUrl} quote={title}>
@@ -99,7 +101,7 @@ export default withTheme(({ list, dialogState, children, shareUrl, facebookAppId
                 shareDialog.hide();
               }}
             >
-              Close
+              {t('buttons.close')}
             </Button>
           </Element>
         </StyledDialog>

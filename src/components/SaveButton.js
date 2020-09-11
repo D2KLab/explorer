@@ -1,12 +1,13 @@
 import { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
-import { useAllCallbacks } from 'reakit-utils';
 import { Heart as HeartIcon } from '@styled-icons/boxicons-regular/Heart';
 import { Heart as HeartSolidIcon } from '@styled-icons/boxicons-solid/Heart';
+
 import Button from '@components/Button';
 import Input from '@components/Input';
 import Element from '@components/Element';
+import { useTranslation } from '~/i18n';
 
 const StyledDialog = styled(Dialog)`
   z-index: 2000;
@@ -97,6 +98,7 @@ const StyledItem = styled.li`
 `;
 
 const SaveButton = ({ item, type, saved, onChange }) => {
+  const { t } = useTranslation('common');
   const [loading, setLoading] = useState(false);
   const [lists, setLists] = useState([]);
   const [newListName, setNewListName] = useState('');
@@ -179,11 +181,11 @@ const SaveButton = ({ item, type, saved, onChange }) => {
         {...dialog}
       >
         {saved ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
-        <StyledLabel>Save</StyledLabel>
+        <StyledLabel>{t('buttons.save')}</StyledLabel>
       </StyledDialogDisclosure>
       <StyledDialogBackdrop {...dialog}>
-        <StyledDialog {...dialog} modal aria-label="Save to a list">
-          <h2>Save to a list</h2>
+        <StyledDialog {...dialog} modal aria-label={t('saveButton.title')}>
+          <h2>{t('saveButton.title')}</h2>
           <Element marginY={12}>
             {listFormVisible ? (
               <form
@@ -194,7 +196,7 @@ const SaveButton = ({ item, type, saved, onChange }) => {
               >
                 <Input
                   type="text"
-                  placeholder="List name"
+                  placeholder={t('saveButton.labels.listName')}
                   value={newListName}
                   onChange={(e) => setNewListName(e.target.value)}
                   autoFocus
@@ -213,21 +215,21 @@ const SaveButton = ({ item, type, saved, onChange }) => {
                       setListFormVisible(false);
                     }}
                   >
-                    Cancel
+                    {t('buttons.cancel')}
                   </Button>
                   <Button type="button" primary onClick={createListWithItem}>
-                    Save
+                    {t('buttons.save')}
                   </Button>
                 </Element>
               </form>
             ) : (
               <Button type="button" primary onClick={() => setListFormVisible(true)}>
-                Create a new list
+                {t('saveButton.createButton')}
               </Button>
             )}
           </Element>
           {loading ? (
-            <p>Loading...</p>
+            <p>{t('saveButton.loading')}</p>
           ) : (
             <StyledList>
               {lists.map((list) => {

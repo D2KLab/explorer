@@ -8,7 +8,9 @@
     "sort_by": "Trier par",
     "select": "Sélectionner...",
     "browse": "Parcourir par {{type}}",
-    "no_results": "Aucun résultat pour cette recherche"
+    "no_results": "Aucun résultat pour cette recherche",
+    "page": "Page {{page}}",
+    "edit_query": "Modifier la requête"
   },
   "fields": {
     "graph": "Graphe",

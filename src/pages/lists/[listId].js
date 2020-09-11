@@ -20,6 +20,7 @@ import ListSettings from '@components/ListSettings';
 import ListDeletion from '@components/ListDeletion';
 import PageTitle from '@components/PageTitle';
 import config from '~/config';
+import { useTranslation, Trans } from '~/i18n';
 
 const StyledMedia = styled(Media)`
   margin-left: var(--card-margin);
@@ -34,10 +35,12 @@ const Results = styled.div`
 `;
 
 const ListsPage = ({ isOwner, list, shareLink, error }) => {
+  const { t } = useTranslation('common');
+
   const renderListItems = () => {
     return (
       <Element marginY={24}>
-        <h2>Items in the list</h2>
+        <h2>{t('list.items')}</h2>
         <Element marginY={12}>
           {list.items.length > 0 ? (
             <Results>
@@ -81,7 +84,7 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
               })}
             </Results>
           ) : (
-            <p>This list is empty!</p>
+            <p>{t('list.empty')}</p>
           )}
         </Element>
       </Element>
@@ -95,7 +98,7 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
 
     return (
       <Element marginY={24}>
-        <h2>Operations</h2>
+        <h2>{t('list.operations')}</h2>
         <Element marginY={12}>
           <ListDeletion list={list} />
         </Element>
@@ -119,20 +122,30 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
               </Navbar>
               <Element>
                 <p>
-                  Created on: <Moment format="DD/MM/YYYY">{list.created_at}</Moment>
+                  {t('list.created')} <Moment format="DD/MM/YYYY">{list.created_at}</Moment>
                 </p>
                 <p>
-                  Last update: <Moment format="DD/MM/YYYY">{list.updated_at}</Moment>
+                  {t('list.updated')} <Moment format="DD/MM/YYYY">{list.updated_at}</Moment>
                 </p>
               </Element>
               {isOwner && (
                 <>
                   <p>
-                    This list is <strong>{list.is_public ? 'public' : 'private'}</strong>.
+                    <Trans
+                      i18nKey="common:list.privacy.text"
+                      components={[<strong />]}
+                      values={{
+                        status: list.is_public
+                          ? t('list.privacy.status.public')
+                          : t('list.privacy.status.private'),
+                      }}
+                    />
                   </p>
                   {list.is_public && (
                     <p>
-                      Public link: <a href={shareLink}>{shareLink}</a>
+                      <Trans i18nKey="common:list.shareLink" link={shareLink}>
+                        Public link: <a href={shareLink}>{shareLink}</a>
+                      </Trans>
                     </p>
                   )}
                 </>
@@ -144,7 +157,7 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
         )) || (
           <>
             <PageTitle title={error.message} />
-            <Title>List not found</Title>
+            <Title>{t('list.notFound')}</Title>
             <Content>
               <p>{error.message}</p>
             </Content>

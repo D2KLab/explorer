@@ -1,11 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
-import styled from 'styled-components';
 
 import GlobalStyle from '@styles/global';
 import Burger from '@components/Burger';
 import Menu from '@components/Menu';
-import Sidebar from '@components/Sidebar';
-import { Container as ContentContainer } from '@components/Content';
 
 /**
  * Main layout container.

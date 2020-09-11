@@ -50,7 +50,7 @@ module.exports = {
     placeholderImage: '/images/placeholder.png',
     languages: {
       en: 'English',
-      fr: 'French',
+      fr: 'Français',
     },
     graphFieldLabel: {
       en: 'Graph',

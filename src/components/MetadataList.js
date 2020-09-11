@@ -61,7 +61,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
 }
 
 const MetadataList = ({ metadata, query, route }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('project');
 
   return (
     <>

@@ -5,6 +5,7 @@ import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit
 
 import { Element } from '@components';
 import Button from '@components/Button';
+import { useTranslation, Trans } from '~/i18n';
 
 const StyledDialogBackdrop = styled(DialogBackdrop)`
   width: 100%;
@@ -29,6 +30,7 @@ const StyledDialog = styled(Dialog)`
 `;
 
 export default withTheme(({ list, dialogState, children }) => {
+  const { t } = useTranslation('common');
   const [isDeleting, setIsDeleting] = useState(false);
   const deleteListDialog = dialogState || useDialogState();
 
@@ -44,15 +46,18 @@ export default withTheme(({ list, dialogState, children }) => {
     <>
       {(children && children) || (
         <DialogDisclosure {...deleteListDialog} as={Button} primary loading={isDeleting}>
-          Delete list
+          {t('listDeletion.title')}
         </DialogDisclosure>
       )}
       <StyledDialogBackdrop {...deleteListDialog}>
-        <StyledDialog {...deleteListDialog} modal aria-label="Delete list">
-          <h2>Delete list</h2>
+        <StyledDialog {...deleteListDialog} modal aria-label={t('listDeletion.title')}>
+          <h2>{t('listDeletion.title')}</h2>
           <p>
-            Are you sure you want to delete the list <strong>"{list.name}"</strong>? This action
-            cannot be undone!
+            <Trans
+              i18nKey="common:listDeletion.confirmText"
+              components={[<strong />]}
+              values={{ name: list.name }}
+            />
           </p>
           <Element display="flex" alignItems="center" justifyContent="space-between">
             <Button
@@ -62,10 +67,10 @@ export default withTheme(({ list, dialogState, children }) => {
                 deleteListDialog.hide();
               }}
             >
-              Cancel
+              {t('buttons.cancel')}
             </Button>
             <Button type="button" primary loading={isDeleting} onClick={deleteList}>
-              Delete list
+              {t('listDeletion.deleteButton')}
             </Button>
           </Element>
         </StyledDialog>

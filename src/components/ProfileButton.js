@@ -8,6 +8,7 @@ import NextAuth from 'next-auth/client';
 import Router from 'next/router';
 
 import { Element } from '@components';
+import { useTranslation, Trans } from '~/i18n';
 
 /**
  * Profile button.
@@ -126,55 +127,60 @@ const StyledSpinner = styled.svg`
   }
 `;
 
-const renderSessionMenuItems = (session, menu) => {
-  if (!session || !session.user) {
-    return null;
-  }
-
-  return (
-    <>
-      <StyledMenuItem
-        {...menu}
-        onClick={() => {
-          Router.push({
-            pathname: '/profile',
-          });
-          menu.hide();
-        }}
-      >
-        Signed in as <strong>{session.user.name}</strong>
-      </StyledMenuItem>
-      <StyledDivider />
-      <StyledMenuItem
-        {...menu}
-        onClick={() => {
-          Router.push({
-            pathname: '/profile',
-          });
-          menu.hide();
-        }}
-      >
-        Your profile
-      </StyledMenuItem>
-      <StyledDivider />
-      <StyledMenuItem
-        {...menu}
-        href="/api/auth/signout"
-        onClick={(e) => {
-          e.preventDefault();
-          NextAuth.signout();
-          menu.hide();
-        }}
-      >
-        Sign out
-      </StyledMenuItem>
-    </>
-  );
-};
-
 const ProfileButton = ({ className }) => {
+  const { t } = useTranslation('common');
   const menu = useMenuState();
   const [session, loading] = NextAuth.useSession();
+
+  const renderSessionMenuItems = () => {
+    if (!session || !session.user) {
+      return null;
+    }
+
+    return (
+      <>
+        <StyledMenuItem
+          {...menu}
+          onClick={() => {
+            Router.push({
+              pathname: '/profile',
+            });
+            menu.hide();
+          }}
+        >
+          <Trans
+            i18nKey="common:profileButton.signedAs"
+            components={[<strong />]}
+            values={{ name: session.user.name }}
+          />
+        </StyledMenuItem>
+        <StyledDivider />
+        <StyledMenuItem
+          {...menu}
+          onClick={() => {
+            Router.push({
+              pathname: '/profile',
+            });
+            menu.hide();
+          }}
+        >
+          {t('profileButton.yourProfile')}
+        </StyledMenuItem>
+        <StyledDivider />
+        <StyledMenuItem
+          {...menu}
+          href="/api/auth/signout"
+          onClick={(e) => {
+            e.preventDefault();
+            NextAuth.signout();
+            menu.hide();
+          }}
+        >
+          {t('profileButton.signOut')}
+        </StyledMenuItem>
+      </>
+    );
+  };
 
   const renderMenu = () => (
     <>
@@ -191,10 +197,10 @@ const ProfileButton = ({ className }) => {
         ) : (
           <StyledUserIcon />
         )}
-        Profile
+        {t('profileButton.label')}
         <StyledDownArrow />
       </StyledMenuButton>
-      <StyledMenu {...menu} aria-label="Profile">
+      <StyledMenu {...menu} aria-label={t('profileButton.label')}>
         {session ? (
           renderSessionMenuItems(session, menu)
         ) : (
@@ -207,7 +213,7 @@ const ProfileButton = ({ className }) => {
               menu.hide();
             }}
           >
-            Sign in
+            {t('profileButton.signIn')}
           </StyledMenuItem>
         )}
       </StyledMenu>

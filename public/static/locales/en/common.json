@@ -1,12 +1,83 @@
 {
-  "search": "Search",
-  "footer": {
-    "text": "The data contained in Exploratory Search comes from DBpedia.\nThe Search Explorer has been developed at EURECOM."
+  "profileButton": {
+    "label": "Profile",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "signedAs": "Signed in as <0>{{name}}</0>",
+    "yourProfile": "Your profile"
   },
-  "metadata": {},
-  "routes": {},
-  "filters": {},
-  "labels": {
-    "edit_query": "Edit the query"
+  "burger": {
+    "label": "Toggle menu"
+  },
+  "listDeletion": {
+    "title": "Delete list",
+    "deleteButton": "Delete list",
+    "confirmText": "Are you sure you want to delete the list \"<0>{{name}}</0>\"? This action cannot be undone!"
+  },
+  "listSettings": {
+    "title": "Settings",
+    "labels": {
+      "name": "Name",
+      "public": "Public?"
+    }
+  },
+  "listShare": {
+    "title": "Share list"
+  },
+  "providerButton": {
+    "label": "Sign in with {{provider}}"
+  },
+  "saveButton": {
+    "title": "Save to a list",
+    "labels": {
+      "listName": "List name"
+    },
+    "createButton": "Create a new list",
+    "loading": "Loading..."
+  },
+  "buttons": {
+    "save": "Save",
+    "close": "Close",
+    "cancel": "Cancel",
+    "search": "Search"
+  },
+  "list": {
+    "items": "Items in the list",
+    "empty": "This list is empty!",
+    "notFound": "List not found",
+    "operations": "Operations",
+    "created": "Created on:",
+    "updated": "Last update:",
+    "privacy": {
+      "text": "This list is <0>{{status}}</strong>.",
+      "status": {
+        "public": "public",
+        "private": "private"
+      }
+    },
+    "shareLink": "Public link: <0>{{link}}</0>"
+  },
+  "profile": {
+    "title": "Profile",
+    "lists": {
+      "title": "My lists",
+      "count": "{{count}} items",
+      "lastEdit": "last edit on",
+      "open": "Open"
+    },
+    "deleteAccount": {
+      "title": "Delete account",
+      "text": "Are you sure you wish to <0>permanently delete</0> your account? <1>This action cannot be undone!</1>",
+      "consequences": "Deleting this account will also remove:",
+      "lists": "All user created lists",
+      "sessions": "All connected social accounts and sessions",
+      "cancel": "Cancel account deletion",
+      "confirm": "Yes, delete my account"
+    },
+    "connectedAccounts": {
+      "title": "Connected accounts",
+      "unlink": "Unlink this connection",
+      "new": "Connect another account"
+    }
   }
 }

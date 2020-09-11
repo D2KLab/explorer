@@ -408,4 +408,4 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
   return { result, inList, mediaUrl, videoSegments };
 };
 
-export default withTranslation('common')(VideoDetailsPage);
+export default withTranslation('project')(VideoDetailsPage);

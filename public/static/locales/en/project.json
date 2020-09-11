@@ -1,0 +1,9 @@
+{
+  "search": "Search",
+  "footer": {
+    "text": "The data contained in Exploratory Search comes from DBpedia.\nThe Search Explorer has been developed at EURECOM."
+  },
+  "metadata": {},
+  "routes": {},
+  "filters": {}
+}

@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 import { breakpoints } from '@styles';
 import { SearchBox } from '@components';
-import LanguageSwitch, { Container as LanguageSwitchContainer } from '@components/LanguageSwitch';
-import ProfileButton, { Container as ProfileButtonContainer } from '@components/ProfileButton';
+import LanguageSwitch from '@components/LanguageSwitch';
+import ProfileButton from '@components/ProfileButton';
 
 import { withTranslation } from '~/i18n';
 import config from '~/config';
@@ -95,7 +95,11 @@ const Header = ({ className, t }) => {
     <Container className={className}>
       <Link href="/" passHref>
         <a>
-          <Logo src={config.metadata.logo} title={config.metadata.title} alt={config.metadata.title} />
+          <Logo
+            src={config.metadata.logo}
+            title={config.metadata.title}
+            alt={config.metadata.title}
+          />
         </a>
       </Link>
       <NavContainer>
@@ -125,4 +129,4 @@ const Header = ({ className, t }) => {
   );
 };
 
-export default withTranslation('common')(Header);
+export default withTranslation('project')(Header);
