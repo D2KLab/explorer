@@ -199,7 +199,7 @@ export const search = async (query) => {
 
     for (let i = 0; i < results.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
-      await results.map(fillWithVocabularies);
+      await fillWithVocabularies(results[i]);
     }
 
     // Compute the total number of pages (used for pagination)

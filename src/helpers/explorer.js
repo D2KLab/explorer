@@ -38,7 +38,7 @@ export async function fillWithVocabularies(item) {
   for (let i = 0; i < keys.length; i += 1) {
     const key = keys[i];
     if (key in config.vocabularies) {
-      if (!vocabulariesCache[key]) {
+      if (typeof vocabulariesCache[key] === 'undefined') {
         // eslint-disable-next-line no-await-in-loop
         vocabulariesCache[key] = await getVocabularyItems(key);
       }
