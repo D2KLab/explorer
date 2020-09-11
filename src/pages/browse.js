@@ -31,6 +31,7 @@ import { breakpoints, sizes } from '@styles';
 import useDebounce from '@helpers/useDebounce';
 import useOnScreen from '@helpers/useOnScreen';
 import { search, getFilters } from '@pages/api/search';
+import ScrollDetector from '@components/ScrollDetector';
 
 import { withTranslation } from '~/i18n';
 import config from '~/config';
@@ -355,6 +356,22 @@ const BrowsePage = ({ initialData, router, t }) => {
     });
   };
 
+  const onScrollToPage = (pageIndex) => {
+    if (initialPage + pageIndex !== query.page) {
+      Router.push(
+        {
+          pathname,
+          query: {
+            ...query,
+            page: initialPage + pageIndex,
+          },
+        },
+        undefined,
+        { shallow: true }
+      );
+    }
+  };
+
   const renderEmptyResults = () => {
     return <p>{t('search:labels.no_results')}</p>;
   };
@@ -421,6 +438,10 @@ const BrowsePage = ({ initialData, router, t }) => {
                 const pageIndex = i;
                 return (
                   <Fragment key={pageIndex}>
+                    <ScrollDetector
+                      onAppears={() => onScrollToPage(pageIndex)}
+                      rootMargin="0px 0px -50% 0px"
+                    />
                     <Results loading={isLoadingInitialData ? 1 : 0}>
                       {renderResults(page.results)}
                     </Results>
