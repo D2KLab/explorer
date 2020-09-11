@@ -143,6 +143,12 @@ const Label = styled.label`
   margin-right: 12px;
 `;
 
+const ResultPage = styled.div`
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 12px;
+`;
+
 const BrowsePage = ({ initialData, router, t }) => {
   const { req, query, pathname } = router;
   const [isMapVisible, setIsMapVisible] = useState(false);
@@ -438,6 +444,11 @@ const BrowsePage = ({ initialData, router, t }) => {
                 const pageIndex = i;
                 return (
                   <Fragment key={pageIndex}>
+                    {page.results.length > 0 && (
+                      <ResultPage>
+                        {initialPage + pageIndex > 1 && <>Page {initialPage + pageIndex}</>}
+                      </ResultPage>
+                    )}
                     <ScrollDetector
                       onAppears={() => onScrollToPage(pageIndex)}
                       rootMargin="0px 0px -50% 0px"
