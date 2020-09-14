@@ -483,8 +483,8 @@ const BrowsePage = ({ initialData, router, t }) => {
               </Element>
               <PaginationContainer>
                 <ReactPaginate
-                  previousLabel="Previous"
-                  nextLabel="Next"
+                  previousLabel={t('search.paginatePrevious')}
+                  nextLabel={t('search.buttons.paginateNext')}
                   breakLabel="..."
                   breakClassName="break"
                   pageCount={totalPages}

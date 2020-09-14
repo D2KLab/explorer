@@ -1,7 +1,9 @@
 {
   "buttons": {
     "clear": "EFFACER",
-    "filter": "FILTRER"
+    "filter": "FILTRER",
+    "paginatePrevious": "Précédent",
+    "paginateNext": "Suivant"
   },
   "labels": {
     "search_results": "Résultats de recherche",
