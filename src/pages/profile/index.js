@@ -192,10 +192,10 @@ const ProfilePage = ({
           >
             <h2>{t('profile.deleteAccount.title')}</h2>
             <p>
-              <Trans i18nKey="common:profile.deleteAccount.text">
-                <strong />
-                <strong />
-              </Trans>
+              <Trans
+                i18nKey="common:profile.deleteAccount.text"
+                components={[<strong />, <strong />]}
+              />
             </p>
             <p>{t('profile.deleteAccount.consequences')}</p>
             <ul style={{ listStyleType: 'disc', paddingLeft: 20, margin: '1em 0' }}>

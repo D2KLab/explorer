@@ -1,4 +1,4 @@
-import styled, { withTheme } from 'styled-components';
+import styled from 'styled-components';
 import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
 import {
   EmailShareButton,
@@ -47,7 +47,7 @@ const StyledDialog = styled(Dialog)`
   outline: 0;
 `;
 
-export default withTheme(({ list, dialogState, children, shareUrl, facebookAppId }) => {
+const ListShare = ({ list, dialogState, children, shareUrl, facebookAppId }) => {
   const { t } = useTranslation('common');
   const shareDialog = dialogState || useDialogState();
   const title = list.name;
@@ -108,4 +108,6 @@ export default withTheme(({ list, dialogState, children, shareUrl, facebookAppId
       </StyledDialogBackdrop>
     </>
   );
-});
+};
+
+export default ListShare;

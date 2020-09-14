@@ -11,7 +11,7 @@ import { Layout, Header, Footer, Body } from '@components';
 import { breakpoints } from '@styles';
 import SearchInput from '@components/SearchInput';
 import PageTitle from '@components/PageTitle';
-import { withTranslation } from '~/i18n';
+import { useTranslation } from '~/i18n';
 import config from '~/config';
 
 const Hero = styled.div`
@@ -255,7 +255,9 @@ const Dropzone = styled.div`
   }
 `;
 
-const HomePage = ({ t }) => {
+const HomePage = () => {
+  const { t } = useTranslation(['common', 'home']);
+
   // Search by image
   const dialog = useDialogState();
   const onDrop = useCallback((acceptedFiles) => {
@@ -270,7 +272,7 @@ const HomePage = ({ t }) => {
 
   return (
     <Layout>
-      <PageTitle title="Home" />
+      <PageTitle title={t('common:home.title')} />
       <Header />
       <Body>
         <Hero>
@@ -283,7 +285,7 @@ const HomePage = ({ t }) => {
                 {config.search.allowTextSearch ? (
                   <>
                     <StyledSearchInput name="q" placeholder={t('home:search.placeholder')} />
-                    <SearchButton aria-label="Search by text" type="submit">
+                    <SearchButton aria-label={t('common:buttons.searchByText')} type="submit">
                       <SearchIcon />
                     </SearchButton>
                   </>
@@ -293,7 +295,7 @@ const HomePage = ({ t }) => {
                     <CameraButton
                       as={DialogDisclosure}
                       type="button"
-                      aria-label="Search by image"
+                      aria-label={t('common:buttons.searchByImage')}
                       {...dialog}
                     >
                       <CameraIcon />
@@ -301,16 +303,16 @@ const HomePage = ({ t }) => {
                     <StyledUploadDialog
                       {...dialog}
                       modal={false}
-                      aria-label="Search by image"
+                      aria-label={t('common:buttons.searchByImage')}
                       {...getRootProps()}
                     >
-                      <h4>Search by image</h4>
+                      <h4>{t('common:buttons.searchByImage')}</h4>
                       <Dropzone>
                         <input {...getInputProps()} />
                         {isDragActive ? (
-                          <p>Drop the files here ...</p>
+                          <p>{t('common:home.searchByImage.dropTitle')}</p>
                         ) : (
-                          <p>Drag &apos;n&apos; drop some files here, or click to select files</p>
+                          <p>{t('common:home.searchByImage.dropText')}</p>
                         )}
                         <ul>{files}</ul>
                       </Dropzone>
@@ -321,7 +323,7 @@ const HomePage = ({ t }) => {
             </HeroMiddle>
           </HeroTop>
           <HeroBottom>
-            <Subtitle>{t('home:browse_by')}</Subtitle>
+            <Subtitle>{t('home:browseBy')}</Subtitle>
             <ButtonsContainer>
               {Object.keys(config.routes)
                 .filter((routeName) => config.routes[routeName].showInNavbar !== false)
@@ -347,4 +349,4 @@ const HomePage = ({ t }) => {
   );
 };
 
-export default withTranslation(['project', 'home'])(HomePage);
+export default HomePage;

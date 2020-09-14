@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import LanguageSwitch from '@components/LanguageSwitch';
 import { breakpoints } from '@styles';
 import config from '~/config';
-import { withTranslation } from '~/i18n';
+import { useTranslation } from '~/i18n';
 
 /**
  * Side menu in use with a Burger button
@@ -57,7 +57,8 @@ const StyledLanguageSwitch = styled(LanguageSwitch)`
   color: #fff;
 `;
 
-const Menu = ({ className, open, t, ...props }) => {
+const Menu = ({ className, open, ...props }) => {
+  const { t } = useTranslation('project');
   const isHidden = !!open;
   const tabIndex = isHidden ? 0 : -1;
 
@@ -79,4 +80,4 @@ Menu.propTypes = {
   open: PropTypes.bool.isRequired,
 };
 
-export default withTranslation('project')(Menu);
+export default Menu;

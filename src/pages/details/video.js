@@ -24,7 +24,7 @@ import Media, { ThumbnailContainer } from '@components/Media';
 import { breakpoints } from '@styles';
 import { absoluteUrl } from '@helpers/utils';
 import SparqlClient from '@helpers/sparql';
-import { withTranslation } from '~/i18n';
+import { useTranslation } from '~/i18n';
 import config from '~/config';
 
 const Columns = styled.div`
@@ -196,8 +196,10 @@ function humanTimeToSeconds(humanTime) {
 }
 
 const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments }) => {
+  const { t } = useTranslation('common');
+
   if (!result) {
-    return <DefaultErrorPage statusCode={404} title="Result not found" />;
+    return <DefaultErrorPage statusCode={404} title={t('common:errors.resultNotFound')} />;
   }
 
   const [session] = NextAuth.useSession();
@@ -408,4 +410,4 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
   return { result, inList, mediaUrl, videoSegments };
 };
 
-export default withTranslation('project')(VideoDetailsPage);
+export default VideoDetailsPage;

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo, Fragment } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
-import Router, { withRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
 import queryString from 'query-string';
 import { useSWRInfinite } from 'swr';
@@ -33,7 +33,7 @@ import useOnScreen from '@helpers/useOnScreen';
 import { search, getFilters } from '@pages/api/search';
 import ScrollDetector from '@components/ScrollDetector';
 
-import { withTranslation } from '~/i18n';
+import { useTranslation } from '~/i18n';
 import config from '~/config';
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
@@ -149,8 +149,9 @@ const ResultPage = styled.div`
   margin-bottom: 12px;
 `;
 
-const BrowsePage = ({ initialData, router, t }) => {
-  const { req, query, pathname } = router;
+const BrowsePage = ({ initialData }) => {
+  const { req, query, pathname } = useRouter();
+  const { t } = useTranslation(['common', 'search']);
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(true);
   const currentPage = parseInt(query.page, 10) || 1;
@@ -310,13 +311,13 @@ const BrowsePage = ({ initialData, router, t }) => {
   const route = config.routes[query.type];
 
   if (!route) {
-    return <DefaultErrorPage statusCode={404} title="Route not found" />;
+    return <DefaultErrorPage statusCode={404} title={t('common:errors.routeNotFound')} />;
   }
 
   const sortOptions = route.filters
     .filter((filter) => filter.isSortable === true)
     .map((filter) => ({
-      label: t(`filters.${filter.id}`, filter.label),
+      label: t(`project:filters.${filter.id}`, filter.label),
       value: filter.id,
     }));
 
@@ -384,7 +385,7 @@ const BrowsePage = ({ initialData, router, t }) => {
   };
 
   const renderEmptyResults = () => {
-    return <p>{t('search:labels.no_results')}</p>;
+    return <p>{t('search:labels.noResults')}</p>;
   };
 
   return (
@@ -409,10 +410,10 @@ const BrowsePage = ({ initialData, router, t }) => {
           />
         </Element>
         <Content>
-          <StyledTitle>{t('search:labels.search_results')}</StyledTitle>
+          <StyledTitle>{t('search:labels.searchResults')}</StyledTitle>
           <OptionsBar>
             <Option>
-              <Label htmlFor="select_sort">{t('search:labels.sort_by')}</Label>
+              <Label htmlFor="select_sort">{t('search:labels.sortBy')}</Label>
               <StyledSelect
                 inputId="select_sort"
                 name="sort"
@@ -434,7 +435,7 @@ const BrowsePage = ({ initialData, router, t }) => {
             </Option>
             {config.plugins.virtualLoom && (
               <Option>
-                <Button primary onClick={toggleMap}>
+                <Button primary onClick={toggleMap} title={t('search:buttons.toggleMap')}>
                   {isMapVisible ? <GridIcon height="20" /> : <MapIcon height="20" />}
                 </Button>
               </Option>
@@ -483,8 +484,8 @@ const BrowsePage = ({ initialData, router, t }) => {
               </Element>
               <PaginationContainer>
                 <ReactPaginate
-                  previousLabel={t('search.paginatePrevious')}
-                  nextLabel={t('search.buttons.paginateNext')}
+                  previousLabel={t('search:buttons.paginatePrevious')}
+                  nextLabel={t('search:buttons.paginateNext')}
                   breakLabel="..."
                   breakClassName="break"
                   pageCount={totalPages}
@@ -520,7 +521,7 @@ const BrowsePage = ({ initialData, router, t }) => {
             </Metadata>
             <Metadata label="SPARQL Query">
               <SPARQLQueryLink query={debugSparqlQuery}>
-                {t('search:labels.edit_query')}
+                {t('search:labels.editQuery')}
               </SPARQLQueryLink>
               <pre>{debugSparqlQuery}</pre>
             </Metadata>
@@ -547,4 +548,4 @@ export async function getServerSideProps({ query }) {
   };
 }
 
-export default withTranslation(['project', 'search'])(withRouter(BrowsePage));
+export default BrowsePage;

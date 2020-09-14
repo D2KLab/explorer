@@ -15,7 +15,7 @@
     "confirmText": "Êtes-vous certains de vouloir supprimer la liste \"<0>{{name}}</0>\" ? Cette action ne peut pas être annulée !"
   },
   "listSettings": {
-    "title": "Paramètres",
+    "title": "Paramètres de la liste",
     "labels": {
       "name": "Nom",
       "public": "Publique ?"
@@ -79,5 +79,26 @@
       "unlink": "Dissocier ce compte",
       "new": "Associer un autre compte"
     }
+  },
+  "errors": {
+    "generic": "An error occurred",
+    "listNotFound": "List not found",
+    "resultNotFound": "Result not found",
+    "routeNotFound": "Route not found"
+  },
+  "home": {
+    "title": "Accueil",
+    "searchByImage": {
+      "dropTitle": "Déposez les fichiers ici ...",
+      "dropText": "Faites glisser et déposez quelques fichiers ici, ou cliquez pour sélectionner des fichiers"
+    }
+  },
+  "vocabulary": {
+    "title": "Vocabulaire : {{vocabulary}}",
+    "explore": "Explorer les <0>{{route}}</0> avec <1>{{item}}</1>"
+  },
+  "collection": {
+    "noDescription": "Aucune description pour cette collection",
+    "items": "Éléments dans la collection"
   }
 }

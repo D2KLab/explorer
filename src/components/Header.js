@@ -6,7 +6,7 @@ import { SearchBox } from '@components';
 import LanguageSwitch from '@components/LanguageSwitch';
 import ProfileButton from '@components/ProfileButton';
 
-import { withTranslation } from '~/i18n';
+import { useTranslation } from '~/i18n';
 import config from '~/config';
 
 /**
@@ -90,7 +90,8 @@ const SearchContainer = styled.div`
   `}
 `;
 
-const Header = ({ className, t }) => {
+const Header = ({ className }) => {
+  const { t } = useTranslation('project');
   return (
     <Container className={className}>
       <Link href="/" passHref>
@@ -129,4 +130,4 @@ const Header = ({ className, t }) => {
   );
 };
 
-export default withTranslation('project')(Header);
+export default Header;

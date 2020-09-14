@@ -25,7 +25,7 @@ import {
 import { breakpoints } from '@styles';
 import { absoluteUrl, generateMediaUrl } from '@helpers/utils';
 import config from '~/config';
-import { withTranslation } from '~/i18n';
+import { useTranslation } from '~/i18n';
 
 const { Carousel } = require('react-responsive-carousel');
 
@@ -197,13 +197,14 @@ const VirtualLoomButton = styled.a`
   display: block;
 `;
 
-const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
+const GalleryDetailsPage = ({ result, inList }) => {
+  const { t, i18n } = useTranslation('common');
   const { query } = useRouter();
   const [session] = NextAuth.useSession();
   const route = config.routes[query.type];
 
   if (!result) {
-    return <DefaultErrorPage statusCode={404} title="Result not found" />;
+    return <DefaultErrorPage statusCode={404} title={t('common:errors.resultNotFound')} />;
   }
 
   const images = [];
@@ -426,17 +427,17 @@ const GalleryDetailsPage = ({ result, inList, t, i18n }) => {
               <MetadataList metadata={metadata} query={query} route={route} />
             </Element>
             <MenuButton {...downloadMenu} as={Button} primary>
-              Download
+              {t('common:buttons.download')}
             </MenuButton>
             <StyledMenu {...downloadMenu} aria-label="Download">
               <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('vljson')}>
-                Virtual Loom
+                {t('common:buttons.downloadVirtualLoom')}
               </MenuItem>
               <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('json')}>
-                Linked Data JSON
+                {t('common:buttons.downloadJSON')}
               </MenuItem>
               <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('image')}>
-                Download selected image
+                {t('common:buttons.downloadSelectedImage')}
               </MenuItem>
             </StyledMenu>
             {/* <RelatedVideos>
@@ -477,4 +478,4 @@ GalleryDetailsPage.getInitialProps = async ({ req, res, query }) => {
   return { result, inList };
 };
 
-export default withTranslation('project')(GalleryDetailsPage);
+export default GalleryDetailsPage;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styled, { withTheme } from 'styled-components';
+import styled from 'styled-components';
 import Router from 'next/router';
 import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
 
@@ -29,7 +29,7 @@ const StyledDialog = styled(Dialog)`
   outline: 0;
 `;
 
-export default withTheme(({ list, dialogState, children }) => {
+const ListDeletion = ({ list, dialogState, children }) => {
   const { t } = useTranslation('common');
   const [isDeleting, setIsDeleting] = useState(false);
   const deleteListDialog = dialogState || useDialogState();
@@ -77,4 +77,6 @@ export default withTheme(({ list, dialogState, children }) => {
       </StyledDialogBackdrop>
     </>
   );
-});
+};
+
+export default ListDeletion;

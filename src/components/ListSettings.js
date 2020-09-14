@@ -1,4 +1,4 @@
-import styled, { withTheme } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { useEffect, useState } from 'react';
 import Router from 'next/router';
 import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
@@ -49,7 +49,8 @@ const StyledSettingsIcon = styled(SettingsIcon)`
   }
 `;
 
-export default withTheme(({ list, theme }) => {
+const ListSettings = ({ list }) => {
+  const theme = useTheme();
   const { t } = useTranslation('common');
   const settingsDialog = useDialogState();
   const [isUpdating, setIsUpdating] = useState(false);
@@ -90,7 +91,7 @@ export default withTheme(({ list, theme }) => {
               <Input
                 name="list_name"
                 type="text"
-                placeholder="List name"
+                placeholder={t('listSettings.labels.name')}
                 value={listName}
                 onChange={(e) => setListName(e.target.value)}
               />
@@ -141,4 +142,6 @@ export default withTheme(({ list, theme }) => {
       </StyledDialogBackdrop>
     </>
   );
-});
+};
+
+export default ListSettings;

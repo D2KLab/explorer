@@ -4,16 +4,17 @@
     "filter": "FILTER",
     "loadMore": "Load more",
     "paginatePrevious": "Previous",
-    "paginateNext": "Next"
+    "paginateNext": "Next",
+    "toggleMap": "Toggle map"
   },
   "labels": {
-    "search_results": "Search results",
-    "sort_by": "Sort by",
+    "searchResults": "Search results",
+    "sortBy": "Sort by",
     "select": "Select...",
     "browse": "Browse {{type}}",
-    "no_results": "Your search did not match any documents",
+    "noResults": "Your search did not match any documents",
     "page": "Page {{page}}",
-    "edit_query": "Edit the query",
+    "editQuery": "Edit the query",
     "loading": "Loading..."
   },
   "fields": {

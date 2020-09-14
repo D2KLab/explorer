@@ -143,9 +143,13 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
                   </p>
                   {list.is_public && (
                     <p>
-                      <Trans i18nKey="common:list.shareLink" link={shareLink}>
-                        Public link: <a href={shareLink}>{shareLink}</a>
-                      </Trans>
+                      <Trans
+                        i18nKey="common:list.shareLink"
+                        components={[<a href={shareLink}>{shareLink}</a>]}
+                        values={{
+                          link: shareLink,
+                        }}
+                      />
                     </p>
                   )}
                 </>
@@ -157,7 +161,7 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
         )) || (
           <>
             <PageTitle title={error.message} />
-            <Title>{t('list.notFound')}</Title>
+            <Title>{t('common:errors.listNotFound')}</Title>
             <Content>
               <p>{error.message}</p>
             </Content>

@@ -3,16 +3,17 @@
     "clear": "EFFACER",
     "filter": "FILTRER",
     "paginatePrevious": "Précédent",
-    "paginateNext": "Suivant"
+    "paginateNext": "Suivant",
+    "toggleMap": "Carte"
   },
   "labels": {
-    "search_results": "Résultats de recherche",
-    "sort_by": "Trier par",
+    "searchResults": "Résultats de recherche",
+    "sortBy": "Trier par",
     "select": "Sélectionner...",
     "browse": "Parcourir par {{type}}",
-    "no_results": "Aucun résultat pour cette recherche",
+    "noResults": "Aucun résultat pour cette recherche",
     "page": "Page {{page}}",
-    "edit_query": "Modifier la requête"
+    "editQuery": "Modifier la requête"
   },
   "fields": {
     "graph": "Graphe",

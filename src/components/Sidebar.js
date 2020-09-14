@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styled, { withTheme } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import Switch from 'react-switch';
 
 import Select from '@components/Select';
@@ -10,7 +10,7 @@ import Input from '@components/Input';
 import useDebounce from '@helpers/useDebounce';
 import useDidMountEffect from '@helpers/useDidMountEffect';
 
-import { withTranslation } from '~/i18n';
+import { useTranslation } from '~/i18n';
 import config from '~/config';
 
 const getValue = (opts, val) => opts.find((o) => o.value === val);
@@ -88,7 +88,10 @@ const Option = styled.div`
   }
 `;
 
-const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) => {
+const Sidebar = ({ className, onSearch, type, filters, query }) => {
+  const theme = useTheme();
+  const { t, i18n } = useTranslation(['project', 'search']);
+
   const [languages] = useState(
     Object.entries(config.search.languages).map(([langKey, langLabel]) => ({
       label: langLabel,
@@ -252,7 +255,7 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
 
     return (
       <Field key={filter.id}>
-        <label htmlFor="field_filter">{t(`filters.${filter.id}`, filter.label)}</label>
+        <label htmlFor="field_filter">{t(`project:filters.${filter.id}`, filter.label)}</label>
         <FilterInput
           isClearable
           inputId={`field_filter_${filter.id}`}
@@ -269,7 +272,7 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
   const renderOption = (filter) => {
     return (
       <Option key={filter.id}>
-        <span>{t(`filters.${filter.id}`, filter.label)}</span>
+        <span>{t(`project:filters.${filter.id}`, filter.label)}</span>
         <StyledSwitch
           onChange={handleSwitchChange}
           checked={!!fields[`field_filter_${filter.id}`]}
@@ -364,4 +367,4 @@ const Sidebar = ({ className, onSearch, type, filters, i18n, query, t, theme }) 
   );
 };
 
-export default withTranslation(['project', 'search'])(withTheme(Sidebar));
+export default Sidebar;

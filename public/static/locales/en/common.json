@@ -15,7 +15,7 @@
     "confirmText": "Are you sure you want to delete the list \"<0>{{name}}</0>\"? This action cannot be undone!"
   },
   "listSettings": {
-    "title": "Settings",
+    "title": "List settings",
     "labels": {
       "name": "Name",
       "public": "Public?"
@@ -39,12 +39,17 @@
     "save": "Save",
     "close": "Close",
     "cancel": "Cancel",
-    "search": "Search"
+    "search": "Search",
+    "searchByText": "Search by text",
+    "searchByImage": "Search by image",
+    "download": "Download",
+    "downloadVirtualLoom": "Virtual Loom",
+    "downloadJSON": "Linked Data JSON",
+    "downloadSelectedImage": "Download selected image"
   },
   "list": {
     "items": "Items in the list",
     "empty": "This list is empty!",
-    "notFound": "List not found",
     "operations": "Operations",
     "created": "Created on:",
     "updated": "Last update:",
@@ -79,5 +84,26 @@
       "unlink": "Unlink this connection",
       "new": "Connect another account"
     }
+  },
+  "errors": {
+    "generic": "Une erreur s'est produite",
+    "listNotFound": "List not found",
+    "resultNotFound": "Result not found",
+    "routeNotFound": "Route not found"
+  },
+  "home": {
+    "title": "Home",
+    "searchByImage": {
+      "dropTitle": "Drop the files here ...",
+      "dropText": "Drag 'n drop some files here, or click to select files"
+    }
+  },
+  "vocabulary": {
+    "title": "Vocabulary : {{vocabulary}}",
+    "explore": "Explore <0>{{route}}</0> with <1>{{item}}</1>"
+  },
+  "collection": {
+    "noDescription": "No description for this collection",
+    "items": "Items in the collection"
   }
 }

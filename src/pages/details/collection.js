@@ -15,7 +15,7 @@ import PageTitle from '@components/PageTitle';
 import { breakpoints } from '@styles';
 import { uriToId, absoluteUrl, generateMediaUrl } from '@helpers/utils';
 import config from '~/config';
-import { withTranslation } from '~/i18n';
+import { useTranslation } from '~/i18n';
 
 const Columns = styled.div`
   display: flex;
@@ -57,8 +57,10 @@ const StyledMedia = styled(Media)`
 `;
 
 const CollectionDetailsPage = ({ result, inList }) => {
+  const { t } = useTranslation('common');
+
   if (!result) {
-    return <DefaultErrorPage statusCode={404} title="Result not found" />;
+    return <DefaultErrorPage statusCode={404} title={t('common:errors.resultNotFound')} />;
   }
 
   const [session] = NextAuth.useSession();
@@ -107,8 +109,8 @@ const CollectionDetailsPage = ({ result, inList }) => {
                 />
               )}
             </Element>
-            <p>{result.description || 'No description for this collection'}</p>
-            <h2>Items in the collection</h2>
+            <p>{result.description || t('common:collection.noDescription')}</p>
+            <h2>{t('common:collection.items')}</h2>
             <Results>
               {result.items.map((item) => {
                 let mainImage = null;
@@ -205,4 +207,4 @@ CollectionDetailsPage.getInitialProps = async ({ req, res, query }) => {
   return { result, inList };
 };
 
-export default withTranslation('project')(CollectionDetailsPage);
+export default CollectionDetailsPage;

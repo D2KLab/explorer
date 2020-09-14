@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { breakpoints } from '@styles';
-import { withTranslation } from '~/i18n';
+import { useTranslation } from '~/i18n';
 import config from '~/config';
 
 /**
@@ -56,7 +56,8 @@ const Logo = styled.img`
   max-width: 100%;
 `;
 
-const Footer = ({ className, t }) => {
+const Footer = ({ className }) => {
+  const { t } = useTranslation('project');
   return (
     <Container className={className}>
       <Credits>
@@ -75,4 +76,4 @@ const Footer = ({ className, t }) => {
   );
 };
 
-export default withTranslation('project')(Footer);
+export default Footer;
