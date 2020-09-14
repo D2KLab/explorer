@@ -71,7 +71,7 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
                       <StyledMedia
                         title={item.title}
                         subtitle={item.subtitle}
-                        thumbnail={generateMediaUrl(item.image, 150)}
+                        thumbnail={generateMediaUrl(item.image, 300)}
                         direction="column"
                         link={`/${item.route}/${encodeURIComponent(
                           uriToId(item.id, { base: route.uriBase })

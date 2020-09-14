@@ -124,7 +124,7 @@ const renderSuggestion = (suggestion, { searchQuery }) => {
 
   return (
     <SuggestionContent>
-      <SuggestionImage src={generateMediaUrl(mainImage, 150)} alt="" />
+      <SuggestionImage src={generateMediaUrl(mainImage, 90)} alt="" />
       <SuggestionName>
         {parts.map((part, index) => {
           const className = part.highlight ? 'highlight' : null;

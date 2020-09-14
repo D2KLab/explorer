@@ -141,7 +141,7 @@ const CollectionDetailsPage = ({ result, inList }) => {
                     key={item['@id']}
                     title={item.label}
                     subtitle=""
-                    thumbnail={generateMediaUrl(mainImage, 150)}
+                    thumbnail={generateMediaUrl(mainImage, 300)}
                     direction="column"
                     uri={result['@graph']}
                   />

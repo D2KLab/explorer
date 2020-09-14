@@ -358,7 +358,7 @@ const BrowsePage = ({ initialData }) => {
             <Media
               title={label}
               subtitle={subtitle}
-              thumbnail={generateMediaUrl(mainImage, 150)}
+              thumbnail={generateMediaUrl(mainImage, 300)}
               direction="column"
               graphUri={result['@graph']}
             />
