@@ -1,4 +1,4 @@
-import { Children, Component } from 'react';
+import { Children, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import SwipeableViews from 'react-swipeable-views';
@@ -65,51 +65,36 @@ const TabContent = styled.div`
 
 export const Tab = styled.div``;
 
-class Tabs extends Component {
-  constructor() {
-    super();
+const Tabs = ({ className, children }) => {
+  const [selectedTab, setSelectedTab] = useState(0);
 
-    this.state = {
-      selectedTab: 0,
-    };
-  }
+  return (
+    <TabsWrapper className={className}>
+      <TabList role="tablist">
+        {Children.map(children, ({ props: { label } }, index) => (
+          <TabButton
+            role="tab"
+            selected={selectedTab === index}
+            aria-selected={selectedTab === index ? 'true' : 'false'}
+            onClick={() => setSelectedTab(index)}
+          >
+            {label}
+          </TabButton>
+        ))}
+      </TabList>
 
-  selectTab = (tabIndex) => {
-    this.setState({ selectedTab: tabIndex });
-  };
-
-  render() {
-    const { className, children } = this.props;
-    const { selectedTab } = this.state;
-
-    return (
-      <TabsWrapper className={className}>
-        <TabList role="tablist">
-          {Children.map(children, ({ props: { label } }, index) => (
-            <TabButton
-              role="tab"
-              selected={selectedTab === index}
-              aria-selected={selectedTab === index ? 'true' : 'false'}
-              onClick={() => this.selectTab(index)}
-            >
-              {label}
-            </TabButton>
+      <TabContent>
+        <SwipeableViews index={selectedTab} onChangeIndex={(index) => setSelectedTab(index)}>
+          {Children.map(children, (comp, index) => (
+            <div value={selectedTab} index={index}>
+              {comp}
+            </div>
           ))}
-        </TabList>
-
-        <TabContent>
-          <SwipeableViews index={selectedTab} onChangeIndex={this.selectTab}>
-            {Children.map(children, (comp, index) => (
-              <div value={selectedTab} index={index}>
-                {comp}
-              </div>
-            ))}
-          </SwipeableViews>
-        </TabContent>
-      </TabsWrapper>
-    );
-  }
-}
+        </SwipeableViews>
+      </TabContent>
+    </TabsWrapper>
+  );
+};
 
 Tabs.propTypes = {
   children: PropTypes.node.isRequired,
