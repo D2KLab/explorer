@@ -163,6 +163,7 @@ const SegmentTime = styled.span`
 
 const SegmentText = styled.div`
   flex: 1;
+  padding-left: 24px;
 `;
 
 const VideoWrapper = styled.div`
@@ -193,6 +194,20 @@ const VideoSegments = styled.div`
 function humanTimeToSeconds(humanTime) {
   const time = humanTime.split(':');
   return +time[0] * 60 * 60 + +time[1] * 60 + +time[2];
+}
+
+function formatSegmentTime(time, removeZeroes) {
+  let formattedTime = time;
+  // Remove '00:' at start if needed
+  if (removeZeroes && formattedTime.startsWith('00:')) {
+    formattedTime = formattedTime.substr('00:'.length);
+  }
+  // Remove milliseconds
+  const msIndex = formattedTime.indexOf('.');
+  if (msIndex > -1) {
+    formattedTime = formattedTime.substr(0, msIndex);
+  }
+  return formattedTime;
 }
 
 const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments }) => {
@@ -245,6 +260,9 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments }) => {
     }
   };
 
+  // Remove '00:' at start if all segments are not hours long
+  const removeZeroes = videoSegments.every((segment) => segment.end.startsWith('00:'));
+
   const renderVideoSegment = (segment) => {
     return (
       <Segment key={segment['@id']}>
@@ -257,13 +275,13 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments }) => {
             &#9654;{' '}
           </SegmentIcon>
           <SegmentTime>
-            {segment.start} - {segment.end}
+            <time>{formatSegmentTime(segment.start, removeZeroes)}</time> -{' '}
+            <time>{formatSegmentTime(segment.end, removeZeroes)}</time>
           </SegmentTime>
         </SegmentButton>
         <SegmentText>
-          {segment.title}
-          <br />
-          {segment.description}
+          {segment.title && <p>{segment.title}</p>}
+          {segment.description && <p>{segment.description}</p>}
         </SegmentText>
       </Segment>
     );
