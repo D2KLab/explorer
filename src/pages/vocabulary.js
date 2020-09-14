@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { withRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import StickyBox from 'react-sticky-box';
 import 'intersection-observer';
@@ -12,7 +12,7 @@ import PageTitle from '@components/PageTitle';
 import { breakpoints } from '@styles';
 import SparqlClient from '@helpers/sparql';
 import config from '~/config';
-import { withTranslation } from '~/i18n';
+import { useTranslation, Trans } from '~/i18n';
 
 const Hero = styled.div`
   width: 100%;
@@ -89,174 +89,181 @@ const Item = styled.div`
   margin-bottom: 24px;
 `;
 
-class VocabularyPage extends Component {
-  constructor(props) {
-    super(props);
+const VocabularyPage = ({ results }) => {
+  const { t } = useTranslation(['common', 'project']);
+  const router = useRouter();
 
-    this.state = {
-      activeResult: {
-        '@id': null,
-        ratio: 0,
-      },
+  const [activeResult, setActiveResult] = useState({
+    '@id': null,
+    ratio: 0,
+  });
+  const [observer, setObserver] = useState(null);
+
+  const rootRef = useRef();
+
+  const singleRefs = results.reduce((acc, value) => {
+    acc[value['@id']] = {
+      ref: useRef(),
+      id: value['@id'],
+      ratio: 0,
     };
 
-    this.rootRef = React.createRef();
+    return acc;
+  }, {});
 
-    this.singleRefs = props.results.reduce((acc, value) => {
-      acc[value['@id']] = {
-        ref: React.createRef(),
-        id: value['@id'],
-        ratio: 0,
-      };
-
-      return acc;
-    }, {});
-
-    if (typeof IntersectionObserver !== 'undefined') {
-      const callback = (entries) => {
-        entries.forEach((entry) => {
-          this.singleRefs[entry.target.id].ratio = entry.intersectionRatio;
-        });
-
-        const activeResult = Object.values(this.singleRefs).reduce(
-          (acc, value) => (value.ratio > acc.ratio ? value : acc),
-          this.state.activeResult
-        );
-
-        if (activeResult.ratio > this.state.activeResult.ratio) {
-          this.setState({ activeResult });
-        }
-      };
-
-      this.observer = new IntersectionObserver(callback, {
-        root: this.rootRef.current,
-        threshold: new Array(101).fill(0).map((v, i) => i * 0.01),
+  if (typeof IntersectionObserver !== 'undefined') {
+    const callback = (entries) => {
+      entries.forEach((entry) => {
+        singleRefs[entry.target.id].ratio = entry.intersectionRatio;
       });
+
+      const targetResult = Object.values(singleRefs).reduce(
+        (acc, value) => (value.ratio > acc.ratio ? value : acc),
+        activeResult
+      );
+
+      if (targetResult.id !== activeResult.id && targetResult.ratio > activeResult.ratio) {
+        setActiveResult(targetResult);
+      }
+    };
+
+    if (observer === null) {
+      setObserver(
+        new IntersectionObserver(callback, {
+          root: rootRef.current,
+          threshold: new Array(101).fill(0).map((v, i) => i * 0.01),
+        })
+      );
     }
   }
 
-  componentDidMount() {
-    Object.values(this.singleRefs).forEach((value) => this.observer.observe(value.ref.current));
+  useEffect(() => {
+    if (observer) Object.values(singleRefs).forEach((value) => observer.observe(value.ref.current));
+
+    return () => {
+      if (observer) observer.disconnect();
+    };
+  }, [observer]);
+
+  const query = { ...router.query };
+  const route = config.routes[query.type];
+
+  const useWith = [];
+  if (route && Array.isArray(route.useWith)) {
+    useWith.push(...route.useWith);
   }
 
-  render() {
-    const { results, router, t } = this.props;
-    const query = { ...router.query };
-    const route = config.routes[query.type];
-
-    const useWith = [];
-    if (route && Array.isArray(route.useWith)) {
-      useWith.push(...route.useWith);
-    }
-
-    return (
-      <Layout>
-        <PageTitle title={`Vocabulary: ${query.type}`} />
-        <Header />
-        <Body>
-          <Hero image={`/images/pages/${query.type}.jpg`}>
-            <Title>
-              {t(
-                `routes.${query.type}`,
-                query.type.substr(0, 1).toUpperCase() + query.type.substr(1)
-              )}
-            </Title>
-          </Hero>
-          <Content>
-            <Container>
-              <StickyBox offsetTop={20} offsetBottom={20}>
-                <Navigation>
-                  {results.map((result) => (
-                    <Anchor
-                      key={result['@id']}
-                      href={`#${result['@id']}`}
-                      selected={result['@id'] === this.state.activeResult.id}
-                    >
-                      {result.label}
-                    </Anchor>
-                  ))}
-                </Navigation>
-              </StickyBox>
-              <Results ref={this.rootRef}>
-                {results.map((result) => {
-                  const items = Array.isArray(result.items)
-                    ? result.items
-                    : [result.items].filter(
-                        (x) =>
-                          x &&
-                          (typeof x !== 'object' ||
-                            x.constructor !== Object ||
-                            Object.keys(x).length > 0)
-                      );
-
-                  const singleRef = this.singleRefs[result['@id']];
-                  const ref = singleRef ? singleRef.ref : null;
-
-                  const renderLink = (withConfig, item) => {
-                    const withRoute = config.routes[withConfig.route];
-                    if (!withRoute) {
-                      return null;
-                    }
-
-                    const withQuery = {};
-
-                    const filter = withRoute.filters.find(
-                      (f) => f.id && f.id === withConfig.filter
+  return (
+    <Layout>
+      <PageTitle title={`${t('common:vocabulary.title')} ${query.type}`} />
+      <Header />
+      <Body>
+        <Hero image={`/images/pages/${query.type}.jpg`}>
+          <Title>
+            {t(
+              `project:routes.${query.type}`,
+              query.type.substr(0, 1).toUpperCase() + query.type.substr(1)
+            )}
+          </Title>
+        </Hero>
+        <Content>
+          <Container>
+            <StickyBox offsetTop={20} offsetBottom={20}>
+              <Navigation>
+                {results.map((result) => (
+                  <Anchor
+                    key={result['@id']}
+                    href={`#${result['@id']}`}
+                    selected={result['@id'] === activeResult.id}
+                  >
+                    {result.label}
+                  </Anchor>
+                ))}
+              </Navigation>
+            </StickyBox>
+            <Results ref={rootRef}>
+              {results.map((result) => {
+                const items = Array.isArray(result.items)
+                  ? result.items
+                  : [result.items].filter(
+                      (x) =>
+                        x &&
+                        (typeof x !== 'object' ||
+                          x.constructor !== Object ||
+                          Object.keys(x).length > 0)
                     );
-                    if (filter) {
-                      const val = filter.isMulti ? [item['@id']] : item['@id'];
-                      withQuery[`field_filter_${filter.id}`] = val;
-                    }
 
-                    return (
-                      <Link
-                        key={withConfig.route}
-                        href={{ pathname: `/${withConfig.route}`, query: withQuery }}
-                      >
-                        <a>
-                          Explore the {t(`routes.${withConfig.route}`).toLowerCase()} realised in{' '}
-                          {(item.label || '').toLowerCase()}
-                        </a>
-                      </Link>
-                    );
-                  };
+                const singleRef = singleRefs[result['@id']];
+                const ref = singleRef ? singleRef.ref : null;
 
-                  const renderItem = (item) => {
-                    const links = useWith.map((w) => renderLink(w, item));
-                    return (
-                      <Item key={item['@id']} id={item['@id']}>
-                        <h2>{item.label}</h2>
-                        {item.description && <p>{item.description}</p>}
-                        {links}
-                      </Item>
-                    );
-                  };
+                const renderLink = (withConfig, item) => {
+                  const withRoute = config.routes[withConfig.route];
+                  if (!withRoute) {
+                    return null;
+                  }
+
+                  const withQuery = {};
+
+                  const filter = withRoute.filters.find((f) => f.id && f.id === withConfig.filter);
+                  if (filter) {
+                    const val = filter.isMulti ? [item['@id']] : item['@id'];
+                    withQuery[`field_filter_${filter.id}`] = val;
+                  }
 
                   return (
-                    <div key={result['@id']} id={result['@id']} ref={ref}>
-                      <h1>{result.label}</h1>
-                      {result.description && <p>{result.description}</p>}
-                      <ul>{items.map(renderItem)}</ul>
-                    </div>
+                    <Link
+                      key={withConfig.route}
+                      href={{ pathname: `/${withConfig.route}`, query: withQuery }}
+                    >
+                      <a>
+                        <Trans
+                          i18nKey="common:vocabulary.explore"
+                          components={[<span />, <span />]}
+                          values={{
+                            route: t(`project:routes.${withConfig.route}`).toLowerCase(),
+                            item: (item.label || '').toLowerCase(),
+                          }}
+                        />
+                      </a>
+                    </Link>
                   );
-                })}
-              </Results>
-            </Container>
-            <Debug>
-              <Metadata label="HTTP Parameters">
-                <pre>{JSON.stringify(query, null, 2)}</pre>
-              </Metadata>
-              <Metadata label="Query Results">
-                <pre>{JSON.stringify(results, null, 2)}</pre>
-              </Metadata>
-            </Debug>
-          </Content>
-        </Body>
-        <Footer />
-      </Layout>
-    );
-  }
-}
+                };
+
+                const renderItem = (item) => {
+                  const links = useWith.map((w) => renderLink(w, item));
+                  return (
+                    <Item key={item['@id']} id={item['@id']}>
+                      <h2>{item.label}</h2>
+                      {item.description && <p>{item.description}</p>}
+                      {links}
+                    </Item>
+                  );
+                };
+
+                return (
+                  <div key={result['@id']} id={result['@id']} ref={ref}>
+                    <h1>{result.label}</h1>
+                    {result.description && <p>{result.description}</p>}
+                    <ul>{items.map(renderItem)}</ul>
+                  </div>
+                );
+              })}
+            </Results>
+          </Container>
+          <Debug>
+            <Metadata label="HTTP Parameters">
+              <pre>{JSON.stringify(query, null, 2)}</pre>
+            </Metadata>
+            <Metadata label="Query Results">
+              <pre>{JSON.stringify(results, null, 2)}</pre>
+            </Metadata>
+          </Debug>
+        </Content>
+      </Body>
+      <Footer />
+    </Layout>
+  );
+};
 
 export async function getServerSideProps({ query }) {
   const route = config.routes[query.type];
@@ -277,4 +284,4 @@ export async function getServerSideProps({ query }) {
   return { props: { results } };
 }
 
-export default withTranslation('project')(withRouter(VocabularyPage));
+export default VocabularyPage;
