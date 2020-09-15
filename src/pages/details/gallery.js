@@ -59,6 +59,10 @@ const Primary = styled.div`
     }
     .thumbs-wrapper {
       overflow: visible;
+
+      .control-arrow {
+        display: none;
+      }
     }
     .thumbs {
       display: flex;
