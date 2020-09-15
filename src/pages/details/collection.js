@@ -14,6 +14,7 @@ import Debug from '@components/Debug';
 import PageTitle from '@components/PageTitle';
 import { breakpoints } from '@styles';
 import { uriToId, absoluteUrl, generateMediaUrl } from '@helpers/utils';
+import { findRouteByRDFType } from '@helpers/explorer';
 import config from '~/config';
 import { useTranslation } from '~/i18n';
 
@@ -124,16 +125,7 @@ const CollectionDetailsPage = ({ result, inList }) => {
                     item.representation[0];
                 }
 
-                const [itemRouteName, itemRoute] =
-                  Object.entries(config.routes).find(([, r]) => {
-                    if (Array.isArray(r.rdfType)) {
-                      return r.rdfType.includes(item['@type']);
-                    }
-                    if (typeof r.rdfType === 'string') {
-                      return r.rdfType === item['@type'];
-                    }
-                    return false;
-                  }) || [];
+                const [itemRouteName, itemRoute] = findRouteByRDFType(item['@type']);
 
                 let element = (
                   <StyledMedia

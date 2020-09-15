@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Autosuggest from 'react-autosuggest';
 
 import { uriToId, generateMediaUrl } from '@helpers/utils';
+import { findRouteByRDFType } from '@helpers/explorer';
 import { query } from '@helpers/sparql';
 import config from '~/config';
 
@@ -141,16 +142,8 @@ const SearchInput = ({ className, placeholder, ariaLabel = 'Search input', ...pr
   };
 
   const onSuggestionSelected = (event, { suggestion }) => {
-    const [routeName, route] =
-      Object.entries(config.routes).find(([, r]) => {
-        if (Array.isArray(r.rdfType)) {
-          return r.rdfType.includes(suggestion['@type']);
-        }
-        if (typeof r.rdfType === 'string') {
-          return r.rdfType === suggestion['@type'];
-        }
-        return false;
-      }) || [];
+    const [routeName, route] = findRouteByRDFType(suggestion['@type']);
+
     if (route) {
       Router.push({
         pathname: `/${routeName}/${encodeURIComponent(

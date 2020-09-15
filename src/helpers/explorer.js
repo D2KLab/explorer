@@ -3,6 +3,26 @@ import config from '~/config';
 
 const vocabulariesCache = {};
 
+/*
+ * Find a route from config based on its RDF type.
+ * Returns an Array with two elements (`[routeName, route]`), or
+ * an empty array (`[]`) if the route was not found.
+ */
+export function findRouteByRDFType(type) {
+  const rdfTypes = Array.isArray(type) ? type : [type];
+  return (
+    Object.entries(config.routes).find(([, r]) => {
+      if (Array.isArray(r.rdfType)) {
+        return r.rdfType.some((rdfType) => rdfTypes.includes(rdfType));
+      }
+      if (typeof r.rdfType === 'string') {
+        return rdfTypes.includes(r.rdfType);
+      }
+      return false;
+    }) || []
+  );
+}
+
 export async function getVocabularyItems(vocabularyId) {
   const results = [];
 

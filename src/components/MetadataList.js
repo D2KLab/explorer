@@ -1,7 +1,7 @@
 import { Metadata } from '@components';
 import { uriToId } from '@helpers/utils';
+import { findRouteByRDFType } from '@helpers/explorer';
 import { useTranslation } from '~/i18n';
-import config from '~/config';
 
 /**
  * Metadata list.
@@ -19,16 +19,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
     return <>{meta}</>;
   }
 
-  const [routeName, route] =
-    Object.entries(config.routes).find(([, r]) => {
-      if (Array.isArray(r.rdfType)) {
-        return r.rdfType.includes(meta['@type']);
-      }
-      if (typeof r.rdfType === 'string') {
-        return r.rdfType === meta['@type'];
-      }
-      return false;
-    }) || [];
+  const [routeName, route] = findRouteByRDFType(meta['@type']);
 
   let url = meta['@id'];
   if (route) {
