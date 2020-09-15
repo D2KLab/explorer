@@ -484,7 +484,9 @@ const BrowsePage = ({ initialData }) => {
               <PaginationContainer>
                 <ReactPaginate
                   previousLabel={t('search:buttons.paginatePrevious')}
+                  previousAriaLabel={t('search:buttons.paginatePrevious')}
                   nextLabel={t('search:buttons.paginateNext')}
+                  nextAriaLabel={t('search:buttons.paginateNext')}
                   breakLabel="..."
                   breakClassName="break"
                   pageCount={totalPages}
