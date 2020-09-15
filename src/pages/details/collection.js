@@ -181,7 +181,7 @@ const CollectionDetailsPage = ({ result, inList }) => {
 
 CollectionDetailsPage.getInitialProps = async ({ req, res, query }) => {
   const { result, inList } = await (
-    await fetch(`${absoluteUrl(req)}/api/entity/${query.id}?${queryString.stringify(query)}`, {
+    await fetch(`${absoluteUrl(req)}/api/entity?${queryString.stringify(query)}`, {
       headers:
         req && req.headers
           ? {

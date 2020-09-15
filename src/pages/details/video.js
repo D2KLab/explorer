@@ -374,7 +374,7 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments }) => {
 
 VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
   const { result, inList } = await (
-    await fetch(`${absoluteUrl(req)}/api/entity/${query.id}?${queryString.stringify(query)}`, {
+    await fetch(`${absoluteUrl(req)}/api/entity?${queryString.stringify(query)}`, {
       headers:
         req && req.headers
           ? {
