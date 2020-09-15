@@ -2,8 +2,6 @@ import { useState } from 'react';
 import Router from 'next/router';
 import styled from 'styled-components';
 import Autosuggest from 'react-autosuggest';
-import AutosuggestHighlightMatch from 'autosuggest-highlight/match';
-import AutosuggestHighlightParse from 'autosuggest-highlight/parse';
 
 import { uriToId, generateMediaUrl } from '@helpers/utils';
 import { query } from '@helpers/sparql';
@@ -105,11 +103,7 @@ const Container = styled.div`
   }
 `;
 
-const renderSuggestion = (suggestion, { searchQuery }) => {
-  const suggestionText = `${suggestion.label}`;
-  const matches = AutosuggestHighlightMatch(suggestionText, searchQuery);
-  const parts = AutosuggestHighlightParse(suggestionText, matches);
-
+const renderSuggestion = (suggestion) => {
   let mainImage = null;
   if (suggestion.representation && suggestion.representation.image) {
     mainImage = Array.isArray(suggestion.representation.image)
@@ -125,18 +119,7 @@ const renderSuggestion = (suggestion, { searchQuery }) => {
   return (
     <SuggestionContent>
       <SuggestionImage src={generateMediaUrl(mainImage, 90)} alt="" />
-      <SuggestionName>
-        {parts.map((part, index) => {
-          const className = part.highlight ? 'highlight' : null;
-
-          return (
-            // eslint-disable-next-line react/no-array-index-key
-            <span className={className} key={index}>
-              {part.text}
-            </span>
-          );
-        })}
-      </SuggestionName>
+      <SuggestionName>{suggestion.label}</SuggestionName>
     </SuggestionContent>
   );
 };
