@@ -5,7 +5,6 @@ import { breakpoints } from '@styles';
 import { SearchBox } from '@components';
 import LanguageSwitch from '@components/LanguageSwitch';
 import ProfileButton from '@components/ProfileButton';
-
 import { useTranslation } from '~/i18n';
 import config from '~/config';
 

@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react';
+
 import useOnScreen from '@helpers/useOnScreen';
 
 const ScrollDetector = ({ onAppears, onDisappears, rootMargin, ...props }) => {

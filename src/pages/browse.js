@@ -7,6 +7,7 @@ import queryString from 'query-string';
 import { useSWRInfinite } from 'swr';
 import { Grid as GridIcon } from '@styled-icons/boxicons-solid/Grid';
 import { MapMarkedAlt as MapIcon } from '@styled-icons/fa-solid/MapMarkedAlt';
+import ReactPaginate from 'react-paginate';
 
 import {
   Header,
@@ -18,21 +19,19 @@ import {
   Media,
   Button,
   Element,
+  Metadata,
+  Debug,
+  Select,
+  SpatioTemporalMaps,
+  SPARQLQueryLink,
+  PageTitle,
+  ScrollDetector,
 } from '@components';
-import Metadata from '@components/Metadata';
-import Debug from '@components/Debug';
-import Select from '@components/Select';
-import SpatioTemporalMaps from '@components/SpatioTemporalMaps';
-import ReactPaginate from 'react-paginate';
-import SPARQLQueryLink from '@components/SPARQLQueryLink';
-import PageTitle from '@components/PageTitle';
 import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
-import { breakpoints, sizes } from '@styles';
 import useDebounce from '@helpers/useDebounce';
 import useOnScreen from '@helpers/useOnScreen';
 import { search, getFilters } from '@pages/api/search';
-import ScrollDetector from '@components/ScrollDetector';
-
+import { breakpoints, sizes } from '@styles';
 import { useTranslation } from '~/i18n';
 import config from '~/config';
 

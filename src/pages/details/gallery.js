@@ -7,6 +7,7 @@ import queryString from 'query-string';
 import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
 import { saveAs } from 'file-saver';
 import Lightbox from 'react-image-lightbox';
+import { Carousel } from 'react-responsive-carousel';
 
 import {
   Header,
@@ -26,8 +27,6 @@ import { breakpoints } from '@styles';
 import { absoluteUrl, generateMediaUrl } from '@helpers/utils';
 import config from '~/config';
 import { useTranslation } from '~/i18n';
-
-const { Carousel } = require('react-responsive-carousel');
 
 const Columns = styled.div`
   display: flex;

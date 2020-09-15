@@ -24,4 +24,6 @@ export { default as ProfileButton } from './ProfileButton';
 export { default as SaveButton } from './SaveButton';
 export { default as GraphIcon } from './GraphIcon';
 export { default as SPARQLQueryLink } from './SPARQLQueryLink';
+export { default as SpatioTemporalMaps } from './SpatioTemporalMaps';
+export { default as ScrollDetector } from './ScrollDetector';
 export { Navbar, NavItem } from './Navbar';

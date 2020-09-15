@@ -1,7 +1,7 @@
-import { Component } from 'react';
 import styled from 'styled-components';
-import Select from '@components/Select';
 import PropTypes from 'prop-types';
+
+import Select from '@components/Select';
 
 /**
  * Select input with support for multiple items.

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Img } from 'react-image';
-import GraphIcon from '@components/GraphIcon';
 
+import GraphIcon from '@components/GraphIcon';
 import config from '~/config';
 
 /**
