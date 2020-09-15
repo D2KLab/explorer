@@ -51,8 +51,8 @@
     "items": "Items in the list",
     "empty": "This list is empty!",
     "operations": "Operations",
-    "created": "Created on:",
-    "updated": "Last update:",
+    "created": "Created on: <0>{{date}}</0>",
+    "updated": "Last update: <0>{{date}}</0>",
     "privacy": {
       "text": "This list is <0>{{status}}</strong>.",
       "status": {
@@ -67,7 +67,7 @@
     "lists": {
       "title": "My lists",
       "count": "{{count}} items",
-      "lastEdit": "last edit on",
+      "lastEdit": "last edit on <0>{{date}}</0>",
       "open": "Open"
     },
     "deleteAccount": {

@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import Link from 'next/link';
-import Moment from 'react-moment';
 
 import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import SparqlClient from '@helpers/sparql';
@@ -122,10 +121,32 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
               </Navbar>
               <Element>
                 <p>
-                  {t('list.created')} <Moment format="DD/MM/YYYY">{list.created_at}</Moment>
+                  <Trans
+                    i18nKey="list.created"
+                    components={[
+                      <time
+                        dateTime={new Date(list.created_at).toISOString()}
+                        title={new Date(list.created_at).toString()}
+                      />,
+                    ]}
+                    values={{
+                      date: new Date(list.created_at).toLocaleDateString(),
+                    }}
+                  />
                 </p>
                 <p>
-                  {t('list.updated')} <Moment format="DD/MM/YYYY">{list.updated_at}</Moment>
+                  <Trans
+                    i18nKey="list.updated"
+                    components={[
+                      <time
+                        dateTime={new Date(list.updated_at).toISOString()}
+                        title={new Date(list.updated_at).toString()}
+                      />,
+                    ]}
+                    values={{
+                      date: new Date(list.updated_at).toLocaleDateString(),
+                    }}
+                  />
                 </p>
               </Element>
               {isOwner && (

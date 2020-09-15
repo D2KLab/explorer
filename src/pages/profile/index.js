@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Img } from 'react-image';
 import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
 import { getSession, getProviders, getCsrfToken, signout } from 'next-auth/client';
-import Moment from 'react-moment';
 import Router from 'next/router';
 import { ShareAlt as ShareIcon } from '@styled-icons/boxicons-solid/ShareAlt';
 import { TrashAlt as TrashIcon } from '@styled-icons/boxicons-solid/TrashAlt';
@@ -315,8 +314,18 @@ const ProfilePage = ({
                         </ListItemTitle>
                         <ListItemSubtitle>
                           {t('profile.lists.count', { count: list.items.length })} |{' '}
-                          {t('profile.lists.lastEdit')}{' '}
-                          <Moment format="DD/MM/YYYY">{list.updated_at}</Moment>
+                          <Trans
+                            i18nKey="profile.lists.lastEdit"
+                            components={[
+                              <time
+                                dateTime={new Date(list.updated_at).toISOString()}
+                                title={new Date(list.updated_at).toString()}
+                              />,
+                            ]}
+                            values={{
+                              date: new Date(list.updated_at).toLocaleDateString(),
+                            }}
+                          />
                         </ListItemSubtitle>
                       </Element>
                       <Element display="flex" alignItems="center" marginLeft="auto">

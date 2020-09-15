@@ -46,8 +46,8 @@
     "empty": "Cette liste est vide !",
     "notFound": "Liste introuvable",
     "operations": "Opérations",
-    "created": "Créée le :",
-    "updated": "Mise à jour :",
+    "created": "Créée le : <0>{{date}}</0>",
+    "updated": "Mise à jour : <0>{{date}}</0>",
     "privacy": {
       "text": "Cette liste est <0>{{status}}</strong>.",
       "status": {
@@ -62,7 +62,7 @@
     "lists": {
       "title": "Mes listes",
       "count": "{{count}} éléments",
-      "lastEdit": "dernière modification le",
+      "lastEdit": "dernière modification le <0>{{date}}</0>",
       "open": "Ouvrir"
     },
     "deleteAccount": {
