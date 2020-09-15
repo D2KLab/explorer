@@ -58,14 +58,14 @@ const StyledMedia = styled(Media)`
 
 const CollectionDetailsPage = ({ result, inList }) => {
   const { t } = useTranslation('common');
+  const [session] = NextAuth.useSession();
+  const { query } = useRouter();
+  const [isItemSaved, setIsItemSaved] = useState(inList);
 
   if (!result) {
     return <DefaultErrorPage statusCode={404} title={t('common:errors.resultNotFound')} />;
   }
 
-  const [session] = NextAuth.useSession();
-
-  const { query } = useRouter();
   const route = config.routes[query.type];
 
   const images = [];
@@ -85,7 +85,6 @@ const CollectionDetailsPage = ({ result, inList }) => {
         (x) => x && (typeof x !== 'object' || x.constructor !== Object || Object.keys(x).length > 0)
       );
 
-  const [isItemSaved, setIsItemSaved] = useState(inList);
   const onItemSaveChange = (status) => {
     setIsItemSaved(status);
   };
