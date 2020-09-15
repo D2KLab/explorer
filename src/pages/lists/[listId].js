@@ -245,11 +245,11 @@ export async function getServerSideProps({ req, res, query }) {
       searchQuery.$filter = `?id = <${item.uri}>`;
 
       try {
-        const res = await SparqlClient.query(searchQuery, {
+        const searchRes = await SparqlClient.query(searchQuery, {
           endpoint: config.api.endpoint,
           debug: config.debug,
         });
-        const result = res['@graph'][0];
+        const result = searchRes['@graph'][0];
 
         let mainImage = null;
         if (result.representation && result.representation.image) {
