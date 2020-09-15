@@ -1,21 +1,21 @@
 /**
  * Gets the last part of an URI
  * Example:
- *  uriToId('http://dbpedia.org/page/Tim_Berners-Lee') returns 'Tim_Berners-Lee'
+ *  uriToId('http://dbpedia.org/page/Tim_Berners-Lee', { base: 'http://dbpedia.org/page' }) returns 'Tim_Berners-Lee'
  */
 export function uriToId(uriPart, { base }) {
   const uri = typeof base !== 'undefined' ? uriPart.substr(base.length + 1) : uriPart;
-  const id = uri.replace(/_/g, '__').replace(/\//g, '_');
+  const id = encodeURIComponent(uri);
   return id;
 }
 
 /**
  * Converts an ID back to an URI, given a base
  * Example:
- *  idToUri('Tim_Berners-Lee', 'http://dbpedia.org/page') returns 'http://dbpedia.org/page/Tim_Berners-Lee'
+ *  idToUri('Tim_Berners-Lee', { base: 'http://dbpedia.org/page' }) returns 'http://dbpedia.org/page/Tim_Berners-Lee'
  */
 export function idToUri(id, { base }) {
-  const uriPart = id.replace(/([^_])_([^_])/g, '$1/$2').replace(/__/g, '_');
+  const uriPart = decodeURIComponent(id);
   const uri = typeof base !== 'undefined' ? `${base}/${uriPart}` : uriPart;
   return uri;
 }
