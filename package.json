@@ -65,5 +65,8 @@
     "husky": "^4.3.0",
     "prettier": "^2.1.1",
     "pretty-quick": "^3.0.2"
+  },
+  "peerOptionalDependencies": {
+    "mongodb": "^3.6.2"
   }
 }
