@@ -67,7 +67,6 @@ const Field = styled.div`
 
   label {
     color: ${({ theme }) => theme.colors.secondary};
-    font-size: 0.9em;
     display: block;
     margin-bottom: 8px;
   }

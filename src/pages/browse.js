@@ -40,11 +40,11 @@ const StyledSelect = styled(Select)`
 `;
 
 const StyledTitle = styled.h1`
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
 `;
 
 const OptionsBar = styled.div`
-  margin-bottom: 24px;
+  margin-bottom: 2rem;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -141,7 +141,7 @@ const Label = styled.label`
 `;
 
 const ResultPage = styled.div`
-  font-size: 24px;
+  font-size: 2rem;
   font-weight: 400;
   margin-bottom: 12px;
 `;

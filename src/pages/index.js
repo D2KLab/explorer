@@ -49,16 +49,16 @@ const HeroTop = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 3em;
+  font-size: 3rem;
   width: 100%;
 
   ${breakpoints.tablet`
     width: 50%;
-    font-size: 3.5em;
+    font-size: 3.5rem;
   `}
 
   ${breakpoints.desktop`
-    font-size: 4em;
+    font-size: 4rem;
   `}
 
   ${({ theme }) => theme?.pages?.HomePage?.Title};
@@ -81,7 +81,7 @@ const Logo = styled.div`
 
 const HeroMiddle = styled.div`
   width: 100%;
-  height: 50px;
+  height: 3.5em;
   position: absolute;
   bottom: -25px;
   left: 0;
@@ -106,11 +106,7 @@ const HeroBottom = styled.div`
 const Subtitle = styled.h2`
   font-size: 2em;
   color: #787878;
-  margin-top: 2em;
-
-  ${breakpoints.tablet`
-    margin-top: 0;
-  `}
+  margin-top: 1em;
 `;
 
 const ButtonsContainer = styled.div`

@@ -114,7 +114,7 @@ const Primary = styled.div`
     }
 
     .carousel-status {
-      font-size: 16px;
+      font-size: inherit;
       color: #fff;
       top: 16px;
       left: 16px;
@@ -171,7 +171,7 @@ const Secondary = styled.div`
 const Title = styled.h1`
   display: none;
   border-bottom: 3px solid ${({ theme }) => theme.colors.primary};
-  font-size: 48px;
+  font-size: 3rem;
   line-height: 1.25;
   margin-bottom: 24px;
 

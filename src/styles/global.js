@@ -18,8 +18,8 @@ export default createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     background-color: ${theme.colors.background};
     color: ${theme.colors.text};
-    font-size: 14px;
-    line-height: 1.65;
+    font-size: 1em;
+    line-height: 1.5;
   }
 
   a {
@@ -32,7 +32,7 @@ export default createGlobalStyle`
 
   pre {
     font-family: ${theme.fontFamily.mono};
-    font-size: 0.7em;
+    font-size: 0.7rem;
     outline: 1px solid #ccc;
     padding: 10px;
     margin: 10px;
@@ -49,26 +49,26 @@ export default createGlobalStyle`
   }
 
   h1 {
-    font-size: 32px;
+    font-size: 2rem;
     font-weight: 400;
   }
 
   h2 {
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 400;
   }
 
   h3 {
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: bold;
   }
 
   h4, h5, h6 {
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: bold;
   }
 
   p {
-    margin: 1em 0;
+    margin: 1rem 0;
   }
 `;

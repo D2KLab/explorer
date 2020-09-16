@@ -118,7 +118,6 @@ const ListItemTitle = styled.div`
 `;
 
 const ListItemSubtitle = styled.span`
-  font-size: 16px;
   color: #666;
 `;
 
@@ -305,9 +304,9 @@ const ProfilePage = ({
               {renderOperations()}
             </ProfileSidebar>
             <ProfileContent>
-              <h2 style={{ marginBottom: 24, textTransform: 'uppercase' }}>
+              <h1 style={{ marginBottom: 24, textTransform: 'uppercase' }}>
                 {t('profile.lists.title')}
-              </h2>
+              </h1>
               <ul>
                 {lists.map((list) => {
                   const shareListDialog = useDialogState();
@@ -317,7 +316,7 @@ const ProfilePage = ({
                     <ListItem key={list._id}>
                       <Element>
                         <ListItemTitle>
-                          <h1>{list.name}</h1>
+                          <h3>{list.name}</h3>
                           <ListSettings list={list} />
                         </ListItemTitle>
                         <ListItemSubtitle>

@@ -18,6 +18,7 @@ const Container = styled.div`
   border-bottom: ${({ theme }) => theme.header.borderBottomWidth} solid #dcdcdc;
   display: flex;
   align-items: center;
+  font-size: 0.875rem;
 `;
 
 const StyledLanguageSwitch = styled(LanguageSwitch)`
@@ -73,9 +74,10 @@ const NavItem = styled.li`
 
 const NavLink = styled.a`
   color: #000;
-  font-size: 0.9em;
   text-decoration: none;
   text-transform: uppercase;
+  display: block;
+  line-height: 54px;
 `;
 
 const SearchContainer = styled.div`

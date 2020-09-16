@@ -41,6 +41,9 @@ const StyledMenu = styled(Menu)`
 
 const StyledMenuButton = styled(MenuButton)`
   background: transparent;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
   border: none;
   outline: none;
   cursor: pointer;
@@ -60,7 +63,7 @@ const StyledMenuItem = styled(MenuItem)`
   cursor: pointer;
   display: block;
   padding: 10px;
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.5;
   color: inherit;
 

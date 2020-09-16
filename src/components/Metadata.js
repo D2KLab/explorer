@@ -15,14 +15,12 @@ import Element from '@components/Element';
 const Label = styled.span`
   display: block;
   color: #666;
-  font-size: 0.7em;
+  font-size: 0.7rem;
   text-transform: uppercase;
 `;
 
 const Data = styled.span`
   font-weight: 400;
-  font-size: 1rem;
-  line-height: 2rem;
 `;
 
 const Metadata = ({ className, label, children }) => {

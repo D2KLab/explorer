@@ -23,6 +23,7 @@ const StyledMenu = styled(Menu)`
 const StyledMenuButton = styled(MenuButton)`
   background: transparent;
   color: inherit;
+  font-size: inherit;
   font-weight: inherit;
   border: none;
   outline: none;
@@ -30,7 +31,6 @@ const StyledMenuButton = styled(MenuButton)`
   text-transform: uppercase;
   display: flex;
   align-items: center;
-  font-size: 1em;
 
   &:hover {
     text-decoration: underline;
