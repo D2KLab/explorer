@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Router from 'next/router';
 import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
 
-import { Element } from '@components';
+import Element from '@components/Element';
 import Button from '@components/Button';
 import { useTranslation, Trans } from '~/i18n';
 

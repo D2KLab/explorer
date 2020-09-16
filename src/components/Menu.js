@@ -3,7 +3,7 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 
 import LanguageSwitch from '@components/LanguageSwitch';
-import { breakpoints } from '@styles';
+import breakpoints from '@styles/breakpoints';
 import config from '~/config';
 import { useTranslation } from '~/i18n';
 

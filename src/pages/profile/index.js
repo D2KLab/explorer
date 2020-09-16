@@ -7,13 +7,19 @@ import Router from 'next/router';
 import { ShareAlt as ShareIcon } from '@styled-icons/boxicons-solid/ShareAlt';
 import { TrashAlt as TrashIcon } from '@styled-icons/boxicons-solid/TrashAlt';
 
+import Header from '@components/Header';
+import Footer from '@components/Footer';
+import Layout from '@components/Layout';
+import Body from '@components/Body';
+import Content from '@components/Content';
+import Button from '@components/Button';
+import Element from '@components/Element';
+import PageTitle from '@components/PageTitle';
 import ListSettings from '@components/ListSettings';
 import ListDeletion from '@components/ListDeletion';
 import ListShare from '@components/ListShare';
 import { ProviderButton } from '@components/ProviderButton';
-import PageTitle from '@components/PageTitle';
-import { Header, Footer, Layout, Body, Content, Element, Button } from '@components';
-import { breakpoints } from '@styles';
+import breakpoints from '@styles/breakpoints';
 import { absoluteUrl } from '@helpers/utils';
 import { useTranslation, Trans } from '~/i18n';
 

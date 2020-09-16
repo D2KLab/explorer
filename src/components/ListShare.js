@@ -21,7 +21,7 @@ import {
   WhatsappIcon,
 } from 'react-share';
 
-import { Element } from '@components';
+import Element from '@components/Element';
 import Button from '@components/Button';
 import { useTranslation } from '~/i18n';
 

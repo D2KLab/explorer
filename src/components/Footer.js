@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { breakpoints } from '@styles';
+import breakpoints from '@styles/breakpoints';
 import { useTranslation } from '~/i18n';
 import config from '~/config';
 

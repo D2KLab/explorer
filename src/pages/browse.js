@@ -9,29 +9,27 @@ import { Grid as GridIcon } from '@styled-icons/boxicons-solid/Grid';
 import { MapMarkedAlt as MapIcon } from '@styled-icons/fa-solid/MapMarkedAlt';
 import ReactPaginate from 'react-paginate';
 
-import {
-  Header,
-  Footer,
-  Sidebar,
-  Layout,
-  Body,
-  Content,
-  Media,
-  Button,
-  Element,
-  Metadata,
-  Debug,
-  Select,
-  SpatioTemporalMaps,
-  SPARQLQueryLink,
-  PageTitle,
-  ScrollDetector,
-} from '@components';
+import Header from '@components/Header';
+import Footer from '@components/Footer';
+import Sidebar from '@components/Sidebar';
+import Layout from '@components/Layout';
+import Body from '@components/Body';
+import Content from '@components/Content';
+import Media from '@components/Media';
+import Button from '@components/Button';
+import Element from '@components/Element';
+import Metadata from '@components/Metadata';
+import Debug from '@components/Debug';
+import Select from '@components/Select';
+import SpatioTemporalMaps from '@components/SpatioTemporalMaps';
+import SPARQLQueryLink from '@components/SPARQLQueryLink';
+import PageTitle from '@components/PageTitle';
+import ScrollDetector from '@components/ScrollDetector';
 import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import useDebounce from '@helpers/useDebounce';
 import useOnScreen from '@helpers/useOnScreen';
 import { search, getFilters } from '@pages/api/search';
-import { breakpoints, sizes } from '@styles';
+import breakpoints, { sizes } from '@styles/breakpoints';
 import { useTranslation } from '~/i18n';
 import config from '~/config';
 

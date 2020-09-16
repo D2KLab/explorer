@@ -8,7 +8,7 @@ export const sizes = {
   largeDesktop: 1200,
 };
 
-export const breakpoints = Object.keys(sizes).reduce((accumulator, label) => {
+export default Object.keys(sizes).reduce((accumulator, label) => {
   const emSize = sizes[label] / 16;
   accumulator[label] = (...args) => css`
     @media (min-width: ${emSize}em) {
@@ -17,5 +17,3 @@ export const breakpoints = Object.keys(sizes).reduce((accumulator, label) => {
   `;
   return accumulator;
 }, {});
-
-export default breakpoints;

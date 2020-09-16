@@ -1,23 +1,20 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 
-import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
-import SparqlClient from '@helpers/sparql';
-import {
-  Header,
-  Footer,
-  Layout,
-  Body,
-  Content,
-  Title,
-  Media,
-  Navbar,
-  NavItem,
-  Element,
-} from '@components';
+import Header from '@components/Header';
+import Footer from '@components/Footer';
+import Layout from '@components/Layout';
+import Body from '@components/Body';
+import Content from '@components/Content';
+import Media from '@components/Media';
+import Element from '@components/Element';
+import Title from '@components/Title';
+import PageTitle from '@components/PageTitle';
 import ListSettings from '@components/ListSettings';
 import ListDeletion from '@components/ListDeletion';
-import PageTitle from '@components/PageTitle';
+import { Navbar, NavItem } from '@components/Navbar';
+import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
+import SparqlClient from '@helpers/sparql';
 import config from '~/config';
 import { useTranslation, Trans } from '~/i18n';
 

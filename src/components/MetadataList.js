@@ -1,4 +1,4 @@
-import { Metadata } from '@components';
+import Metadata from '@components/Metadata';
 import { uriToId } from '@helpers/utils';
 import { findRouteByRDFType } from '@helpers/explorer';
 import { useTranslation } from '~/i18n';

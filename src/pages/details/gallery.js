@@ -9,21 +9,19 @@ import { saveAs } from 'file-saver';
 import Lightbox from 'react-image-lightbox';
 import { Carousel } from 'react-responsive-carousel';
 
-import {
-  Header,
-  Footer,
-  Layout,
-  Body,
-  Element,
-  MetadataList,
-  Metadata,
-  GraphIcon,
-  Debug,
-  SaveButton,
-  PageTitle,
-  Button,
-} from '@components';
-import { breakpoints } from '@styles';
+import Header from '@components/Header';
+import Footer from '@components/Footer';
+import Layout from '@components/Layout';
+import Body from '@components/Body';
+import Button from '@components/Button';
+import Element from '@components/Element';
+import Metadata from '@components/Metadata';
+import Debug from '@components/Debug';
+import PageTitle from '@components/PageTitle';
+import GraphIcon from '@components/GraphIcon';
+import MetadataList from '@components/MetadataList';
+import SaveButton from '@components/SaveButton';
+import breakpoints from '@styles/breakpoints';
 import { absoluteUrl, generateMediaUrl } from '@helpers/utils';
 import config from '~/config';
 import { useTranslation } from '~/i18n';

@@ -1,4 +1,7 @@
-import { Layout, Header, Body, Content } from '@components';
+import Layout from '@components/Layout';
+import Header from '@components/Header';
+import Body from '@components/Body';
+import Content from '@components/Content';
 import PageTitle from '@components/PageTitle';
 
 const PrivacyPolicyPage = () => {

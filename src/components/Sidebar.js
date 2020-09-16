@@ -4,7 +4,7 @@ import Switch from 'react-switch';
 
 import Select from '@components/Select';
 import MultiSelect from '@components/MultiSelect';
-import { breakpoints } from '@styles';
+import breakpoints from '@styles/breakpoints';
 import Button from '@components/Button';
 import Input from '@components/Input';
 import useDebounce from '@helpers/useDebounce';

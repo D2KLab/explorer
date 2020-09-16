@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
 import { DownArrow } from '@styled-icons/boxicons-solid/DownArrow';
 
-import { Element } from '@components';
+import Element from '@components/Element';
 import { useTranslation } from '~/i18n';
 import config from '~/config';
 

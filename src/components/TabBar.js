@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import SwipeableViews from 'react-swipeable-views';
 
-import { breakpoints } from '@styles';
+import breakpoints from '@styles/breakpoints';
 
 const TabsWrapper = styled.div`
   flex: 1;

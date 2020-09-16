@@ -6,22 +6,20 @@ import ReactPlayer from 'react-player';
 import queryString from 'query-string';
 import NextAuth from 'next-auth/client';
 
-import {
-  Header,
-  Footer,
-  Layout,
-  Body,
-  Button,
-  Element,
-  MetadataList,
-  SaveButton,
-  Metadata,
-  GraphIcon,
-  PageTitle,
-  Debug,
-} from '@components';
+import Header from '@components/Header';
+import Footer from '@components/Footer';
+import Layout from '@components/Layout';
+import Body from '@components/Body';
+import Button from '@components/Button';
+import Element from '@components/Element';
+import Metadata from '@components/Metadata';
+import Debug from '@components/Debug';
+import PageTitle from '@components/PageTitle';
 import Media, { ThumbnailContainer } from '@components/Media';
-import { breakpoints } from '@styles';
+import GraphIcon from '@components/GraphIcon';
+import MetadataList from '@components/MetadataList';
+import SaveButton from '@components/SaveButton';
+import breakpoints from '@styles/breakpoints';
 import { absoluteUrl } from '@helpers/utils';
 import SparqlClient from '@helpers/sparql';
 import { useTranslation } from '~/i18n';

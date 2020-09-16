@@ -7,10 +7,13 @@ import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
 import { Camera } from '@styled-icons/boxicons-solid/Camera';
 import { Button as ReakitButton } from 'reakit';
 
-import { Layout, Header, Footer, Body } from '@components';
-import { breakpoints } from '@styles';
+import Layout from '@components/Layout';
+import Header from '@components/Header';
+import Footer from '@components/Footer';
+import Body from '@components/Body';
 import SearchInput from '@components/SearchInput';
 import PageTitle from '@components/PageTitle';
+import breakpoints from '@styles/breakpoints';
 import { useTranslation } from '~/i18n';
 import config from '~/config';
 

@@ -1,8 +1,14 @@
 import { getProviders, getCsrfToken } from 'next-auth/client';
 
-import { Layout, Header, Body, Content, Title, Footer, Element } from '@components';
-import { ProviderButton } from '@components/ProviderButton';
+import Header from '@components/Header';
+import Footer from '@components/Footer';
+import Layout from '@components/Layout';
+import Body from '@components/Body';
+import Content from '@components/Content';
+import Element from '@components/Element';
 import PageTitle from '@components/PageTitle';
+import Title from '@components/Title';
+import { ProviderButton } from '@components/ProviderButton';
 import { useTranslation } from '~/i18n';
 
 const SignInPage = ({ providers, csrfToken }) => {

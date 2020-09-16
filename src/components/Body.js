@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 import Content from '@components/Content';
-import { breakpoints } from '@styles';
+import breakpoints from '@styles/breakpoints';
 
 /**
  * Flex body container.

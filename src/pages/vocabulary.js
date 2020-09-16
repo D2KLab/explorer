@@ -5,11 +5,15 @@ import Link from 'next/link';
 import StickyBox from 'react-sticky-box';
 import 'intersection-observer';
 
-import { Header, Footer, Layout, Body, Content } from '@components';
+import Header from '@components/Header';
+import Footer from '@components/Footer';
+import Layout from '@components/Layout';
+import Body from '@components/Body';
+import Content from '@components/Content';
 import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import PageTitle from '@components/PageTitle';
-import { breakpoints } from '@styles';
+import breakpoints from '@styles/breakpoints';
 import SparqlClient from '@helpers/sparql';
 import config from '~/config';
 import { useTranslation, Trans } from '~/i18n';

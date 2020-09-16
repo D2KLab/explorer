@@ -7,7 +7,7 @@ import { User } from '@styled-icons/boxicons-solid/User';
 import NextAuth from 'next-auth/client';
 import Router from 'next/router';
 
-import { Element } from '@components';
+import Element from '@components/Element';
 import { useTranslation, Trans } from '~/i18n';
 
 /**

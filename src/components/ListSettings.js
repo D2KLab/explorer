@@ -5,7 +5,7 @@ import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit
 import { Edit as SettingsIcon } from '@styled-icons/material/Edit';
 import Switch from 'react-switch';
 
-import { Element } from '@components';
+import Element from '@components/Element';
 import Input from '@components/Input';
 import Button from '@components/Button';
 import { useTranslation } from '~/i18n';

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import { breakpoints } from '@styles';
+import breakpoints from '@styles/breakpoints';
 import { useTranslation } from '~/i18n';
 
 /**

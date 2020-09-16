@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Element } from '@components';
+import Element from '@components/Element';
 
 /**
  * Metadata with label and value(s).
