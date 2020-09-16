@@ -209,7 +209,7 @@ function formatSegmentTime(time, removeZeroes) {
 }
 
 const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation();
 
   if (!result) {
     return <DefaultErrorPage statusCode={404} title={t('common:errors.resultNotFound')} />;
@@ -423,7 +423,13 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
     res.statusCode = 404;
   }
 
-  return { result, inList, mediaUrl, videoSegments };
+  return {
+    result,
+    inList,
+    mediaUrl,
+    videoSegments,
+    namespacesRequired: ['common'],
+  };
 };
 
 export default VideoDetailsPage;

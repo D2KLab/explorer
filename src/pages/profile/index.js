@@ -21,6 +21,7 @@ import ListShare from '@components/ListShare';
 import { ProviderButton } from '@components/ProviderButton';
 import breakpoints from '@styles/breakpoints';
 import { absoluteUrl } from '@helpers/utils';
+import { getSessionUser, getUserLists, getUserAccounts } from '@helpers/database';
 import { useTranslation, Trans } from '~/i18n';
 
 const StyledDialogDisclosure = styled(DialogDisclosure)`
@@ -376,8 +377,9 @@ const ProfilePage = ({
 export async function getServerSideProps(ctx) {
   const { req, res } = ctx;
   const session = await getSession(ctx);
+  const user = await getSessionUser(session);
 
-  if (!session) {
+  if (!user) {
     res.setHeader('location', '/auth/signin');
     res.statusCode = 302;
     res.end();
@@ -385,30 +387,18 @@ export async function getServerSideProps(ctx) {
   }
 
   // Get user lists
-  const lists = await (
-    await fetch(`${absoluteUrl(req)}/api/profile/lists`, {
-      headers: {
-        cookie: req.headers.cookie,
-      },
-    })
-  ).json();
+  const lists = await getUserLists(user);
 
   // Get user accounts
-  const accounts = await (
-    await fetch(`${absoluteUrl(req)}/api/profile/accounts`, {
-      headers: {
-        cookie: req.headers.cookie,
-      },
-    })
-  ).json();
+  const accounts = await getUserAccounts(user);
 
   return {
     props: {
       providers: await getProviders(ctx),
       csrfToken: await getCsrfToken(ctx),
       session,
-      accounts,
-      lists,
+      accounts: JSON.parse(JSON.stringify(accounts)), // serialize the accounts
+      lists: JSON.parse(JSON.stringify(lists)), // serialize the lists
       baseUrl: absoluteUrl(req),
       facebookAppId: process.env.FACEBOOK_ID,
     },

@@ -1,8 +1,9 @@
 import NextAuth from 'next-auth/client';
 
 import { withRequestValidation } from '@helpers/api';
-import { absoluteUrl, idToUri } from '@helpers/utils';
+import { idToUri } from '@helpers/utils';
 import { fillWithVocabularies } from '@helpers/explorer';
+import { getSessionUser, getUserLists } from '@helpers/database';
 import SparqlClient from '@helpers/sparql';
 import config from '~/config';
 
@@ -36,18 +37,10 @@ export default withRequestValidation({
 
     if (req) {
       const session = await NextAuth.getSession({ req });
-      if (session) {
+      const user = await getSessionUser(session);
+      if (user) {
         // Check if this item is in a user list and flag it accordingly.
-        const loadedLists = await (
-          await fetch(`${absoluteUrl(req)}/api/profile/lists`, {
-            headers:
-              req && req.headers
-                ? {
-                    cookie: req.headers.cookie,
-                  }
-                : undefined,
-          })
-        ).json();
+        const loadedLists = await getUserLists(user);
         inList = loadedLists.some((list) =>
           list.items.some((it) => it.uri === result['@id'] && it.type === query.type)
         );

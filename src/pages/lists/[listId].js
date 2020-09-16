@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import Link from 'next/link';
+import { getSession } from 'next-auth/client';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -14,6 +15,7 @@ import ListSettings from '@components/ListSettings';
 import ListDeletion from '@components/ListDeletion';
 import { Navbar, NavItem } from '@components/Navbar';
 import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
+import { getSessionUser, getListById } from '@helpers/database';
 import SparqlClient from '@helpers/sparql';
 import config from '~/config';
 import { useTranslation, Trans } from '~/i18n';
@@ -191,36 +193,25 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
   );
 };
 
-export async function getServerSideProps({ req, res, query }) {
-  // Fetch the list
-  const list = await (
-    await fetch(`${absoluteUrl(req)}/api/lists/${query.listId}`, {
-      headers: {
-        cookie: req.headers.cookie,
-      },
-    })
-  ).json();
+export async function getServerSideProps(ctx) {
+  const { req, res, query } = ctx;
+  const session = await getSession(ctx);
+  const list = await getListById(query.listId);
 
-  if (list.error) {
+  if (!list) {
     // List not found
     res.statusCode = 404;
     return {
       props: {
-        error: list.error,
+        error: 'List not found',
       },
     };
   }
 
   // Get current user
-  const user = await (
-    await fetch(`${absoluteUrl(req)}/api/profile`, {
-      headers: {
-        cookie: req.headers.cookie,
-      },
-    })
-  ).json();
+  const user = await getSessionUser(session);
 
-  const isOwner = user && list.user === user._id;
+  const isOwner = user && list && list.user.equals(user._id);
 
   if (!list.is_public && !isOwner) {
     res.setHeader('location', '/auth/signin');
@@ -277,7 +268,7 @@ export async function getServerSideProps({ req, res, query }) {
 
   return {
     props: {
-      list,
+      list: JSON.parse(JSON.stringify(list)), // serialize the list
       isOwner,
       shareLink: `${absoluteUrl(req)}/lists/${list._id}`,
     },

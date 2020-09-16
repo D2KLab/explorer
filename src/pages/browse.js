@@ -148,7 +148,7 @@ const ResultPage = styled.div`
 
 const BrowsePage = ({ initialData }) => {
   const { req, query, pathname } = useRouter();
-  const { t } = useTranslation(['common', 'search']);
+  const { t } = useTranslation();
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(true);
   const currentPage = parseInt(query.page, 10) || 1;
@@ -543,6 +543,7 @@ export async function getServerSideProps({ query }) {
         debugSparqlQuery: searchData.debugSparqlQuery,
         filters,
       },
+      namespacesRequired: ['common', 'search'],
     },
   };
 }

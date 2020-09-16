@@ -259,7 +259,7 @@ const Dropzone = styled.div`
 `;
 
 const HomePage = () => {
-  const { t } = useTranslation(['common', 'home']);
+  const { t } = useTranslation();
 
   // Search by image
   const dialog = useDialogState();
@@ -353,6 +353,12 @@ const HomePage = () => {
       <Footer />
     </Layout>
   );
+};
+
+HomePage.getInitialProps = () => {
+  return {
+    namespacesRequired: ['common', 'home'],
+  };
 };
 
 export default HomePage;

@@ -193,7 +193,7 @@ const VirtualLoomButton = styled.a`
 `;
 
 const GalleryDetailsPage = ({ result, inList }) => {
-  const { t, i18n } = useTranslation('common');
+  const { t, i18n } = useTranslation();
   const { query } = useRouter();
   const [session] = NextAuth.useSession();
   const route = config.routes[query.type];
@@ -470,7 +470,11 @@ GalleryDetailsPage.getInitialProps = async ({ req, res, query }) => {
     res.statusCode = 404;
   }
 
-  return { result, inList };
+  return {
+    result,
+    inList,
+    namespacesRequired: ['common'],
+  };
 };
 
 export default GalleryDetailsPage;

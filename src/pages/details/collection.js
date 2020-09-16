@@ -63,7 +63,7 @@ const StyledMedia = styled(Media)`
 `;
 
 const CollectionDetailsPage = ({ result, inList }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation();
   const [session] = NextAuth.useSession();
   const { query } = useRouter();
   const [isItemSaved, setIsItemSaved] = useState(inList);
@@ -200,7 +200,11 @@ CollectionDetailsPage.getInitialProps = async ({ req, res, query }) => {
     res.statusCode = 404;
   }
 
-  return { result, inList };
+  return {
+    result,
+    inList,
+    namespacesRequired: ['common'],
+  };
 };
 
 export default CollectionDetailsPage;
