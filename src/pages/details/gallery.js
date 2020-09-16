@@ -309,8 +309,8 @@ const GalleryDetailsPage = ({ result, inList }) => {
 
   const customRenderThumb = (children) => {
     return Carousel.defaultProps.renderThumbs(children).concat(
-      <Element>
-        <VirtualLoomButton key="virtual-loom" onClick={virtualLoomOnClick} {...virtualLoomMenu}>
+      <Element key="virtual-loom">
+        <VirtualLoomButton onClick={virtualLoomOnClick}>
           <img src="/images/virtual-loom-button.png" alt="Virtual Loom" />
         </VirtualLoomButton>
         <StyledMenu {...virtualLoomMenu} aria-label="Virtual Loom">
