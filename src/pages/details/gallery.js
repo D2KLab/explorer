@@ -315,10 +315,10 @@ const GalleryDetailsPage = ({ result, inList }) => {
         </VirtualLoomButton>
         <StyledMenu {...virtualLoomMenu} aria-label="Virtual Loom">
           <MenuItem {...virtualLoomMenu} as={Button} primary onClick={onClickVirtualLoomButton}>
-            Web
+            {t('common:buttons.virtualLoom.web')}
           </MenuItem>
           <MenuItem {...virtualLoomMenu} as={Button} primary onClick={() => download('vljson')}>
-            Desktop
+            {t('common:buttons.virtualLoom.desktop')}
           </MenuItem>
         </StyledMenu>
       </Element>
@@ -426,7 +426,7 @@ const GalleryDetailsPage = ({ result, inList }) => {
             </MenuButton>
             <StyledMenu {...downloadMenu} aria-label="Download">
               <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('vljson')}>
-                {t('common:buttons.downloadVirtualLoom')}
+                {t('common:buttons.virtualLoom.download')}
               </MenuItem>
               <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('json')}>
                 {t('common:buttons.downloadJSON')}

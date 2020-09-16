@@ -39,12 +39,21 @@
     "save": "Enregistrer",
     "close": "Fermer",
     "cancel": "Annuler",
-    "search": "Rechercher"
+    "search": "Rechercher",
+    "searchByText": "Recherche par texte",
+    "searchByImage": "Recherche par image",
+    "download": "Télécharger",
+    "virtualLoom": {
+      "download": "Virtual Loom",
+      "web": "Web",
+      "desktop": "Bureau"
+    },
+    "downloadJSON": "Linked Data JSON",
+    "downloadSelectedImage": "Télécharger l'image"
   },
   "list": {
     "items": "Éléments dans la liste",
     "empty": "Cette liste est vide !",
-    "notFound": "Liste introuvable",
     "operations": "Opérations",
     "created": "Créée le : <0>{{date}}</0>",
     "updated": "Mise à jour : <0>{{date}}</0>",

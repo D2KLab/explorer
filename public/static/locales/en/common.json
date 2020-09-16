@@ -43,7 +43,11 @@
     "searchByText": "Search by text",
     "searchByImage": "Search by image",
     "download": "Download",
-    "downloadVirtualLoom": "Virtual Loom",
+    "virtualLoom": {
+      "download": "Virtual Loom",
+      "web": "Web",
+      "desktop": "Desktop"
+    },
     "downloadJSON": "Linked Data JSON",
     "downloadSelectedImage": "Download selected image"
   },
