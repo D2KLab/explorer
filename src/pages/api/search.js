@@ -21,7 +21,6 @@ export const getFilters = async (query) => {
 
     // Check if filter values are already cached
     const cacheKey = `route_${query.type}_filter_${filter.id}`;
-    // eslint-disable-next-line no-await-in-loop
     await cache.exists(cacheKey).then(async (reply) => {
       if (reply !== 1) {
         let filterQuery = null;
@@ -198,7 +197,6 @@ export const search = async (query) => {
     }
 
     for (let i = 0; i < results.length; i += 1) {
-      // eslint-disable-next-line no-await-in-loop
       await fillWithVocabularies(results[i]);
     }
 
