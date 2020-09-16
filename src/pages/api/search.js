@@ -1,5 +1,3 @@
-/* eslint-disable import/no-named-as-default-member */
-
 import { withRequestValidation } from '@helpers/api';
 import SparqlClient from '@helpers/sparql';
 import { fillWithVocabularies } from '@helpers/explorer';
