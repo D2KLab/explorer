@@ -188,12 +188,6 @@ const MobileTitle = styled(Title)`
   `};
 `;
 
-const Analysis = styled.div`
-  /* background-color: red; */
-
-  margin-bottom: 8px;
-`;
-
 const VirtualLoomButton = styled.a`
   display: block;
 `;

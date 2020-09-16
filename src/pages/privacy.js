@@ -12,7 +12,7 @@ const PrivacyPolicyPage = () => {
       <Body>
         <Content>
           <h2>Privacy Policy</h2>
-          <p></p>
+          <p />
         </Content>
       </Body>
     </Layout>

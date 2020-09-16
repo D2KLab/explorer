@@ -263,9 +263,12 @@ const HomePage = () => {
 
   // Search by image
   const dialog = useDialogState();
-  const onDrop = useCallback((acceptedFiles) => {
-    // TODO: do something with the files
-  }, []);
+  const onDrop = useCallback(
+    (/* acceptedFiles */) => {
+      // TODO: do something with the files
+    },
+    []
+  );
   const { acceptedFiles, getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const files = acceptedFiles.map((file) => (
     <li key={file.path}>

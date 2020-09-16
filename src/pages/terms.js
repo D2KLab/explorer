@@ -12,7 +12,7 @@ const TermsOfServicePage = () => {
       <Body>
         <Content>
           <h2>Terms of Service</h2>
-          <p></p>
+          <p />
         </Content>
       </Body>
     </Layout>
