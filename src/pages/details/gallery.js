@@ -247,14 +247,17 @@ const GalleryDetailsPage = ({ result, inList }) => {
     };
   };
 
-  const onClickVirtualLoomButton = (e) => {
-    e.stopPropagation();
-
+  const generateVirtualLoomURL = () => {
     const data = generateVirtualLoomData();
-
     const params = [];
     params.push(`lang=${encodeURIComponent(data.language)}`);
     params.push(`data=${encodeURIComponent(JSON.stringify(data))}`);
+    const url = `${config.plugins.virtualLoom.url}?${params.join('&')}`;
+    return url;
+  };
+
+  const onClickVirtualLoomButton = (e) => {
+    e.stopPropagation();
 
     const width = 960;
     const height = 720;
@@ -262,8 +265,8 @@ const GalleryDetailsPage = ({ result, inList }) => {
     top = top > 0 ? top / 2 : 0;
     let left = window.screen.width - width;
     left = left > 0 ? left / 2 : 0;
-    const url = `${config.plugins.virtualLoom.url}?${params.join('&')}`;
 
+    const url = generateVirtualLoomURL();
     const win = window.open(
       url,
       'Virtual Loom',
@@ -317,7 +320,12 @@ const GalleryDetailsPage = ({ result, inList }) => {
           <MenuItem {...virtualLoomMenu} as={Button} primary onClick={onClickVirtualLoomButton}>
             {t('common:buttons.virtualLoom.web')}
           </MenuItem>
-          <MenuItem {...virtualLoomMenu} as={Button} primary onClick={() => download('vljson')}>
+          <MenuItem
+            {...virtualLoomMenu}
+            as={Button}
+            primary
+            href={generateVirtualLoomURL().replace(/^https?:\/\//, 'vloom://')}
+          >
             {t('common:buttons.virtualLoom.desktop')}
           </MenuItem>
         </StyledMenu>
