@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Img } from 'react-image';
 import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
 import { getSession, getProviders, getCsrfToken, signout } from 'next-auth/client';
+import NextLink from 'next/link';
 import Router from 'next/router';
 import { ShareAlt as ShareIcon } from '@styled-icons/boxicons-solid/ShareAlt';
 import { TrashAlt as TrashIcon } from '@styled-icons/boxicons-solid/TrashAlt';
@@ -356,9 +357,9 @@ const ProfilePage = ({
                           </ListDeletion>
                         </ListItemButton>
                         <ListItemButton>
-                          <Button primary href={`/lists/${list._id}`}>
-                            {t('profile.lists.open')}
-                          </Button>
+                          <NextLink href={`/lists/${list._id}`}>
+                            <Button primary>{t('profile.lists.open')}</Button>
+                          </NextLink>
                         </ListItemButton>
                       </Element>
                     </ListItem>
