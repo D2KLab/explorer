@@ -176,7 +176,6 @@ const SaveButton = ({ item, type, saved, onChange }) => {
       <StyledDialogDisclosure
         onClick={useCallback((event) => {
           loadLists(event);
-          dialog.onClick(event);
         })}
         {...dialog}
       >
