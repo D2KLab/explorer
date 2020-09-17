@@ -154,10 +154,10 @@ const BrowsePage = ({ initialData }) => {
   const currentPage = parseInt(query.page, 10) || 1;
   const mapRef = useRef(null);
 
-  // Memoize the initial query to prevent re-rendering the map
+  // Save the initial query to prevent re-rendering the map
   // (reloading the iframe) every time the search query changes.
   // Instead, we rely on `setQuery` from the iframe's contentWindow.
-  const mapInitialQuery = useMemo(() => query, [isMapVisible]);
+  const [mapInitialQuery, setMapInitialQuery] = useState(query);
 
   // Store the initial start page on load, because `currentPage`
   // gets updated during infinite scroll.
@@ -213,6 +213,12 @@ const BrowsePage = ({ initialData }) => {
           });
         }
         mapRef.current.focus();
+      } else {
+        // Map isn't ready/loaded yet, change the initial map query to update the iframe url
+        setMapInitialQuery({
+          type: query.type,
+          ...fields,
+        });
       }
     }
 
@@ -292,7 +298,12 @@ const BrowsePage = ({ initialData }) => {
   };
 
   const toggleMap = () => {
-    setIsMapVisible(!isMapVisible);
+    const mapVisibility = !isMapVisible;
+    setIsMapVisible(mapVisibility);
+    if (mapVisibility) {
+      // Update the query if it has changed since last time
+      setMapInitialQuery(query);
+    }
   };
 
   const loadMore = () => {
