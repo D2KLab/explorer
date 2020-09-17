@@ -1,9 +1,12 @@
+import { useMemo } from 'react';
 import queryString from 'query-string';
 
 import config from '~/config';
 
 const SpatioTemporalMaps = ({ mapRef, query }) => {
-  const params = { ...query, _t: new Date().getTime() };
+  const params = useMemo(() => {
+    return { ...query, _t: new Date().getTime() };
+  }, [queryString.stringify(query)]);
 
   return (
     <div>
