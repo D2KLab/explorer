@@ -33,7 +33,9 @@
       "listName": "List name"
     },
     "createButton": "Create a new list",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "save": "Save",
+    "saved": "Saved"
   },
   "buttons": {
     "save": "Save",

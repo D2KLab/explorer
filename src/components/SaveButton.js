@@ -180,7 +180,7 @@ const SaveButton = ({ item, type, saved, onChange }) => {
         {...dialog}
       >
         {saved ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
-        <StyledLabel>{t('buttons.save')}</StyledLabel>
+        <StyledLabel>{saved ? t('saveButton.saved') : t('saveButton.save')}</StyledLabel>
       </StyledDialogDisclosure>
       <StyledDialogBackdrop {...dialog}>
         <StyledDialog {...dialog} modal aria-label={t('saveButton.title')}>
@@ -217,7 +217,7 @@ const SaveButton = ({ item, type, saved, onChange }) => {
                     {t('buttons.cancel')}
                   </Button>
                   <Button type="button" primary onClick={createListWithItem}>
-                    {t('buttons.save')}
+                    {saved ? t('saveButton.saved') : t('saveButton.save')}
                   </Button>
                 </Element>
               </form>

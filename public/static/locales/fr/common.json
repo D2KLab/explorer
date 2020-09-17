@@ -33,7 +33,9 @@
       "listName": "Nom de la liste"
     },
     "createButton": "Créer une nouvelle liste",
-    "loading": "Chargement..."
+    "loading": "Chargement...",
+    "save": "Ajouter",
+    "saved": "Ajouté"
   },
   "buttons": {
     "save": "Enregistrer",
