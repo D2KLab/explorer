@@ -204,13 +204,16 @@ const BrowsePage = ({ initialData }) => {
   const onSearch = (fields) => {
     const isMapSearch = isMapVisible; // && mapRef.current?.src?.startsWith(window.location.origin);
     if (isMapSearch) {
-      if (typeof mapRef?.current?.contentWindow?.setQuery === 'function') {
-        mapRef.current.contentWindow.setQuery({
-          type: query.type,
-          ...fields,
-        });
+      if (mapRef && mapRef.current) {
+        const { contentWindow } = mapRef.current;
+        if (contentWindow && typeof contentWindow.setQuery === 'function') {
+          contentWindow.setQuery({
+            type: query.type,
+            ...fields,
+          });
+        }
+        mapRef.current.focus();
       }
-      mapRef.current.focus();
     }
 
     const newQuery = {
