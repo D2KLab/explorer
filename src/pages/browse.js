@@ -157,7 +157,7 @@ const BrowsePage = ({ initialData }) => {
   // Memoize the initial query to prevent re-rendering the map
   // (reloading the iframe) every time the search query changes.
   // Instead, we rely on `setQuery` from the iframe's contentWindow.
-  const mapInitialQuery = useMemo(() => query, []);
+  const mapInitialQuery = useMemo(() => query, [isMapVisible]);
 
   // Store the initial start page on load, because `currentPage`
   // gets updated during infinite scroll.
