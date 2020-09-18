@@ -16,6 +16,7 @@ import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import PageTitle from '@components/PageTitle';
 import Media, { ThumbnailContainer } from '@components/Media';
+import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import GraphIcon from '@components/GraphIcon';
 import MetadataList from '@components/MetadataList';
 import SaveButton from '@components/SaveButton';
@@ -208,7 +209,7 @@ function formatSegmentTime(time, removeZeroes) {
   return formattedTime;
 }
 
-const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments }) => {
+const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSegments }) => {
   const { t } = useTranslation();
 
   if (!result) {
@@ -353,6 +354,12 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments }) => {
               <Metadata label="Query Result">
                 <pre>{JSON.stringify(result, null, 2)}</pre>
               </Metadata>
+              <Metadata label="SPARQL Query">
+                <SPARQLQueryLink query={debugSparqlQuery}>
+                  {t('common:buttons.editQuery')}
+                </SPARQLQueryLink>
+                <pre>{debugSparqlQuery}</pre>
+              </Metadata>
             </Debug>
           </Primary>
           <Secondary>
@@ -371,7 +378,7 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, videoSegments }) => {
 };
 
 VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
-  const { result, inList } = await (
+  const { result, inList, debugSparqlQuery } = await (
     await fetch(`${absoluteUrl(req)}/api/entity?${queryString.stringify(query)}`, {
       headers:
         req && req.headers
@@ -428,6 +435,7 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
     inList,
     mediaUrl,
     videoSegments,
+    debugSparqlQuery,
     namespacesRequired: ['common'],
   };
 };

@@ -18,6 +18,7 @@ import Element from '@components/Element';
 import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import PageTitle from '@components/PageTitle';
+import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import GraphIcon from '@components/GraphIcon';
 import MetadataList from '@components/MetadataList';
 import SaveButton from '@components/SaveButton';
@@ -192,7 +193,7 @@ const VirtualLoomButton = styled.a`
   display: block;
 `;
 
-const GalleryDetailsPage = ({ result, inList }) => {
+const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   const { t, i18n } = useTranslation();
   const { query } = useRouter();
   const [session] = NextAuth.useSession();
@@ -411,6 +412,12 @@ const GalleryDetailsPage = ({ result, inList }) => {
               <Metadata label="Query Result">
                 <pre>{JSON.stringify(result, null, 2)}</pre>
               </Metadata>
+              <Metadata label="SPARQL Query">
+                <SPARQLQueryLink query={debugSparqlQuery}>
+                  {t('common:buttons.editQuery')}
+                </SPARQLQueryLink>
+                <pre>{debugSparqlQuery}</pre>
+              </Metadata>
             </Debug>
           </Primary>
           <Secondary>
@@ -463,7 +470,7 @@ const GalleryDetailsPage = ({ result, inList }) => {
 };
 
 GalleryDetailsPage.getInitialProps = async ({ req, res, query }) => {
-  const { result, inList } = await (
+  const { result, inList, debugSparqlQuery } = await (
     await fetch(`${absoluteUrl(req)}/api/entity?${queryString.stringify(query)}`, {
       headers:
         req && req.headers
@@ -481,6 +488,7 @@ GalleryDetailsPage.getInitialProps = async ({ req, res, query }) => {
   return {
     result,
     inList,
+    debugSparqlQuery,
     namespacesRequired: ['common'],
   };
 };

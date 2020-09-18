@@ -24,7 +24,14 @@ export default withRequestValidation({
     base: route.uriBase,
   })}>`;
 
-  let inList = false;
+  const returnValue = {
+    result: null,
+    inList: false,
+  };
+
+  if (config.debug) {
+    returnValue.debugSparqlQuery = await SparqlClient.getSparqlQuery(searchQuery);
+  }
 
   const queryRes = await SparqlClient.query(searchQuery, {
     endpoint: config.api.endpoint,
@@ -41,15 +48,14 @@ export default withRequestValidation({
       if (user) {
         // Check if this item is in a user list and flag it accordingly.
         const loadedLists = await getUserLists(user);
-        inList = loadedLists.some((list) =>
+        returnValue.inList = loadedLists.some((list) =>
           list.items.some((it) => it.uri === result['@id'] && it.type === query.type)
         );
       }
     }
+
+    returnValue.result = result;
   }
 
-  res.status(200).json({
-    result,
-    inList,
-  });
+  res.status(200).json(returnValue);
 });

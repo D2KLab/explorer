@@ -16,6 +16,7 @@ import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import PageTitle from '@components/PageTitle';
 import SaveButton from '@components/SaveButton';
+import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import GraphIcon from '@components/GraphIcon';
 import breakpoints from '@styles/breakpoints';
 import { uriToId, absoluteUrl, generateMediaUrl } from '@helpers/utils';
@@ -62,7 +63,7 @@ const StyledMedia = styled(Media)`
   margin-right: var(--card-margin);
 `;
 
-const CollectionDetailsPage = ({ result, inList }) => {
+const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   const { t } = useTranslation();
   const [session] = NextAuth.useSession();
   const { query } = useRouter();
@@ -175,6 +176,12 @@ const CollectionDetailsPage = ({ result, inList }) => {
               <Metadata label="Query Result">
                 <pre>{JSON.stringify(result, null, 2)}</pre>
               </Metadata>
+              <Metadata label="SPARQL Query">
+                <SPARQLQueryLink query={debugSparqlQuery}>
+                  {t('common:buttons.editQuery')}
+                </SPARQLQueryLink>
+                <pre>{debugSparqlQuery}</pre>
+              </Metadata>
             </Debug>
           </Primary>
         </Columns>
@@ -185,7 +192,7 @@ const CollectionDetailsPage = ({ result, inList }) => {
 };
 
 CollectionDetailsPage.getInitialProps = async ({ req, res, query }) => {
-  const { result, inList } = await (
+  const { result, inList, debugSparqlQuery } = await (
     await fetch(`${absoluteUrl(req)}/api/entity?${queryString.stringify(query)}`, {
       headers:
         req && req.headers
@@ -203,6 +210,7 @@ CollectionDetailsPage.getInitialProps = async ({ req, res, query }) => {
   return {
     result,
     inList,
+    debugSparqlQuery,
     namespacesRequired: ['common'],
   };
 };
