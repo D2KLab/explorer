@@ -109,7 +109,7 @@
     "explore": "Explore <0>{{route}}</0> with <1>{{item}}</1>"
   },
   "collection": {
-    "noDescription": "No description for this collection",
+    "noDescription": "No description for this collection.",
     "items": "Items in the collection"
   }
 }
