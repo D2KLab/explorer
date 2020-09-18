@@ -239,7 +239,10 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
 
   const metadata = Object.entries(result).filter(([metaName]) => {
     if (metaName === '@id' && !route.details.showPermalink) return false;
-    return !['@id', '@type', '@graph', 'label', 'representation'].includes(metaName);
+    if (['@type', '@graph', 'label', 'representation'].includes(metaName)) return false;
+    if (Array.isArray(route.details.excludedMetadata)) {
+      return !route.details.excludedMetadata.includes(metaName);
+    }
   });
 
   const label = getEntityLabelForRoute(result, route);
