@@ -70,3 +70,19 @@ export async function fillWithVocabularies(item) {
     }
   }
 }
+
+export function getEntityLabelForRoute(entity, route) {
+  if (typeof route.labelFunc === 'function') {
+    return route.labelFunc(entity);
+  }
+
+  if (typeof entity.label === 'object' && typeof entity.label.value === 'string') {
+    return entity.label.value;
+  }
+
+  if (typeof entity.label === 'string') {
+    return entity.label;
+  }
+
+  return entity.label || null;
+}

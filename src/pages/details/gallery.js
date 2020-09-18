@@ -24,6 +24,7 @@ import MetadataList from '@components/MetadataList';
 import SaveButton from '@components/SaveButton';
 import breakpoints from '@styles/breakpoints';
 import { absoluteUrl, generateMediaUrl } from '@helpers/utils';
+import { getEntityLabelForRoute } from '@helpers/explorer';
 import config from '~/config';
 import { useTranslation } from '~/i18n';
 
@@ -217,7 +218,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
     return !['@id', '@type', '@graph', 'label', 'representation'].includes(metaName);
   });
 
-  const pageTitle = route.labelFunc(result);
+  const pageTitle = getEntityLabelForRoute(result, route);
 
   const [currentSlide, setCurrentSlide] = useState(0);
 

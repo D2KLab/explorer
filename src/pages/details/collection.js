@@ -20,7 +20,7 @@ import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import GraphIcon from '@components/GraphIcon';
 import breakpoints from '@styles/breakpoints';
 import { uriToId, absoluteUrl, generateMediaUrl } from '@helpers/utils';
-import { findRouteByRDFType } from '@helpers/explorer';
+import { findRouteByRDFType, getEntityLabelForRoute } from '@helpers/explorer';
 import config from '~/config';
 import { useTranslation } from '~/i18n';
 
@@ -84,7 +84,7 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
     images.push(...imgs.filter((img) => img && new URL(img).hostname === 'silknow.org'));
   });
 
-  const label = route.labelFunc(result);
+  const label = getEntityLabelForRoute(result, route);
 
   result.items = Array.isArray(result.items)
     ? result.items

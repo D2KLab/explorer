@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo, Fragment } from 'react';
+import { useState, useEffect, useRef, Fragment } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
@@ -28,6 +28,7 @@ import ScrollDetector from '@components/ScrollDetector';
 import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import useDebounce from '@helpers/useDebounce';
 import useOnScreen from '@helpers/useOnScreen';
+import { getEntityLabelForRoute } from '@helpers/explorer';
 import { search, getFilters } from '@pages/api/search';
 import breakpoints, { sizes } from '@styles/breakpoints';
 import { useTranslation } from '~/i18n';
@@ -352,7 +353,7 @@ const BrowsePage = ({ initialData }) => {
           result.representation[0];
       }
 
-      const label = typeof route.labelFunc === 'function' ? route.labelFunc(result) : null;
+      const label = getEntityLabelForRoute(result, route);
       const subtitle = typeof route.subtitleFunc === 'function' ? route.subtitleFunc(result) : null;
 
       return (

@@ -23,6 +23,7 @@ import SaveButton from '@components/SaveButton';
 import breakpoints from '@styles/breakpoints';
 import { absoluteUrl } from '@helpers/utils';
 import SparqlClient from '@helpers/sparql';
+import { getEntityLabelForRoute } from '@helpers/explorer';
 import { useTranslation } from '~/i18n';
 import config from '~/config';
 
@@ -241,7 +242,7 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
     return !['@id', '@type', '@graph', 'label', 'representation'].includes(metaName);
   });
 
-  const label = route.labelFunc(result);
+  const label = getEntityLabelForRoute(result, route);
 
   const [isItemSaved, setIsItemSaved] = useState(inList);
   const onItemSaveChange = (status) => {

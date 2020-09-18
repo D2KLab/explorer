@@ -17,6 +17,7 @@ import { Navbar, NavItem } from '@components/Navbar';
 import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import { getSessionUser, getListById } from '@helpers/database';
 import SparqlClient from '@helpers/sparql';
+import { getEntityLabelForRoute } from '@helpers/explorer';
 import config from '~/config';
 import { useTranslation, Trans } from '~/i18n';
 
@@ -250,7 +251,8 @@ export async function getServerSideProps(ctx) {
             result.representation[0]['@id'] ||
             result.representation[0];
         }
-        const label = route.labelFunc(result);
+
+        const label = getEntityLabelForRoute(result, route);
 
         list.items[i] = {
           id: result['@id'],
