@@ -48,7 +48,7 @@ const SuggestionImage = styled.img`
 
 const SuggestionName = styled.span`
   &.highlight {
-    font-weight: bold;
+    font-weight: 700;
   }
 `;
 

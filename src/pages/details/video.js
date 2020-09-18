@@ -151,7 +151,7 @@ const SegmentTime = styled.span`
   color: ${({ theme }) => theme.colors.primary};
   font-size: 1rem;
   line-height: 2rem;
-  font-weight: bold;
+  font-weight: 700;
   padding-left: 12px;
 
   &:hover {

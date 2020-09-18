@@ -20,25 +20,38 @@ import { useTranslation, Trans } from '~/i18n';
 
 const Hero = styled.div`
   width: 100%;
-  height: 380px;
+  height: 220px;
   display: flex;
   color: #fff;
   background-image: ${({ image }) => `url(${image})`};
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+
+  ${breakpoints.mobile`
+    height: 300px;
+  `}
+
+  ${breakpoints.weirdMedium`
+    height: 380px;
+  `}
 `;
 
 const Title = styled.h1`
-  padding-left: 80px;
-  padding-bottom: 60px;
+  padding-left: 0.8em;
+  padding-bottom: 0.6em;
   align-self: flex-end;
   text-shadow: 0px 4px 3px rgba(0, 0, 0, 0.2), 0px 8px 13px rgba(0, 0, 0, 0.1),
     0px 18px 23px rgba(0, 0, 0, 0.1);
   word-break: break-all;
+  font-size: 3rem;
+  font-weight: 200;
 
+  ${breakpoints.mobile`
+    font-size: 5rem;
+  `}
   ${breakpoints.weirdMedium`
-    font-size: 6em;
+    font-size: 6rem;
   `}
 `;
 
@@ -53,7 +66,10 @@ const Navigation = styled.nav`
 
 const Results = styled.div`
   flex: 1;
-  margin-left: 120px;
+
+  ${breakpoints.weirdMedium`
+    margin-left: 120px;
+  `}
 
   p {
     margin-bottom: 1em;
@@ -79,7 +95,7 @@ const Anchor = styled.a`
       ? css`
           color: ${({ theme }) => theme.colors.secondary};
           border-left-color: ${({ theme }) => theme.colors.secondary};
-          font-weight: bold;
+          font-weight: 700;
         `
       : null};
 `;

@@ -43,6 +43,7 @@ const StyledDialog = styled(Dialog)`
   background-color: #fff;
   box-shadow: rgba(0, 0, 0, 0.28) 0px 8px 28px;
   overflow: visible;
+  max-width: 480px;
   padding: 32px;
   outline: 0;
 `;
@@ -51,6 +52,8 @@ const ListShare = ({ list, dialogState, children, shareUrl, facebookAppId }) => 
   const { t } = useTranslation('common');
   const shareDialog = dialogState || useDialogState();
   const title = list.name;
+
+  const buttonStyle = { margin: '1em' };
 
   return (
     <>
@@ -64,36 +67,42 @@ const ListShare = ({ list, dialogState, children, shareUrl, facebookAppId }) => 
           <Element marginBottom={24}>
             <h2>{t('listShare.title')}</h2>
           </Element>
-          <Element display="flex" alignItems="center" marginBottom={24}>
-            <FacebookShareButton url={shareUrl} quote={title}>
+          <Element marginBottom={24}>
+            <FacebookShareButton url={shareUrl} quote={title} style={buttonStyle}>
               <FacebookIcon size={32} round />
             </FacebookShareButton>
-            <FacebookMessengerShareButton url={shareUrl} appId={facebookAppId}>
+            <FacebookMessengerShareButton url={shareUrl} appId={facebookAppId} style={buttonStyle}>
               <FacebookMessengerIcon size={32} round />
             </FacebookMessengerShareButton>
-            <TwitterShareButton url={shareUrl} title={title}>
+            <TwitterShareButton url={shareUrl} title={title} style={buttonStyle}>
               <TwitterIcon size={32} round />
             </TwitterShareButton>
-            <TelegramShareButton url={shareUrl} title={title}>
+            <TelegramShareButton url={shareUrl} title={title} style={buttonStyle}>
               <TelegramIcon size={32} round />
             </TelegramShareButton>
-            <WhatsappShareButton url={shareUrl} title={title} separator=":: ">
+            <WhatsappShareButton url={shareUrl} title={title} separator=":: " style={buttonStyle}>
               <WhatsappIcon size={32} round />
             </WhatsappShareButton>
-            <LinkedinShareButton url={shareUrl}>
+            <LinkedinShareButton url={shareUrl} style={buttonStyle}>
               <LinkedinIcon size={32} round />
             </LinkedinShareButton>
-            <RedditShareButton url={shareUrl} title={title} windowWidth={660} windowHeight={460}>
+            <RedditShareButton
+              url={shareUrl}
+              title={title}
+              windowWidth={660}
+              windowHeight={460}
+              style={buttonStyle}
+            >
               <RedditIcon size={32} round />
             </RedditShareButton>
-            <TumblrShareButton url={shareUrl} title={title}>
+            <TumblrShareButton url={shareUrl} title={title} style={buttonStyle}>
               <TumblrIcon size={32} round />
             </TumblrShareButton>
-            <EmailShareButton url={shareUrl} subject={title} body="">
+            <EmailShareButton url={shareUrl} subject={title} body="" style={buttonStyle}>
               <EmailIcon size={32} round />
             </EmailShareButton>
           </Element>
-          <Element display="flex" justifyContent="space-between" marginTop={24}>
+          <Element display="flex" justifyContent="flex-end" marginTop={24}>
             <Button
               type="button"
               secondary

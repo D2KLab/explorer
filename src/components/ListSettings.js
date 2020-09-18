@@ -85,59 +85,59 @@ const ListSettings = ({ list }) => {
           <Element marginBottom={24}>
             <h2>{t('listSettings.title')}</h2>
           </Element>
-          <Element display="flex" alignItems="center" marginBottom={24}>
-            <label>
-              <Element paddingRight={12}>{t('listSettings.labels.name')}</Element>
-              <Input
-                name="list_name"
-                type="text"
-                placeholder={t('listSettings.labels.name')}
-                value={listName}
-                onChange={(e) => setListName(e.target.value)}
-              />
-            </label>
-          </Element>
-          <Element display="flex" alignItems="center" marginBottom={24}>
-            <label>
-              <Element paddingRight={12}>{t('listSettings.labels.public')}</Element>
-              <Switch
-                onChange={(checked) => setListPublic(checked)}
-                checked={listPublic}
-                onColor={theme.colors.light}
-                offHandleColor="#f0f0f0"
-                onHandleColor={theme.colors.primary}
-                handleDiameter={24}
-                uncheckedIcon={false}
-                checkedIcon={false}
-                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                height={16}
-                width={36}
-              />
-            </label>
-          </Element>
-          <Element display="flex" justifyContent="space-between" marginTop={24}>
-            <Button
-              type="button"
-              secondary
-              onClick={() => {
-                settingsDialog.hide();
-              }}
-            >
-              {t('buttons.cancel')}
-            </Button>
-            <Button
-              type="button"
-              primary
-              loading={isUpdating}
-              onClick={async () => {
-                await updateSettings();
-                settingsDialog.hide();
-              }}
-            >
-              {t('buttons.save')}
-            </Button>
-          </Element>
+          <form
+            onSubmit={async (e) => {
+              e.stopPropagation();
+              await updateSettings();
+              settingsDialog.hide();
+            }}
+          >
+            <Element display="flex" alignItems="center" marginBottom={24}>
+              <label>
+                <Element paddingRight={12}>{t('listSettings.labels.name')}</Element>
+                <Input
+                  name="list_name"
+                  type="text"
+                  placeholder={t('listSettings.labels.name')}
+                  value={listName}
+                  onChange={(e) => setListName(e.target.value)}
+                />
+              </label>
+            </Element>
+            <Element display="flex" alignItems="center" marginBottom={24}>
+              <label>
+                <Element paddingRight={12}>{t('listSettings.labels.public')}</Element>
+                <Switch
+                  onChange={(checked) => setListPublic(checked)}
+                  checked={listPublic}
+                  onColor={theme.colors.light}
+                  offHandleColor="#f0f0f0"
+                  onHandleColor={theme.colors.primary}
+                  handleDiameter={24}
+                  uncheckedIcon={false}
+                  checkedIcon={false}
+                  boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                  activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                  height={16}
+                  width={36}
+                />
+              </label>
+            </Element>
+            <Element display="flex" justifyContent="space-between" marginTop={24}>
+              <Button
+                type="button"
+                secondary
+                onClick={() => {
+                  settingsDialog.hide();
+                }}
+              >
+                {t('buttons.cancel')}
+              </Button>
+              <Button type="button" primary htmlType="submit" loading={isUpdating}>
+                {t('buttons.save')}
+              </Button>
+            </Element>
+          </form>
         </StyledDialog>
       </StyledDialogBackdrop>
     </>

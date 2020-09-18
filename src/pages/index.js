@@ -33,28 +33,32 @@ const HeroTop = styled.div`
     (100vh - ${({ theme }) => `${theme.header.height} - ${theme.header.borderBottomWidth}`}) / 2
   );
   min-height: fit-content;
-
   display: flex;
-  flex-direction: row;
+  flex-direction: column-reverse;
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 0 2.5em;
   background-color: #fff;
   position: relative;
   background-image: url(${config.home.hero.image});
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+
+  ${breakpoints.tablet`
+    flex-direction: row;
+  `}
 `;
 
 const Title = styled.h1`
-  font-size: 3rem;
-  width: 100%;
+  width: 80%;
+  text-align: center;
 
   ${breakpoints.tablet`
     width: 50%;
+    height: auto;
     font-size: 3.5rem;
+    text-align: left;
   `}
 
   ${breakpoints.desktop`
@@ -70,19 +74,18 @@ const Logo = styled.div`
   background-size: contain;
   background-position: center;
   width: 50%;
-  height: 100%;
+  height: 50%;
   max-width: 350px;
-  display: none;
 
   ${breakpoints.tablet`
-    display: block;
+    height: 100%;
   `}
 `;
 
 const HeroMiddle = styled.div`
   width: 100%;
   height: 3.5em;
-  position: absolute;
+  position: relative;
   bottom: -25px;
   left: 0;
   display: flex;
@@ -103,8 +106,9 @@ const HeroBottom = styled.div`
   background-color: #eee;
 `;
 
-const Subtitle = styled.h2`
-  font-size: 2em;
+const Subtitle = styled.span`
+  display: block;
+  font-size: 2rem;
   color: #787878;
   margin-top: 1em;
 `;
@@ -281,49 +285,49 @@ const HomePage = () => {
           <HeroTop>
             {config.home.hero.showHeadline && <Title>{t('home:hero.headline')}</Title>}
             {config.home.hero.showLogo && <Logo />}
-            <HeroMiddle>
-              <SearchForm method="GET" action="/browse">
-                <input type="hidden" name="type" value={config.search.route} />
-                {config.search.allowTextSearch ? (
-                  <>
-                    <StyledSearchInput name="q" placeholder={t('home:search.placeholder')} />
-                    <SearchButton aria-label={t('common:buttons.searchByText')} type="submit">
-                      <SearchIcon />
-                    </SearchButton>
-                  </>
-                ) : null}
-                {config.search.allowImageSearch ? (
-                  <>
-                    <CameraButton
-                      as={DialogDisclosure}
-                      type="button"
-                      aria-label={t('common:buttons.searchByImage')}
-                      {...dialog}
-                    >
-                      <CameraIcon />
-                    </CameraButton>
-                    <StyledUploadDialog
-                      {...dialog}
-                      modal={false}
-                      aria-label={t('common:buttons.searchByImage')}
-                      {...getRootProps()}
-                    >
-                      <h4>{t('common:buttons.searchByImage')}</h4>
-                      <Dropzone>
-                        <input {...getInputProps()} />
-                        {isDragActive ? (
-                          <p>{t('common:home.searchByImage.dropTitle')}</p>
-                        ) : (
-                          <p>{t('common:home.searchByImage.dropText')}</p>
-                        )}
-                        <ul>{files}</ul>
-                      </Dropzone>
-                    </StyledUploadDialog>
-                  </>
-                ) : null}
-              </SearchForm>
-            </HeroMiddle>
           </HeroTop>
+          <HeroMiddle>
+            <SearchForm method="GET" action="/browse">
+              <input type="hidden" name="type" value={config.search.route} />
+              {config.search.allowTextSearch ? (
+                <>
+                  <StyledSearchInput name="q" placeholder={t('home:search.placeholder')} />
+                  <SearchButton aria-label={t('common:buttons.searchByText')} type="submit">
+                    <SearchIcon />
+                  </SearchButton>
+                </>
+              ) : null}
+              {config.search.allowImageSearch ? (
+                <>
+                  <CameraButton
+                    as={DialogDisclosure}
+                    type="button"
+                    aria-label={t('common:buttons.searchByImage')}
+                    {...dialog}
+                  >
+                    <CameraIcon />
+                  </CameraButton>
+                  <StyledUploadDialog
+                    {...dialog}
+                    modal={false}
+                    aria-label={t('common:buttons.searchByImage')}
+                    {...getRootProps()}
+                  >
+                    <h4>{t('common:buttons.searchByImage')}</h4>
+                    <Dropzone>
+                      <input {...getInputProps()} />
+                      {isDragActive ? (
+                        <p>{t('common:home.searchByImage.dropTitle')}</p>
+                      ) : (
+                        <p>{t('common:home.searchByImage.dropText')}</p>
+                      )}
+                      <ul>{files}</ul>
+                    </Dropzone>
+                  </StyledUploadDialog>
+                </>
+              ) : null}
+            </SearchForm>
+          </HeroMiddle>
           <HeroBottom>
             <Subtitle>{t('home:browseBy')}</Subtitle>
             <ButtonsContainer>

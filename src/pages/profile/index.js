@@ -55,7 +55,7 @@ const StyledDialog = styled(Dialog)`
 `;
 
 const DeleteButton = styled(Button)`
-  font-weight: bold;
+  font-weight: 700;
   border: 1px solid rgba(27, 31, 35, 0.35);
   border-radius: 0.25em;
 `;
@@ -304,9 +304,7 @@ const ProfilePage = ({
               {renderOperations()}
             </ProfileSidebar>
             <ProfileContent>
-              <h1 style={{ marginBottom: 24, textTransform: 'uppercase' }}>
-                {t('profile.lists.title')}
-              </h1>
+              <h1 style={{ marginBottom: 24 }}>{t('profile.lists.title')}</h1>
               <ul>
                 {lists.map((list) => {
                   const shareListDialog = useDialogState();

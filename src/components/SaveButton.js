@@ -40,7 +40,7 @@ const StyledDialogDisclosure = styled(DialogDisclosure)`
   align-items: center;
 
   &:hover {
-    font-weight: bold;
+    font-weight: 700;
   }
 `;
 
@@ -93,7 +93,7 @@ const StyledItem = styled.li`
 
   &:hover {
     border-color: #ccc;
-    font-weight: bold;
+    font-weight: 700;
   }
 `;
 

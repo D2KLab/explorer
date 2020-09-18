@@ -83,7 +83,7 @@ const Results = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, 150px);
   grid-gap: 1rem;
-  margin-bottom: 24px;
+  margin: 1rem 0;
 
   transition: opacity 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
   opacity: ${({ loading }) => (loading ? 0.25 : 1)};
@@ -121,6 +121,10 @@ const PaginationContainer = styled.div`
       padding: 7px 12px;
       transition: color 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
       color: ${({ theme }) => theme.colors.primary};
+
+      &:hover {
+        font-weight: 700;
+      }
     }
 
     &.break {
@@ -140,10 +144,9 @@ const Label = styled.label`
   margin-right: 12px;
 `;
 
-const ResultPage = styled.div`
-  font-size: 2rem;
-  font-weight: 400;
-  margin-bottom: 12px;
+const ResultPage = styled.h3`
+  margin-top: 2rem;
+  margin-bottom: 1rem;
 `;
 
 const BrowsePage = ({ initialData }) => {

@@ -33,7 +33,7 @@ export const StyledMenu = styled.nav`
     font-size: 1.5rem;
     text-transform: uppercase;
     padding: 1rem 0;
-    font-weight: bold;
+    font-weight: 700;
     letter-spacing: 0.5rem;
     color: #fff;
     text-decoration: none;
@@ -53,7 +53,7 @@ export const StyledMenu = styled.nav`
 
 const StyledLanguageSwitch = styled(LanguageSwitch)`
   align-self: flex-end;
-  font-weight: bold;
+  font-weight: 700;
   color: #fff;
 `;
 
