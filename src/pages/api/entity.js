@@ -20,9 +20,12 @@ export default withRequestValidation({
 
   const jsonQuery = route.details && route.details.query ? route.details.query : route.query;
   const searchQuery = JSON.parse(JSON.stringify(jsonQuery));
-  searchQuery.$filter = `?id = <${idToUri(query.id, {
-    base: route.uriBase,
-  })}>`;
+  searchQuery.$filter = searchQuery.$filter || [];
+  searchQuery.$filter.push(
+    `?id = <${idToUri(query.id, {
+      base: route.uriBase,
+    })}>`
+  );
 
   const returnValue = {
     result: null,

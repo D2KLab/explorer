@@ -231,7 +231,8 @@ export async function getServerSideProps(ctx) {
 
     if (route) {
       const searchQuery = JSON.parse(JSON.stringify(route.query));
-      searchQuery.$filter = `?id = <${item.uri}>`;
+      searchQuery.$filter = searchQuery.$filter || [];
+      searchQuery.$filter.push(`?id = <${item.uri}>`);
 
       try {
         const searchRes = await SparqlClient.query(searchQuery, {
