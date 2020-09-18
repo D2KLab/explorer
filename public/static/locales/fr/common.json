@@ -51,7 +51,8 @@
       "desktop": "Bureau"
     },
     "downloadJSON": "Linked Data JSON",
-    "downloadSelectedImage": "Télécharger l'image"
+    "downloadSelectedImage": "Télécharger l'image",
+    "editQuery": "Modifier la requête"
   },
   "list": {
     "items": "Éléments dans la liste",

@@ -12,8 +12,7 @@
     "select": "Sélectionner...",
     "browse": "Parcourir par {{type}}",
     "noResults": "Aucun résultat pour cette recherche",
-    "page": "Page {{page}}",
-    "editQuery": "Modifier la requête"
+    "page": "Page {{page}}"
   },
   "fields": {
     "graph": "Graphe",

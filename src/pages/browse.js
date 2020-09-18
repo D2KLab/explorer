@@ -537,7 +537,7 @@ const BrowsePage = ({ initialData }) => {
             </Metadata>
             <Metadata label="SPARQL Query">
               <SPARQLQueryLink query={debugSparqlQuery}>
-                {t('search:labels.editQuery')}
+                {t('common:buttons.editQuery')}
               </SPARQLQueryLink>
               <pre>{debugSparqlQuery}</pre>
             </Metadata>

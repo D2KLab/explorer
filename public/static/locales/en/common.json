@@ -51,7 +51,8 @@
       "desktop": "Desktop"
     },
     "downloadJSON": "Linked Data JSON",
-    "downloadSelectedImage": "Download selected image"
+    "downloadSelectedImage": "Download selected image",
+    "editQuery": "Edit the query"
   },
   "list": {
     "items": "Items in the list",
