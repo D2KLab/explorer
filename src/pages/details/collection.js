@@ -18,6 +18,7 @@ import PageTitle from '@components/PageTitle';
 import SaveButton from '@components/SaveButton';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import GraphIcon from '@components/GraphIcon';
+import MetadataList from '@components/MetadataList';
 import breakpoints from '@styles/breakpoints';
 import { uriToId, absoluteUrl, generateMediaUrl } from '@helpers/utils';
 import { findRouteByRDFType, getEntityLabelForRoute } from '@helpers/explorer';
@@ -84,6 +85,14 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
     images.push(...imgs.filter((img) => img && new URL(img).hostname === 'silknow.org'));
   });
 
+  const metadata = Object.entries(result).filter(([metaName]) => {
+    if (metaName === '@id' && !route.details.showPermalink) return false;
+    if (['@type', '@graph', 'label', 'representation'].includes(metaName)) return false;
+    if (Array.isArray(route.details.excludedMetadata)) {
+      return !route.details.excludedMetadata.includes(metaName);
+    }
+  });
+
   const label = getEntityLabelForRoute(result, route);
 
   result.items = Array.isArray(result.items)
@@ -116,6 +125,9 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
               )}
             </Element>
             <p>{result.description || t('common:collection.noDescription')}</p>
+            <Element marginBottom={24}>
+              <MetadataList metadata={metadata} query={query} route={route} />
+            </Element>
             <h2>{t('common:collection.items')}</h2>
             <Results>
               {result.items.map((item) => {
