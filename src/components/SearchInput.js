@@ -18,7 +18,9 @@ async function getSuggestions(value) {
   const searchQuery = JSON.parse(JSON.stringify(config.search.textSearchQuery));
   searchQuery.$filter = searchQuery.$filter || [];
   if (typeof config.search.filterFunc === 'function') {
-    searchQuery.$filter.push(...config.search.filterFunc(value));
+    searchQuery.$filter.push(
+      ...config.search.filterFunc(value).map((condition) => `(${condition})`)
+    );
   } else {
     searchQuery.$filter.push(`regex(?label, "${value}", "i")`);
   }

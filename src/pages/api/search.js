@@ -109,7 +109,7 @@ export const search = async (query) => {
             extraWhere.push(...filter.whereFunc(val));
           }
           if (typeof filter.filterFunc === 'function') {
-            extraFilter.push(...filter.filterFunc(val));
+            extraFilter.push(...filter.filterFunc(val).map((condition) => `(${condition})`));
           }
         }
       }
