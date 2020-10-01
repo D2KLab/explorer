@@ -4,8 +4,7 @@
  *  uriToId('http://dbpedia.org/page/Tim_Berners-Lee', { base: 'http://dbpedia.org/page' }) returns 'Tim_Berners-Lee'
  */
 export function uriToId(uriPart, { base }) {
-  const uri = typeof base !== 'undefined' ? uriPart.substr(base.length + 1) : uriPart;
-  const id = encodeURIComponent(uri);
+  const id = typeof base !== 'undefined' ? uriPart.substr(base.length + 1) : uriPart;
   return id;
 }
 
@@ -15,8 +14,7 @@ export function uriToId(uriPart, { base }) {
  *  idToUri('Tim_Berners-Lee', { base: 'http://dbpedia.org/page' }) returns 'http://dbpedia.org/page/Tim_Berners-Lee'
  */
 export function idToUri(id, { base }) {
-  const uriPart = decodeURIComponent(id);
-  const uri = typeof base !== 'undefined' ? `${base}/${uriPart}` : uriPart;
+  const uri = typeof base !== 'undefined' ? `${base}/${id}` : id;
   return uri;
 }
 
