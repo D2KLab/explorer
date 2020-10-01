@@ -33,6 +33,8 @@ export const GraphIconContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  ${({ theme }) => theme?.components?.Media?.GraphIconContainer};
 `;
 
 export const TextContainer = styled.div`

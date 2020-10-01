@@ -11,6 +11,8 @@ const StyledImage = styled.img`
     css`
       height: ${size}px;
     `}
+
+  ${({ theme }) => theme?.components?.GraphIcon?.StyledImage};
 `;
 
 const GraphIcon = ({ className, size = 24, uri }) => {
