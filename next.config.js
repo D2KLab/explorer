@@ -23,8 +23,8 @@ module.exports = {
         ];
         if (route.details) {
           rewrites.push({
-            source: `/${routeName}/:id`,
-            destination: `/details/${route.details.view}?id=:id&type=${routeName}`,
+            source: `/${routeName}/:id*`,
+            destination: `/details/${route.details.view}?id=:id*&type=${routeName}`,
           });
         }
         return rewrites;
