@@ -147,9 +147,7 @@ const SearchInput = ({ className, placeholder, ariaLabel = 'Search input', ...pr
 
     if (route) {
       Router.push({
-        pathname: `/${routeName}/${encodeURIComponent(
-          uriToId(suggestion['@id'], { base: route.uriBase })
-        )}`,
+        pathname: `/${routeName}/${encodeURI(uriToId(suggestion['@id'], { base: route.uriBase }))}`,
       });
     } else {
       console.warn('Route not found:', routeName, 'for suggestion type:', suggestion['@type']);

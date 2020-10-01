@@ -61,9 +61,7 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
                         base: route.uriBase,
                       })
                     )}&type=${item.route}`}
-                    as={`/${item.route}/${encodeURIComponent(
-                      uriToId(item.id, { base: route.uriBase })
-                    )}`}
+                    as={`/${item.route}/${encodeURI(uriToId(item.id, { base: route.uriBase }))}`}
                     passHref
                   >
                     <a>
@@ -72,7 +70,7 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
                         subtitle={item.subtitle}
                         thumbnail={generateMediaUrl(item.image, 300)}
                         direction="column"
-                        link={`/${item.route}/${encodeURIComponent(
+                        link={`/${item.route}/${encodeURI(
                           uriToId(item.id, { base: route.uriBase })
                         )}`}
                         uri={item.graph}

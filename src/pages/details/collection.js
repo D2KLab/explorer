@@ -166,7 +166,7 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                           base: itemRoute.uriBase,
                         })
                       )}&type=${itemRouteName}`}
-                      as={`/${itemRouteName}/${encodeURIComponent(
+                      as={`/${itemRouteName}/${encodeURI(
                         uriToId(item['@id'], {
                           base: itemRoute.uriBase,
                         })

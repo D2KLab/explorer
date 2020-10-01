@@ -364,9 +364,7 @@ const BrowsePage = ({ initialData }) => {
               base: route.uriBase,
             })
           )}&type=${query.type}`}
-          as={`/${query.type}/${encodeURIComponent(
-            uriToId(result['@id'], { base: route.uriBase })
-          )}`}
+          as={`/${query.type}/${encodeURI(uriToId(result['@id'], { base: route.uriBase }))}`}
           passHref
         >
           <a>

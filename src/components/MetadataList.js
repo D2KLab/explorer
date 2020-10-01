@@ -23,7 +23,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
 
   let url = meta['@id'];
   if (route) {
-    url = `/${routeName}/${encodeURIComponent(uriToId(meta['@id'], { base: route.uriBase }))}`;
+    url = `/${routeName}/${encodeURI(uriToId(meta['@id'], { base: route.uriBase }))}`;
   } else if (
     currentRoute &&
     Array.isArray(currentRoute.filters) &&
