@@ -333,7 +333,8 @@ const Sidebar = ({ className, onSearch, type, filters, query }) => {
           {route.filterByGraph && (
             <Field>
               <label htmlFor="graph">
-                {config.search.graphFieldLabel[i18n.language] || t('search:fields.graph')}
+                {(config.search.graphFieldLabel && config.search.graphFieldLabel[i18n.language]) ||
+                  t('search:fields.graph')}
               </label>
               <Select
                 isClearable
