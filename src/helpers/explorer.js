@@ -76,13 +76,21 @@ export function getEntityLabelForRoute(entity, route) {
     return route.labelFunc(entity);
   }
 
-  if (typeof entity.label === 'object' && typeof entity.label.value === 'string') {
-    return entity.label.value;
+  if (typeof entity.label === 'undefined') {
+    return null;
   }
 
-  if (typeof entity.label === 'string') {
-    return entity.label;
-  }
+  const labels = Array.isArray(entity.label) ? entity.label : [entity.label];
 
-  return entity.label || null;
+  return labels
+    .map((label) => {
+      if (typeof label === 'object' && typeof label.value === 'string') {
+        return label.value;
+      }
+      if (typeof label === 'string') {
+        return label;
+      }
+      return '';
+    })
+    .join(', ');
 }
