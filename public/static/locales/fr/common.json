@@ -111,6 +111,7 @@
   },
   "collection": {
     "noDescription": "Aucune description pour cette collection.",
-    "items": "Éléments dans la collection"
+    "items": "{{count}} élément dans la collection",
+    "items_plural": "{{count}} éléments dans la collection"
   }
 }

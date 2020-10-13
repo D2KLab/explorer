@@ -128,7 +128,7 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
             <Element marginBottom={24}>
               <MetadataList metadata={metadata} query={query} route={route} />
             </Element>
-            <h2>{t('common:collection.items')}</h2>
+            <h2>{t('common:collection.items', { count: result.items.length })}</h2>
             <Results>
               {result.items.map((item) => {
                 let mainImage = null;
