@@ -42,7 +42,7 @@ export const Container = styled.div`
 
 const Body = ({ className, hasSidebar, children }) => {
   return (
-    <Container className={className} hasSidebar={hasSidebar}>
+    <Container className={className} hasSidebar={hasSidebar} role="main">
       {children}
     </Container>
   );
