@@ -82,30 +82,33 @@ export function getEntityMainLabel(entity, { route, language }) {
 
   const labels = Array.isArray(entity.label) ? entity.label : [entity.label];
 
-  // Pick the first label which matches the language
-  let targetLabel = labels.find((label) => label['@language'] === language);
+  // Pick labels which match the language
+  let targetLabels = labels.filter((label) => label['@language'] === language);
 
-  // If no labels match the language, pick the first one without a language
-  if (typeof targetLabel === 'undefined') {
-    targetLabel = labels.find((label) => typeof label['@language'] !== 'string');
+  // If no labels match the language, pick those without a language
+  if (targetLabels.length === 0) {
+    targetLabels = labels.filter((label) => typeof label['@language'] !== 'string');
   }
 
   // If no labels without a language, fall back to the first label we find
-  if (typeof targetLabel === 'undefined') {
-    [targetLabel] = labels;
+  if (targetLabels.length === 0 && labels.length > 0) {
+    targetLabels = [labels[0]];
   }
 
   // Return label value as a string
-  if (typeof targetLabel === 'object') {
-    if (typeof targetLabel.value === 'string') {
-      return targetLabel.value;
-    }
-    if (typeof targetLabel['@value'] === 'string') {
-      return targetLabel['@value'];
-    }
-  } else if (typeof targetLabel === 'string') {
-    return targetLabel;
-  }
-
-  return undefined;
+  return targetLabels
+    .map((label) => {
+      if (typeof label === 'object') {
+        if (typeof label.value === 'string') {
+          return label.value;
+        }
+        if (typeof label['@value'] === 'string') {
+          return label['@value'];
+        }
+      } else if (typeof label === 'string') {
+        return label;
+      }
+      return undefined;
+    })
+    .join(', ');
 }
