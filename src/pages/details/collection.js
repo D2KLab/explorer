@@ -145,10 +145,12 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
 
                 const [itemRouteName, itemRoute] = findRouteByRDFType(item['@type']);
 
+                const itemLabel = getEntityMainLabel(item, { route, language: i18n.language });
+
                 let element = (
                   <StyledMedia
                     key={item['@id']}
-                    title={item.label}
+                    title={itemLabel}
                     subtitle=""
                     thumbnail={generateMediaUrl(mainImage, 300)}
                     direction="column"

@@ -77,7 +77,7 @@ export function getEntityMainLabel(entity, { route, language }) {
   }
 
   if (typeof entity.label === 'undefined') {
-    return null;
+    return undefined;
   }
 
   const labels = Array.isArray(entity.label) ? entity.label : [entity.label];
