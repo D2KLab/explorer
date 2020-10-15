@@ -23,7 +23,7 @@ import SaveButton from '@components/SaveButton';
 import breakpoints from '@styles/breakpoints';
 import { absoluteUrl } from '@helpers/utils';
 import SparqlClient from '@helpers/sparql';
-import { getEntityLabelForRoute } from '@helpers/explorer';
+import { getEntityMainLabel } from '@helpers/explorer';
 import { useTranslation } from '~/i18n';
 import config from '~/config';
 
@@ -211,7 +211,7 @@ function formatSegmentTime(time, removeZeroes) {
 }
 
 const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSegments }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   if (!result) {
     return <DefaultErrorPage statusCode={404} title={t('common:errors.resultNotFound')} />;
@@ -245,7 +245,7 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
     }
   });
 
-  const label = getEntityLabelForRoute(result, route);
+  const label = getEntityMainLabel(result, { route, language: i18n.language });
 
   const [isItemSaved, setIsItemSaved] = useState(inList);
   const onItemSaveChange = (status) => {

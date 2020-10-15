@@ -28,7 +28,7 @@ import ScrollDetector from '@components/ScrollDetector';
 import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import useDebounce from '@helpers/useDebounce';
 import useOnScreen from '@helpers/useOnScreen';
-import { getEntityLabelForRoute } from '@helpers/explorer';
+import { getEntityMainLabel } from '@helpers/explorer';
 import { search, getFilters } from '@pages/api/search';
 import breakpoints, { sizes } from '@styles/breakpoints';
 import { useTranslation } from '~/i18n';
@@ -152,7 +152,7 @@ const ResultPage = styled.h3`
 
 const BrowsePage = ({ initialData }) => {
   const { req, query, pathname } = useRouter();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(true);
   const currentPage = parseInt(query.page, 10) || 1;
@@ -353,7 +353,7 @@ const BrowsePage = ({ initialData }) => {
           result.representation[0];
       }
 
-      const label = getEntityLabelForRoute(result, route);
+      const label = getEntityMainLabel(result, { route, language: i18n.language });
       const subtitle = typeof route.subtitleFunc === 'function' ? route.subtitleFunc(result) : null;
 
       return (

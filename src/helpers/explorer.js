@@ -71,8 +71,8 @@ export async function fillWithVocabularies(item) {
   }
 }
 
-export function getEntityLabelForRoute(entity, route) {
-  if (typeof route.labelFunc === 'function') {
+export function getEntityMainLabel(entity, { route, language }) {
+  if (typeof route === 'object' && typeof route.labelFunc === 'function') {
     return route.labelFunc(entity);
   }
 
@@ -82,15 +82,30 @@ export function getEntityLabelForRoute(entity, route) {
 
   const labels = Array.isArray(entity.label) ? entity.label : [entity.label];
 
-  return labels
-    .map((label) => {
-      if (typeof label === 'object' && typeof label.value === 'string') {
-        return label.value;
-      }
-      if (typeof label === 'string') {
-        return label;
-      }
-      return '';
-    })
-    .join(', ');
+  // Pick the first label which matches the language
+  let targetLabel = labels.find((label) => label['@language'] === language);
+
+  // If no labels match the language, pick the first one without a language
+  if (typeof targetLabel === 'undefined') {
+    targetLabel = labels.find((label) => typeof label['@language'] !== 'string');
+  }
+
+  // If no labels without a language, fall back to the first label we find
+  if (typeof targetLabel === 'undefined') {
+    [targetLabel] = labels;
+  }
+
+  // Return label value as a string
+  if (typeof targetLabel === 'object') {
+    if (typeof targetLabel.value === 'string') {
+      return targetLabel.value;
+    }
+    if (typeof targetLabel['@value'] === 'string') {
+      return targetLabel['@value'];
+    }
+  } else if (typeof targetLabel === 'string') {
+    return targetLabel;
+  }
+
+  return undefined;
 }

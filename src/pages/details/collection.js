@@ -21,7 +21,7 @@ import GraphIcon from '@components/GraphIcon';
 import MetadataList from '@components/MetadataList';
 import breakpoints from '@styles/breakpoints';
 import { uriToId, absoluteUrl, generateMediaUrl } from '@helpers/utils';
-import { findRouteByRDFType, getEntityLabelForRoute } from '@helpers/explorer';
+import { findRouteByRDFType, getEntityMainLabel } from '@helpers/explorer';
 import config from '~/config';
 import { useTranslation } from '~/i18n';
 
@@ -65,7 +65,7 @@ const StyledMedia = styled(Media)`
 `;
 
 const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [session] = NextAuth.useSession();
   const { query } = useRouter();
   const [isItemSaved, setIsItemSaved] = useState(inList);
@@ -93,7 +93,7 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
     }
   });
 
-  const label = getEntityLabelForRoute(result, route);
+  const label = getEntityMainLabel(result, { route, language: i18n.language });
 
   result.items = Array.isArray(result.items)
     ? result.items
