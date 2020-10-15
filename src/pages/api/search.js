@@ -170,7 +170,7 @@ export const search = async (query) => {
     `;
     searchQuery.$where.push(`
       {
-        SELECT DISTINCT ?id WHERE {
+        SELECT DISTINCT * WHERE {
           ${whereCondition}
         }
         GROUP BY ?id
