@@ -86,7 +86,7 @@ const Option = styled.div`
   }
 `;
 
-const Sidebar = ({ className, onSearch, type, filters, query }) => {
+const Sidebar = ({ className, onSearch, submitOnChange = false, type, filters, query }) => {
   const theme = useTheme();
   const { t, i18n } = useTranslation(['project', 'search']);
 
@@ -293,7 +293,9 @@ const Sidebar = ({ className, onSearch, type, filters, query }) => {
   // Execute search when fields change
   const debouncedFields = useDebounce(fields, 500);
   useDidMountEffect(() => {
-    doSearch();
+    if (submitOnChange) {
+      doSearch();
+    }
   }, [debouncedFields]);
 
   const route = config.routes[type];
