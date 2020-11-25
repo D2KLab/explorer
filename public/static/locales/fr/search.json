@@ -7,7 +7,7 @@
     "toggleMap": "Carte"
   },
   "labels": {
-    "searchResults": "Résultats de recherche",
+    "searchResults": "{{totalResults}} résultats de recherche",
     "sortBy": "Trier par",
     "select": "Sélectionner...",
     "browse": "Parcourir par {{type}}",

@@ -187,11 +187,13 @@ const BrowsePage = ({ initialData }) => {
 
   const { filters } = initialData;
   let totalPages = 0;
+  let totalResults = 0;
   let debugSparqlQuery = null;
   if (data && data[0]) {
-    totalPages = Math.ceil(data[0].totalResults / PAGE_SIZE);
+    totalResults = data[0].totalResults;
     debugSparqlQuery = data[0].debugSparqlQuery;
   }
+  totalPages = Math.ceil(totalResults / PAGE_SIZE);
 
   if (typeof window !== 'undefined') {
     const debouncedHandleResize = useDebounce(function handleResize() {
@@ -424,7 +426,7 @@ const BrowsePage = ({ initialData }) => {
           />
         </Element>
         <Content>
-          <StyledTitle>{t('search:labels.searchResults')}</StyledTitle>
+          <StyledTitle>{t('search:labels.searchResults', { totalResults })}</StyledTitle>
           <OptionsBar>
             <Option>
               <Label htmlFor="select_sort">{t('search:labels.sortBy')}</Label>

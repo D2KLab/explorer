@@ -8,7 +8,7 @@
     "toggleMap": "Toggle map"
   },
   "labels": {
-    "searchResults": "Search results",
+    "searchResults": "{{totalResults}} search results",
     "sortBy": "Sort by",
     "select": "Select...",
     "browse": "Browse {{type}}",
