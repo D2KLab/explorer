@@ -7,7 +7,9 @@ import queryString from 'query-string';
 import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
 import { saveAs } from 'file-saver';
 import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css';
 import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';

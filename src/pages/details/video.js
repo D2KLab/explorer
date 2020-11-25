@@ -55,45 +55,6 @@ const Primary = styled.div`
 
   display: flex;
   flex-direction: column;
-
-  .carousel .thumbs {
-    /* TODO: HACK: react-responsive-carousel doesn't support vertical thumbnails as of 2020-04-27 */
-    white-space: normal;
-    transform: none !important;
-  }
-  .carousel .thumb.selected,
-  .carousel .thumb:hover {
-    border: 3px solid ${({ theme }) => theme.colors.primary};
-  }
-  .carousel .slide {
-    background: #d9d9d9;
-
-    img {
-      width: auto;
-      max-width: 100%;
-    }
-  }
-  .carousel .carousel-status {
-    font-size: inherit;
-    color: #d4d3ce;
-    top: 16px;
-    left: 16px;
-  }
-  .carousel .control-arrow::before {
-    border-width: 0 3px 3px 0;
-    border: solid #000;
-    display: inline-block;
-    padding: 3px;
-    border-width: 0 3px 3px 0;
-    width: 20px;
-    height: 20px;
-  }
-  .carousel .control-next.control-arrow::before {
-    transform: rotate(-45deg);
-  }
-  .carousel .control-prev.control-arrow::before {
-    transform: rotate(135deg);
-  }
 `;
 
 const Secondary = styled.div`

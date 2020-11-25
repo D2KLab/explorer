@@ -1,5 +1,3 @@
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import 'react-image-lightbox/style.css';
 import NextAuth from 'next-auth/client';
 import App from 'next/app';
 import { ThemeProvider } from 'styled-components';

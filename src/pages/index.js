@@ -85,9 +85,7 @@ const Logo = styled.div`
 const HeroMiddle = styled.div`
   width: 100%;
   height: 3.5em;
-  position: relative;
-  bottom: -25px;
-  left: 0;
+  margin-top: -28px;
   display: flex;
   justify-content: center;
 `;
@@ -96,6 +94,7 @@ const HeroBottom = styled.div`
   min-height: calc(
     (100vh - ${({ theme }) => `${theme.header.height} - ${theme.header.borderBottomWidth}`}) / 2
   );
+  margin-top: -28px;
   padding-bottom: 1em;
 
   display: flex;
