@@ -115,12 +115,16 @@ export const search = async (query) => {
 
     // Text search
     if (query.q) {
-      const labelProp =
-        typeof route.labelProp === 'string'
-          ? route.labelProp
-          : 'http://www.w3.org/2000/01/rdf-schema#label';
-      extraWhere.push(`?id <${labelProp}> ?label`);
-      extraFilter.push(`CONTAINS(LCASE(STR(?label)), LCASE("${query.q}"))`);
+      if (typeof route.textSearchFunc === 'function') {
+        extraWhere.push(...route.textSearchFunc(query.q));
+      } else {
+        if (typeof route.labelProp === 'string') {
+          extraWhere.push(`?id <${route.labelProp}> ?_s1texto`);
+        } else {
+          extraWhere.push('?id ?_s1textp ?_s1texto');
+        }
+        extraWhere.push(`?_s1texto bif:contains '${JSON.stringify(query.q)}'`);
+      }
     }
 
     // Graph
