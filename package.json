@@ -48,7 +48,8 @@
     "styled-icons": "^10.22.0",
     "styled-reset": "^4.2.3",
     "styled-system": "^5.1.5",
-    "swr": "^0.3.5"
+    "swr": "^0.3.5",
+    "tiny-async-pool": "^1.2.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",

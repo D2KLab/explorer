@@ -1,3 +1,5 @@
+import asyncPool from 'tiny-async-pool';
+
 import { withRequestValidation } from '@helpers/api';
 import SparqlClient from '@helpers/sparql';
 import { fillWithVocabularies } from '@helpers/explorer';
@@ -74,10 +76,6 @@ export const search = async (query) => {
 
   const route = config.routes[query.type];
   if (route) {
-    const searchQuery = JSON.parse(JSON.stringify(route.query));
-    searchQuery.$where = searchQuery.$where || [];
-    searchQuery.$filter = searchQuery.$filter || [];
-
     const extraWhere = [];
     const extraFilter = [];
 
@@ -168,31 +166,74 @@ export const search = async (query) => {
       ${extraWhere.length > 1 ? '.' : ''}
       ${extraFilter.length > 0 ? `FILTER(${extraFilter.join(' && ')})` : ''}
     `;
-    searchQuery.$where.push(`
-      {
-        SELECT DISTINCT ?id WHERE {
-          ${whereCondition}
-        }
-        GROUP BY ?id
-        ${orderByVariable ? `ORDER BY ?${orderByVariable}` : ''}
-        OFFSET ${itemsPerPage * ((parseInt(query.page, 10) || 1) - 1)}
-        LIMIT ${itemsPerPage}
-      }
-    `);
-    searchQuery.$filter = []; // clear the filters since they are included in the sub-select query
-
-    // Execute the query
-    if (config.debug) {
-      debugSparqlQuery = await SparqlClient.getSparqlQuery(searchQuery);
+    const mainSearchQuery = {
+      '@graph': [
+        {
+          '@id': '?id',
+          '@graph': '?g',
+        },
+      ],
+      $where: [],
+      $filter: [],
+      $groupby: '?id',
+      $offset: `${itemsPerPage * ((parseInt(query.page, 10) || 1) - 1)}`,
+      $limit: itemsPerPage,
+    };
+    if (orderByVariable) {
+      mainSearchQuery.$orderby = `?${orderByVariable}`;
     }
-    // Call the endpoint with the search query
-    const resSearch = await SparqlClient.query(searchQuery, {
+    mainSearchQuery.$where.push(whereCondition);
+
+    // Execute the main search query
+    if (config.debug) {
+      debugSparqlQuery = await SparqlClient.getSparqlQuery(mainSearchQuery);
+    }
+    // Call the endpoint with the main search query
+    const resMainSearch = await SparqlClient.query(mainSearchQuery, {
       endpoint: config.api.endpoint,
       debug: config.debug,
     });
-    if (resSearch) {
-      results.push(...resSearch['@graph']);
+    const entities = [];
+    if (resMainSearch) {
+      entities.push(...resMainSearch['@graph']);
     }
+
+    // Loop through each entity and get the details
+    const maxConcurrentRequests = 3;
+    results.push(
+      ...(
+        await asyncPool(maxConcurrentRequests, entities, async (entity) => {
+          const searchDetailsQuery = JSON.parse(JSON.stringify(route.query));
+          searchDetailsQuery.$where = searchDetailsQuery.$where || [];
+          searchDetailsQuery.$filter = searchDetailsQuery.$filter || [];
+          searchDetailsQuery.$values = searchDetailsQuery.$values || {};
+          searchDetailsQuery.$values['?id'] = searchDetailsQuery.$values['?id'] || [];
+          searchDetailsQuery.$values['?id'].push(entity['@id']);
+
+          const resSearchDetails = await SparqlClient.query(searchDetailsQuery, {
+            endpoint: config.api.endpoint,
+            debug: config.debug,
+          });
+
+          const details = [];
+          if (resSearchDetails) {
+            // Ignore empty objects
+            const detailsWithoutEmptyObjects = resSearchDetails['@graph'].map((obj) => {
+              Object.keys(obj).forEach((k) => {
+                if (Array.isArray(obj[k])) {
+                  obj[k] = obj[k].filter((v) => typeof v !== 'object' || Object.keys(v).length > 0);
+                }
+              });
+              return obj;
+            });
+
+            details.push(...detailsWithoutEmptyObjects);
+          }
+
+          return details;
+        })
+      ).flat()
+    );
 
     for (let i = 0; i < results.length; i += 1) {
       await fillWithVocabularies(results[i]);
