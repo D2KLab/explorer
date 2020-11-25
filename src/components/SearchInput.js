@@ -16,11 +16,14 @@ async function getSuggestions(value) {
   const results = [];
 
   const searchQuery = JSON.parse(JSON.stringify(config.search.textSearchQuery));
+  searchQuery.$where = searchQuery.$where || [];
   searchQuery.$filter = searchQuery.$filter || [];
   if (typeof config.search.filterFunc === 'function') {
     searchQuery.$filter.push(
       ...config.search.filterFunc(value).map((condition) => `(${condition})`)
     );
+  } else if (typeof config.search.whereFunc === 'function') {
+    searchQuery.$where.push(...config.search.whereFunc(value));
   } else {
     searchQuery.$filter.push(`regex(?label, "${value}", "i")`);
   }
