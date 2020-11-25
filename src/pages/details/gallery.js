@@ -112,6 +112,7 @@ const Primary = styled.div`
         width: auto;
         max-width: 100%;
         max-height: 50vh;
+        pointer-events: auto;
       }
     }
 
