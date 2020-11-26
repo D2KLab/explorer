@@ -143,7 +143,9 @@ const VocabularyPage = ({ results }) => {
   if (typeof IntersectionObserver !== 'undefined') {
     const callback = (entries) => {
       entries.forEach((entry) => {
-        singleRefs[entry.target.id].ratio = entry.intersectionRatio;
+        if (singleRefs[entry.target.id]) {
+          singleRefs[entry.target.id].ratio = entry.intersectionRatio;
+        }
       });
 
       const targetResult = Object.values(singleRefs).reduce(
