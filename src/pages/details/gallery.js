@@ -174,18 +174,22 @@ const Secondary = styled.div`
 `;
 
 const Title = styled.h1`
-  display: none;
   border-bottom: 3px solid ${({ theme }) => theme.colors.primary};
   font-size: 3rem;
   line-height: 1.25;
+`;
+
+const DesktopContainer = styled.div`
   margin-bottom: 24px;
+  display: none;
 
   ${breakpoints.desktop`
     display: block;
   `}
 `;
 
-const MobileTitle = styled(Title)`
+const MobileContainer = styled.div`
+  margin-bottom: 24px;
   display: block;
 
   ${breakpoints.desktop`
@@ -217,8 +221,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   });
 
   const metadata = Object.entries(result).filter(([metaName]) => {
-    if (metaName === '@id' && !route.details.showPermalink) return false;
-    if (['@type', '@graph', 'label', 'representation'].includes(metaName)) return false;
+    if (['@id', '@type', '@graph', 'label', 'representation'].includes(metaName)) return false;
     if (Array.isArray(route.details.excludedMetadata)) {
       return !route.details.excludedMetadata.includes(metaName);
     }
@@ -376,7 +379,14 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                 />
               )}
 
-              <MobileTitle>{pageTitle}</MobileTitle>
+              <MobileContainer>
+                <Title>{pageTitle}</Title>
+                {route.details.showPermalink && (
+                  <small>
+                    (<a href={result['@id']}>permalink</a>)
+                  </small>
+                )}
+              </MobileContainer>
               <Carousel
                 showArrows
                 {...config.gallery.options}
@@ -430,7 +440,14 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
             </Primary>
           )}
           <Secondary>
-            <Title>{pageTitle}</Title>
+            <DesktopContainer marginBottom={24}>
+              <Title>{pageTitle}</Title>
+              {route.details.showPermalink && (
+                <small>
+                  (<a href={result['@id']}>permalink</a>)
+                </small>
+              )}
+            </DesktopContainer>
             <Element marginBottom={12} display="flex" justifyContent="space-between">
               <GraphIcon uri={result['@graph']} />
               {session && (

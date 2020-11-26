@@ -86,8 +86,7 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   });
 
   const metadata = Object.entries(result).filter(([metaName]) => {
-    if (metaName === '@id' && !route.details.showPermalink) return false;
-    if (['@type', '@graph', 'label', 'representation'].includes(metaName)) return false;
+    if (['@id', '@type', '@graph', 'label', 'representation'].includes(metaName)) return false;
     if (Array.isArray(route.details.excludedMetadata)) {
       return !route.details.excludedMetadata.includes(metaName);
     }
@@ -112,7 +111,14 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
       <Body>
         <Columns>
           <Primary>
-            <h1>{label}</h1>
+            <Element marginBottom={24}>
+              <h1>{label}</h1>
+              {route.details.showPermalink && (
+                <small>
+                  (<a href={result['@id']}>permalink</a>)
+                </small>
+              )}
+            </Element>
             <Element marginBottom={12} display="flex" justifyContent="space-between">
               <GraphIcon uri={result['@graph']} />
               {session && (

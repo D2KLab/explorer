@@ -72,7 +72,6 @@ const Title = styled.h1`
   border-bottom: 3px solid ${({ theme }) => theme.colors.primary};
   font-size: 3rem;
   line-height: 1.25;
-  margin-bottom: 24px;
 `;
 
 const RelatedVideosList = styled.div``;
@@ -199,8 +198,7 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
   }
 
   const metadata = Object.entries(result).filter(([metaName]) => {
-    if (metaName === '@id' && !route.details.showPermalink) return false;
-    if (['@type', '@graph', 'label', 'representation'].includes(metaName)) return false;
+    if (['@id', '@type', '@graph', 'label', 'representation'].includes(metaName)) return false;
     if (Array.isArray(route.details.excludedMetadata)) {
       return !route.details.excludedMetadata.includes(metaName);
     }
@@ -280,7 +278,14 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
         )}
         <Columns>
           <Primary>
-            <Title>{label}</Title>
+            <Element marginBottom={24}>
+              <Title>{label}</Title>
+              {route.details.showPermalink && (
+                <small>
+                  (<a href={result['@id']}>permalink</a>)
+                </small>
+              )}
+            </Element>
             <Element marginBottom={12} display="flex" justifyContent="space-between">
               <GraphIcon uri={result['@graph']} />
               {session && (
