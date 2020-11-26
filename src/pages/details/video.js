@@ -282,7 +282,11 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
               <Title>{label}</Title>
               {route.details.showPermalink && (
                 <small>
-                  (<a href={result['@id']}>permalink</a>)
+                  (
+                  <a href={result['@id']} target="_blank" rel="noopener noreferrer">
+                    permalink
+                  </a>
+                  )
                 </small>
               )}
             </Element>

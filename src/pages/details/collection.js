@@ -115,7 +115,11 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
               <h1>{label}</h1>
               {route.details.showPermalink && (
                 <small>
-                  (<a href={result['@id']}>permalink</a>)
+                  (
+                  <a href={result['@id']} target="_blank" rel="noopener noreferrer">
+                    permalink
+                  </a>
+                  )
                 </small>
               )}
             </Element>

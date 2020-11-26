@@ -383,7 +383,11 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                 <Title>{pageTitle}</Title>
                 {route.details.showPermalink && (
                   <small>
-                    (<a href={result['@id']}>permalink</a>)
+                    (
+                    <a href={result['@id']} target="_blank" rel="noopener noreferrer">
+                      permalink
+                    </a>
+                    )
                   </small>
                 )}
               </MobileContainer>
@@ -444,7 +448,11 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
               <Title>{pageTitle}</Title>
               {route.details.showPermalink && (
                 <small>
-                  (<a href={result['@id']}>permalink</a>)
+                  (
+                  <a href={result['@id']} target="_blank" rel="noopener noreferrer">
+                    permalink
+                  </a>
+                  )
                 </small>
               )}
             </DesktopContainer>
