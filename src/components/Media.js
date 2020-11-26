@@ -47,6 +47,11 @@ export const Title = styled.span`
   font-weight: 700;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  /* Clamp text to 3 lines for Webkit browsers */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 `;
 
 export const Subtitle = styled.span`
