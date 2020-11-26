@@ -360,73 +360,75 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
       <Header />
       <Body>
         <Columns>
-          <Primary>
-            {lightboxIsOpen && (
-              <Lightbox
-                imageTitle={pageTitle}
-                mainSrc={images[lightboxIndex]}
-                nextSrc={images[(lightboxIndex + 1) % images.length]}
-                prevSrc={images[(lightboxIndex + images.length - 1) % images.length]}
-                onCloseRequest={() => setLightboxIsOpen(false)}
-                onMovePrevRequest={() =>
-                  setLightboxIndex((lightboxIndex + images.length - 1) % images.length)
-                }
-                onMoveNextRequest={() => setLightboxIndex((lightboxIndex + 1) % images.length)}
-              />
-            )}
+          {images.length > 0 && (
+            <Primary>
+              {lightboxIsOpen && (
+                <Lightbox
+                  imageTitle={pageTitle}
+                  mainSrc={images[lightboxIndex]}
+                  nextSrc={images[(lightboxIndex + 1) % images.length]}
+                  prevSrc={images[(lightboxIndex + images.length - 1) % images.length]}
+                  onCloseRequest={() => setLightboxIsOpen(false)}
+                  onMovePrevRequest={() =>
+                    setLightboxIndex((lightboxIndex + images.length - 1) % images.length)
+                  }
+                  onMoveNextRequest={() => setLightboxIndex((lightboxIndex + 1) % images.length)}
+                />
+              )}
 
-            <MobileTitle>{pageTitle}</MobileTitle>
-            <Carousel
-              showArrows
-              {...config.gallery.options}
-              renderThumbs={customRenderThumb}
-              onChange={setCurrentSlide}
-            >
-              {images.map((image, i) => (
-                <div key={image} onClick={() => showLightbox(i, pageTitle)} aria-hidden="true">
-                  <img src={generateMediaUrl(image, 1024)} alt={pageTitle} />
-                  <p className="legend">{pageTitle}</p>
-                </div>
-              ))}
-            </Carousel>
+              <MobileTitle>{pageTitle}</MobileTitle>
+              <Carousel
+                showArrows
+                {...config.gallery.options}
+                renderThumbs={customRenderThumb}
+                onChange={setCurrentSlide}
+              >
+                {images.map((image, i) => (
+                  <div key={image} onClick={() => showLightbox(i, pageTitle)} aria-hidden="true">
+                    <img src={generateMediaUrl(image, 1024)} alt={pageTitle} />
+                    <p className="legend">{pageTitle}</p>
+                  </div>
+                ))}
+              </Carousel>
 
-            {/*
-            <Analysis>
-              <Tabs>
-                <Tab label="Transcript">
-                  <p>Transcript.</p>
-                  {lipsum}
-                </Tab>
-                <Tab label="Face Rec">
-                  <p>Face Rec.</p>
-                  {lipsum}
-                </Tab>
-                <Tab label="Audio">
-                  <p>Audio.</p>
-                  {lipsum}
-                </Tab>
-                <Tab label="Object Det">
-                  <p>Object Det.</p>
-                  {lipsum}
-                </Tab>
-              </Tabs>
-            </Analysis>
-            */}
-            <Debug>
-              <Metadata label="HTTP Parameters">
-                <pre>{JSON.stringify(query, null, 2)}</pre>
-              </Metadata>
-              <Metadata label="Query Result">
-                <pre>{JSON.stringify(result, null, 2)}</pre>
-              </Metadata>
-              <Metadata label="SPARQL Query">
-                <SPARQLQueryLink query={debugSparqlQuery}>
-                  {t('common:buttons.editQuery')}
-                </SPARQLQueryLink>
-                <pre>{debugSparqlQuery}</pre>
-              </Metadata>
-            </Debug>
-          </Primary>
+              {/*
+              <Analysis>
+                <Tabs>
+                  <Tab label="Transcript">
+                    <p>Transcript.</p>
+                    {lipsum}
+                  </Tab>
+                  <Tab label="Face Rec">
+                    <p>Face Rec.</p>
+                    {lipsum}
+                  </Tab>
+                  <Tab label="Audio">
+                    <p>Audio.</p>
+                    {lipsum}
+                  </Tab>
+                  <Tab label="Object Det">
+                    <p>Object Det.</p>
+                    {lipsum}
+                  </Tab>
+                </Tabs>
+              </Analysis>
+              */}
+              <Debug>
+                <Metadata label="HTTP Parameters">
+                  <pre>{JSON.stringify(query, null, 2)}</pre>
+                </Metadata>
+                <Metadata label="Query Result">
+                  <pre>{JSON.stringify(result, null, 2)}</pre>
+                </Metadata>
+                <Metadata label="SPARQL Query">
+                  <SPARQLQueryLink query={debugSparqlQuery}>
+                    {t('common:buttons.editQuery')}
+                  </SPARQLQueryLink>
+                  <pre>{debugSparqlQuery}</pre>
+                </Metadata>
+              </Debug>
+            </Primary>
+          )}
           <Secondary>
             <Title>{pageTitle}</Title>
             <Element marginBottom={12} display="flex" justifyContent="space-between">
