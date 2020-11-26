@@ -100,4 +100,8 @@ export default createGlobalStyle`
     font-weight: 400;
     color: inherit;
   }
+
+  small {
+    font-size: smaller;
+  }
 `;

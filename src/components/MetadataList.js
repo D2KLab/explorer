@@ -2,6 +2,7 @@ import Metadata from '@components/Metadata';
 import { uriToId } from '@helpers/utils';
 import { findRouteByRDFType } from '@helpers/explorer';
 import { useTranslation } from '~/i18n';
+import config from '~/config';
 
 /**
  * Metadata list.
@@ -20,16 +21,20 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
   }
 
   const [routeName, route] = findRouteByRDFType(meta['@type']);
+  const filter =
+    currentRoute &&
+    Array.isArray(currentRoute.filters) &&
+    currentRoute.filters.find((f) => f.id === metaName);
 
+  let skosmosUri = null;
   let url = meta['@id'];
   if (route) {
     url = `/${routeName}/${encodeURI(uriToId(meta['@id'], { base: route.uriBase }))}`;
-  } else if (
-    currentRoute &&
-    Array.isArray(currentRoute.filters) &&
-    currentRoute.filters.find((f) => f.id === metaName)
-  ) {
+  } else if (filter) {
     url = `/${currentRouteName}?field_filter_${metaName}=${encodeURIComponent(meta['@id'])}`;
+    if (filter.hasSkosmosDefinition) {
+      skosmosUri = meta['@id'];
+    }
   }
 
   let printableValue = '<unk>';
@@ -48,7 +53,25 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
     return <>{printableValue}</>;
   }
 
-  return <a href={url}>{printableValue}</a>;
+  return (
+    <>
+      <a href={url}>{printableValue}</a>
+      {skosmosUri && config.plugins.skosmos && (
+        <small>
+          {' '}
+          (
+          <a
+            href={`${config.plugins.skosmos.url}${meta['@id']}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            def
+          </a>
+          )
+        </small>
+      )}
+    </>
+  );
 }
 
 const MetadataList = ({ metadata, query, route }) => {

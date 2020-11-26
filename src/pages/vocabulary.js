@@ -109,6 +109,15 @@ const Item = styled.div`
   margin-bottom: 24px;
 `;
 
+const ItemTitle = styled.div`
+  display: flex;
+  align-items: center;
+
+  h2:not(:last-child) {
+    margin-right: 0.25em;
+  }
+`;
+
 const VocabularyPage = ({ results }) => {
   const { t } = useTranslation(['common', 'project']);
   const router = useRouter();
@@ -253,9 +262,20 @@ const VocabularyPage = ({ results }) => {
                   const links = useWith.map((w) => renderLink(w, item));
                   return (
                     <Item key={item['@id']} id={item['@id']}>
-                      <h2>{item.label}</h2>
+                      <ItemTitle>
+                        <h2>{item.label}</h2>
+                        {config.plugins.skosmos && (
+                          <a
+                            href={`${config.plugins.skosmos.url}${encodeURIComponent(item['@id'])}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            def
+                          </a>
+                        )}
+                      </ItemTitle>
                       {item.description && <p>{item.description}</p>}
-                      {links}
+                      <p>{links}</p>
                     </Item>
                   );
                 };
