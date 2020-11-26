@@ -42,6 +42,10 @@ const Credits = styled.div`
 `;
 
 const LogoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
   margin-top: 24px;
 
   ${breakpoints.tablet`
@@ -54,6 +58,11 @@ const LogoContainer = styled.div`
 const Logo = styled.img`
   max-height: 100px;
   max-width: 100%;
+  margin: 1em;
+
+  &:not(:last-child) {
+    margin-right: 2em;
+  }
 `;
 
 const Footer = ({ className }) => {
@@ -64,13 +73,17 @@ const Footer = ({ className }) => {
         <p>{t('footer.text')}</p>
       </Credits>
       <LogoContainer>
-        <a target="_blank" rel="noopener noreferrer">
+        {Array.isArray(config.footer.logo) ? (
+          config.footer.logo.map((logo) => (
+            <Logo src={logo} alt={config.metadata.title} title={config.metadata.title} />
+          ))
+        ) : (
           <Logo
             src={config.footer.logo || config.metadata.logo}
             alt={config.metadata.title}
             title={config.metadata.title}
           />
-        </a>
+        )}
       </LogoContainer>
     </Container>
   );
