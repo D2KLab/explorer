@@ -3,6 +3,7 @@ import asyncPool from 'tiny-async-pool';
 import { withRequestValidation } from '@helpers/api';
 import SparqlClient from '@helpers/sparql';
 import { fillWithVocabularies } from '@helpers/explorer';
+import { removeEmptyObjects } from '@helpers/utils';
 import cache from '@helpers/cache';
 import config from '~/config';
 
@@ -222,15 +223,7 @@ export const search = async (query) => {
           const details = [];
           if (resSearchDetails) {
             // Ignore empty objects
-            const detailsWithoutEmptyObjects = resSearchDetails['@graph'].map((obj) => {
-              Object.keys(obj).forEach((k) => {
-                if (Array.isArray(obj[k])) {
-                  obj[k] = obj[k].filter((v) => typeof v !== 'object' || Object.keys(v).length > 0);
-                }
-              });
-              return obj;
-            });
-
+            const detailsWithoutEmptyObjects = resSearchDetails['@graph'].map(removeEmptyObjects);
             details.push(...detailsWithoutEmptyObjects);
           }
 

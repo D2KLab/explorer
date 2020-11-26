@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth/client';
 
 import { withRequestValidation } from '@helpers/api';
-import { idToUri } from '@helpers/utils';
+import { idToUri, removeEmptyObjects } from '@helpers/utils';
 import { fillWithVocabularies } from '@helpers/explorer';
 import { getSessionUser, getUserLists } from '@helpers/database';
 import SparqlClient from '@helpers/sparql';
@@ -41,7 +41,7 @@ export default withRequestValidation({
     debug: config.debug,
   });
 
-  const result = queryRes && queryRes['@graph'][0];
+  const result = queryRes && removeEmptyObjects(queryRes['@graph'][0]);
   if (result) {
     await fillWithVocabularies(result);
 

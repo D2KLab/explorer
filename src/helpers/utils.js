@@ -65,3 +65,12 @@ export function absoluteUrl(req, localhostAddress = 'localhost:3000') {
 
   return `${protocol}//${host}`;
 }
+
+export function removeEmptyObjects(obj) {
+  Object.keys(obj).forEach((k) => {
+    if (Array.isArray(obj[k])) {
+      obj[k] = obj[k].filter((v) => typeof v !== 'object' || Object.keys(v).length > 0);
+    }
+  });
+  return obj;
+}
