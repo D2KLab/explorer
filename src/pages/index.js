@@ -303,6 +303,7 @@ const HomePage = () => {
                     type="button"
                     aria-label={t('common:buttons.searchByImage')}
                     {...dialog}
+                    style={{ opacity: 0.5, pointerEvents: 'none' }}
                   >
                     <CameraIcon />
                   </CameraButton>
