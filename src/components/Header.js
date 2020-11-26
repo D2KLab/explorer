@@ -37,10 +37,8 @@ const StyledProfileButton = styled(ProfileButton)`
   `}
 `;
 
-const Logo = styled.img`
-  max-width: 128px;
-  max-height: 54px;
-  flex: 0 0 auto;
+const LogoContainer = styled.a`
+  text-decoration: none;
   margin-right: 0;
   margin-left: 5em;
 
@@ -48,6 +46,17 @@ const Logo = styled.img`
     margin-left: 2em;
     margin-right: 2em;
   `}
+`;
+
+const Logo = styled.img`
+  max-width: 128px;
+  max-height: 54px;
+  flex: 0 0 auto;
+`;
+
+const LogoTitle = styled.span`
+  color: #000;
+  font-size: 2em;
 `;
 
 const NavContainer = styled.div`
@@ -96,13 +105,17 @@ const Header = ({ className }) => {
   return (
     <Container className={className}>
       <Link href="/" passHref>
-        <a>
-          <Logo
-            src={config.metadata.logo}
-            title={config.metadata.title}
-            alt={config.metadata.title}
-          />
-        </a>
+        <LogoContainer>
+          {config.metadata.logo ? (
+            <Logo
+              src={config.metadata.logo}
+              title={config.metadata.title}
+              alt={config.metadata.title}
+            />
+          ) : (
+            <LogoTitle>{config.metadata.title}</LogoTitle>
+          )}
+        </LogoContainer>
       </Link>
       <NavContainer>
         <NavList>
