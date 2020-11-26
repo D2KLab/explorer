@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, createRef, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -123,7 +123,7 @@ const VocabularyPage = ({ results }) => {
 
   const singleRefs = results.reduce((acc, value) => {
     acc[value['@id']] = {
-      ref: useRef(),
+      ref: createRef(),
       id: value['@id'],
       ratio: 0,
     };
