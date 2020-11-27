@@ -256,6 +256,8 @@ const VocabularyPage = ({ results }) => {
                   if (filter) {
                     const val = filter.isMulti ? [item['@id']] : item['@id'];
                     withQuery[`field_filter_${filter.id}`] = val;
+                  } else {
+                    withQuery[withConfig.filter] = item.label;
                   }
 
                   return (
