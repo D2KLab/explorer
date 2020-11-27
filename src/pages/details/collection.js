@@ -69,7 +69,7 @@ const Description = styled.div`
 `;
 
 const LegalBody = styled.small`
-  margin: 8px;
+  margin-left: 8px;
 `;
 
 const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
@@ -94,7 +94,8 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   });
 
   const metadata = Object.entries(result).filter(([metaName]) => {
-    if (['@id', '@type', '@graph', 'label', 'representation'].includes(metaName)) return false;
+    if (['@id', '@type', '@graph', 'label', 'representation', 'legalBody'].includes(metaName))
+      return false;
     if (Array.isArray(route.details.excludedMetadata)) {
       return !route.details.excludedMetadata.includes(metaName);
     }
@@ -146,7 +147,7 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                 )}
               </Element>
             </Element>
-            <Element marginBottom={12} display="flex" flexWrap="wrap">
+            <Element marginBottom={12} display="flex">
               <GraphIcon uri={result['@graph']} />
               <LegalBody>
                 {Array.isArray(result.legalBody)

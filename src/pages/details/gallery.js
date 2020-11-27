@@ -206,7 +206,7 @@ const Description = styled.div`
 `;
 
 const LegalBody = styled.small`
-  margin: 8px;
+  margin-left: 8px;
 `;
 
 const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
@@ -513,7 +513,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                 )}
               </Element>
             </DesktopContainer>
-            <Element marginBottom={12} display="flex" flexWrap="wrap">
+            <Element marginBottom={12} display="flex">
               <GraphIcon uri={result['@graph']} />
               <LegalBody>
                 {Array.isArray(result.legalBody)

@@ -156,7 +156,7 @@ const Description = styled.div`
 `;
 
 const LegalBody = styled.small`
-  margin: 8px;
+  margin-left: 8px;
 `;
 
 function humanTimeToSeconds(humanTime) {
@@ -206,7 +206,8 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
   }
 
   const metadata = Object.entries(result).filter(([metaName]) => {
-    if (['@id', '@type', '@graph', 'label', 'representation'].includes(metaName)) return false;
+    if (['@id', '@type', '@graph', 'label', 'representation', 'legalBody'].includes(metaName))
+      return false;
     if (Array.isArray(route.details.excludedMetadata)) {
       return !route.details.excludedMetadata.includes(metaName);
     }
@@ -313,7 +314,7 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
                 )}
               </Element>
             </Element>
-            <Element marginBottom={12} display="flex" flexWrap="wrap">
+            <Element marginBottom={12} display="flex">
               <GraphIcon uri={result['@graph']} />
               {session && (
                 <SaveButton
