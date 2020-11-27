@@ -61,7 +61,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
           {' '}
           (
           <a
-            href={`${config.plugins.skosmos.url}${meta['@id']}`}
+            href={`${config.plugins.skosmos.baseUrl}${meta['@id']}`}
             target="_blank"
             rel="noopener noreferrer"
           >

@@ -268,7 +268,9 @@ const VocabularyPage = ({ results }) => {
                         <h2>{item.label}</h2>
                         {config.plugins.skosmos && (
                           <a
-                            href={`${config.plugins.skosmos.url}${encodeURIComponent(item['@id'])}`}
+                            href={`${config.plugins.skosmos.baseUrl}${encodeURIComponent(
+                              item['@id']
+                            )}`}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
