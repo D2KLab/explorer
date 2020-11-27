@@ -64,6 +64,10 @@ const StyledMedia = styled(Media)`
   margin-right: var(--card-margin);
 `;
 
+const Description = styled.div`
+  white-space: pre-line;
+`;
+
 const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   const { t, i18n } = useTranslation(['common']);
   const [session] = NextAuth.useSession();
@@ -193,6 +197,20 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                 return element;
               })}
             </Results>
+
+            {result.description && (
+              <>
+                <h4>Description</h4>
+                <Description
+                  dangerouslySetInnerHTML={{
+                    __html: Array.isArray(result.description)
+                      ? result.description.join('\n\n')
+                      : result.description,
+                  }}
+                />
+              </>
+            )}
+
             <Debug>
               <Metadata label="HTTP Parameters">
                 <pre>{JSON.stringify(query, null, 2)}</pre>

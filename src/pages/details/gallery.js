@@ -201,6 +201,10 @@ const VirtualLoomButton = styled.a`
   display: block;
 `;
 
+const Description = styled.div`
+  white-space: pre-line;
+`;
+
 const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   const { t, i18n } = useTranslation(['common']);
   const { query } = useRouter();
@@ -221,7 +225,8 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   });
 
   const metadata = Object.entries(result).filter(([metaName]) => {
-    if (['@id', '@type', '@graph', 'label', 'representation'].includes(metaName)) return false;
+    if (['@id', '@type', '@graph', 'label', 'description', 'representation'].includes(metaName))
+      return false;
     if (Array.isArray(route.details.excludedMetadata)) {
       return !route.details.excludedMetadata.includes(metaName);
     }
@@ -427,6 +432,20 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                 </Tabs>
               </Analysis>
               */}
+
+              {result.description && (
+                <>
+                  <h4>Description</h4>
+                  <Description
+                    dangerouslySetInnerHTML={{
+                      __html: Array.isArray(result.description)
+                        ? result.description.join('\n\n')
+                        : result.description,
+                    }}
+                  />
+                </>
+              )}
+
               <Debug>
                 <Metadata label="HTTP Parameters">
                   <pre>{JSON.stringify(query, null, 2)}</pre>

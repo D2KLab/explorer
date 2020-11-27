@@ -151,6 +151,10 @@ const VideoSegments = styled.div`
   `};
 `;
 
+const Description = styled.div`
+  white-space: pre-line;
+`;
+
 function humanTimeToSeconds(humanTime) {
   const time = humanTime.split(':');
   return +time[0] * 60 * 60 + +time[1] * 60 + +time[2];
@@ -321,6 +325,20 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
                 </Tab>
               </Tabs>
             </Analysis> */}
+
+            {result.description && (
+              <>
+                <h4>Description</h4>
+                <Description
+                  dangerouslySetInnerHTML={{
+                    __html: Array.isArray(result.description)
+                      ? result.description.join('\n\n')
+                      : result.description,
+                  }}
+                />
+              </>
+            )}
+
             <Debug>
               <Metadata label="HTTP Parameters">
                 <pre>{JSON.stringify(query, null, 2)}</pre>
