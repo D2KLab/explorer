@@ -2,6 +2,7 @@
   "buttons": {
     "clear": "EFFACER",
     "filter": "FILTRER",
+    "loadMore": "Charger plus",
     "paginatePrevious": "Précédent",
     "paginateNext": "Suivant",
     "toggleMap": "Carte"
@@ -12,7 +13,8 @@
     "select": "Sélectionner...",
     "browse": "Parcourir par {{type}}",
     "noResults": "Aucun résultat pour cette recherche",
-    "page": "Page {{page}}"
+    "page": "Page {{page}}",
+    "loading": "Chargement..."
   },
   "fields": {
     "graph": "Graphe",
