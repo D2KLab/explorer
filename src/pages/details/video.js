@@ -171,7 +171,7 @@ function formatSegmentTime(time, removeZeroes) {
 }
 
 const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSegments }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(['common']);
 
   if (!result) {
     return <DefaultErrorPage statusCode={404} title={t('common:errors.resultNotFound')} />;

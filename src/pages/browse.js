@@ -152,7 +152,7 @@ const ResultPage = styled.h3`
 
 const BrowsePage = ({ initialData }) => {
   const { req, query, pathname } = useRouter();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(['common', 'search']);
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(true);
   const currentPage = parseInt(query.page, 10) || 1;

@@ -65,7 +65,7 @@ const StyledMedia = styled(Media)`
 `;
 
 const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(['common']);
   const [session] = NextAuth.useSession();
   const { query } = useRouter();
   const [isItemSaved, setIsItemSaved] = useState(inList);

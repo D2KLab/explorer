@@ -202,7 +202,7 @@ const VirtualLoomButton = styled.a`
 `;
 
 const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(['common']);
   const { query } = useRouter();
   const [session] = NextAuth.useSession();
   const route = config.routes[query.type];

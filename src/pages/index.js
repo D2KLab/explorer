@@ -258,7 +258,7 @@ const Dropzone = styled.div`
 `;
 
 const HomePage = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'home', 'project']);
 
   // Search by image
   const dialog = useDialogState();
@@ -340,7 +340,7 @@ const HomePage = () => {
                       color={config.routes[routeName].textColor || '#000000'}
                     >
                       {t(
-                        `routes.${routeName}`,
+                        `project:routes.${routeName}`,
                         routeName.substr(0, 1).toUpperCase() + routeName.substr(1)
                       )}
                     </BigButton>
