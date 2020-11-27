@@ -5,6 +5,7 @@ import breakpoints from '@styles/breakpoints';
 import SearchBox from '@components/SearchBox';
 import LanguageSwitch from '@components/LanguageSwitch';
 import ProfileButton from '@components/ProfileButton';
+import { OpenInNew } from '@styled-icons/material/OpenInNew';
 import { useTranslation } from '~/i18n';
 import config from '~/config';
 
@@ -85,7 +86,8 @@ const NavLink = styled.a`
   color: #000;
   text-decoration: none;
   text-transform: uppercase;
-  display: block;
+  display: flex;
+  align-items: center;
   line-height: 54px;
 `;
 
@@ -133,6 +135,17 @@ const Header = ({ className }) => {
                 </Link>
               </NavItem>
             ))}
+          {config.plugins.skosmos && config.plugins.skosmos.thesaurusUrl && (
+            <NavItem>
+              <NavLink
+                href={config.plugins.skosmos.thesaurusUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Thesaurus <OpenInNew style={{ width: '1rem', height: '1rem' }} />
+              </NavLink>
+            </NavItem>
+          )}
         </NavList>
       </NavContainer>
       <SearchContainer>
