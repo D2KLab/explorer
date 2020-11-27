@@ -1,43 +1,12 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Router from 'next/router';
 import styled from 'styled-components';
 import Autosuggest from 'react-autosuggest';
 
+import Spinner from '@components/Spinner';
 import { uriToId, generateMediaUrl } from '@helpers/utils';
-import { findRouteByRDFType } from '@helpers/explorer';
-import { query } from '@helpers/sparql';
-import config from '~/config';
-
-function getSuggestionValue(suggestion) {
-  return `${suggestion.label}`;
-}
-
-async function getSuggestions(value) {
-  const results = [];
-
-  const searchQuery = JSON.parse(JSON.stringify(config.search.textSearchQuery));
-  searchQuery.$where = searchQuery.$where || [];
-  searchQuery.$filter = searchQuery.$filter || [];
-  if (typeof config.search.filterFunc === 'function') {
-    searchQuery.$filter.push(
-      ...config.search.filterFunc(value).map((condition) => `(${condition})`)
-    );
-  } else if (typeof config.search.whereFunc === 'function') {
-    searchQuery.$where.push(...config.search.whereFunc(value));
-  } else {
-    searchQuery.$filter.push(`regex(?label, "${value}", "i")`);
-  }
-
-  const res = await query(searchQuery, {
-    endpoint: config.api.endpoint,
-    debug: config.debug,
-  });
-  if (res) {
-    results.push(...res['@graph']);
-  }
-
-  return results;
-}
+import { findRouteByRDFType, getEntityMainLabel } from '@helpers/explorer';
+import { useTranslation } from '~/i18n';
 
 const SuggestionContent = styled.span`
   display: flex;
@@ -108,38 +77,102 @@ const Container = styled.div`
   }
 `;
 
-const renderSuggestion = (suggestion) => {
-  let mainImage = null;
-  if (suggestion.representation && suggestion.representation.image) {
-    mainImage = Array.isArray(suggestion.representation.image)
-      ? suggestion.representation.image.shift()
-      : suggestion.representation.image;
-  } else if (Array.isArray(suggestion.representation)) {
-    mainImage =
-      suggestion.representation[0].image ||
-      suggestion.representation[0]['@id'] ||
-      suggestion.representation[0];
-  }
-
-  return (
-    <SuggestionContent>
-      <SuggestionImage src={generateMediaUrl(mainImage, 90)} alt="" />
-      <SuggestionName>{suggestion.label}</SuggestionName>
-    </SuggestionContent>
-  );
-};
+function debounce(fn, time) {
+  let timeoutId;
+  return function wrapper(...args) {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      timeoutId = null;
+      fn(...args);
+    }, time);
+  };
+}
 
 const SearchInput = ({ className, placeholder, ariaLabel = 'Search input', ...props }) => {
   const [inputValue, setInputValue] = useState('');
+  const [totalResults, setTotalResults] = useState(0);
   const [suggestions, setSuggestions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const { t, i18n } = useTranslation(['search']);
+
+  const getSuggestionValue = (suggestion) => {
+    const [, route] = findRouteByRDFType(suggestion['@type']);
+    const label = getEntityMainLabel(suggestion, { route, language: i18n.language });
+    return label;
+  };
+
+  const getSuggestions = async (value) => {
+    setIsLoading(true);
+
+    const response = await (
+      await fetch('/api/autocomplete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          q: value,
+        }),
+      })
+    ).json();
+
+    setIsLoading(false);
+    setTotalResults(response.totalResults);
+
+    return response.results;
+  };
+
+  const renderSuggestion = (suggestion) => {
+    const [, route] = findRouteByRDFType(suggestion['@type']);
+    const label = getEntityMainLabel(suggestion, { route, language: i18n.language });
+
+    let mainImage = null;
+    if (suggestion.representation && suggestion.representation.image) {
+      mainImage = Array.isArray(suggestion.representation.image)
+        ? suggestion.representation.image.shift()
+        : suggestion.representation.image;
+    } else if (Array.isArray(suggestion.representation)) {
+      mainImage =
+        suggestion.representation[0].image ||
+        suggestion.representation[0]['@id'] ||
+        suggestion.representation[0];
+    }
+
+    return (
+      <SuggestionContent>
+        <SuggestionImage src={generateMediaUrl(mainImage, 90)} alt="" />
+        <SuggestionName>{label}</SuggestionName>
+      </SuggestionContent>
+    );
+  };
+
+  const renderSuggestionsContainer = ({ containerProps, children }) => {
+    return (
+      <div {...containerProps}>
+        {children}
+        <div className="react-autosuggest__suggestion">
+          <SuggestionContent>
+            <SuggestionName>
+              <em>{t('search:labels.searchResults', { totalResults: `${totalResults}+` })}</em>
+            </SuggestionName>
+          </SuggestionContent>
+        </div>
+      </div>
+    );
+  };
 
   const onChange = (event, { newValue }) => {
     setInputValue(newValue);
   };
 
-  const onSuggestionsFetchRequested = async ({ value }) => {
-    setSuggestions(await getSuggestions(value));
-  };
+  const onSuggestionsFetchRequested = useCallback(
+    debounce(async ({ value }) => {
+      setSuggestions(await getSuggestions(value));
+    }, 500),
+    []
+  );
 
   const onSuggestionsClearRequested = () => {
     setSuggestions([]);
@@ -175,7 +208,9 @@ const SearchInput = ({ className, placeholder, ariaLabel = 'Search input', ...pr
         getSuggestionValue={getSuggestionValue}
         renderSuggestion={renderSuggestion}
         inputProps={inputProps}
+        renderSuggestionsContainer={renderSuggestionsContainer}
       />
+      {isLoading && <Spinner size="24" style={{ marginRight: '1em' }} />}
     </Container>
   );
 };

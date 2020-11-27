@@ -156,7 +156,7 @@ export const search = async (query) => {
     }
 
     // Pagination
-    const minPerPage = 10; // minimum number of results per page
+    const minPerPage = 5; // minimum number of results per page
     const maxPerPage = 50; // maximum number of results per page
     const defaultPerPage = 20; // default number of results per page
     const itemsPerPage =
@@ -245,6 +245,7 @@ export const search = async (query) => {
         SELECT (COUNT(DISTINCT ?id) AS ?count) WHERE {
           ${whereCondition}
         }
+        ${query.approximate ? 'LIMIT 1000' : ''}
       `,
     };
     const resPagination = await SparqlClient.query(paginationQuery, {

@@ -104,4 +104,8 @@ export default createGlobalStyle`
   small {
     font-size: smaller;
   }
+
+  em {
+    font-style: italic;
+  }
 `;
