@@ -44,7 +44,7 @@
     "reakit": "^1.3.0",
     "redis": "^3.0.2",
     "sparql-transformer": "^2.5.3",
-    "styled-components": "^5.2.1",
+    "styled-components": "^5.2.0",
     "styled-icons": "^10.22.0",
     "styled-reset": "^4.3.1",
     "styled-system": "^5.1.5",
