@@ -180,7 +180,6 @@ export const search = async (query) => {
       ],
       $where: [],
       $filter: [],
-      $groupby: '?id',
       $offset: `${itemsPerPage * ((parseInt(query.page, 10) || 1) - 1)}`,
       $limit: itemsPerPage,
     };
