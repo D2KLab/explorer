@@ -205,6 +205,10 @@ const Description = styled.div`
   white-space: pre-line;
 `;
 
+const LegalBody = styled.small`
+  margin: 8px;
+`;
+
 const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   const { t, i18n } = useTranslation(['common']);
   const { query } = useRouter();
@@ -225,7 +229,11 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   });
 
   const metadata = Object.entries(result).filter(([metaName]) => {
-    if (['@id', '@type', '@graph', 'label', 'description', 'representation'].includes(metaName))
+    if (
+      ['@id', '@type', '@graph', 'label', 'description', 'representation', 'legalBody'].includes(
+        metaName
+      )
+    )
       return false;
     if (Array.isArray(route.details.excludedMetadata)) {
       return !route.details.excludedMetadata.includes(metaName);
@@ -386,15 +394,30 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
 
               <MobileContainer>
                 <Title>{pageTitle}</Title>
-                {route.details.showPermalink && (
-                  <small>
-                    (
-                    <a href={result['@id']} target="_blank" rel="noopener noreferrer">
-                      permalink
-                    </a>
-                    )
-                  </small>
-                )}
+                <Element
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  marginY={12}
+                >
+                  {route.details.showPermalink && (
+                    <small>
+                      (
+                      <a href={result['@id']} target="_blank" rel="noopener noreferrer">
+                        {t('common:buttons.permalink')}
+                      </a>
+                      )
+                    </small>
+                  )}
+                  {session && (
+                    <SaveButton
+                      type={query.type}
+                      item={result}
+                      saved={isItemSaved}
+                      onChange={onItemSaveChange}
+                    />
+                  )}
+                </Element>
               </MobileContainer>
               <Carousel
                 showArrows
@@ -465,26 +488,38 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
           <Secondary>
             <DesktopContainer marginBottom={24}>
               <Title>{pageTitle}</Title>
-              {route.details.showPermalink && (
-                <small>
-                  (
-                  <a href={result['@id']} target="_blank" rel="noopener noreferrer">
-                    permalink
-                  </a>
-                  )
-                </small>
-              )}
+              <Element
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                marginY={12}
+              >
+                {route.details.showPermalink && (
+                  <small>
+                    (
+                    <a href={result['@id']} target="_blank" rel="noopener noreferrer">
+                      {t('common:buttons.permalink')}
+                    </a>
+                    )
+                  </small>
+                )}
+                {session && (
+                  <SaveButton
+                    type={query.type}
+                    item={result}
+                    saved={isItemSaved}
+                    onChange={onItemSaveChange}
+                  />
+                )}
+              </Element>
             </DesktopContainer>
-            <Element marginBottom={12} display="flex" justifyContent="space-between">
+            <Element marginBottom={12} display="flex" flexWrap="wrap">
               <GraphIcon uri={result['@graph']} />
-              {session && (
-                <SaveButton
-                  type={query.type}
-                  item={result}
-                  saved={isItemSaved}
-                  onChange={onItemSaveChange}
-                />
-              )}
+              <LegalBody>
+                {Array.isArray(result.legalBody)
+                  ? result.legalBody.map((body) => body.label)
+                  : result.legalBody.label}
+              </LegalBody>
             </Element>
             <Element marginBottom={24}>
               <MetadataList metadata={metadata} query={query} route={route} />

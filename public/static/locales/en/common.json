@@ -52,7 +52,8 @@
     },
     "downloadJSON": "Linked Data JSON",
     "downloadSelectedImage": "Download selected image",
-    "editQuery": "Edit the query"
+    "editQuery": "Edit the query",
+    "permalink": "permalink"
   },
   "list": {
     "items": "Items in the list",

@@ -155,6 +155,10 @@ const Description = styled.div`
   white-space: pre-line;
 `;
 
+const LegalBody = styled.small`
+  margin: 8px;
+`;
+
 function humanTimeToSeconds(humanTime) {
   const time = humanTime.split(':');
   return +time[0] * 60 * 60 + +time[1] * 60 + +time[2];
@@ -284,17 +288,32 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
           <Primary>
             <Element marginBottom={24}>
               <Title>{label}</Title>
-              {route.details.showPermalink && (
-                <small>
-                  (
-                  <a href={result['@id']} target="_blank" rel="noopener noreferrer">
-                    permalink
-                  </a>
-                  )
-                </small>
-              )}
+              <Element
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                marginY={12}
+              >
+                {route.details.showPermalink && (
+                  <small>
+                    (
+                    <a href={result['@id']} target="_blank" rel="noopener noreferrer">
+                      {t('common:buttons.permalink')}
+                    </a>
+                    )
+                  </small>
+                )}
+                {session && (
+                  <SaveButton
+                    type={query.type}
+                    item={result}
+                    saved={isItemSaved}
+                    onChange={onItemSaveChange}
+                  />
+                )}
+              </Element>
             </Element>
-            <Element marginBottom={12} display="flex" justifyContent="space-between">
+            <Element marginBottom={12} display="flex" flexWrap="wrap">
               <GraphIcon uri={result['@graph']} />
               {session && (
                 <SaveButton
@@ -304,6 +323,11 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
                   onChange={onItemSaveChange}
                 />
               )}
+              <LegalBody>
+                {Array.isArray(result.legalBody)
+                  ? result.legalBody.map((body) => body.label)
+                  : result.legalBody.label}
+              </LegalBody>
             </Element>
             <Element marginBottom={24}>
               <MetadataList metadata={metadata} query={query} route={route} />

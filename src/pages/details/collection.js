@@ -68,6 +68,10 @@ const Description = styled.div`
   white-space: pre-line;
 `;
 
+const LegalBody = styled.small`
+  margin: 8px;
+`;
+
 const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   const { t, i18n } = useTranslation(['common']);
   const [session] = NextAuth.useSession();
@@ -117,26 +121,38 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
           <Primary>
             <Element marginBottom={24}>
               <h1>{label}</h1>
-              {route.details.showPermalink && (
-                <small>
-                  (
-                  <a href={result['@id']} target="_blank" rel="noopener noreferrer">
-                    permalink
-                  </a>
-                  )
-                </small>
-              )}
+              <Element
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                marginY={12}
+              >
+                {route.details.showPermalink && (
+                  <small>
+                    (
+                    <a href={result['@id']} target="_blank" rel="noopener noreferrer">
+                      {t('common:buttons.permalink')}
+                    </a>
+                    )
+                  </small>
+                )}
+                {session && (
+                  <SaveButton
+                    type={query.type}
+                    item={result}
+                    saved={isItemSaved}
+                    onChange={onItemSaveChange}
+                  />
+                )}
+              </Element>
             </Element>
-            <Element marginBottom={12} display="flex" justifyContent="space-between">
+            <Element marginBottom={12} display="flex" flexWrap="wrap">
               <GraphIcon uri={result['@graph']} />
-              {session && (
-                <SaveButton
-                  type={query.type}
-                  item={result}
-                  saved={isItemSaved}
-                  onChange={onItemSaveChange}
-                />
-              )}
+              <LegalBody>
+                {Array.isArray(result.legalBody)
+                  ? result.legalBody.map((body) => body.label)
+                  : result.legalBody.label}
+              </LegalBody>
             </Element>
             <p>{result.description || t('common:collection.noDescription')}</p>
             <Element marginBottom={24}>
