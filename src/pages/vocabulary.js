@@ -37,22 +37,28 @@ const Hero = styled.div`
   `}
 `;
 
-const Title = styled.h1`
-  padding-left: 0.8em;
-  padding-bottom: 0.6em;
+const VocabularyTitle = styled.div`
   align-self: flex-end;
-  text-shadow: 0px 4px 3px rgba(0, 0, 0, 0.2), 0px 8px 13px rgba(0, 0, 0, 0.1),
-    0px 18px 23px rgba(0, 0, 0, 0.1);
-  word-break: break-all;
-  font-size: 3rem;
-  font-weight: 200;
+  display: flex;
+  align-items: center;
 
-  ${breakpoints.mobile`
-    font-size: 5rem;
-  `}
-  ${breakpoints.weirdMedium`
-    font-size: 6rem;
-  `}
+  h1 {
+    margin-right: 0.25em;
+    padding-left: 0.8em;
+    padding-bottom: 0.6em;
+    text-shadow: 0px 4px 3px rgba(0, 0, 0, 0.2), 0px 8px 13px rgba(0, 0, 0, 0.1),
+      0px 18px 23px rgba(0, 0, 0, 0.1);
+    word-break: break-all;
+    font-size: 3rem;
+    font-weight: 200;
+
+    ${breakpoints.mobile`
+      font-size: 5rem;
+    `}
+    ${breakpoints.weirdMedium`
+      font-size: 6rem;
+    `}
+  }
 `;
 
 const Navigation = styled.nav`
@@ -190,12 +196,23 @@ const VocabularyPage = ({ results }) => {
       <Header />
       <Body>
         <Hero image={`/images/pages/${query.type}.jpg`}>
-          <Title>
-            {t(
-              `project:routes.${query.type}`,
-              query.type.substr(0, 1).toUpperCase() + query.type.substr(1)
+          <VocabularyTitle>
+            <h1>
+              {t(
+                `project:routes.${query.type}`,
+                query.type.substr(0, 1).toUpperCase() + query.type.substr(1)
+              )}
+            </h1>
+            {config.plugins.skosmos && route.skosmos && route.skosmos.uri && (
+              <a
+                href={`${config.plugins.skosmos.baseUrl}${encodeURIComponent(route.skosmos.uri)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                def
+              </a>
             )}
-          </Title>
+          </VocabularyTitle>
         </Hero>
         <Content>
           <Container>
