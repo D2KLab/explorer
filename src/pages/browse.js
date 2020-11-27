@@ -155,6 +155,7 @@ const BrowsePage = ({ initialData }) => {
   const { t, i18n } = useTranslation(['common', 'search']);
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(true);
+  const [isPageLoading, setIsPageLoading] = useState(false);
   const currentPage = parseInt(query.page, 10) || 1;
   const mapRef = useRef(null);
 
@@ -403,6 +404,10 @@ const BrowsePage = ({ initialData }) => {
     return <p>{t('search:labels.noResults')}</p>;
   };
 
+  Router.events.on('routeChangeStart', () => setIsPageLoading(true));
+  Router.events.on('routeChangeComplete', () => setIsPageLoading(false));
+  Router.events.on('routeChangeError', () => setIsPageLoading(false));
+
   return (
     <Layout>
       <PageTitle title={t('search:labels.browse', { type: query.type })} />
@@ -426,7 +431,11 @@ const BrowsePage = ({ initialData }) => {
           />
         </Element>
         <Content>
-          <StyledTitle>{t('search:labels.searchResults', { totalResults })}</StyledTitle>
+          <StyledTitle>
+            {isPageLoading
+              ? t('search:labels.loading')
+              : t('search:labels.searchResults', { totalResults })}
+          </StyledTitle>
           <OptionsBar>
             <Option>
               <Label htmlFor="select_sort">{t('search:labels.sortBy')}</Label>
@@ -478,7 +487,7 @@ const BrowsePage = ({ initialData }) => {
                       onAppears={() => onScrollToPage(pageIndex)}
                       rootMargin="0px 0px -50% 0px"
                     />
-                    <Results loading={isLoadingInitialData ? 1 : 0}>
+                    <Results loading={isPageLoading || isLoadingInitialData ? 1 : 0}>
                       {renderResults(page.results)}
                     </Results>
                   </Fragment>
