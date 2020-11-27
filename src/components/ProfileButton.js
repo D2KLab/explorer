@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
 import { Img } from 'react-image';
 import { DownArrow } from '@styled-icons/boxicons-solid/DownArrow';
@@ -8,6 +8,7 @@ import NextAuth from 'next-auth/client';
 import Router from 'next/router';
 
 import Element from '@components/Element';
+import Spinner from '@components/Spinner';
 import { useTranslation, Trans } from '~/i18n';
 
 /**
@@ -87,47 +88,6 @@ const StyledDownArrow = styled(DownArrow)`
 const StyledUserIcon = styled(User)`
   width: 1.6em;
   margin: 0 0.2em;
-`;
-
-const Spinner = ({ size }) => (
-  <StyledSpinner size={size} viewBox="0 0 50 50">
-    <circle className="path" cx="25" cy="25" r="20" fill="none" strokeWidth="2" />
-  </StyledSpinner>
-);
-
-const StyledSpinner = styled.svg`
-  animation: rotate 1s linear infinite;
-  ${({ size = 50 }) =>
-    css`
-      width: ${size}px;
-      height: ${size}px;
-    `}
-
-  & .path {
-    stroke: ${({ theme }) => theme.colors.primary};
-    stroke-linecap: round;
-    animation: dash 1.5s ease-in-out infinite;
-  }
-
-  @keyframes rotate {
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-  @keyframes dash {
-    0% {
-      stroke-dasharray: 1, 150;
-      stroke-dashoffset: 0;
-    }
-    50% {
-      stroke-dasharray: 90, 150;
-      stroke-dashoffset: -35;
-    }
-    100% {
-      stroke-dasharray: 90, 150;
-      stroke-dashoffset: -124;
-    }
-  }
 `;
 
 const ProfileButton = ({ className }) => {

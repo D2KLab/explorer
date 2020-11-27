@@ -2,38 +2,7 @@ import { forwardRef } from 'react';
 import styled from 'styled-components';
 import { Button as ReakitButton } from 'reakit';
 
-const StyledSpinner = styled.svg`
-  animation: rotate 1s linear infinite;
-  width: 1rem;
-  height: 1rem;
-  margin-right: 6px;
-
-  & .path {
-    stroke: ${({ theme }) => theme.colors.secondary};
-    stroke-linecap: round;
-    animation: dash 1.5s ease-in-out infinite;
-  }
-
-  @keyframes rotate {
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-  @keyframes dash {
-    0% {
-      stroke-dasharray: 1, 150;
-      stroke-dashoffset: 0;
-    }
-    50% {
-      stroke-dasharray: 90, 150;
-      stroke-dashoffset: -35;
-    }
-    100% {
-      stroke-dasharray: 90, 150;
-      stroke-dashoffset: -124;
-    }
-  }
-`;
+import Spinner from '@components/Spinner';
 
 const Container = styled(ReakitButton)`
   font-size: 1rem;
@@ -74,6 +43,10 @@ const Container = styled(ReakitButton)`
   pointer-events: ${({ loading }) => (loading ? 'none' : 'auto')};
 `;
 
+const StyledSpinner = styled(Spinner)`
+  margin-right: 0.5rem;
+`;
+
 const Button = forwardRef(({ loading, primary, secondary, href, children, ...props }, ref) => {
   return (
     <Container
@@ -85,11 +58,7 @@ const Button = forwardRef(({ loading, primary, secondary, href, children, ...pro
       primary={primary ? 1 : undefined}
       secondary={secondary ? 1 : undefined}
     >
-      {loading && (
-        <StyledSpinner viewBox="0 0 50 50">
-          <circle className="path" cx="25" cy="25" r="20" fill="none" strokeWidth="2" />
-        </StyledSpinner>
-      )}
+      {loading && <StyledSpinner color="#fff" size={24} />}
       {children}
     </Container>
   );
