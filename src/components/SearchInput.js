@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import Router from 'next/router';
+import Link from 'next/link';
 import styled from 'styled-components';
 import Autosuggest from 'react-autosuggest';
 
@@ -7,6 +8,7 @@ import Spinner from '@components/Spinner';
 import { uriToId, generateMediaUrl } from '@helpers/utils';
 import { findRouteByRDFType, getEntityMainLabel } from '@helpers/explorer';
 import { useTranslation } from '~/i18n';
+import config from '~/config';
 
 const SuggestionContent = styled.span`
   display: flex;
@@ -155,7 +157,11 @@ const SearchInput = ({ className, placeholder, ariaLabel = 'Search input', ...pr
         <div className="react-autosuggest__suggestion">
           <SuggestionContent>
             <SuggestionName>
-              <em>{t('search:labels.searchResults', { totalResults: `${totalResults}+` })}</em>
+              <Link href={`/${config.search.route}?q=${encodeURIComponent(inputValue)}`}>
+                <a>
+                  <em>{t('search:labels.searchResults', { totalResults: `${totalResults}+` })}</em>
+                </a>
+              </Link>
             </SuggestionName>
           </SuggestionContent>
         </div>
