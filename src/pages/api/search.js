@@ -20,42 +20,38 @@ export const getFilters = async (query) => {
     const filter = route.filters[i];
     let filterValues = [];
 
-    // Check if filter values are already cached
-    const cacheKey = `route_${query.type}_filter_${filter.id}`;
-    await cache.exists(cacheKey).then(async (reply) => {
-      if (reply !== 1) {
-        let filterQuery = null;
-        if (filter.query) {
-          filterQuery = { ...filter.query };
-        } else if (filter.vocabulary) {
-          const vocabulary = config.vocabularies[filter.vocabulary];
-          if (vocabulary) {
-            filterQuery = { ...vocabulary.query };
-          }
-        }
-
-        if (filterQuery) {
-          const resQuery = await SparqlClient.query(filterQuery, {
-            endpoint: config.api.endpoint,
-            debug: config.debug,
-          });
-          if (resQuery) {
-            filterValues = resQuery['@graph'].map((row) => ({
-              label: row.label
-                ? row.label['@value'] || row.label
-                : row['@id']['@value'] || row['@id'],
-              value: row['@id']['@value'] || row['@id'],
-            }));
-
-            // Cache filter values
-            await cache.set(cacheKey, JSON.stringify(filterValues));
-          }
-        }
-      } else {
-        // Use cached version of filter values when available
-        filterValues = JSON.parse(await cache.get(cacheKey));
+    let filterQuery = null;
+    if (filter.query) {
+      filterQuery = { ...filter.query };
+    } else if (filter.vocabulary) {
+      const vocabulary = config.vocabularies[filter.vocabulary];
+      if (vocabulary) {
+        filterQuery = { ...vocabulary.query };
       }
-    });
+    }
+
+    if (filterQuery) {
+      // Check if filter values are already cached
+      const cacheKey = JSON.stringify(filterQuery);
+
+      await cache.exists(cacheKey).then(async (reply) => {
+        const resQuery = await SparqlClient.query(filterQuery, {
+          endpoint: config.api.endpoint,
+          debug: config.debug,
+        });
+        if (resQuery) {
+          filterValues = resQuery['@graph'].map((row) => ({
+            label: row.label
+              ? row.label['@value'] || row.label
+              : row['@id']['@value'] || row['@id'],
+            value: row['@id']['@value'] || row['@id'],
+          }));
+
+          // Cache filter values
+          await cache.set(cacheKey, JSON.stringify(filterValues));
+        }
+      });
+    }
 
     filters.push({
       id: filter.id,
