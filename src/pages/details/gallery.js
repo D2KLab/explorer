@@ -319,7 +319,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
         const imageUrl = images[currentSlide] || images[0];
         if (imageUrl) {
           const filename = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
-          saveAs(generateMediaUrl(imageUrl, 1024), filename);
+          saveAs(imageUrl, filename);
         }
         break;
       }
