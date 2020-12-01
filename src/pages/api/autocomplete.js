@@ -1,5 +1,6 @@
 import { withRequestValidation } from '@helpers/api';
 import { search } from '@pages/api/search';
+import config from '~/config';
 
 export default withRequestValidation({
   allowedMethods: ['POST'],
@@ -7,7 +8,7 @@ export default withRequestValidation({
   const { q } = req.body;
 
   const results = await search({
-    type: 'object',
+    type: config.search.route,
     q,
     per_page: 5,
     approximate: true,
