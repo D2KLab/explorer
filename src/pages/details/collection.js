@@ -149,11 +149,13 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
             </Element>
             <Element marginBottom={12} display="flex">
               <GraphIcon uri={result['@graph']} />
-              <LegalBody>
-                {Array.isArray(result.legalBody)
-                  ? result.legalBody.map((body) => body.label)
-                  : result.legalBody.label}
-              </LegalBody>
+              {result.legalBody && (
+                <LegalBody>
+                  {Array.isArray(result.legalBody)
+                    ? result.legalBody.map((body) => body.label)
+                    : result.legalBody.label}
+                </LegalBody>
+              )}
             </Element>
             <p>{result.description || t('common:collection.noDescription')}</p>
             <Element marginBottom={24}>

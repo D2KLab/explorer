@@ -324,11 +324,13 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
                   onChange={onItemSaveChange}
                 />
               )}
-              <LegalBody>
-                {Array.isArray(result.legalBody)
-                  ? result.legalBody.map((body) => body.label)
-                  : result.legalBody.label}
-              </LegalBody>
+              {result.legalBody && (
+                <LegalBody>
+                  {Array.isArray(result.legalBody)
+                    ? result.legalBody.map((body) => body.label)
+                    : result.legalBody.label}
+                </LegalBody>
+              )}
             </Element>
             <Element marginBottom={24}>
               <MetadataList metadata={metadata} query={query} route={route} />
