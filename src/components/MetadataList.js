@@ -53,7 +53,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
     // Example: {"@id":"http://data.silknow.org/collection/ec0f9a6f-7b69-31c4-80a6-c0a9cde663a5","@type":"http://erlangen-crm.org/current/E78_Collection","label":"European Sculpture and Decorative Arts"}
     printableValue = meta.label;
   } else {
-    printableValue = null;
+    printableValue = meta['@id'];
     url = null;
   }
 
