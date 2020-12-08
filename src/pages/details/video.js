@@ -63,7 +63,6 @@ const Secondary = styled.div`
   margin-left: 24px;
 
   ${breakpoints.desktop`
-    padding-right: 24px;
     margin-left: 0;
   `}
 `;
@@ -72,6 +71,7 @@ const Title = styled.h1`
   border-bottom: 3px solid ${({ theme }) => theme.colors.primary};
   font-size: 3rem;
   line-height: 1.25;
+  word-break: break-word;
 `;
 
 const RelatedVideosList = styled.div``;
