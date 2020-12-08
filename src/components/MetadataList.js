@@ -20,6 +20,11 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
     return <>{meta}</>;
   }
 
+  // Ignore empty meta objects
+  if (Object.keys(meta).length === 0) {
+    return undefined;
+  }
+
   const [routeName, route] = findRouteByRDFType(meta['@type']);
   const filter =
     currentRoute &&
