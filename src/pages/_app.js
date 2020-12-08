@@ -4,8 +4,10 @@ import { ThemeProvider } from 'styled-components';
 import { Provider as ReakitProvider } from 'reakit';
 import { Reset } from 'styled-reset';
 import Head from 'next/head';
+import Cookies from 'js-cookie';
 
 import NProgress from '@components/NProgress';
+import ConsentPopup from '@components/ConsentPopup';
 import theme from '~/theme';
 import { appWithTranslation } from '~/i18n';
 
@@ -35,6 +37,7 @@ class MyApp extends App {
             />
           </Head>
           <NProgress />
+          {typeof Cookies.get('consent') === 'undefined' ? <ConsentPopup /> : <div />}
           <NextAuth.Provider options={{ site: process.env.SITE }} session={session}>
             <Component {...pageProps} />
           </NextAuth.Provider>

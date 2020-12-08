@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
 import queryString from 'query-string';
+import Cookies from 'js-cookie';
 
 import config from '~/config';
 
 const SpatioTemporalMaps = ({ mapRef, query }) => {
   const params = useMemo(() => {
-    return { ...query, _t: new Date().getTime() };
+    return { ...query, _analytics: Cookies.get('consent') === '1', _t: new Date().getTime() };
   }, [queryString.stringify(query)]);
 
   return (

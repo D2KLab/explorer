@@ -10,6 +10,7 @@ import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import Cookies from 'js-cookie';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -268,6 +269,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
         ? result.material.map((v) => v.label)
         : [result.material.label].filter((x) => x),
       endpoint: 'http://grlc.eurecom.fr/api-git/silknow/api/',
+      analytics: Cookies.get('consent') === '1',
     };
   };
 
