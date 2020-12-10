@@ -13,6 +13,7 @@ import Content from '@components/Content';
 import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import PageTitle from '@components/PageTitle';
+import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import breakpoints from '@styles/breakpoints';
 import SparqlClient from '@helpers/sparql';
 import config from '~/config';
@@ -138,7 +139,7 @@ const getResultItems = (result) => {
       );
 };
 
-const VocabularyPage = ({ results }) => {
+const VocabularyPage = ({ results, debugSparqlQuery }) => {
   const { t } = useTranslation(['common', 'project']);
   const router = useRouter();
 
@@ -296,6 +297,12 @@ const VocabularyPage = ({ results }) => {
             <Metadata label="Query Results">
               <pre>{JSON.stringify(results, null, 2)}</pre>
             </Metadata>
+            <Metadata label="SPARQL Query">
+              <SPARQLQueryLink query={debugSparqlQuery}>
+                {t('common:buttons.editQuery')}
+              </SPARQLQueryLink>
+              <pre>{debugSparqlQuery}</pre>
+            </Metadata>
           </Debug>
         </Content>
       </Body>
@@ -307,9 +314,14 @@ const VocabularyPage = ({ results }) => {
 export async function getServerSideProps({ query }) {
   const route = config.routes[query.type];
 
+  let debugSparqlQuery = null;
   const results = [];
 
   if (route) {
+    if (config.debug) {
+      debugSparqlQuery = await SparqlClient.getSparqlQuery(route.query);
+    }
+
     // Execute the query
     const res = await SparqlClient.query(route.query, {
       endpoint: config.api.endpoint,
@@ -320,7 +332,12 @@ export async function getServerSideProps({ query }) {
     }
   }
 
-  return { props: { results } };
+  return {
+    props: {
+      results,
+      debugSparqlQuery,
+    },
+  };
 }
 
 export default VocabularyPage;
