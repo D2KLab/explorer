@@ -1,4 +1,4 @@
-import { useState, useRef, createRef, useEffect } from 'react';
+import { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -84,26 +84,32 @@ const Results = styled.div`
 
 const Anchor = styled.a`
   display: block;
+  max-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
   text-decoration: none;
-  color: #666;
   line-height: 2em;
   padding-left: 10px;
   border-left: 2px solid #666;
-  transition: color 0.3s ease-in-out, border-left-color 0.3s ease-in-out;
 
-  &:hover {
-    color: ${({ theme }) => theme.colors.secondary};
-    border-left-color: ${({ theme }) => theme.colors.secondary};
+  > span {
+    color: #666;
+    transition: color 0.3s ease-in-out, border-left-color 0.3s ease-in-out;
+
+    &:hover {
+      color: ${({ theme }) => theme.colors.secondary};
+      border-left-color: ${({ theme }) => theme.colors.secondary};
+    }
+
+    ${(props) =>
+      props.selected
+        ? css`
+            color: ${({ theme }) => theme.colors.secondary};
+            border-left-color: ${({ theme }) => theme.colors.secondary};
+            font-weight: 700;
+          `
+        : null};
   }
-
-  ${(props) =>
-    props.selected
-      ? css`
-          color: ${({ theme }) => theme.colors.secondary};
-          border-left-color: ${({ theme }) => theme.colors.secondary};
-          font-weight: 700;
-        `
-      : null};
 `;
 
 const Container = styled.div`
@@ -124,63 +130,20 @@ const ItemTitle = styled.div`
   }
 `;
 
+const getResultItems = (result) => {
+  return Array.isArray(result.items)
+    ? result.items
+    : [result.items].filter(
+        (x) => x && (typeof x !== 'object' || x.constructor !== Object || Object.keys(x).length > 0)
+      );
+};
+
 const VocabularyPage = ({ results }) => {
   const { t } = useTranslation(['common', 'project']);
   const router = useRouter();
 
-  const [activeResult, setActiveResult] = useState({
-    '@id': null,
-    ratio: 0,
-  });
-  const [observer, setObserver] = useState(null);
-
-  const rootRef = useRef();
-
-  const singleRefs = results.reduce((acc, value) => {
-    acc[value['@id']] = {
-      ref: createRef(),
-      id: value['@id'],
-      ratio: 0,
-    };
-
-    return acc;
-  }, {});
-
-  if (typeof IntersectionObserver !== 'undefined') {
-    const callback = (entries) => {
-      entries.forEach((entry) => {
-        if (singleRefs[entry.target.id]) {
-          singleRefs[entry.target.id].ratio = entry.intersectionRatio;
-        }
-      });
-
-      const targetResult = Object.values(singleRefs).reduce(
-        (acc, value) => (value.ratio > acc.ratio ? value : acc),
-        activeResult
-      );
-
-      if (targetResult.id !== activeResult.id && targetResult.ratio > activeResult.ratio) {
-        setActiveResult(targetResult);
-      }
-    };
-
-    if (observer === null) {
-      setObserver(
-        new IntersectionObserver(callback, {
-          root: rootRef.current,
-          threshold: new Array(101).fill(0).map((v, i) => i * 0.01),
-        })
-      );
-    }
-  }
-
-  useEffect(() => {
-    if (observer) Object.values(singleRefs).forEach((value) => observer.observe(value.ref.current));
-
-    return () => {
-      if (observer) observer.disconnect();
-    };
-  }, [observer]);
+  const [activeResult, setActiveResult] = useState(null);
+  const [activeItem, setActiveItem] = useState(null);
 
   const query = { ...router.query };
   const route = config.routes[query.type];
@@ -218,31 +181,44 @@ const VocabularyPage = ({ results }) => {
           <Container>
             <StickyBox offsetTop={20} offsetBottom={20}>
               <Navigation>
-                {results.map((result) => (
-                  <Anchor
-                    key={result['@id']}
-                    href={`#${result['@id']}`}
-                    selected={result['@id'] === activeResult.id}
-                  >
-                    {result.label}
-                  </Anchor>
-                ))}
+                {results.map((result) => {
+                  const items = getResultItems(result);
+                  let arrow;
+                  if (result.items.length > 0) {
+                    arrow = result['@id'] === activeResult ? '⯆' : '⯈';
+                  }
+                  return (
+                    <Anchor
+                      key={result['@id']}
+                      href={`#${result['@id']}`}
+                      selected={result['@id'] === activeResult}
+                      onClick={() => setActiveResult(result['@id'])}
+                    >
+                      <span>
+                        {arrow} {result.label}
+                      </span>
+
+                      {result['@id'] === activeResult &&
+                        items.map((item) => {
+                          return (
+                            <Anchor
+                              key={item['@id']}
+                              href={`#${item['@id']}`}
+                              selected={item['@id'] === activeItem}
+                              onClick={() => setActiveItem(item['@id'])}
+                            >
+                              <span>{item.label}</span>
+                            </Anchor>
+                          );
+                        })}
+                    </Anchor>
+                  );
+                })}
               </Navigation>
             </StickyBox>
-            <Results ref={rootRef}>
+            <Results>
               {results.map((result) => {
-                const items = Array.isArray(result.items)
-                  ? result.items
-                  : [result.items].filter(
-                      (x) =>
-                        x &&
-                        (typeof x !== 'object' ||
-                          x.constructor !== Object ||
-                          Object.keys(x).length > 0)
-                    );
-
-                const singleRef = singleRefs[result['@id']];
-                const ref = singleRef ? singleRef.ref : null;
+                const items = getResultItems(result);
 
                 const renderLink = (withConfig, item) => {
                   const withRoute = config.routes[withConfig.route];
@@ -304,7 +280,7 @@ const VocabularyPage = ({ results }) => {
                 };
 
                 return (
-                  <div key={result['@id']} id={result['@id']} ref={ref}>
+                  <div key={result['@id']} id={result['@id']}>
                     <h1>{result.label}</h1>
                     {result.description && <p>{result.description}</p>}
                     <ul>{items.map(renderItem)}</ul>
