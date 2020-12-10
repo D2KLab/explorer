@@ -208,7 +208,10 @@ const VocabularyPage = ({ results, debugSparqlQuery }) => {
                               selected={item['@id'] === activeItem}
                               onClick={() => setActiveItem(item['@id'])}
                             >
-                              <span>{item.label}</span>
+                              <span>
+                                {item.label}{' '}
+                                {typeof item.count !== 'undefined' ? `(${item.count})` : ''}
+                              </span>
                             </Anchor>
                           );
                         })}
