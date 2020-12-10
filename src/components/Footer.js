@@ -75,7 +75,7 @@ const Footer = ({ className }) => {
       <LogoContainer>
         {Array.isArray(config.footer.logo) ? (
           config.footer.logo.map((logo) => (
-            <Logo src={logo} alt={config.metadata.title} title={config.metadata.title} />
+            <Logo key={logo} src={logo} alt={config.metadata.title} title={config.metadata.title} />
           ))
         ) : (
           <Logo

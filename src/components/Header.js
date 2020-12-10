@@ -110,6 +110,7 @@ const Header = ({ className }) => {
         <LogoContainer>
           {config.metadata.logo ? (
             <Logo
+              key={config.metadata.logo}
               src={config.metadata.logo}
               title={config.metadata.title}
               alt={config.metadata.title}
