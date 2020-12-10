@@ -97,7 +97,8 @@
     "generic": "Une erreur s'est produite",
     "listNotFound": "List not found",
     "resultNotFound": "Result not found",
-    "routeNotFound": "Route not found"
+    "routeNotFound": "Route not found",
+    "pageNotFound": "Page not found"
   },
   "home": {
     "title": "Home",
