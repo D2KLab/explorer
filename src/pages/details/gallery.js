@@ -226,7 +226,13 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
     : [result.representation].filter((x) => x);
   representations.forEach((repres) => {
     const imgs = Array.isArray(repres.image) ? repres.image : [repres.image];
-    images.push(...imgs.filter((img) => img && new URL(img).hostname === 'silknow.org'));
+    imgs.forEach((img) => {
+      images.push({
+        id: repres['@id'],
+        url: img,
+        label: repres.label,
+      });
+    });
   });
 
   const metadata = Object.entries(result).filter(([metaName]) => {
@@ -249,7 +255,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
     const lang = i18n.language.toUpperCase();
     return {
       language: lang,
-      imgUri: images[currentSlide] || images[0],
+      imgUri: images[currentSlide]?.url || images[0]?.url,
       dimension: {
         x: result.dimension?.width,
         y: result.dimension?.height,
@@ -318,7 +324,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
         break;
       }
       case 'image': {
-        const imageUrl = images[currentSlide] || images[0];
+        const imageUrl = images[currentSlide]?.url || images[0]?.url;
         if (imageUrl) {
           const filename = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
           saveAs(imageUrl, filename);
@@ -382,10 +388,10 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
             <Primary>
               {lightboxIsOpen && (
                 <Lightbox
-                  imageTitle={pageTitle}
-                  mainSrc={images[lightboxIndex]}
-                  nextSrc={images[(lightboxIndex + 1) % images.length]}
-                  prevSrc={images[(lightboxIndex + images.length - 1) % images.length]}
+                  imageTitle={images[lightboxIndex]?.label || pageTitle}
+                  mainSrc={images[lightboxIndex]?.url}
+                  nextSrc={images[(lightboxIndex + 1) % images.length]?.url}
+                  prevSrc={images[(lightboxIndex + images.length - 1) % images.length]?.url}
                   onCloseRequest={() => setLightboxIsOpen(false)}
                   onMovePrevRequest={() =>
                     setLightboxIndex((lightboxIndex + images.length - 1) % images.length)
@@ -428,9 +434,13 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                 onChange={setCurrentSlide}
               >
                 {images.map((image, i) => (
-                  <div key={image} onClick={() => showLightbox(i, pageTitle)} aria-hidden="true">
-                    <img src={generateMediaUrl(image, 1024)} alt={pageTitle} />
-                    <p className="legend">{pageTitle}</p>
+                  <div
+                    key={image.url}
+                    onClick={() => showLightbox(i, image.label)}
+                    aria-hidden="true"
+                  >
+                    <img src={generateMediaUrl(image.url, 1024)} alt={image.label} />
+                    {image.label && <p className="legend">{image.label}</p>}
                   </div>
                 ))}
               </Carousel>
