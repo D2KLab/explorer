@@ -46,6 +46,8 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
   if (currentRoute.metadata && typeof currentRoute.metadata[metaName] === 'function') {
     printableValue = currentRoute.metadata[metaName](meta);
     url = null;
+  } else if (Array.isArray(meta.label)) {
+    printableValue = meta.label.join(', ');
   } else if (typeof meta.label === 'object') {
     // If $langTag is set to 'show' in sparql-transformer
     printableValue = meta.label['@value'];
