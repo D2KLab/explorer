@@ -57,6 +57,10 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
     url = null;
   }
 
+  if (!url && !printableValue) {
+    return undefined;
+  }
+
   if (!url) {
     return <>{printableValue}</>;
   }
@@ -111,6 +115,11 @@ const MetadataList = ({ metadata, query, route }) => {
           if (value) {
             values.push(value);
           }
+        }
+
+        if (!values.length) {
+          // Do not display the metadata if there's no values
+          return undefined;
         }
 
         return (
