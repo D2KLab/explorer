@@ -93,14 +93,6 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
     images.push(...imgs.filter((img) => img && new URL(img).hostname === 'silknow.org'));
   });
 
-  const metadata = Object.entries(result).filter(([metaName]) => {
-    if (['@id', '@type', '@graph', 'label', 'representation', 'legalBody'].includes(metaName))
-      return false;
-    if (Array.isArray(route.details.excludedMetadata)) {
-      return !route.details.excludedMetadata.includes(metaName);
-    }
-  });
-
   const label = getEntityMainLabel(result, { route, language: i18n.language });
 
   result.items = Array.isArray(result.items)
@@ -159,7 +151,7 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
             </Element>
             <p>{result.description || t('common:collection.noDescription')}</p>
             <Element marginBottom={24}>
-              <MetadataList metadata={metadata} query={query} route={route} />
+              <MetadataList metadata={result} query={query} route={route} />
             </Element>
             <h2>{t('common:collection.items', { count: result.items.length })}</h2>
             <Results>

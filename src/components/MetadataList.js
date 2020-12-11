@@ -8,7 +8,7 @@ import config from '~/config';
  * Metadata list.
  */
 
-function generateValue(currentRouteName, currentRoute, metaName, meta) {
+function generateValue(currentRouteName, currentRoute, metadata, metaName, metaIndex, meta) {
   if (typeof meta !== 'object') {
     if (['http://', 'https://'].some((protocol) => meta.startsWith(protocol))) {
       return (
@@ -43,10 +43,7 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
   }
 
   let printableValue = '<unk>';
-  if (currentRoute.metadata && typeof currentRoute.metadata[metaName] === 'function') {
-    printableValue = currentRoute.metadata[metaName](meta);
-    url = null;
-  } else if (Array.isArray(meta.label)) {
+  if (Array.isArray(meta.label)) {
     printableValue = meta.label.join(', ');
   } else if (typeof meta.label === 'object') {
     // If $langTag is set to 'show' in sparql-transformer
@@ -56,6 +53,11 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
     printableValue = meta.label;
   } else {
     printableValue = meta['@id'];
+    url = null;
+  }
+
+  if (currentRoute.metadata && typeof currentRoute.metadata[metaName] === 'function') {
+    printableValue = currentRoute.metadata[metaName](printableValue, metaIndex, metadata);
     url = null;
   }
 
@@ -91,9 +93,17 @@ function generateValue(currentRouteName, currentRoute, metaName, meta) {
 const MetadataList = ({ metadata, query, route }) => {
   const { t } = useTranslation('project');
 
+  const displayedMetadata = Object.entries(metadata).filter(([metaName]) => {
+    if (['@id', '@type', '@graph', 'label', 'representation', 'legalBody'].includes(metaName))
+      return false;
+    if (Array.isArray(route.details.excludedMetadata)) {
+      return !route.details.excludedMetadata.includes(metaName);
+    }
+  });
+
   return (
     <>
-      {metadata.flatMap(([metaName, meta]) => {
+      {displayedMetadata.flatMap(([metaName, meta], index) => {
         const values = [];
         if (Array.isArray(meta)) {
           /* Example:
@@ -102,8 +112,8 @@ const MetadataList = ({ metadata, query, route }) => {
               { '@id': 'http://data.silknow.org/vocabulary/277', label: [ { '@language': 'en', '@value': 'silk thread' } ] }
             ]
           */
-          meta.forEach((subMeta) => {
-            const value = generateValue(query.type, route, metaName, subMeta);
+          meta.forEach((subMeta, i) => {
+            const value = generateValue(query.type, route, metadata, metaName, i, subMeta);
             if (value) {
               values.push(value);
             }
@@ -113,7 +123,7 @@ const MetadataList = ({ metadata, query, route }) => {
           values.push(<span>{meta['@id']['@value']}</span>);
         } else {
           // Example: { '@id': 'http://data.silknow.org/collection/4051dfc9-1267-3530-bac8-40011f2e3daa', '@type': 'E78_Collection', label: 'Textiles and Fashion Collection' }
-          const value = generateValue(query.type, route, metaName, meta);
+          const value = generateValue(query.type, route, metadata, metaName, index, meta);
           if (value) {
             values.push(value);
           }

@@ -235,18 +235,6 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
     });
   });
 
-  const metadata = Object.entries(result).filter(([metaName]) => {
-    if (
-      ['@id', '@type', '@graph', 'label', 'description', 'representation', 'legalBody'].includes(
-        metaName
-      )
-    )
-      return false;
-    if (Array.isArray(route.details.excludedMetadata)) {
-      return !route.details.excludedMetadata.includes(metaName);
-    }
-  });
-
   const pageTitle = getEntityMainLabel(result, { route, language: i18n.language });
 
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -536,7 +524,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
               )}
             </Element>
             <Element marginBottom={24}>
-              <MetadataList metadata={metadata} query={query} route={route} />
+              <MetadataList metadata={result} query={query} route={route} />
             </Element>
             <MenuButton {...downloadMenu} as={Button} primary>
               {t('common:buttons.download')}

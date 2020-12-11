@@ -205,14 +205,6 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
     });
   }
 
-  const metadata = Object.entries(result).filter(([metaName]) => {
-    if (['@id', '@type', '@graph', 'label', 'representation', 'legalBody'].includes(metaName))
-      return false;
-    if (Array.isArray(route.details.excludedMetadata)) {
-      return !route.details.excludedMetadata.includes(metaName);
-    }
-  });
-
   const label = getEntityMainLabel(result, { route, language: i18n.language });
 
   const [isItemSaved, setIsItemSaved] = useState(inList);
@@ -333,7 +325,7 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
               )}
             </Element>
             <Element marginBottom={24}>
-              <MetadataList metadata={metadata} query={query} route={route} />
+              <MetadataList metadata={result} query={query} route={route} />
             </Element>
             {/* <Analysis>
               <Tabs>
