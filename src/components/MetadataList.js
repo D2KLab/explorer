@@ -58,7 +58,6 @@ function generateValue(currentRouteName, currentRoute, metadata, metaName, metaI
 
   if (currentRoute.metadata && typeof currentRoute.metadata[metaName] === 'function') {
     printableValue = currentRoute.metadata[metaName](printableValue, metaIndex, metadata);
-    url = null;
   }
 
   if (!url && !printableValue) {
