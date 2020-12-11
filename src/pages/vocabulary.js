@@ -196,7 +196,12 @@ const VocabularyPage = ({ results, debugSparqlQuery }) => {
                       onClick={() => setActiveResult(result['@id'])}
                     >
                       <span>
-                        {arrow} {result.label}
+                        {arrow} {result.label} (
+                        {items.reduce((acc, cur) => {
+                          acc += cur.count || 0;
+                          return acc;
+                        }, 0)}
+                        )
                       </span>
 
                       {result['@id'] === activeResult &&
