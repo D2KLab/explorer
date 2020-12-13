@@ -57,7 +57,7 @@ const Primary = styled.div`
 
   .carousel {
     &.carousel-slider {
-      height: 50vh;
+      min-height: 50vh;
     }
     .thumbs-wrapper {
       overflow: visible;
@@ -428,7 +428,8 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                     aria-hidden="true"
                   >
                     <img src={generateMediaUrl(image.url, 1024)} alt={image.label} />
-                    {image.label && <p className="legend">{image.label}</p>}
+                    {image.description && <p className="legend">{image.description}</p>}
+                    {image.label && <div className="subtitle">{image.label}</div>}
                   </div>
                 ))}
               </Carousel>
