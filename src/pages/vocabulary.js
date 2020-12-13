@@ -13,6 +13,7 @@ import Content from '@components/Content';
 import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import PageTitle from '@components/PageTitle';
+import Button from '@components/Button';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import breakpoints from '@styles/breakpoints';
 import SparqlClient from '@helpers/sparql';
@@ -73,35 +74,48 @@ const Navigation = styled.nav`
 
 const Results = styled.div`
   flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 400px);
+  grid-gap: 1rem;
+  margin: 1rem 0;
+
+  transition: opacity 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
+  opacity: ${({ loading }) => (loading ? 0.25 : 1)};
+  pointer-events: ${({ loading }) => (loading ? 'none' : 'auto')};
 
   ${breakpoints.weirdMedium`
     margin-left: 120px;
   `}
 
-  p {
-    margin-bottom: 1em;
+  a {
+    text-decoration: none;
+    &:hover {
+      color: inherit;
+      text-decoration: underline;
+    }
   }
 `;
 
-const Anchor = styled.a`
-  display: block;
-  max-height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  text-decoration: none;
+const Result = styled.div``;
+
+const Anchor = styled.div`
   line-height: 2em;
   padding-left: 10px;
   border-left: 2px solid #666;
 
-  > span {
+  a {
+    text-decoration: none;
     color: #666;
+
     transition: color 0.3s ease-in-out, border-left-color 0.3s ease-in-out;
 
     &:hover {
       color: ${({ theme }) => theme.colors.secondary};
       border-left-color: ${({ theme }) => theme.colors.secondary};
     }
+  }
 
+  > span {
     ${(props) =>
       props.selected
         ? css`
@@ -139,12 +153,11 @@ const getResultItems = (result) => {
       );
 };
 
-const VocabularyPage = ({ results, debugSparqlQuery }) => {
+const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
   const { t } = useTranslation(['common', 'project']);
   const router = useRouter();
 
-  const [activeResult, setActiveResult] = useState(null);
-  const [activeItem, setActiveItem] = useState(null);
+  const [activeResult, setActiveResult] = useState(results[0]?.['@id']);
 
   const query = { ...router.query };
   const route = config.routes[query.type];
@@ -153,6 +166,27 @@ const VocabularyPage = ({ results, debugSparqlQuery }) => {
   if (route && Array.isArray(route.useWith)) {
     useWith.push(...route.useWith);
   }
+
+  const getUseWithLink = (withConfig, item) => {
+    if (!withConfig || !item) {
+      return '';
+    }
+
+    const withRoute = config.routes[withConfig.route];
+    if (!withRoute) {
+      return '';
+    }
+    const withQuery = {};
+    const filter = withRoute.filters.find((f) => f.id && f.id === withConfig.filter);
+    if (filter) {
+      const val = filter.isMulti ? [item['@id']] : item['@id'];
+      withQuery[`field_filter_${filter.id}`] = val;
+    } else {
+      withQuery[withConfig.filter] = item.label;
+    }
+
+    return { pathname: `/${withConfig.route}`, query: withQuery };
+  };
 
   return (
     <Layout>
@@ -184,73 +218,49 @@ const VocabularyPage = ({ results, debugSparqlQuery }) => {
               <Navigation>
                 {results.map((result) => {
                   const items = getResultItems(result);
-                  let arrow;
-                  if (result.items.length > 0) {
-                    arrow = result['@id'] === activeResult ? '⯆' : '⯈';
-                  }
-                  return (
-                    <Anchor
-                      key={result['@id']}
-                      href={`#${result['@id']}`}
-                      selected={result['@id'] === activeResult}
-                      onClick={() => setActiveResult(result['@id'])}
-                    >
-                      <span>
-                        {arrow} {result.label} (
-                        {items.reduce((acc, cur) => {
-                          acc += cur.count || 0;
-                          return acc;
-                        }, 0)}
-                        )
-                      </span>
+                  const arrow = '⯆';
 
-                      {result['@id'] === activeResult &&
-                        items.map((item) => {
-                          return (
-                            <Anchor
-                              key={item['@id']}
-                              href={`#${item['@id']}`}
-                              selected={item['@id'] === activeItem}
-                              onClick={() => setActiveItem(item['@id'])}
-                            >
+                  return (
+                    <Anchor key={result['@id']}>
+                      <Link href={getUseWithLink(useWith[0], result)} passHref>
+                        <a onClick={() => setActiveResult(result['@id'])}>
+                          <span>
+                            {arrow} {result.label} (
+                            {items.reduce((acc, cur) => {
+                              acc += cur.count || 0;
+                              return acc;
+                            }, 0)}
+                            )
+                          </span>
+                        </a>
+                      </Link>
+                      {items.map((item) => (
+                        <Anchor>
+                          <Link key={item['@id']} href={getUseWithLink(useWith[0], item)} passHref>
+                            <a>
                               <span>
-                                {item.label}{' '}
-                                {typeof item.count !== 'undefined' ? `(${item.count})` : ''}
+                                {item.label} ({item.count || 0})
                               </span>
-                            </Anchor>
-                          );
-                        })}
+                            </a>
+                          </Link>
+                        </Anchor>
+                      ))}
                     </Anchor>
                   );
                 })}
               </Navigation>
             </StickyBox>
             <Results>
-              {results.map((result) => {
-                const items = getResultItems(result);
-
+              {featured.map((featuredItem) => {
                 const renderLink = (withConfig, item) => {
                   const withRoute = config.routes[withConfig.route];
                   if (!withRoute) {
                     return null;
                   }
 
-                  const withQuery = {};
-
-                  const filter = withRoute.filters.find((f) => f.id && f.id === withConfig.filter);
-                  if (filter) {
-                    const val = filter.isMulti ? [item['@id']] : item['@id'];
-                    withQuery[`field_filter_${filter.id}`] = val;
-                  } else {
-                    withQuery[withConfig.filter] = item.label;
-                  }
-
                   return (
-                    <Link
-                      key={withConfig.route}
-                      href={{ pathname: `/${withConfig.route}`, query: withQuery }}
-                    >
-                      <a>
+                    <Link key={withConfig.route} href={getUseWithLink(withConfig, item)} passHref>
+                      <Button primary>
                         <Trans
                           i18nKey="common:vocabulary.explore"
                           components={[<span />, <span />]}
@@ -259,7 +269,7 @@ const VocabularyPage = ({ results, debugSparqlQuery }) => {
                             item: (item.label || '').toLowerCase(),
                           }}
                         />
-                      </a>
+                      </Button>
                     </Link>
                   );
                 };
@@ -269,19 +279,21 @@ const VocabularyPage = ({ results, debugSparqlQuery }) => {
                   return (
                     <Item key={item['@id']} id={item['@id']}>
                       <ItemTitle>
-                        <h2>{item.label}</h2>
-                        {config.plugins.skosmos && (
-                          <a
-                            href={`${config.plugins.skosmos.baseUrl}${encodeURIComponent(
-                              item['@id']
-                            )}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            def
-                          </a>
-                        )}
+                        <h2>
+                          {item.label} ({item.count || 0})
+                        </h2>
                       </ItemTitle>
+                      {config.plugins.skosmos && (
+                        <a
+                          href={`${config.plugins.skosmos.baseUrl}${encodeURIComponent(
+                            item['@id']
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          def
+                        </a>
+                      )}
                       {item.description && <p>{item.description}</p>}
                       <p>{links}</p>
                     </Item>
@@ -289,11 +301,9 @@ const VocabularyPage = ({ results, debugSparqlQuery }) => {
                 };
 
                 return (
-                  <div key={result['@id']} id={result['@id']}>
-                    <h1>{result.label}</h1>
-                    {result.description && <p>{result.description}</p>}
-                    <ul>{items.map(renderItem)}</ul>
-                  </div>
+                  <Result key={featuredItem['@id']} id={featuredItem['@id']}>
+                    {renderItem(featuredItem)}
+                  </Result>
                 );
               })}
             </Results>
@@ -324,6 +334,7 @@ export async function getServerSideProps({ query }) {
 
   let debugSparqlQuery = null;
   const results = [];
+  const featured = [];
 
   if (route) {
     if (config.debug) {
@@ -338,11 +349,27 @@ export async function getServerSideProps({ query }) {
     if (res) {
       results.push(...res['@graph']);
     }
+
+    // Execute the query
+    if (route.featured) {
+      if (config.debug) {
+        debugSparqlQuery = await SparqlClient.getSparqlQuery(route.featured.query);
+      }
+
+      const resFeatured = await SparqlClient.query(route.featured.query, {
+        endpoint: config.api.endpoint,
+        debug: config.debug,
+      });
+      if (resFeatured) {
+        featured.push(...resFeatured['@graph']);
+      }
+    }
   }
 
   return {
     props: {
       results,
+      featured,
       debugSparqlQuery,
     },
   };

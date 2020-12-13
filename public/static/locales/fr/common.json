@@ -109,7 +109,7 @@
   },
   "vocabulary": {
     "title": "Vocabulaire : {{vocabulary}}",
-    "explore": "Explorer les <0>{{route}}</0> avec <1>{{item}}</1>"
+    "explore": "Explorer"
   },
   "collection": {
     "noDescription": "Aucune description pour cette collection.",
