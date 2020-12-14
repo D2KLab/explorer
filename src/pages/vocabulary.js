@@ -166,12 +166,21 @@ const ItemTitle = styled.div`
   }
 `;
 
+const cleanupItem = (obj) =>
+  Object.fromEntries(
+    Object.entries(obj).flatMap(([k, v]) => {
+      if (String(v) !== '[object Object]') {
+        return [[k, v]];
+      }
+      v = cleanupItem(v);
+      return Object.keys(v).length > 0 ? [[k, v]] : [];
+    })
+  );
+
 const getResultItems = (result) => {
-  return Array.isArray(result.items)
-    ? result.items
-    : [result.items].filter(
-        (x) => x && (typeof x !== 'object' || x.constructor !== Object || Object.keys(x).length > 0)
-      );
+  return (Array.isArray(result.items) ? result.items : [result.items].filter((x) => x)).map(
+    cleanupItem
+  );
 };
 
 const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
