@@ -236,6 +236,7 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
               <Navigation>
                 {results.map((result) => {
                   const items = getResultItems(result);
+                  items.sort((a, b) => a.label.localeCompare(b.label)); // Sort items alphabetically
                   const isActive = result['@id'] === activeResult;
 
                   return (
