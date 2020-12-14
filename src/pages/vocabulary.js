@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import StickyBox from 'react-sticky-box';
 import 'intersection-observer';
+import { ChevronRight } from '@styled-icons/entypo/ChevronRight';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -64,7 +65,7 @@ const VocabularyTitle = styled.div`
 `;
 
 const Navigation = styled.nav`
-  max-width: 200px;
+  max-width: 240px;
   display: none;
 
   ${breakpoints.weirdMedium`
@@ -98,6 +99,15 @@ const Results = styled.div`
 
 const Result = styled.div``;
 
+const Arrow = styled.svg`
+  width: 1em;
+  height: 1em;
+  margin-right: 0.25em;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
+`;
+
 const Anchor = styled.div`
   line-height: 2em;
   padding-left: 10px;
@@ -124,6 +134,10 @@ const Anchor = styled.div`
             font-weight: 700;
           `
         : null};
+  }
+
+  ${Arrow} {
+    transform: ${(props) => (props.selected ? 'rotate(90deg)' : 'rotate(0deg)')};
   }
 `;
 
@@ -158,6 +172,10 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
   const router = useRouter();
 
   const [activeResult, setActiveResult] = useState(results[0]?.['@id']);
+
+  const toggleActiveResult = (result) => {
+    setActiveResult(activeResult === result ? null : result);
+  };
 
   const query = { ...router.query };
   const route = config.routes[query.type];
@@ -218,33 +236,40 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
               <Navigation>
                 {results.map((result) => {
                   const items = getResultItems(result);
-                  const arrow = '⯆';
+                  const isActive = result['@id'] === activeResult;
 
                   return (
-                    <Anchor key={result['@id']}>
-                      <Link href={getUseWithLink(useWith[0], result)} passHref>
-                        <a onClick={() => setActiveResult(result['@id'])}>
-                          <span>
-                            {arrow} {result.label} (
+                    <Anchor key={result['@id']} selected={isActive}>
+                      <span>
+                        <Arrow
+                          as={ChevronRight}
+                          onClick={() => toggleActiveResult(result['@id'])}
+                        />
+                        <Link href={getUseWithLink(useWith[0], result)} passHref>
+                          <a>
+                            {result.label} (
                             {items.reduce((acc, cur) => {
                               acc += cur.count || 0;
                               return acc;
                             }, 0)}
                             )
-                          </span>
-                        </a>
-                      </Link>
-                      {items.map((item) => (
-                        <Anchor>
-                          <Link key={item['@id']} href={getUseWithLink(useWith[0], item)} passHref>
-                            <a>
-                              <span>
+                          </a>
+                        </Link>
+                      </span>
+                      {isActive &&
+                        items.map((item) => (
+                          <Anchor>
+                            <Link
+                              key={item['@id']}
+                              href={getUseWithLink(useWith[0], item)}
+                              passHref
+                            >
+                              <a>
                                 {item.label} ({item.count || 0})
-                              </span>
-                            </a>
-                          </Link>
-                        </Anchor>
-                      ))}
+                              </a>
+                            </Link>
+                          </Anchor>
+                        ))}
                     </Anchor>
                   );
                 })}
