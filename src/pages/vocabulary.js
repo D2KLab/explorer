@@ -233,7 +233,7 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
             {items.reduce((acc, cur) => {
               acc += cur.count || 0;
               return acc;
-            }, 0)}
+            }, result.count || 0)}
             )
           </a>
         </Link>
