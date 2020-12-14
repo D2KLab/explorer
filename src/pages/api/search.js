@@ -53,14 +53,16 @@ export const getFilters = async (query) => {
       });
     }
 
-    filters.push({
-      id: filter.id,
-      label: filter.label || null,
-      isOption: !!filter.isOption,
-      isMulti: !!filter.isMulti,
-      defaultValue: filter.defaultValue || null,
+    const serializedFilter = {
+      ...filter,
       values: filterValues,
+    };
+    Object.entries(serializedFilter).forEach(([key, value]) => {
+      if (typeof value === 'function') {
+        delete serializedFilter[key];
+      }
     });
+    filters.push(serializedFilter);
   }
 
   return filters;
