@@ -171,7 +171,7 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
   const { t } = useTranslation(['common', 'project']);
   const router = useRouter();
 
-  const [activeResult, setActiveResult] = useState(results[0]?.['@id']);
+  const [activeResult, setActiveResult] = useState(null);
 
   const toggleActiveResult = (result) => {
     setActiveResult(activeResult === result ? null : result);
