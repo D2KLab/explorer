@@ -64,19 +64,28 @@ const VocabularyTitle = styled.div`
   }
 `;
 
-const Navigation = styled.nav`
-  max-width: 240px;
+const StyledStickyBox = styled(StickyBox)`
   display: none;
-
   ${breakpoints.weirdMedium`
     display: block;
+  `}
+`;
+
+const Navigation = styled.nav`
+  max-width: 240px;
+`;
+
+const MobileNavigation = styled(Navigation)`
+  margin: 1em 0;
+  ${breakpoints.weirdMedium`
+    display: none;
   `}
 `;
 
 const Results = styled.div`
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fit, 400px);
+  grid-template-columns: repeat(auto-fit, min(400px, 100%));
   grid-gap: 1rem;
   margin: 1rem 0;
 
@@ -233,6 +242,8 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
     );
   };
 
+  const renderedResults = results.map(renderResult);
+
   return (
     <Layout>
       <PageTitle title={`${t('common:vocabulary.title')} ${query.type}`} />
@@ -258,10 +269,11 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
           </VocabularyTitle>
         </Hero>
         <Content>
+          <MobileNavigation>{renderedResults}</MobileNavigation>
           <Container>
-            <StickyBox offsetTop={20} offsetBottom={20}>
-              <Navigation>{results.map(renderResult)}</Navigation>
-            </StickyBox>
+            <StyledStickyBox offsetTop={20} offsetBottom={20}>
+              <Navigation>{renderedResults}</Navigation>
+            </StyledStickyBox>
             <Results>
               {featured.map((featuredItem) => {
                 const renderLink = (withConfig, item) => {
