@@ -32,6 +32,7 @@ const StyledDialog = styled(Dialog)`
   outline: 0;
   display: flex;
   flex-direction: column;
+  overflow: auto;
 `;
 
 const StyledSwitch = styled(Switch)`
