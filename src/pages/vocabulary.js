@@ -217,9 +217,19 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
     return { pathname: `/${withConfig.route}`, query: withQuery };
   };
 
+  const getItemsTotalCount = (items, start) => {
+    return items.reduce((acc, cur) => {
+      acc += cur.count || 0;
+      if (Array.isArray(cur.items)) {
+        acc += getItemsTotalCount(cur.items, 0);
+      }
+      return acc;
+    }, start);
+  };
+
   const renderResult = (result) => {
     const items = getResultItems(result);
-    items.sort((a, b) => a.label.localeCompare(b.label)); // Sort items alphabetically
+    items.sort((a, b) => typeof a.label === 'string' && a.label.localeCompare(b.label)); // Sort items alphabetically
     const isActive = activeResults.includes(result['@id']);
 
     return (
@@ -229,12 +239,7 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
         )}
         <Link href={getUseWithLink(useWith[0], result)} passHref>
           <a>
-            {result.label} (
-            {items.reduce((acc, cur) => {
-              acc += cur.count || 0;
-              return acc;
-            }, result.count || 0)}
-            )
+            {result.label} ({getItemsTotalCount(items, result.count || 0)})
           </a>
         </Link>
         {isActive && <Items>{items.map(renderResult)}</Items>}
