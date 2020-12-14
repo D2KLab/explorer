@@ -40,12 +40,19 @@ export const getFilters = async (query) => {
           debug: config.debug,
         });
         if (resQuery) {
-          filterValues = resQuery['@graph'].map((row) => ({
-            label: row.label
+          filterValues = resQuery['@graph'].map((row) => {
+            const label = row.label
               ? row.label['@value'] || row.label
-              : row['@id']['@value'] || row['@id'],
-            value: row['@id']['@value'] || row['@id'],
-          }));
+              : row['@id']['@value'] || row['@id'];
+            const value = row['@id']['@value'] || row['@id'];
+            return {
+              label,
+              value,
+            };
+          });
+
+          // Sort values by label
+          filterValues.sort((a, b) => a.label.localeCompare(b.label));
 
           // Cache filter values
           await cache.set(cacheKey, JSON.stringify(filterValues));
