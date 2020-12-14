@@ -125,25 +125,23 @@ const Anchor = styled.div`
     }
   }
 
-  > span {
-    ${(props) =>
-      props.selected
-        ? css`
-            color: ${({ theme }) => theme.colors.secondary};
-            border-left-color: ${({ theme }) => theme.colors.secondary};
-            font-weight: 700;
-          `
-        : null};
-  }
-
-  ${Arrow} {
-    transform: ${(props) => (props.selected ? 'rotate(90deg)' : 'rotate(0deg)')};
-  }
+  ${(props) =>
+    props.selected
+      ? css`
+          > ${Arrow} {
+            transform: rotate(90deg);
+          }
+        `
+      : null};
 `;
 
 const Container = styled.div`
   display: flex;
   align-items: baseline;
+`;
+
+const Items = styled.div`
+  padding-left: 8px;
 `;
 
 const Item = styled.div`
@@ -171,10 +169,14 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
   const { t } = useTranslation(['common', 'project']);
   const router = useRouter();
 
-  const [activeResult, setActiveResult] = useState(null);
+  const [activeResults, setActiveResults] = useState([]);
 
   const toggleActiveResult = (result) => {
-    setActiveResult(activeResult === result ? null : result);
+    if (activeResults.includes(result)) {
+      setActiveResults(activeResults.filter((r) => r !== result));
+    } else {
+      setActiveResults((prev) => [...prev, result]);
+    }
   };
 
   const query = { ...router.query };
@@ -206,6 +208,31 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
     return { pathname: `/${withConfig.route}`, query: withQuery };
   };
 
+  const renderResult = (result) => {
+    const items = getResultItems(result);
+    items.sort((a, b) => a.label.localeCompare(b.label)); // Sort items alphabetically
+    const isActive = activeResults.includes(result['@id']);
+
+    return (
+      <Anchor key={result['@id']} selected={isActive}>
+        {items.length > 0 && (
+          <Arrow as={ChevronRight} onClick={() => toggleActiveResult(result['@id'])} />
+        )}
+        <Link href={getUseWithLink(useWith[0], result)} passHref>
+          <a>
+            {result.label} (
+            {items.reduce((acc, cur) => {
+              acc += cur.count || 0;
+              return acc;
+            }, 0)}
+            )
+          </a>
+        </Link>
+        {isActive && <Items>{items.map(renderResult)}</Items>}
+      </Anchor>
+    );
+  };
+
   return (
     <Layout>
       <PageTitle title={`${t('common:vocabulary.title')} ${query.type}`} />
@@ -233,48 +260,7 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
         <Content>
           <Container>
             <StickyBox offsetTop={20} offsetBottom={20}>
-              <Navigation>
-                {results.map((result) => {
-                  const items = getResultItems(result);
-                  items.sort((a, b) => a.label.localeCompare(b.label)); // Sort items alphabetically
-                  const isActive = result['@id'] === activeResult;
-
-                  return (
-                    <Anchor key={result['@id']} selected={isActive}>
-                      <span>
-                        <Arrow
-                          as={ChevronRight}
-                          onClick={() => toggleActiveResult(result['@id'])}
-                        />
-                        <Link href={getUseWithLink(useWith[0], result)} passHref>
-                          <a>
-                            {result.label} (
-                            {items.reduce((acc, cur) => {
-                              acc += cur.count || 0;
-                              return acc;
-                            }, 0)}
-                            )
-                          </a>
-                        </Link>
-                      </span>
-                      {isActive &&
-                        items.map((item) => (
-                          <Anchor>
-                            <Link
-                              key={item['@id']}
-                              href={getUseWithLink(useWith[0], item)}
-                              passHref
-                            >
-                              <a>
-                                {item.label} ({item.count || 0})
-                              </a>
-                            </Link>
-                          </Anchor>
-                        ))}
-                    </Anchor>
-                  );
-                })}
-              </Navigation>
+              <Navigation>{results.map(renderResult)}</Navigation>
             </StickyBox>
             <Results>
               {featured.map((featuredItem) => {
