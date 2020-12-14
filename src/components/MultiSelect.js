@@ -41,6 +41,10 @@ const Container = styled.div`
   }
 `;
 
+const defaultRenderSelectedOption = (item) => {
+  return <>{item.label}</>;
+};
+
 const MultiSelect = ({
   className,
   inputId,
@@ -49,6 +53,7 @@ const MultiSelect = ({
   placeholder,
   value,
   onChange,
+  renderSelectedOption = defaultRenderSelectedOption,
   ...props
 }) => {
   const triggerOnChange = (values) => {
@@ -97,7 +102,7 @@ const MultiSelect = ({
           values.map((item) => (
             <li key={item.value}>
               <CrossButton onClick={() => removeItem(item)} />
-              <span>{item.label}</span>
+              <span>{renderSelectedOption(item)}</span>
             </li>
           ))}
       </ul>

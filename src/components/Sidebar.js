@@ -225,6 +225,28 @@ const Sidebar = ({ className, onSearch, submitOnChange = false, type, filters, q
     setFields(clearedFields);
   };
 
+  const renderSelectedOption = (item) => {
+    return (
+      <>
+        {item.label}{' '}
+        {config.plugins.skosmos && (
+          <small>
+            {' '}
+            (
+            <a
+              href={`${config.plugins.skosmos.baseUrl}${item.value}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              def
+            </a>
+            )
+          </small>
+        )}
+      </>
+    );
+  };
+
   const renderFilter = (filter) => {
     const field = fields[`field_filter_${filter.id}`];
     const FilterInput = filter.isMulti ? MultiSelect : Select;
@@ -262,6 +284,9 @@ const Sidebar = ({ className, onSearch, submitOnChange = false, type, filters, q
           value={value}
           placeholder={t('search:labels.select')}
           onChange={handleInputChange}
+          renderSelectedOption={
+            typeof filter.vocabulary !== 'undefined' ? renderSelectedOption : undefined
+          }
         />
       </Field>
     );
