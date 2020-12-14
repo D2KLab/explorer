@@ -52,7 +52,7 @@ export const getFilters = async (query) => {
           });
 
           // Sort values by label
-          filterValues.sort((a, b) => a.label.localeCompare(b.label));
+          filterValues.sort((a, b) => a.label && a.label.localeCompare(b.label));
 
           // Cache filter values
           await cache.set(cacheKey, JSON.stringify(filterValues));
