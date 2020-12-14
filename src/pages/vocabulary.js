@@ -341,11 +341,17 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
             <Metadata label="Query Results">
               <pre>{JSON.stringify(results, null, 2)}</pre>
             </Metadata>
-            <Metadata label="SPARQL Query">
-              <SPARQLQueryLink query={debugSparqlQuery}>
+            <Metadata label="Results SPARQL Query">
+              <SPARQLQueryLink query={debugSparqlQuery.results}>
                 {t('common:buttons.editQuery')}
               </SPARQLQueryLink>
-              <pre>{debugSparqlQuery}</pre>
+              <pre>{debugSparqlQuery.results}</pre>
+            </Metadata>
+            <Metadata label="Featured SPARQL Query">
+              <SPARQLQueryLink query={debugSparqlQuery.featured}>
+                {t('common:buttons.editQuery')}
+              </SPARQLQueryLink>
+              <pre>{debugSparqlQuery.featured}</pre>
             </Metadata>
           </Debug>
         </Content>
@@ -358,13 +364,13 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
 export async function getServerSideProps({ query }) {
   const route = config.routes[query.type];
 
-  let debugSparqlQuery = null;
+  const debugSparqlQuery = {};
   const results = [];
   const featured = [];
 
   if (route) {
     if (config.debug) {
-      debugSparqlQuery = await SparqlClient.getSparqlQuery(route.query);
+      debugSparqlQuery.results = await SparqlClient.getSparqlQuery(route.query);
     }
 
     // Execute the query
@@ -379,7 +385,7 @@ export async function getServerSideProps({ query }) {
     // Execute the query
     if (route.featured) {
       if (config.debug) {
-        debugSparqlQuery = await SparqlClient.getSparqlQuery(route.featured.query);
+        debugSparqlQuery.featured = await SparqlClient.getSparqlQuery(route.featured.query);
       }
 
       const resFeatured = await SparqlClient.query(route.featured.query, {
