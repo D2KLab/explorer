@@ -226,11 +226,11 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
     return { pathname: `/${withConfig.route}`, query: withQuery };
   };
 
-  const getItemsTotalCount = (items, start) => {
+  const getItemsCount = (items, start) => {
     return items.reduce((acc, cur) => {
       acc += cur.count || 0;
       if (Array.isArray(cur.items)) {
-        acc += getItemsTotalCount(cur.items, 0);
+        acc += getItemsCount(cur.items, 0);
       }
       return acc;
     }, start);
@@ -240,15 +240,22 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
     const items = getResultItems(result);
     items.sort((a, b) => typeof a.label === 'string' && a.label.localeCompare(b.label)); // Sort items alphabetically
     const isActive = activeResults.includes(result['@id']);
+    const itemsCount = getItemsCount(items, 0);
+    const totalCount = (result.count || 0) + itemsCount;
+
+    // Do not display terms with 0 results
+    if (totalCount === 0) {
+      return undefined;
+    }
 
     return (
       <Anchor key={result['@id']} selected={isActive}>
-        {items.length > 0 && (
+        {itemsCount > 0 && (
           <Arrow as={ChevronRight} onClick={() => toggleActiveResult(result['@id'])} />
         )}
         <Link href={getUseWithLink(useWith[0], result)} passHref>
           <a>
-            {result.label} ({getItemsTotalCount(items, result.count || 0)})
+            {result.label} ({totalCount})
           </a>
         </Link>
         {isActive && <Items>{items.map(renderResult)}</Items>}
