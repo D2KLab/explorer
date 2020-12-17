@@ -55,6 +55,12 @@ const options = {
     // in data loss if used in production.
     synchronize: process.env.NODE_ENV !== 'production',
   },
+  callbacks: {
+    session: async (session, user) => {
+      // Expose user id
+      return Promise.resolve({ ...session, user: { ...session.user, id: user.id } });
+    },
+  },
   // sessionMaxAge: 30*24*60*60*1000, // Expire sessions after 30 days of being idle
   // sessionUpdateAge: 24*60*60*1000, // Update session expiry only if session was updated more recently than the last 24 hours
   // verificationMaxAge: 24*60*60*1000, // Expire erification links (for email sign in) after 24 hours

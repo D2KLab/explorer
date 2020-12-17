@@ -8,7 +8,9 @@ import Cookies from 'js-cookie';
 
 import NProgress from '@components/NProgress';
 import ConsentPopup from '@components/ConsentPopup';
+import RRWeb from '@components/RRWeb';
 import theme from '~/theme';
+import config from '~/config';
 import { appWithTranslation } from '~/i18n';
 
 class MyApp extends App {
@@ -37,7 +39,12 @@ class MyApp extends App {
             />
           </Head>
           <NProgress />
-          {typeof Cookies.get('consent') === 'undefined' ? <ConsentPopup /> : <div />}
+          {config.plugins?.consent?.show && typeof Cookies.get('consent') === 'undefined' ? (
+            <ConsentPopup />
+          ) : (
+            <div />
+          )}
+          {config.plugins?.consent?.show && <RRWeb />}
           <NextAuth.Provider options={{ site: process.env.SITE }} session={session}>
             <Component {...pageProps} />
           </NextAuth.Provider>

@@ -41,10 +41,8 @@ export const getFilters = async (query) => {
         });
         if (resQuery) {
           filterValues = resQuery['@graph'].map((row) => {
-            const label = row.label
-              ? row.label['@value'] || row.label
-              : row['@id']['@value'] || row['@id'];
             const value = row['@id']['@value'] || row['@id'];
+            const label = row.label ? row.label['@value'] || row.label : value;
             return {
               label,
               value,

@@ -196,3 +196,14 @@ export const removeUserAccount = async (user, account) => {
     }
   );
 };
+
+export const getCaptures = async () => {
+  const db = await connectToDatabase();
+  return db.collection('rrweb').find().toArray();
+};
+
+export const getCaptureEvents = async (captureSessionId) => {
+  const db = await connectToDatabase();
+  const row = await db.collection('rrweb').findOne({ captureSessionId });
+  return row !== null ? row.events : [];
+};
