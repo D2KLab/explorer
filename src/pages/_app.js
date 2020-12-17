@@ -44,7 +44,7 @@ class MyApp extends App {
           ) : (
             <div />
           )}
-          {config.plugins?.consent?.show && <RRWeb />}
+          {config.plugins?.consent?.show && typeof Cookies.get('consent') === '1' && <RRWeb />}
           <NextAuth.Provider options={{ site: process.env.SITE }} session={session}>
             <Component {...pageProps} />
           </NextAuth.Provider>
