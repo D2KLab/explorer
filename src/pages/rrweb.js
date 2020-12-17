@@ -1,7 +1,6 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import StickyBox from 'react-sticky-box';
 import rrwebPlayer from 'rrweb-player';
 import 'rrweb-player/dist/style.css';
@@ -11,6 +10,7 @@ import Header from '@components/Header';
 import Body from '@components/Body';
 import Content from '@components/Content';
 import PageTitle from '@components/PageTitle';
+import Button from '@components/Button';
 import { getCaptures, getCaptureEvents } from '@helpers/database';
 import breakpoints from '@styles/breakpoints';
 
@@ -64,9 +64,21 @@ const Anchor = styled.div`
       : null};
 `;
 
+const Player = styled.div`
+  &:before,
+  &:after {
+    content: '';
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+`;
+
 const RRWebPage = ({ captures, events }) => {
   const refPlayer = useRef();
   const { query } = useRouter();
+  const [isDeletingCapture, setIsDeletingCapture] = useState(false);
 
   useEffect(() => {
     if (Array.isArray(events) && events.length > 1) {
@@ -85,6 +97,20 @@ const RRWebPage = ({ captures, events }) => {
       };
     }
   }, events);
+
+  const deleteCapture = async (id) => {
+    setIsDeletingCapture(true);
+    await fetch(`/api/rrweb`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        delete: id,
+      }),
+    });
+    Router.reload();
+  };
 
   const renderNavigation = () => {
     return captures.map((capture) => (
@@ -107,8 +133,24 @@ const RRWebPage = ({ captures, events }) => {
               <Navigation>{renderNavigation()}</Navigation>
             </StyledStickyBox>
             <Results>
-              <h2>RRWeb Replay</h2>
-              <div ref={refPlayer} />
+              {query.id ? (
+                <>
+                  <h2>RRWeb Replay</h2>
+                  <Player ref={refPlayer} />
+                  <br />
+                  <Button
+                    type="button"
+                    bg="#dc3545"
+                    text="#fff"
+                    loading={isDeletingCapture}
+                    onClick={() => deleteCapture(query.id)}
+                  >
+                    Delete this capture
+                  </Button>
+                </>
+              ) : (
+                <>No selected capture</>
+              )}
             </Results>
           </Container>
         </Content>

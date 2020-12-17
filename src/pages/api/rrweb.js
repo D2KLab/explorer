@@ -10,6 +10,15 @@ export default withRequestValidation({
 })(async (req, res) => {
   const session = await NextAuth.getSession({ req });
   const user = await getSessionUser(session);
+  const db = await connectToDatabase();
+
+  if (req.body.delete) {
+    await db.collection('rrweb').remove({
+      captureSessionId: req.body.delete,
+    });
+    res.status(200).end();
+    return;
+  }
 
   const cookies = cookie.parse(req.headers.cookie);
 
@@ -27,7 +36,6 @@ export default withRequestValidation({
     return;
   }
 
-  const db = await connectToDatabase();
   await db.collection('rrweb').updateOne(
     {
       captureSessionId: rrweb,
