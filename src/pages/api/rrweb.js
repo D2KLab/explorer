@@ -21,7 +21,7 @@ export default withRequestValidation({
 
   const { events, pathname } = req.body;
 
-  if (pathname === '/rrweb') {
+  if (pathname.endsWith('/rrweb')) {
     // Ignore rrweb player page
     res.status(204).end();
     return;
