@@ -1,5 +1,6 @@
 const NodeCache = require('node-cache');
 const sparqlTransformer = require('sparql-transformer').default;
+const config = require('../../config');
 
 if (!(global.sparqlCache instanceof NodeCache)) {
   global.sparqlCache = global.sparqlCache || new NodeCache();
@@ -7,6 +8,9 @@ if (!(global.sparqlCache instanceof NodeCache)) {
 
 export const getSparqlQuery = async (query) => {
   let sparqlQuery = null;
+  if (config && config.api && config.api.prefixes) {
+    query.$prefixes = { ...config.api.prefixes, ...query.$prefixes };
+  }
   try {
     await sparqlTransformer(query, {
       debug: false,
