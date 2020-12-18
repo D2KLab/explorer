@@ -204,6 +204,6 @@ export const getCaptures = async () => {
 
 export const getCaptureEvents = async (captureSessionId) => {
   const db = await connectToDatabase();
-  const row = await db.collection('rrweb').findOne({ captureSessionId });
+  const row = await db.collection('rrweb').findOne({ capture_session_id: captureSessionId });
   return row !== null ? row.events : [];
 };

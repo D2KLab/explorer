@@ -14,7 +14,7 @@ export default withRequestValidation({
 
   if (req.body.delete) {
     await db.collection('rrweb').remove({
-      captureSessionId: req.body.delete,
+      capture_session_id: req.body.delete,
     });
     res.status(200).end();
     return;
@@ -38,13 +38,15 @@ export default withRequestValidation({
 
   await db.collection('rrweb').updateOne(
     {
-      captureSessionId: rrweb,
+      capture_session_id: rrweb,
     },
     {
       $set: {
-        captureSessionId: rrweb,
+        capture_session_id: rrweb,
         user: user && new ObjectID(user._id),
+        updated_at: new Date(),
       },
+      $setOnInsert: { created_at: new Date() },
       $push: { events: { $each: events } },
     },
     {

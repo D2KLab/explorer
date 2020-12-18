@@ -3,7 +3,7 @@ import { record } from 'rrweb';
 import Cookies from 'js-cookie';
 import { v4 as uuidv4 } from 'uuid';
 
-const RRWeb = () => {
+const RRWebRecorder = () => {
   useEffect(() => {
     if (typeof Cookies.get('rrweb') === 'undefined') {
       Cookies.set('rrweb', uuidv4(), { expires: 1 });
@@ -61,4 +61,4 @@ const RRWeb = () => {
   return null;
 };
 
-export default RRWeb;
+export default RRWebRecorder;

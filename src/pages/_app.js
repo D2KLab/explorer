@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 
 import NProgress from '@components/NProgress';
 import ConsentPopup from '@components/ConsentPopup';
-import RRWeb from '@components/RRWeb';
+import RRWebRecorder from '@components/RRWebRecorder';
 import theme from '~/theme';
 import config from '~/config';
 import { appWithTranslation } from '~/i18n';
@@ -44,7 +44,7 @@ class MyApp extends App {
           ) : (
             <div />
           )}
-          {config.plugins?.consent?.show && typeof Cookies.get('consent') === '1' && <RRWeb />}
+          {config.plugins?.consent?.show && Cookies.get('consent') === '1' && <RRWebRecorder />}
           <NextAuth.Provider options={{ site: process.env.SITE }} session={session}>
             <Component {...pageProps} />
           </NextAuth.Provider>

@@ -75,7 +75,7 @@ const Player = styled.div`
   }
 `;
 
-const RRWebPage = ({ captures, events }) => {
+const RRWebPage = ({ captures, selectedCapture, events }) => {
   const refPlayer = useRef();
   const { query } = useRouter();
   const [isDeletingCapture, setIsDeletingCapture] = useState(false);
@@ -114,9 +114,9 @@ const RRWebPage = ({ captures, events }) => {
 
   const renderNavigation = () => {
     return captures.map((capture) => (
-      <Anchor selected={capture.captureSessionId === query.id}>
-        <a href={`/rrweb?id=${encodeURIComponent(capture.captureSessionId)}`}>
-          {capture.captureSessionId}
+      <Anchor selected={capture.capture_session_id === query.id}>
+        <a href={`/rrweb?id=${encodeURIComponent(capture.capture_session_id)}`}>
+          {capture.capture_session_id}
         </a>
       </Anchor>
     ));
@@ -133,9 +133,26 @@ const RRWebPage = ({ captures, events }) => {
               <Navigation>{renderNavigation()}</Navigation>
             </StyledStickyBox>
             <Results>
-              {query.id ? (
+              {(selectedCapture && (
                 <>
                   <h2>RRWeb Replay</h2>
+                  <p>
+                    Created:{' '}
+                    <time
+                      dateTime={new Date(selectedCapture.created_at).toISOString()}
+                      title={new Date(selectedCapture.created_at).toString()}
+                    >
+                      {new Date(selectedCapture.created_at).toLocaleString()}
+                    </time>
+                    <br />
+                    Updated:{' '}
+                    <time
+                      dateTime={new Date(selectedCapture.updated_at).toISOString()}
+                      title={new Date(selectedCapture.updated_at).toString()}
+                    >
+                      {new Date(selectedCapture.updated_at).toLocaleString()}
+                    </time>
+                  </p>
                   <Player ref={refPlayer} />
                   <br />
                   <Button
@@ -143,14 +160,12 @@ const RRWebPage = ({ captures, events }) => {
                     bg="#dc3545"
                     text="#fff"
                     loading={isDeletingCapture}
-                    onClick={() => deleteCapture(query.id)}
+                    onClick={() => deleteCapture(selectedCapture.capture_session_id)}
                   >
                     Delete this capture
                   </Button>
                 </>
-              ) : (
-                <>No selected capture</>
-              )}
+              )) || <>No selected capture</>}
             </Results>
           </Container>
         </Content>
@@ -166,6 +181,9 @@ export async function getServerSideProps({ query }) {
   return {
     props: {
       captures: JSON.parse(JSON.stringify(captures)), // serialize captures list
+      selectedCapture: JSON.parse(
+        JSON.stringify(captures.find((capture) => capture.capture_session_id === query.id) || null)
+      ),
       events,
       namespacesRequired: ['common'],
     },
