@@ -35,27 +35,32 @@ export const getFilters = async (query) => {
       const cacheKey = JSON.stringify(filterQuery);
 
       await cache.exists(cacheKey).then(async (reply) => {
-        const resQuery = await SparqlClient.query(filterQuery, {
-          endpoint: config.api.endpoint,
-          debug: config.debug,
-        });
-        if (resQuery) {
-          filterValues = resQuery['@graph'].map((row) => {
-            const value = row['@id']['@value'] || row['@id'];
-            const label = row.label ? row.label['@value'] || row.label : value;
-            return {
-              label,
-              value,
-            };
+        if (reply !== 1) {
+          const resQuery = await SparqlClient.query(filterQuery, {
+            endpoint: config.api.endpoint,
+            debug: config.debug,
           });
+          if (resQuery) {
+            filterValues = resQuery['@graph'].map((row) => {
+              const value = row['@id']['@value'] || row['@id'];
+              const label = row.label ? row.label['@value'] || row.label : value;
+              return {
+                label,
+                value,
+              };
+            });
 
-          // Sort values by label
-          filterValues.sort(
-            (a, b) => typeof a.label === 'string' && a.label.localeCompare(b.label)
-          );
+            // Sort values by label
+            filterValues.sort(
+              (a, b) => typeof a.label === 'string' && a.label.localeCompare(b.label)
+            );
 
-          // Cache filter values
-          await cache.set(cacheKey, JSON.stringify(filterValues));
+            // Cache filter values
+            await cache.set(cacheKey, JSON.stringify(filterValues));
+          }
+        } else {
+          // Use cached version of filter values when available
+          filterValues = JSON.parse(await cache.get(cacheKey));
         }
       });
     }
