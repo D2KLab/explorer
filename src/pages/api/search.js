@@ -125,16 +125,17 @@ export const search = async (query) => {
     }
 
     // Text search
+    const textSearchWhere = [];
     if (query.q) {
       if (typeof route.textSearchFunc === 'function') {
-        extraWhere.push(...route.textSearchFunc(query.q));
+        textSearchWhere.push(...route.textSearchFunc(query.q));
       } else {
         if (typeof route.labelProp === 'string') {
-          extraWhere.push(`?id <${route.labelProp}> ?_s1texto`);
+          textSearchWhere.push(`?id <${route.labelProp}> ?_s1texto`);
         } else {
-          extraWhere.push('?id ?_s1textp ?_s1texto');
+          textSearchWhere.push('?id ?_s1textp ?_s1texto');
         }
-        extraWhere.push(`?_s1texto bif:contains '${JSON.stringify(query.q)}'`);
+        textSearchWhere.push(`?_s1texto bif:contains '${JSON.stringify(query.q)}'`);
       }
     }
 
@@ -179,6 +180,8 @@ export const search = async (query) => {
       ${route.baseWhere.length > 1 ? '.' : ''}
       ${extraWhere.join('.')}
       ${extraWhere.length > 1 ? '.' : ''}
+      ${textSearchWhere.join('.')}
+      ${textSearchWhere.length > 1 ? '.' : ''}
       ${extraFilter.length > 0 ? `FILTER(${extraFilter.join(' && ')})` : ''}
     `;
     const mainSearchQuery = {
@@ -246,13 +249,30 @@ export const search = async (query) => {
     }
 
     // Compute the total number of pages (used for pagination)
+    const paginationWhereCondition = `
+      ${route.baseWhere.join('.')}
+      ${route.baseWhere.length > 1 ? '.' : ''}
+      ${extraWhere.join('.')}
+      ${extraWhere.length > 1 ? '.' : ''}
+      ${extraFilter.length > 0 ? `FILTER(${extraFilter.join(' && ')})` : ''}
+    `;
     const paginationQuery = {
       proto: {
         id: '?count',
       },
       $where: `
         SELECT (COUNT(DISTINCT ?id) AS ?count) WHERE {
-          ${whereCondition}
+          {
+            SELECT DISTINCT ?id WHERE {
+              ${route.baseWhere.join('.')}
+              ${route.baseWhere.length > 1 ? '.' : ''}
+              {
+                ${textSearchWhere.join('.')}
+                ${textSearchWhere.length > 1 ? '.' : ''}
+              }
+            }
+          }
+          ${paginationWhereCondition}
         }
         ${query.approximate ? 'LIMIT 1000' : ''}
       `,
