@@ -1,8 +1,10 @@
+import { useEffect } from 'react';
 import NextAuth from 'next-auth/client';
 import { ThemeProvider } from 'styled-components';
 import { Provider as ReakitProvider } from 'reakit';
 import { Reset } from 'styled-reset';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 
 import NProgress from '@components/NProgress';
@@ -14,6 +16,21 @@ import { appWithTranslation } from '~/i18n';
 
 const App = ({ Component, pageProps }) => {
   const { session } = pageProps;
+
+  const router = useRouter();
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      if (typeof window?.gtag !== 'undefined' && typeof config.analytics?.id !== 'undefined') {
+        window.gtag('config', config.analytics.id, {
+          page_path: url,
+        });
+      }
+    };
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
 
   return (
     <ThemeProvider theme={theme}>

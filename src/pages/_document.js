@@ -1,5 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
+import config from '~/config';
 
 const i18nPropsFromCtx = (ctx) => {
   if (!(ctx && ctx.req && ctx.req.language)) return {};
@@ -43,7 +44,29 @@ export default class MyDocument extends Document {
     const { i18nDocumentProps } = this.props;
     return (
       <Html {...i18nDocumentProps}>
-        <Head />
+        <Head>
+          {/* Global site tag (gtag.js) - Google Analytics */}
+          {typeof config.analytics?.id !== 'undefined' && (
+            <>
+              <script
+                async
+                src={`https://www.googletagmanager.com/gtag/js?id=${config.analytics.id}`}
+              />
+              <script
+                dangerouslySetInnerHTML={{
+                  __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments)}
+                  gtag('js', new Date());
+                  gtag('config', '${config.analytics.id}', {
+                    page_path: window.location.pathname,
+                  });
+                `,
+                }}
+              />
+            </>
+          )}
+        </Head>
         <body>
           <Main />
           <NextScript />
