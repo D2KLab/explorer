@@ -227,6 +227,18 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
   const removeZeroes = videoSegments.every((segment) => segment.end.startsWith('00:'));
 
   const renderVideoSegment = (segment) => {
+    const segmentTitle = (Array.isArray(segment.title)
+      ? segment.title
+      : [segment.title].filter((x) => x)
+    )
+      .map((x) => x['@value'] || x)
+      .pop();
+    const segmentDescription = (Array.isArray(segment.description)
+      ? segment.description
+      : [segment.description].filter((x) => x)
+    )
+      .map((x) => x['@value'] || x)
+      .pop();
     return (
       <Segment key={segment['@id']}>
         <SegmentButton onClick={() => seekVideoTo(segment.startSeconds)}>
@@ -243,8 +255,8 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
           </SegmentTime>
         </SegmentButton>
         <SegmentText>
-          {segment.title && <p>{segment.title}</p>}
-          {segment.description && <p>{segment.description}</p>}
+          {segmentTitle && <p>{segmentTitle}</p>}
+          {segmentDescription && <p>{segmentDescription}</p>}
         </SegmentText>
       </Segment>
     );
