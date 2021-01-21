@@ -177,11 +177,11 @@ export const search = async (query) => {
     // The subquery is also used to compute the total number of pages for the pagination component
     const whereCondition = `
       ${route.baseWhere.join('.')}
-      ${route.baseWhere.length > 1 ? '.' : ''}
+      ${route.baseWhere.length > 0 ? '.' : ''}
       ${extraWhere.join('.')}
-      ${extraWhere.length > 1 ? '.' : ''}
+      ${extraWhere.length > 0 ? '.' : ''}
       ${textSearchWhere.join('.')}
-      ${textSearchWhere.length > 1 ? '.' : ''}
+      ${textSearchWhere.length > 0 ? '.' : ''}
       ${extraFilter.length > 0 ? `FILTER(${extraFilter.join(' && ')})` : ''}
     `;
     const mainSearchQuery = {
