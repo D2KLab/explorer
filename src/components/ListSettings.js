@@ -133,7 +133,7 @@ const ListSettings = ({ list }) => {
               >
                 {t('buttons.cancel')}
               </Button>
-              <Button type="button" primary htmlType="submit" loading={isUpdating}>
+              <Button type="submit" primary loading={isUpdating}>
                 {t('buttons.save')}
               </Button>
             </Element>
