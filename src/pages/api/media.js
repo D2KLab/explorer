@@ -29,6 +29,12 @@ export default withRequestValidation({
 
   // Fetch and return image
   const fetchRes = await fetch(requestUrl);
-  res.writeHead(fetchRes.status, Object.fromEntries(fetchRes.headers.entries()));
+  const headers = Object.fromEntries(fetchRes.headers.entries());
+  if (fetchRes.status >= 400) {
+    // Do not write cache headers if there is an error
+    delete headers['cache-control'];
+    delete headers.expires;
+  }
+  res.writeHead(fetchRes.status, headers);
   return fetchRes.body.pipe(res);
 });
