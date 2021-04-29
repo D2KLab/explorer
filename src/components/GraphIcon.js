@@ -9,13 +9,15 @@ import config from '~/config';
 const StyledImage = styled.img`
   ${({ size }) =>
     css`
+      width: ${size}px;
       height: ${size}px;
+      object-fit: contain;
     `}
 
   ${({ theme }) => theme?.components?.GraphIcon?.StyledImage};
 `;
 
-const GraphIcon = ({ className, size = 24, uri }) => {
+const GraphIcon = ({ className, size = 24, uri, style }) => {
   const graph = config.graphs[uri];
   if (!graph) {
     return null;
@@ -27,6 +29,7 @@ const GraphIcon = ({ className, size = 24, uri }) => {
       src={graph.icon}
       title={graph.label}
       alt={graph.label}
+      style={style}
     />
   );
 };

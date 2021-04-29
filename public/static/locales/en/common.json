@@ -115,5 +115,9 @@
     "noDescription": "No description for this collection.",
     "items": "{{count}} item in the collection",
     "items_plural": "{{count}} items in the collection"
+  },
+  "listing": {
+    "items": "{{count}} item in the list",
+    "items_plural": "{{count}} items in the list"
   }
 }

@@ -118,6 +118,7 @@ const ButtonsContainer = styled.div`
   align-items: center;
   flex-wrap: wrap;
   width: 100%;
+  max-width: 1280px;
   overflow: auto;
   padding: 0 0.5em;
   flex: 0.5;
@@ -331,7 +332,7 @@ const HomePage = () => {
             <Subtitle>{t('home:browseBy')}</Subtitle>
             <ButtonsContainer>
               {Object.keys(config.routes)
-                .filter((routeName) => config.routes[routeName].showInNavbar !== false)
+                .filter((routeName) => config.routes[routeName].showInHome !== false)
                 .flatMap((routeName) => (
                   <Link key={routeName} href={`/${routeName}`} passHref>
                     <BigButton
