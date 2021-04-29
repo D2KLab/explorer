@@ -33,7 +33,6 @@ import { useTranslation } from '~/i18n';
 
 const Columns = styled.div`
   display: flex;
-  max-width: 1024px;
   width: 100%;
   margin: 0 auto;
   flex-direction: column;
@@ -42,12 +41,13 @@ const Columns = styled.div`
 
   ${breakpoints.desktop`
     flex-direction: row;
+    padding: 0 2em;
   `}
 `;
 
 const Primary = styled.div`
   flex: auto;
-  min-width: 75%;
+  min-width: 50%;
   padding-right: 24px;
   padding-top: 24px;
   margin-left: 24px;
@@ -55,24 +55,29 @@ const Primary = styled.div`
   display: flex;
   flex-direction: column;
 
+  .carousel-root {
+    display: flex;
+  }
   .carousel {
+    width: auto;
+
     &.carousel-slider {
       min-height: 50vh;
     }
+    .thumbs {
+      /* For vertical thumbs */
+      display: flex;
+      flex-direction: column;
+      transform: none !important;
+    }
     .thumbs-wrapper {
       overflow: visible;
+      margin-top: 0;
+      margin-bottom: 0;
 
       .control-arrow {
         display: none;
       }
-    }
-    .thumbs {
-      display: flex;
-      flex-wrap: wrap;
-
-      /* TODO: HACK: react-responsive-carousel doesn't support vertical thumbnails as of 2020-04-27 */
-      white-space: normal;
-      transform: none !important;
     }
     .thumb {
       width: 80px;
@@ -165,8 +170,17 @@ const StyledMenu = styled(Menu)`
 const Secondary = styled.div`
   flex: auto;
   min-width: 25%;
-  padding-top: 24px;
-  margin-left: 24px;
+  padding: 24px 24px 0 24px;
+
+  ${breakpoints.desktop`
+    margin-left: 0;
+  `}
+`;
+
+const Tertiary = styled.div`
+  flex: auto;
+  min-width: 25%;
+  padding: 24px 24px 0 24px;
 
   ${breakpoints.desktop`
     margin-left: 0;
@@ -456,34 +470,6 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                 </Tabs>
               </Analysis>
               */}
-
-              {result.description && (
-                <>
-                  <h4>Description</h4>
-                  <Description
-                    dangerouslySetInnerHTML={{
-                      __html: Array.isArray(result.description)
-                        ? result.description.join('\n\n')
-                        : result.description,
-                    }}
-                  />
-                </>
-              )}
-
-              <Debug>
-                <Metadata label="HTTP Parameters">
-                  <pre>{JSON.stringify(query, null, 2)}</pre>
-                </Metadata>
-                <Metadata label="Query Result">
-                  <pre>{JSON.stringify(result, null, 2)}</pre>
-                </Metadata>
-                <Metadata label="SPARQL Query">
-                  <SPARQLQueryLink query={debugSparqlQuery}>
-                    {t('common:buttons.editQuery')}
-                  </SPARQLQueryLink>
-                  <pre>{debugSparqlQuery}</pre>
-                </Metadata>
-              </Debug>
             </Primary>
           )}
           <Secondary>
@@ -553,6 +539,35 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
               </RelatedVideosList>
             </RelatedVideos> */}
           </Secondary>
+          <Tertiary>
+            {result.description && (
+              <>
+                <h4>Description</h4>
+                <Description
+                  dangerouslySetInnerHTML={{
+                    __html: Array.isArray(result.description)
+                      ? result.description.join('\n\n')
+                      : result.description,
+                  }}
+                />
+              </>
+            )}
+
+            <Debug>
+              <Metadata label="HTTP Parameters">
+                <pre>{JSON.stringify(query, null, 2)}</pre>
+              </Metadata>
+              <Metadata label="Query Result">
+                <pre>{JSON.stringify(result, null, 2)}</pre>
+              </Metadata>
+              <Metadata label="SPARQL Query">
+                <SPARQLQueryLink query={debugSparqlQuery}>
+                  {t('common:buttons.editQuery')}
+                </SPARQLQueryLink>
+                <pre>{debugSparqlQuery}</pre>
+              </Metadata>
+            </Debug>
+          </Tertiary>
         </Columns>
       </Body>
       <Footer />
