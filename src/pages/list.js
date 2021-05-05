@@ -2,7 +2,6 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import NextAuth from 'next-auth/client';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -12,6 +11,9 @@ import Input from '@components/Input';
 import Element from '@components/Element';
 import PageTitle from '@components/PageTitle';
 import GraphIcon from '@components/GraphIcon';
+import Metadata from '@components/Metadata';
+import Debug from '@components/Debug';
+import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import breakpoints from '@styles/breakpoints';
 import SparqlClient from '@helpers/sparql';
 import config from '~/config';
@@ -51,9 +53,8 @@ const Item = styled.li`
   margin: 1em 0;
 `;
 
-const ListDetailsPage = ({ items }) => {
-  const { t, i18n } = useTranslation(['common']);
-  const [session] = NextAuth.useSession();
+const ListDetailsPage = ({ items, debugSparqlQuery }) => {
+  const { t } = useTranslation(['common']);
   const { query } = useRouter();
 
   const route = config.routes[query.type];
@@ -132,6 +133,20 @@ const ListDetailsPage = ({ items }) => {
                 })}
               </ul>
             </Results>
+            <Debug>
+              <Metadata label="HTTP Parameters">
+                <pre>{JSON.stringify(query, null, 2)}</pre>
+              </Metadata>
+              <Metadata label="Query Results">
+                <pre>{JSON.stringify(items, null, 2)}</pre>
+              </Metadata>
+              <Metadata label="Results SPARQL Query">
+                <SPARQLQueryLink query={debugSparqlQuery}>
+                  {t('common:buttons.editQuery')}
+                </SPARQLQueryLink>
+                <pre>{debugSparqlQuery}</pre>
+              </Metadata>
+            </Debug>
           </Primary>
         </Columns>
       </Body>
@@ -143,12 +158,17 @@ const ListDetailsPage = ({ items }) => {
 ListDetailsPage.getInitialProps = async ({ query }) => {
   const route = config.routes[query.type];
   const items = [];
+  let debugSparqlQuery = null;
 
   if (Array.isArray(route.items)) {
     items.push(...(route.items || []));
   }
 
   if (route.query) {
+    if (config.debug) {
+      debugSparqlQuery = await SparqlClient.getSparqlQuery(route.query);
+    }
+
     // Execute the query
     const res = await SparqlClient.query(route.query, {
       endpoint: config.api.endpoint,
@@ -161,6 +181,7 @@ ListDetailsPage.getInitialProps = async ({ query }) => {
 
   return {
     items,
+    debugSparqlQuery,
     namespacesRequired: ['common'],
   };
 };
