@@ -5,6 +5,8 @@ import Link from 'next/link';
 import StickyBox from 'react-sticky-box';
 import 'intersection-observer';
 import { ChevronRight } from '@styled-icons/entypo/ChevronRight';
+import { ChevronDown } from '@styled-icons/entypo/ChevronDown';
+import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -166,6 +168,17 @@ const ItemTitle = styled.div`
   }
 `;
 
+const SearchIcon = styled(SearchAlt2)`
+  margin-left: 8px;
+  height: 16px;
+  transform: scaleX(-1);
+  color: inherit;
+`;
+
+const DropdownItem = styled.a`
+  cursor: pointer;
+`;
+
 const cleanupItem = (obj) =>
   Object.fromEntries(
     Object.entries(obj).flatMap(([k, v]) => {
@@ -250,14 +263,30 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
 
     return (
       <Anchor key={result['@id']} selected={isActive}>
-        {itemsCount > 0 && (
-          <Arrow as={ChevronRight} onClick={() => toggleActiveResult(result['@id'])} />
+        {(itemsCount > 0 && (
+          <DropdownItem>
+            <a
+              role="button"
+              tabIndex={0}
+              onClick={() => toggleActiveResult(result['@id'])}
+              onKeyPress={() => toggleActiveResult(result['@id'])}
+            >
+              <Arrow as={isActive ? ChevronDown : ChevronRight} />
+              {result.label} ({totalCount})
+            </a>
+            <Link href={getUseWithLink(useWith[0], result)} passHref>
+              <a>
+                <SearchIcon />
+              </a>
+            </Link>
+          </DropdownItem>
+        )) || (
+          <Link href={getUseWithLink(useWith[0], result)} passHref>
+            <a>
+              {result.label} ({totalCount})
+            </a>
+          </Link>
         )}
-        <Link href={getUseWithLink(useWith[0], result)} passHref>
-          <a>
-            {result.label} ({totalCount})
-          </a>
-        </Link>
         {isActive && <Items>{items.map(renderResult)}</Items>}
       </Anchor>
     );
