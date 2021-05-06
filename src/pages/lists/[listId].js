@@ -240,7 +240,10 @@ export async function getServerSideProps(ctx) {
         const result = searchRes['@graph'][0];
 
         let mainImage = null;
-        if (result.representation && result.representation.image) {
+
+        if (typeof route.imageFunc === 'function') {
+          mainImage = route.imageFunc(result);
+        } else if (result.representation && result.representation.image) {
           mainImage = Array.isArray(result.representation.image)
             ? result.representation.image.shift()
             : result.representation.image;
