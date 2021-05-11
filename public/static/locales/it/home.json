@@ -1,0 +1,9 @@
+{
+  "hero": {
+    "headline": "Dimostrazione"
+  },
+  "search": {
+    "placeholder": "Cerca paesi all'interno di DBpedia ..."
+  },
+  "browseBy": "o sfoglia per"
+}

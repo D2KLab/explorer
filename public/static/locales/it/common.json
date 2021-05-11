@@ -1,0 +1,123 @@
+{
+  "profileButton": {
+    "label": "Profilo",
+    "signIn": "Entra",
+    "signOut": "Esci",
+    "signedAs": "Accesso effettuato come <0>{{name}}</0>",
+    "yourProfile": "Il tuo profilo"
+  },
+  "burger": {
+    "label": "Menu alternativo"
+  },
+  "listDeletion": {
+    "title": "Elimina la lista",
+    "deleteButton": "Elimina la lista",
+    "confirmText": "Sei sicuro/a di voler eliminare la lista \"<0>{{name}}</0>\"? Questa azione è irreversibile"
+  },
+  "listSettings": {
+    "title": "Impostazioni elenco",
+    "labels": {
+      "name": "Nome",
+      "public": "Pubblico?"
+    }
+  },
+  "listShare": {
+    "title": "Condividi la lista"
+  },
+  "providerButton": {
+    "label": "Accedi con {{provider}}"
+  },
+  "saveButton": {
+    "title": "Salva in un elenco",
+    "labels": {
+      "listName": "Nome dell'elenco"
+    },
+    "createButton": "Crea una nuova lista",
+    "loading": "Caricamento...",
+    "save": "Salva",
+    "saved": "Salvato"
+  },
+  "buttons": {
+    "save": "Salva",
+    "close": "Chiudi",
+    "cancel": "Elimina",
+    "search": "Cerca",
+    "searchByText": "Ricerca per testo",
+    "searchByImage": "Ricerca per imagine",
+    "download": "Scarica",
+    "virtualLoom": {
+      "download": "Telaio Virtuale",
+      "web": "Web",
+      "desktop": "Scrivania"
+    },
+    "downloadJSON": "Dati collegati a JSON",
+    "downloadSelectedImage": "Scarica l'immagine selezionata",
+    "editQuery": "Scrivi la domanda",
+    "permalink": "permalink"
+  },
+  "list": {
+    "items": "Items nella lista",
+    "empty": "Questa lista è vuota!",
+    "operations": "Operazioni",
+    "created": "Creato il: <0>{{date}}</0>",
+    "updated": "Ultimo aggiornamento il: <0>{{date}}</0>",
+    "privacy": {
+      "text": "Questa lista è <0>{{status}}</0>.",
+      "status": {
+        "public": "pubblico",
+        "private": "privato"
+      }
+    },
+    "shareLink": "Link pubblico: <0>{{link}}</0> "
+  },
+  "profile": {
+    "title": "Profilo",
+    "lists": {
+      "title": "La mia lista",
+      "count": "{{count}} items",
+      "lastEdit": "ultima modifica il <0>{{date}}</0>",
+      "open": "Apri"
+    },
+    "deleteAccount": {
+      "title": "Elimina l'account",
+      "text": "Sei sicuro che vuoi <0>cancellare definitavamente<0> il tuo account?<1> Questa azione è irreversibile!<1>",
+      "consequences": "Cancellando questo account si cancellerà anche:",
+      "lists": "Tutte le liste create dall'utente",
+      "sessions": "Tutti gli account social e le sessioni connesse",
+      "cancel": "Annullare l'eliminazione dell'account",
+      "confirm": "Si, elimina il mio account"
+    },
+    "connectedAccounts": {
+      "title": "Account connessi",
+      "unlink": "Sconnetti l'account",
+      "new": "Connetti un altro account"
+    }
+  },
+  "errors": {
+    "generic": "Si è verificato un errore",
+    "listNotFound": "Lista non trovata",
+    "resultNotFound": "Risutlato non trovato",
+    "routeNotFound": "Percorso non trovato",
+    "pageNotFound": "Pagina nn trovata"
+  },
+  "home": {
+    "title": "Home",
+    "searchByImage": {
+      "dropTitle": "Rilascia i file qui ...",
+      "dropText": "Trascina e rilascia i file qui, o fai click per selezionare i file"
+    }
+  },
+  "vocabulary": {
+    "title": "Vocabolario: {{vocabulary}}",
+    "explore": "Esplora"
+  },
+  "collection": {
+    "noDescription": "Non è presente alcuna descrizione per questa collezione",
+    "items": "{{count}} item nella collezione",
+    "items_plural": "{{count}} item nella collezione"
+  },
+  "listing": {
+    "items": "{{count}} item nella lista",
+    "items_plural": " {{count}} item nella lista"
+  }
+}
