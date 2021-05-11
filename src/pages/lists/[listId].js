@@ -14,7 +14,7 @@ import PageTitle from '@components/PageTitle';
 import ListSettings from '@components/ListSettings';
 import ListDeletion from '@components/ListDeletion';
 import { Navbar, NavItem } from '@components/Navbar';
-import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
+import { absoluteUrl, uriToId, generateMediaUrl, getQueryObject } from '@helpers/utils';
 import { getSessionUser, getListById } from '@helpers/database';
 import SparqlClient from '@helpers/sparql';
 import { getEntityMainLabel } from '@helpers/explorer';
@@ -228,7 +228,7 @@ export async function getServerSideProps(ctx) {
       }) || [];
 
     if (route) {
-      const searchQuery = JSON.parse(JSON.stringify(route.query));
+      const searchQuery = JSON.parse(JSON.stringify(getQueryObject(route.query)));
       searchQuery.$filter = searchQuery.$filter || [];
       searchQuery.$filter.push(`?id = <${item.uri}>`);
 

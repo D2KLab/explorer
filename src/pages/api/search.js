@@ -3,7 +3,7 @@ import asyncPool from 'tiny-async-pool';
 import { withRequestValidation } from '@helpers/api';
 import SparqlClient from '@helpers/sparql';
 import { fillWithVocabularies } from '@helpers/explorer';
-import { removeEmptyObjects } from '@helpers/utils';
+import { removeEmptyObjects, getQueryObject } from '@helpers/utils';
 import cache from '@helpers/cache';
 import config from '~/config';
 
@@ -22,11 +22,11 @@ export const getFilters = async (query) => {
 
     let filterQuery = null;
     if (filter.query) {
-      filterQuery = { ...filter.query };
+      filterQuery = getQueryObject(filter.query);
     } else if (filter.vocabulary) {
       const vocabulary = config.vocabularies[filter.vocabulary];
       if (vocabulary) {
-        filterQuery = { ...vocabulary.query };
+        filterQuery = getQueryObject(vocabulary.query);
       }
     }
 
@@ -220,7 +220,7 @@ export const search = async (query) => {
     results.push(
       ...(
         await asyncPool(maxConcurrentRequests, entities, async (entity) => {
-          const searchDetailsQuery = JSON.parse(JSON.stringify(route.query));
+          const searchDetailsQuery = JSON.parse(JSON.stringify(getQueryObject(route.query)));
           searchDetailsQuery.$where = searchDetailsQuery.$where || [];
           searchDetailsQuery.$filter = searchDetailsQuery.$filter || [];
           searchDetailsQuery.$values = searchDetailsQuery.$values || {};

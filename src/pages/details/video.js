@@ -21,7 +21,7 @@ import GraphIcon from '@components/GraphIcon';
 import MetadataList from '@components/MetadataList';
 import SaveButton from '@components/SaveButton';
 import breakpoints from '@styles/breakpoints';
-import { absoluteUrl } from '@helpers/utils';
+import { absoluteUrl, getQueryObject } from '@helpers/utils';
 import SparqlClient from '@helpers/sparql';
 import { getEntityMainLabel } from '@helpers/explorer';
 import { useTranslation } from '~/i18n';
@@ -429,7 +429,7 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
     }
     // Video segments
     if (config?.plugins?.videoSegments) {
-      const videoSegmentsQuery = { ...config.plugins.videoSegments.query };
+      const videoSegmentsQuery = getQueryObject(config.plugins.videoSegments.query);
       videoSegmentsQuery.$filter = videoSegmentsQuery.$filter || [];
       videoSegmentsQuery.$filter.push(`?video = <${result['@id']}>`);
 

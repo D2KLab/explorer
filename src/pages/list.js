@@ -16,6 +16,7 @@ import Debug from '@components/Debug';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import breakpoints from '@styles/breakpoints';
 import SparqlClient from '@helpers/sparql';
+import { getQueryObject } from '@helpers/utils';
 import config from '~/config';
 import { useTranslation } from '~/i18n';
 
@@ -155,7 +156,7 @@ const ListDetailsPage = ({ items, debugSparqlQuery }) => {
   );
 };
 
-ListDetailsPage.getInitialProps = async ({ query }) => {
+ListDetailsPage.getInitialProps = async ({ query, req }) => {
   const route = config.routes[query.type];
   const items = [];
   let debugSparqlQuery = null;
@@ -165,12 +166,14 @@ ListDetailsPage.getInitialProps = async ({ query }) => {
   }
 
   if (route.query) {
+    const listQuery = getQueryObject(route.query, { language: req?.language });
+
     if (config.debug) {
-      debugSparqlQuery = await SparqlClient.getSparqlQuery(route.query);
+      debugSparqlQuery = await SparqlClient.getSparqlQuery(listQuery);
     }
 
     // Execute the query
-    const res = await SparqlClient.query(route.query, {
+    const res = await SparqlClient.query(listQuery, {
       endpoint: config.api.endpoint,
       debug: config.debug,
     });

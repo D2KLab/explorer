@@ -20,6 +20,7 @@ import Button from '@components/Button';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import breakpoints from '@styles/breakpoints';
 import SparqlClient from '@helpers/sparql';
+import { getQueryObject } from '@helpers/utils';
 import config from '~/config';
 import { useTranslation, Trans } from '~/i18n';
 
@@ -409,7 +410,7 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
   );
 };
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps({ query, req }) {
   const route = config.routes[query.type];
 
   const debugSparqlQuery = {};
@@ -417,12 +418,14 @@ export async function getServerSideProps({ query }) {
   const featured = [];
 
   if (route) {
+    const mainQuery = getQueryObject(route.query, { language: req.language });
+
     if (config.debug) {
-      debugSparqlQuery.results = await SparqlClient.getSparqlQuery(route.query);
+      debugSparqlQuery.results = await SparqlClient.getSparqlQuery(mainQuery);
     }
 
     // Execute the query
-    const res = await SparqlClient.query(route.query, {
+    const res = await SparqlClient.query(mainQuery, {
       endpoint: config.api.endpoint,
       debug: config.debug,
     });
@@ -432,11 +435,13 @@ export async function getServerSideProps({ query }) {
 
     // Execute the query
     if (route.featured) {
+      const featuredQuery = getQueryObject(route.featured.query, { language: req.language });
+
       if (config.debug) {
-        debugSparqlQuery.featured = await SparqlClient.getSparqlQuery(route.featured.query);
+        debugSparqlQuery.featured = await SparqlClient.getSparqlQuery(featuredQuery);
       }
 
-      const resFeatured = await SparqlClient.query(route.featured.query, {
+      const resFeatured = await SparqlClient.query(featuredQuery, {
         endpoint: config.api.endpoint,
         debug: config.debug,
       });

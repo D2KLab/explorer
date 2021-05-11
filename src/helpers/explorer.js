@@ -1,4 +1,5 @@
 import SparqlClient from '@helpers/sparql';
+import { getQueryObject } from '@helpers/utils';
 import config from '~/config';
 
 const vocabulariesCache = {};
@@ -23,7 +24,7 @@ export function findRouteByRDFType(type) {
   );
 }
 
-export async function getVocabularyItems(vocabularyId) {
+export async function getVocabularyItems(vocabularyId, options = { language: 'en' }) {
   const results = [];
 
   const vocabulary = config.vocabularies[vocabularyId];
@@ -33,7 +34,8 @@ export async function getVocabularyItems(vocabularyId) {
   }
 
   // Call the endpoint with the search query
-  const resSearch = await SparqlClient.query(vocabulary.query, {
+  const searchQuery = getQueryObject(vocabulary.query, { language: options.language });
+  const resSearch = await SparqlClient.query(searchQuery, {
     endpoint: config.api.endpoint,
     debug: config.debug,
   });

@@ -12,8 +12,8 @@ export default withRequestValidation({
   const vocabulary = config.vocabularies[vocabularyId];
 
   if (!vocabulary) {
-    res.statusCode = 404;
-    return { props: {} };
+    res.status(404).json([]);
+    return;
   }
 
   const results = await getVocabularyItems(vocabularyId);

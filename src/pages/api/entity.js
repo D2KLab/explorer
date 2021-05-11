@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth/client';
 
 import { withRequestValidation } from '@helpers/api';
-import { idToUri, removeEmptyObjects } from '@helpers/utils';
+import { idToUri, removeEmptyObjects, getQueryObject } from '@helpers/utils';
 import { fillWithVocabularies } from '@helpers/explorer';
 import { getSessionUser, getUserLists } from '@helpers/database';
 import SparqlClient from '@helpers/sparql';
@@ -19,7 +19,7 @@ export default withRequestValidation({
   }
 
   const jsonQuery = route.details && route.details.query ? route.details.query : route.query;
-  const searchQuery = JSON.parse(JSON.stringify(jsonQuery));
+  const searchQuery = JSON.parse(JSON.stringify(getQueryObject(jsonQuery)));
   searchQuery.$filter = searchQuery.$filter || [];
   searchQuery.$filter.push(
     `?id = <${idToUri(query.id, {

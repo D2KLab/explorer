@@ -74,3 +74,10 @@ export function removeEmptyObjects(obj) {
   });
   return obj;
 }
+
+export function getQueryObject(query, options = { language: 'en' }) {
+  if (typeof query === 'function') {
+    return { ...query(options) };
+  }
+  return { ...query };
+}
