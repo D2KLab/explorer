@@ -1,0 +1,123 @@
+{
+  "profileButton": {
+    "label": "Perfil",
+    "signIn": "Inicio sesión",
+    "signOut": "Cerrar sesión",
+    "signedAs": "Iniciar sesión como <0>{{name}}</0>",
+    "yourProfile": "Tu perfil"
+  },
+  "burger": {
+    "label": "Menú alternativo"
+  },
+  "listDeletion": {
+    "title": "Borrar lista",
+    "deleteButton": "Borrar lista",
+    "confirmText": "¿Estás seguro de que deseas eliminar la lista \"<0>{{name}}</0>\"? Esta acción no se puede deshacer."
+  },
+  "listSettings": {
+    "title": "Configuración de la lista",
+    "labels": {
+      "name": "Nombre",
+      "public": "¿Público?"
+    }
+  },
+  "listShare": {
+    "title": "Compartir lista"
+  },
+  "providerButton": {
+    "label": "Accede con {{provider}}"
+  },
+  "saveButton": {
+    "title": "Salvar en una lista",
+    "labels": {
+      "listName": "Nombre de la lista"
+    },
+    "createButton": "Crear una lista",
+    "loading": "Cargando...",
+    "save": "Salvar",
+    "saved": "Salvado"
+  },
+  "buttons": {
+    "save": "Salvar",
+    "close": "Cerrar",
+    "cancel": "Cancelar",
+    "search": "Buscar",
+    "searchByText": "Buscar por texto",
+    "searchByImage": "Buscar por imagen",
+    "download": "Descargar",
+    "virtualLoom": {
+      "download": "Telar Virtual",
+      "web": "Web",
+      "desktop": "Escritorio"
+    },
+    "downloadJSON": "Datos enlazados JSON",
+    "downloadSelectedImage": "Descargar imagen seleccionada",
+    "editQuery": "Editar la consulta",
+    "permalink": "permalink"
+  },
+  "list": {
+    "items": "Items en esta lista",
+    "empty": "¡Esta lista es vacía!",
+    "operations": "Operaciones",
+    "created": "Creado en: <0>{{date}}</0>",
+    "updated": "La última actualización: <0>{{date}}</0>",
+    "privacy": {
+      "text": "Esta lista es <0>{{status}}</0>.",
+      "status": {
+        "public": "público",
+        "private": "privado"
+      }
+    },
+    "shareLink": "Enlace público: <0>{{link}}</0>"
+  },
+  "profile": {
+    "title": "Perfil",
+    "lists": {
+      "title": "Mis listas",
+      "count": "{{count}} items",
+      "lastEdit": "última edición en <0>{{date}}</0>",
+      "open": "Abrir"
+    },
+    "deleteAccount": {
+      "title": "Borrar cuenta",
+      "text": "¿Estás seguro de que deseas eliminar <0>permanentemente</0> tu cuenta? <1>Esta acción no se puede deshacer</1>",
+      "consequences": "Al eliminar esta cuenta también se eliminará:",
+      "lists": "Todas las listas creadas por los usuarios",
+      "sessions": "Todas las redes sociales y sesiones conectadas",
+      "cancel": "Cancelar la eliminación de la cuenta",
+      "confirm": "Sí, borra mi cuenta"
+    },
+    "connectedAccounts": {
+      "title": "Cuentas conectadas",
+      "unlink": "Desvincular esta conexión",
+      "new": "Conectar otra cuenta"
+    }
+  },
+  "errors": {
+    "generic": "Ha ocurrido un error",
+    "listNotFound": "Lista no encontrada",
+    "resultNotFound": "Resultado no encontrado",
+    "routeNotFound": "Ruta no encontrada",
+    "pageNotFound": "Página no encontrada"
+  },
+  "home": {
+    "title": "Inicio sesión",
+    "searchByImage": {
+      "dropTitle": "Suelta los archivos aquí...",
+      "dropText": "Arrastra y suelta algunos archivos aquí, o haz clic para seleccionarlos"
+    }
+  },
+  "vocabulary": {
+    "title": "Vocabulario: {{vocabulary}}",
+    "explore": "Explorar"
+  },
+  "collection": {
+    "noDescription": "No hay descripción para esta colección.",
+    "items": "{{count}} elemento de la colección",
+    "items_plural": "{{count}} elementos de la colección"
+  },
+  "listing": {
+    "items": "{{count}} elemento de la lista",
+    "items_plural": "{{count}} elementos de la lista"
+  }
+}

@@ -51,10 +51,12 @@ module.exports = {
     languages: {
       en: 'English',
       fr: 'Français',
+      es: 'Español',
     },
     graphFieldLabel: {
       en: 'Graph',
       fr: 'Graph',
+      es: 'Graph',
     },
     defaultLanguage: 'en',
   },

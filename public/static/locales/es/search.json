@@ -1,0 +1,25 @@
+{
+  "buttons": {
+    "clear": "BORRAR",
+    "filter": "FILTRAR",
+    "loadMore": "Cargar más",
+    "paginatePrevious": "Previo",
+    "paginateNext": "Siguiente",
+    "toggleMap": "Mapa"
+  },
+  "labels": {
+    "searchResults": "{{totalResults}} resultados de la búsqueda",
+    "sortBy": "Ordenar por",
+    "select": "Seleccionar...",
+    "browse": "Buscar {{type}}",
+    "noResults": "Tu búsqueda no ha encontrado ningún documento",
+    "page": "Página {{page}}",
+    "loading": "Cargando..."
+  },
+  "fields": {
+    "graph": "Gráfica",
+    "q": "Búsqueda por texto",
+    "languages": "Idiomas",
+    "options": "Opciones"
+  }
+}
