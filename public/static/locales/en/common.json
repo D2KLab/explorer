@@ -94,7 +94,7 @@
     }
   },
   "errors": {
-    "generic": "Une erreur s'est produite",
+    "generic": "An error occurred",
     "listNotFound": "List not found",
     "resultNotFound": "Result not found",
     "routeNotFound": "Route not found",
@@ -108,7 +108,7 @@
     }
   },
   "vocabulary": {
-    "title": "Vocabulary : {{vocabulary}}",
+    "title": "Vocabulary: {{vocabulary}}",
     "explore": "Explore"
   },
   "collection": {
