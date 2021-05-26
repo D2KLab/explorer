@@ -8,7 +8,7 @@
     "toggleMap": "Aziona la mappa"
   },
   "labels": {
-    "searchResults": "{{totalResults}} cerca risultati",
+    "searchResults": "{{totalResults}} risultati",
     "sortBy": "Ordina per",
     "select": "Seleziona...",
     "browse": "Sfoglia {{type}}",
