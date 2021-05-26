@@ -5,6 +5,7 @@ import DefaultErrorPage from 'next/error';
 import ReactPlayer from 'react-player';
 import queryString from 'query-string';
 import NextAuth from 'next-auth/client';
+import { useTabState, Tab, TabList, TabPanel } from 'reakit/Tab';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -159,9 +160,53 @@ const LegalBody = styled.small`
   margin-left: 8px;
 `;
 
+const StyledTab = styled(Tab)`
+  appearance: none;
+  background-color: #fff;
+  border: 2px solid ${({ theme }) => theme.colors.primary};
+  border-radius: 0;
+  outline: 0;
+  padding: 1em;
+  cursor: pointer;
+  flex: 1;
+  font-weight: bold;
+  text-transform: uppercase;
+
+  &:hover {
+    background-color: #ddd;
+  }
+
+  &[aria-selected='true'] {
+    border-bottom: none;
+  }
+  &:not([aria-selected='true']) {
+    border-top-color: transparent;
+    border-left-color: transparent;
+    border-right-color: transparent;
+  }
+`;
+
+const StyledTabList = styled(TabList)`
+  display: flex;
+  height: 50px;
+`;
+
+const StyledTabPanel = styled(TabPanel)`
+  overflow: auto;
+  max-height: calc(100% - 50px);
+`;
+
 function humanTimeToSeconds(humanTime) {
   const time = humanTime.split(':');
   return +time[0] * 60 * 60 + +time[1] * 60 + +time[2];
+}
+
+function secondsToHumanTime(seconds) {
+  seconds = parseInt(seconds, 10);
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.round(seconds % 60);
+  return [h, m > 9 ? m : h ? `0${m}` : m || '0', s > 9 ? s : `0${s}`].filter(Boolean).join(':');
 }
 
 function formatSegmentTime(time, removeZeroes) {
@@ -178,7 +223,16 @@ function formatSegmentTime(time, removeZeroes) {
   return formattedTime;
 }
 
-const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSegments }) => {
+const VideoDetailsPage = ({
+  result,
+  inList,
+  mediaUrl,
+  debugSparqlQuery,
+  videoSegments,
+  annotations,
+  faceTracks,
+  captions,
+}) => {
   const { t, i18n } = useTranslation(['common']);
 
   if (!result) {
@@ -250,8 +304,10 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
             &#9654;{' '}
           </SegmentIcon>
           <SegmentTime>
-            <time>{formatSegmentTime(segment.start, removeZeroes)}</time> -{' '}
-            <time>{formatSegmentTime(segment.end, removeZeroes)}</time>
+            {segment.start}
+            {segment.end}
+            {/* <time>{formatSegmentTime(segment.start, removeZeroes)}</time> -{' '}
+            <time>{formatSegmentTime(segment.end, removeZeroes)}</time> */}
           </SegmentTime>
         </SegmentButton>
         <SegmentText>
@@ -264,6 +320,97 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
 
   const onVideoProgress = ({ playedSeconds }) => {
     setVideoPlayedSeconds(playedSeconds);
+  };
+
+  const tab = useTabState();
+
+  const renderAnalysis = () => {
+    const hasVideoSegments = Array.isArray(videoSegments) && videoSegments.length > 0;
+    const hasAnnotations = Array.isArray(annotations) && annotations.length > 0;
+    const hasFaceTracks = Array.isArray(faceTracks) && faceTracks.length > 0;
+    const hasCaptions = Array.isArray(captions) && captions.length > 0;
+
+    return (
+      <Element flex="0.7">
+        <StyledTabList {...tab} aria-label="Analysis">
+          {hasVideoSegments && <StyledTab {...tab}>Segments</StyledTab>}
+          {hasAnnotations && <StyledTab {...tab}>Annotations</StyledTab>}
+          {hasFaceTracks && <StyledTab {...tab}>FaceRec</StyledTab>}
+          {hasCaptions && <StyledTab {...tab}>DeepCaptions</StyledTab>}
+        </StyledTabList>
+        {hasVideoSegments && (
+          <StyledTabPanel {...tab}>
+            <VideoSegments>{videoSegments.map(renderVideoSegment)}</VideoSegments>
+          </StyledTabPanel>
+        )}
+        {hasAnnotations && (
+          <StyledTabPanel {...tab}>
+            <ul>
+              {annotations.map((ann) => {
+                return (
+                  <Segment key={ann['@id']}>
+                    <SegmentButton onClick={() => seekVideoTo(ann.startSeconds)}>
+                      <SegmentTime>
+                        <time>{formatSegmentTime(ann.start)}</time> -{' '}
+                        <time>{formatSegmentTime(ann.end)}</time>
+                      </SegmentTime>
+                    </SegmentButton>
+                    <SegmentText>
+                      <p>
+                        {ann.body} <small>({ann.type})</small>
+                      </p>
+                    </SegmentText>
+                  </Segment>
+                );
+              })}
+            </ul>
+          </StyledTabPanel>
+        )}
+        {hasFaceTracks && (
+          <StyledTabPanel {...tab}>
+            {faceTracks.map((track) => {
+              return (
+                <Segment key={track.track_id}>
+                  <SegmentButton onClick={() => seekVideoTo(track.start_npt)}>
+                    <SegmentTime>
+                      <time>{formatSegmentTime(secondsToHumanTime(track.start_npt))}</time> -{' '}
+                      <time>{formatSegmentTime(secondsToHumanTime(track.end_npt))}</time>
+                    </SegmentTime>
+                  </SegmentButton>
+                  <SegmentText>
+                    <p>
+                      {track.name}{' '}
+                      <small style={{ color: '#aaa' }}>
+                        (Confidence: {track.confidence.toFixed(2)})
+                      </small>
+                    </p>
+                  </SegmentText>
+                </Segment>
+              );
+            })}
+          </StyledTabPanel>
+        )}
+        {hasCaptions && (
+          <StyledTabPanel {...tab}>
+            {captions.map((caption) => {
+              return (
+                <Segment key={caption['@id']}>
+                  <SegmentButton onClick={() => seekVideoTo(parseInt(caption.start, 10))}>
+                    <SegmentTime>
+                      <time>{formatSegmentTime(secondsToHumanTime(caption.start))}</time> -{' '}
+                      <time>{formatSegmentTime(secondsToHumanTime(caption.end))}</time>
+                    </SegmentTime>
+                  </SegmentButton>
+                  <SegmentText>
+                    <p>{caption.text}</p>
+                  </SegmentText>
+                </Segment>
+              );
+            })}
+          </StyledTabPanel>
+        )}
+      </Element>
+    );
   };
 
   return (
@@ -282,11 +429,7 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
               controls
               playing
             />
-            {config?.plugins?.videoSegments &&
-              Array.isArray(videoSegments) &&
-              videoSegments.length > 0 && (
-                <VideoSegments>{videoSegments.map(renderVideoSegment)}</VideoSegments>
-              )}
+            {config?.plugins?.videoSegments && renderAnalysis()}
           </VideoWrapper>
         )}
         <Columns>
@@ -339,24 +482,6 @@ const VideoDetailsPage = ({ result, inList, mediaUrl, debugSparqlQuery, videoSeg
             <Element marginBottom={24}>
               <MetadataList metadata={result} query={query} route={route} />
             </Element>
-            {/* <Analysis>
-              <Tabs>
-                <Tab label="Transcript">
-                  <p>Transcript.</p>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices
-                    gravida. Risus commodo viverra maecenas accumsan lacus vel facilisisda.
-                  </p>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices
-                    gravida. Risus commodo viverra maecenas accumsan lacus vel facilisisda.
-                  </p>
-                </Tab>
-              </Tabs>
-            </Analysis> */}
-
             {result.description && (
               <>
                 <h4>Description</h4>
@@ -414,6 +539,9 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
 
   let mediaUrl = null;
   const videoSegments = [];
+  let faceTracks = [];
+  const annotations = [];
+  const captions = [];
 
   if (result) {
     const route = config.routes[query.type];
@@ -427,6 +555,7 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
       // Get media url from the media provider
       mediaUrl = result.mediaLocator;
     }
+
     // Video segments
     if (config?.plugins?.videoSegments) {
       const videoSegmentsQuery = getQueryObject(config.plugins.videoSegments.query);
@@ -449,6 +578,50 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
       // Sort segments by time
       videoSegments.sort((a, b) => a.startSeconds - b.startSeconds);
     }
+
+    // ANNOTATIONS
+    // Process the annotations
+    result.annotation.forEach((ann) => {
+      annotations.push({
+        ...ann,
+        startSeconds: ann.start,
+        endSeconds: ann.end,
+        start: secondsToHumanTime(ann.start),
+        end: secondsToHumanTime(ann.end),
+      });
+    });
+    // Remove annotations from result object since we're displaying them manually instead of in the MetadataList
+    delete result.annotation;
+
+    // FACEREC
+    // Get face tracking data
+    const resTrack = await (
+      await fetch(
+        `http://facerec.eurecom.fr/track?video=${encodeURIComponent(
+          result['@id']
+        )}&project=memad&speedup=25`
+      )
+    ).json();
+    faceTracks = resTrack.tracks || [];
+    faceTracks = faceTracks.concat(resTrack.feat_clusters || []);
+    faceTracks = faceTracks.filter((track) => track.confidence > 0.7);
+    console.log(faceTracks);
+    faceTracks.sort((a, b) => (a.start_npt > b.start_npt ? 1 : -1));
+
+    // DEEPCAPTIONS
+    // Process the captions
+    result.caption.forEach((caption) => {
+      captions.push({
+        ...caption,
+        startSeconds: parseInt(caption.start, 10),
+        endSeconds: parseInt(caption.end, 10),
+        start: secondsToHumanTime(caption.start),
+        end: secondsToHumanTime(caption.end),
+      });
+    });
+    captions.sort((a, b) => (a.startSeconds > b.startSeconds ? 1 : -1));
+    // Remove captions from result object since we're displaying them manually instead of in the MetadataList
+    delete result.caption;
   } else if (res) {
     res.statusCode = 404;
   }
@@ -459,6 +632,9 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
     mediaUrl,
     videoSegments,
     debugSparqlQuery,
+    faceTracks,
+    annotations,
+    captions,
     namespacesRequired: ['common'],
   };
 };
