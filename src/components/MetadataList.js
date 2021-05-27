@@ -9,51 +9,49 @@ import config from '~/config';
  */
 
 function generateValue(currentRouteName, currentRoute, metadata, metaName, metaIndex, meta) {
-  if (typeof meta !== 'object') {
-    if (['http://', 'https://'].some((protocol) => meta.startsWith(protocol))) {
-      return (
-        <a href={meta} target="_blank" rel="noopener noreferrer">
-          {meta}
-        </a>
-      );
-    }
-    return <>{meta}</>;
-  }
-
   // Ignore empty meta objects
-  if (Object.keys(meta).length === 0) {
+  if (typeof meta === 'object' && Object.keys(meta).length === 0) {
     return undefined;
   }
 
-  const [routeName, route] = findRouteByRDFType(meta['@type']);
-  const filter =
-    currentRoute &&
-    Array.isArray(currentRoute.filters) &&
-    currentRoute.filters.find((f) => f.id === metaName);
-
   let skosmosUri = null;
-  let url = meta['@id'];
-  if (route) {
-    url = `/${routeName}/${encodeURI(uriToId(meta['@id'], { base: route.uriBase }))}`;
-  } else if (filter) {
-    url = `/${currentRouteName}?field_filter_${metaName}=${encodeURIComponent(meta['@id'])}`;
-    if (filter.hasSkosmosDefinition) {
-      skosmosUri = meta['@id'];
-    }
-  }
-
+  let url = null;
   let printableValue = '<unk>';
-  if (Array.isArray(meta.label)) {
-    printableValue = meta.label.join(', ');
-  } else if (typeof meta.label === 'object') {
-    // If $langTag is set to 'show' in sparql-transformer
-    printableValue = meta.label['@value'];
-  } else if (typeof meta.label === 'string') {
-    // Example: {"@id":"http://data.silknow.org/collection/ec0f9a6f-7b69-31c4-80a6-c0a9cde663a5","@type":"http://erlangen-crm.org/current/E78_Collection","label":"European Sculpture and Decorative Arts"}
-    printableValue = meta.label;
+
+  if (typeof meta === 'object') {
+    const [routeName, route] = findRouteByRDFType(meta['@type']);
+    const filter =
+      currentRoute &&
+      Array.isArray(currentRoute.filters) &&
+      currentRoute.filters.find((f) => f.id === metaName);
+
+    url = meta['@id'];
+    if (route) {
+      url = `/${routeName}/${encodeURI(uriToId(meta['@id'], { base: route.uriBase }))}`;
+    } else if (filter) {
+      url = `/${currentRouteName}?field_filter_${metaName}=${encodeURIComponent(meta['@id'])}`;
+      if (filter.hasSkosmosDefinition) {
+        skosmosUri = meta['@id'];
+      }
+    }
+
+    if (Array.isArray(meta.label)) {
+      printableValue = meta.label.join(', ');
+    } else if (typeof meta.label === 'object') {
+      // If $langTag is set to 'show' in sparql-transformer
+      printableValue = meta.label['@value'];
+    } else if (typeof meta.label === 'string') {
+      // Example: {"@id":"http://data.silknow.org/collection/ec0f9a6f-7b69-31c4-80a6-c0a9cde663a5","@type":"http://erlangen-crm.org/current/E78_Collection","label":"European Sculpture and Decorative Arts"}
+      printableValue = meta.label;
+    } else {
+      printableValue = meta['@id'];
+      url = null;
+    }
   } else {
-    printableValue = meta['@id'];
-    url = null;
+    printableValue = meta;
+    if (['http://', 'https://'].some((protocol) => meta.startsWith(protocol))) {
+      url = meta;
+    }
   }
 
   if (currentRoute.metadata && typeof currentRoute.metadata[metaName] === 'function') {
