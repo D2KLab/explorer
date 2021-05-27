@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
@@ -156,13 +156,6 @@ const VideoWrapper = styled.div`
   `};
 `;
 
-const StyledReactPlayer = styled(ReactPlayer)`
-  flex: 1;
-  ${breakpoints.desktop`
-    padding: 24px;
-  `};
-`;
-
 const VideoSegments = styled.div`
   ${breakpoints.desktop`
     padding: 24px 0;
@@ -219,6 +212,34 @@ const StyledTabPanel = styled(TabPanel)`
   `}
 `;
 
+const PlayerWrapper = styled.div`
+  position: relative;
+  flex: 1;
+
+  ${breakpoints.desktop`
+    margin: 24px;
+    max-width: 700px;
+  `};
+`;
+
+const FaceOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: ${({ width }) => `${width}px`};
+  height: ${({ height }) => `${height}px`};
+`;
+
+const FaceRectangle = styled.div`
+  border: 3px solid red;
+  position: absolute;
+  top: ${({ y }) => `${y}px`};
+  left: ${({ x }) => `${x}px`};
+  width: ${({ width }) => `${width}px`};
+  height: ${({ height }) => `${height}px`};
+  display: ${({ visible }) => (visible ? 'block' : 'none')};
+`;
+
 function humanTimeToSeconds(humanTime) {
   const time = humanTime.split(':');
   return +time[0] * 60 * 60 + +time[1] * 60 + +time[2];
@@ -244,6 +265,38 @@ function formatSegmentTime(time, removeZeroes) {
     formattedTime = formattedTime.substr(0, msIndex);
   }
   return formattedTime;
+}
+
+function adaptDimension(bounding, origW, origH, destW, destH) {
+  const rW = destW / origW;
+  const rH = destH / origH;
+  return {
+    x: bounding.x * rW,
+    y: bounding.y * rH,
+    w: bounding.w * rW,
+    h: bounding.h * rH,
+  };
+}
+
+function isInViewport(el) {
+  const rect = el.getBoundingClientRect();
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
+}
+
+function debounce(fn, ms) {
+  let timer;
+  return () => {
+    clearTimeout(timer);
+    timer = setTimeout((...args) => {
+      timer = null;
+      fn.apply(this, ...args);
+    }, ms);
+  };
 }
 
 const VideoDetailsPage = ({
@@ -297,7 +350,9 @@ const VideoDetailsPage = ({
     console.log('seekVideoTo', seconds);
     if (typeof seconds === 'number') {
       $videoPlayer.current.seekTo(seconds, 'seconds');
-      $videoPlayer.current.wrapper.scrollIntoView();
+      if (!isInViewport($videoPlayer.current.wrapper)) {
+        $videoPlayer.current.wrapper.scrollIntoView();
+      }
       setVideoPlayedSeconds(seconds);
     }
   };
@@ -343,11 +398,49 @@ const VideoDetailsPage = ({
     );
   };
 
+  const [faceRectangles, setFaceRectangles] = useState([]);
+
+  const updateFaceRectangles = () => {
+    setFaceRectangles(
+      faceTracks.map((track) => {
+        if (!$videoPlayer.current || !$videoPlayer.current.getInternalPlayer()) return;
+        const {
+          videoWidth,
+          videoHeight,
+          offsetWidth,
+          offsetHeight,
+        } = $videoPlayer.current.getInternalPlayer();
+        const bounds = adaptDimension(
+          track.bounding,
+          videoWidth,
+          videoHeight,
+          offsetWidth,
+          offsetHeight
+        );
+        return { bounds, start_npt: track.start_npt, end_npt: track.end_npt };
+      })
+    );
+  };
+
+  const onVideoStart = () => {
+    updateFaceRectangles();
+  };
+
   const onVideoProgress = ({ playedSeconds }) => {
     setVideoPlayedSeconds(playedSeconds);
   };
 
   const tab = useTabState();
+
+  useEffect(() => {
+    const debouncedHandleResize = debounce(function handleResize() {
+      updateFaceRectangles();
+    }, 1000);
+    window.addEventListener('resize', debouncedHandleResize);
+    return () => {
+      window.removeEventListener('resize', debouncedHandleResize);
+    };
+  }, []);
 
   const renderAnalysis = () => {
     const hasVideoSegments = Array.isArray(videoSegments) && videoSegments.length > 0;
@@ -490,20 +583,42 @@ const VideoDetailsPage = ({
         </MobileContainer>
         {mediaUrl && (
           <VideoWrapper>
-            <StyledReactPlayer
-              ref={$videoPlayer}
-              url={mediaUrl}
-              onProgress={onVideoProgress}
-              width="100%"
-              height="100%"
-              controls
-              playing
-              config={{
-                file: {
-                  tracks: subtitles,
-                },
-              }}
-            />
+            <PlayerWrapper>
+              <ReactPlayer
+                ref={$videoPlayer}
+                url={mediaUrl}
+                onStart={onVideoStart}
+                onProgress={onVideoProgress}
+                width="100%"
+                height="100%"
+                controls
+                playing
+                config={{
+                  file: {
+                    tracks: subtitles,
+                  },
+                }}
+              />
+              <FaceOverlay
+                width={$videoPlayer?.current?.getInternalPlayer()?.offsetWidth}
+                height={$videoPlayer?.current?.getInternalPlayer()?.offsetHeight}
+              >
+                {faceRectangles.map(
+                  (rect) =>
+                    rect && (
+                      <FaceRectangle
+                        x={rect.bounds.x}
+                        y={rect.bounds.y}
+                        width={rect.bounds.w}
+                        height={rect.bounds.h}
+                        visible={
+                          videoPlayedSeconds >= rect.start_npt && videoPlayedSeconds <= rect.end_npt
+                        }
+                      />
+                    )
+                )}
+              </FaceOverlay>
+            </PlayerWrapper>
             {config?.plugins?.videoSegments && renderAnalysis()}
           </VideoWrapper>
         )}
