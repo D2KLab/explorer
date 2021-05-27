@@ -223,6 +223,7 @@ const PlayerWrapper = styled.div`
 `;
 
 const FaceOverlay = styled.div`
+  pointer-events: none;
   position: absolute;
   top: 0;
   left: 0;
