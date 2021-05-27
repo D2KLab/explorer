@@ -255,6 +255,7 @@ const VideoDetailsPage = ({
   annotations,
   faceTracks,
   captions,
+  subtitles,
 }) => {
   const { t, i18n } = useTranslation(['common']);
 
@@ -497,6 +498,11 @@ const VideoDetailsPage = ({
               height="100%"
               controls
               playing
+              config={{
+                file: {
+                  tracks: subtitles,
+                },
+              }}
             />
             {config?.plugins?.videoSegments && renderAnalysis()}
           </VideoWrapper>
@@ -629,6 +635,7 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
   const annotations = [];
   const captions = [];
   let producerSummary = null;
+  const subtitles = [];
 
   if (result) {
     const route = config.routes[query.type];
@@ -726,6 +733,23 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
       }
       return a.startSeconds > b.startSeconds ? 1 : -1;
     });
+
+    // SUBTITLES
+    subtitles.push({
+      kind: 'subtitles',
+      src: `/api/memad/subtitles?type=programmes&lang=French&id=${encodeURIComponent(
+        uriToId(result['@id'], { base: route.uriBase })
+      )}`,
+      srcLang: 'French',
+      default: true,
+    });
+    subtitles.push({
+      kind: 'subtitles',
+      src: `/api/memad/subtitles?type=programmes&lang=English&id=${encodeURIComponent(
+        uriToId(result['@id'], { base: route.uriBase })
+      )}`,
+      srcLang: 'English',
+    });
   } else if (res) {
     res.statusCode = 404;
   }
@@ -739,6 +763,7 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
     faceTracks,
     annotations,
     captions,
+    subtitles,
     namespacesRequired: ['common'],
   };
 };
