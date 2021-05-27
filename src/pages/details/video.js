@@ -6,6 +6,7 @@ import ReactPlayer from 'react-player';
 import queryString from 'query-string';
 import NextAuth from 'next-auth/client';
 import { useTabState, Tab, TabList, TabPanel } from 'reakit/Tab';
+import Link from 'next/link';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -22,7 +23,7 @@ import GraphIcon from '@components/GraphIcon';
 import MetadataList from '@components/MetadataList';
 import SaveButton from '@components/SaveButton';
 import breakpoints from '@styles/breakpoints';
-import { absoluteUrl, getQueryObject } from '@helpers/utils';
+import { absoluteUrl, getQueryObject, uriToId } from '@helpers/utils';
 import SparqlClient from '@helpers/sparql';
 import { getEntityMainLabel } from '@helpers/explorer';
 import { useTranslation } from '~/i18n';
@@ -41,6 +42,8 @@ const Columns = styled.div`
 `;
 
 const StyledMedia = styled(Media)`
+  margin-bottom: 12px;
+
   ${ThumbnailContainer} {
     height: auto;
   }
@@ -73,6 +76,22 @@ const Title = styled.h1`
   font-size: 3rem;
   line-height: 1.25;
   word-break: break-word;
+`;
+
+const DesktopContainer = styled.div`
+  display: none;
+
+  ${breakpoints.desktop`
+    display: block;
+  `}
+`;
+
+const MobileContainer = styled.div`
+  display: block;
+
+  ${breakpoints.desktop`
+    display: none;
+  `};
 `;
 
 const RelatedVideosList = styled.div``;
@@ -193,7 +212,11 @@ const StyledTabList = styled(TabList)`
 
 const StyledTabPanel = styled(TabPanel)`
   overflow: auto;
-  max-height: calc(100% - 50px);
+  max-height: 45vh;
+
+  ${breakpoints.desktop`
+    max-height: calc(100% - 50px);
+  `}
 `;
 
 function humanTimeToSeconds(humanTime) {
@@ -270,6 +293,7 @@ const VideoDetailsPage = ({
   const [videoPlayedSeconds, setVideoPlayedSeconds] = useState(0);
 
   const seekVideoTo = (seconds) => {
+    console.log('seekVideoTo', seconds);
     if (typeof seconds === 'number') {
       $videoPlayer.current.seekTo(seconds, 'seconds');
       $videoPlayer.current.wrapper.scrollIntoView();
@@ -334,7 +358,7 @@ const VideoDetailsPage = ({
       <Element flex="0.7">
         <StyledTabList {...tab} aria-label="Analysis">
           {hasVideoSegments && <StyledTab {...tab}>Segments</StyledTab>}
-          {hasAnnotations && <StyledTab {...tab}>Annotations</StyledTab>}
+          {hasAnnotations && <StyledTab {...tab}>NER</StyledTab>}
           {hasFaceTracks && <StyledTab {...tab}>FaceRec</StyledTab>}
           {hasCaptions && <StyledTab {...tab}>DeepCaptions</StyledTab>}
         </StyledTabList>
@@ -395,10 +419,10 @@ const VideoDetailsPage = ({
             {captions.map((caption) => {
               return (
                 <Segment key={caption['@id']}>
-                  <SegmentButton onClick={() => seekVideoTo(parseInt(caption.start, 10))}>
+                  <SegmentButton onClick={() => seekVideoTo(caption.startSeconds)}>
                     <SegmentTime>
-                      <time>{formatSegmentTime(secondsToHumanTime(caption.start))}</time> -{' '}
-                      <time>{formatSegmentTime(secondsToHumanTime(caption.end))}</time>
+                      <time>{formatSegmentTime(caption.start)}</time> -{' '}
+                      <time>{formatSegmentTime(caption.end)}</time>
                     </SegmentTime>
                   </SegmentButton>
                   <SegmentText>
@@ -413,11 +437,56 @@ const VideoDetailsPage = ({
     );
   };
 
+  const renderPermalink = () => (
+    <Element display="flex" alignItems="center" justifyContent="space-between" marginY={12}>
+      {route.details.showPermalink && (
+        <small>
+          (
+          <a href={result['@id']} target="_blank" rel="noopener noreferrer">
+            {t('common:buttons.permalink')}
+          </a>
+          )
+        </small>
+      )}
+      {session && (
+        <SaveButton
+          type={query.type}
+          item={result}
+          saved={isItemSaved}
+          onChange={onItemSaveChange}
+        />
+      )}
+    </Element>
+  );
+
+  const relatedLinks = {
+    'http://data.memad.eu/f24/speciale-elections-europeennes/61273825d815bc5a40df44cb2c6a65edfde6c44c': {
+      title: 'Spéciale élections européennes : [1ère partie]',
+      image: 'https://platform.limecraft.com/api/production/2336/mo/807720/moa',
+    },
+    'http://data.memad.eu/f24/speciale-elections-europeennes/2d9371cabdf44cdbeb80e4e66ebcc6af0a6f9bf5': {
+      title: 'Spéciale élections européennes : [2ème partie]',
+      image: 'https://platform.limecraft.com/api/production/2336/mo/807722/moa',
+    },
+    'http://data.memad.eu/f24/speciale-elections-europeennes/293ada98496bab9a3cbce574442d9eccc2ddff3e': {
+      title: 'Spéciale élections européennes : [3ème partie]',
+      image: 'https://platform.limecraft.com/api/production/2336/mo/807782/moa',
+    },
+    'http://data.memad.eu/fit/orphan/f8be6bfaf333982cb725c7b3f5b0a738a90712a6': {
+      title: 'Soirée spéciale Elections européennes',
+      image: 'https://platform.limecraft.com/api/production/2336/mo/811884/moa',
+    },
+  };
+
   return (
     <Layout>
       <PageTitle title={`${label}`} />
       <Header />
       <Body>
+        <MobileContainer style={{ padding: 24 }}>
+          <Title>{label}</Title>
+          {renderPermalink()}
+        </MobileContainer>
         {mediaUrl && (
           <VideoWrapper>
             <StyledReactPlayer
@@ -435,31 +504,10 @@ const VideoDetailsPage = ({
         <Columns>
           <Primary>
             <Element marginBottom={24}>
-              <Title>{label}</Title>
-              <Element
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-                marginY={12}
-              >
-                {route.details.showPermalink && (
-                  <small>
-                    (
-                    <a href={result['@id']} target="_blank" rel="noopener noreferrer">
-                      {t('common:buttons.permalink')}
-                    </a>
-                    )
-                  </small>
-                )}
-                {session && (
-                  <SaveButton
-                    type={query.type}
-                    item={result}
-                    saved={isItemSaved}
-                    onChange={onItemSaveChange}
-                  />
-                )}
-              </Element>
+              <DesktopContainer>
+                <Title>{label}</Title>
+                {renderPermalink()}
+              </DesktopContainer>
             </Element>
             <Element marginBottom={12} display="flex">
               <GraphIcon uri={result['@graph']} />
@@ -479,11 +527,8 @@ const VideoDetailsPage = ({
                 </LegalBody>
               )}
             </Element>
-            <Element marginBottom={24}>
-              <MetadataList metadata={result} query={query} route={route} />
-            </Element>
             {result.description && (
-              <>
+              <Element marginBottom={24}>
                 <h4>Description</h4>
                 <Description
                   dangerouslySetInnerHTML={{
@@ -492,7 +537,19 @@ const VideoDetailsPage = ({
                       : result.description,
                   }}
                 />
-              </>
+              </Element>
+            )}
+            {result.producerSummary && (
+              <Element marginBottom={24}>
+                <h4>Producer Summary</h4>
+                <Description
+                  dangerouslySetInnerHTML={{
+                    __html: Array.isArray(result.producerSummary)
+                      ? result.producerSummary.join('\n\n')
+                      : result.producerSummary,
+                  }}
+                />
+              </Element>
             )}
 
             <Debug>
@@ -511,12 +568,41 @@ const VideoDetailsPage = ({
             </Debug>
           </Primary>
           <Secondary>
-            <div>
+            <Element marginBottom={24}>
+              <MetadataList metadata={result} query={query} route={route} />
+            </Element>
+            <Element marginBottom={24}>
               <h2>Related</h2>
               <RelatedVideosList>
-                <StyledMedia title={label} subtitle="" thumbnail={images[0]} direction="row" />
+                {(Object.keys(relatedLinks).includes(result['@id']) &&
+                  Object.entries(relatedLinks).map(([link, infos]) => {
+                    if (link === result['@id']) return;
+
+                    return (
+                      <Link
+                        href={`/details/${route.details.view}?id=${encodeURIComponent(
+                          uriToId(link, {
+                            base: route.uriBase,
+                          })
+                        )}&type=${query.type}`}
+                        as={`/${query.type}/${encodeURI(uriToId(link, { base: route.uriBase }))}`}
+                        passHref
+                      >
+                        <a>
+                          <StyledMedia
+                            title={infos.title}
+                            subtitle=""
+                            thumbnail={route.imageFunc({ mediaLocator: infos.image })}
+                            direction="row"
+                          />
+                        </a>
+                      </Link>
+                    );
+                  })) || (
+                  <StyledMedia title={label} subtitle="" thumbnail={images[0]} direction="row" />
+                )}
               </RelatedVideosList>
-            </div>
+            </Element>
           </Secondary>
         </Columns>
       </Body>
@@ -542,6 +628,7 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
   let faceTracks = [];
   const annotations = [];
   const captions = [];
+  let producerSummary = null;
 
   if (result) {
     const route = config.routes[query.type];
@@ -576,22 +663,34 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
       });
 
       // Sort segments by time
-      videoSegments.sort((a, b) => a.startSeconds - b.startSeconds);
+      videoSegments.sort((a, b) => {
+        if (a.startSeconds === b.startSeconds) {
+          return a.endSeconds > b.endSeconds ? 1 : -1;
+        }
+        return a.startSeconds > b.startSeconds ? 1 : -1;
+      });
     }
 
     // ANNOTATIONS
     // Process the annotations
-    result.annotation.forEach((ann) => {
-      annotations.push({
-        ...ann,
-        startSeconds: ann.start,
-        endSeconds: ann.end,
-        start: secondsToHumanTime(ann.start),
-        end: secondsToHumanTime(ann.end),
+    if (Array.isArray(result.annotation)) {
+      result.annotation.forEach((ann) => {
+        annotations.push({
+          ...ann,
+          startSeconds: ann.start,
+          endSeconds: ann.end,
+          start: secondsToHumanTime(ann.start),
+          end: secondsToHumanTime(ann.end),
+        });
       });
+    }
+    // Sort annotations by time
+    annotations.sort((a, b) => {
+      if (a.startSeconds === b.startSeconds) {
+        return a.endSeconds > b.endSeconds ? 1 : -1;
+      }
+      return a.startSeconds > b.startSeconds ? 1 : -1;
     });
-    // Remove annotations from result object since we're displaying them manually instead of in the MetadataList
-    delete result.annotation;
 
     // FACEREC
     // Get face tracking data
@@ -605,23 +704,28 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
     faceTracks = resTrack.tracks || [];
     faceTracks = faceTracks.concat(resTrack.feat_clusters || []);
     faceTracks = faceTracks.filter((track) => track.confidence > 0.7);
-    console.log(faceTracks);
     faceTracks.sort((a, b) => (a.start_npt > b.start_npt ? 1 : -1));
 
     // DEEPCAPTIONS
     // Process the captions
-    result.caption.forEach((caption) => {
-      captions.push({
-        ...caption,
-        startSeconds: parseInt(caption.start, 10),
-        endSeconds: parseInt(caption.end, 10),
-        start: secondsToHumanTime(caption.start),
-        end: secondsToHumanTime(caption.end),
+    if (Array.isArray(result.caption)) {
+      result.caption.forEach((caption) => {
+        captions.push({
+          ...caption,
+          startSeconds: parseInt(caption.start, 10),
+          endSeconds: parseInt(caption.end, 10),
+          start: secondsToHumanTime(caption.start),
+          end: secondsToHumanTime(caption.end),
+        });
       });
+    }
+    // Sort captions by time
+    captions.sort((a, b) => {
+      if (a.startSeconds === b.startSeconds) {
+        return a.endSeconds > b.endSeconds ? 1 : -1;
+      }
+      return a.startSeconds > b.startSeconds ? 1 : -1;
     });
-    captions.sort((a, b) => (a.startSeconds > b.startSeconds ? 1 : -1));
-    // Remove captions from result object since we're displaying them manually instead of in the MetadataList
-    delete result.caption;
   } else if (res) {
     res.statusCode = 404;
   }
