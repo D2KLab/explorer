@@ -818,7 +818,7 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
     // Get face tracking data
     const resTrack = await (
       await fetch(
-        `http://facerec.eurecom.fr/track?video=${encodeURIComponent(
+        `https://facerec.eurecom.fr/track?video=${encodeURIComponent(
           result['@id']
         )}&project=memad&speedup=25`
       )
