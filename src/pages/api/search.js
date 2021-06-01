@@ -87,38 +87,41 @@ export const search = async (query) => {
 
   const route = config.routes[query.type];
   if (route) {
+    const baseWhere = route.baseWhere || [];
     const extraWhere = [];
     const extraFilter = [];
 
-    // Props filter
-    for (let i = 0; i < route.filters.length; i += 1) {
-      const filter = route.filters[i];
-      if (filter.id) {
-        let val = filter.defaultValue;
-        if (query[`field_filter_${filter.id}`]) {
-          if (filter.isOption) {
-            // Since options are checkboxes, get either 1 for true or 0 for false
-            val = parseInt(query[`field_filter_${filter.id}`], 10) === 1;
-            // Unset the value so we don't trigger whereFunc/filterFunc
-            if (val === false) {
-              val = undefined;
+    if (Array.isArray(route.filters)) {
+      // Props filter
+      for (let i = 0; i < route.filters.length; i += 1) {
+        const filter = route.filters[i];
+        if (filter.id) {
+          let val = filter.defaultValue;
+          if (query[`field_filter_${filter.id}`]) {
+            if (filter.isOption) {
+              // Since options are checkboxes, get either 1 for true or 0 for false
+              val = parseInt(query[`field_filter_${filter.id}`], 10) === 1;
+              // Unset the value so we don't trigger whereFunc/filterFunc
+              if (val === false) {
+                val = undefined;
+              }
+            } else if (filter.isMulti) {
+              // Make sure that the value is an array when isMulti is set
+              val = !Array.isArray(query[`field_filter_${filter.id}`])
+                ? [query[`field_filter_${filter.id}`]]
+                : query[`field_filter_${filter.id}`];
+            } else {
+              val = query[`field_filter_${filter.id}`];
             }
-          } else if (filter.isMulti) {
-            // Make sure that the value is an array when isMulti is set
-            val = !Array.isArray(query[`field_filter_${filter.id}`])
-              ? [query[`field_filter_${filter.id}`]]
-              : query[`field_filter_${filter.id}`];
-          } else {
-            val = query[`field_filter_${filter.id}`];
           }
-        }
 
-        if (typeof val !== 'undefined') {
-          if (typeof filter.whereFunc === 'function') {
-            extraWhere.push(...filter.whereFunc(val));
-          }
-          if (typeof filter.filterFunc === 'function') {
-            extraFilter.push(...filter.filterFunc(val).map((condition) => `(${condition})`));
+          if (typeof val !== 'undefined') {
+            if (typeof filter.whereFunc === 'function') {
+              extraWhere.push(...filter.whereFunc(val));
+            }
+            if (typeof filter.filterFunc === 'function') {
+              extraFilter.push(...filter.filterFunc(val).map((condition) => `(${condition})`));
+            }
           }
         }
       }
@@ -176,8 +179,8 @@ export const search = async (query) => {
     // query results, while we actually need to limit the number of unique ?id results
     // The subquery is also used to compute the total number of pages for the pagination component
     const whereCondition = `
-      ${route.baseWhere.join('.')}
-      ${route.baseWhere.length > 0 ? '.' : ''}
+      ${baseWhere.join('.')}
+      ${baseWhere.length > 0 ? '.' : ''}
       ${extraWhere.join('.')}
       ${extraWhere.length > 0 ? '.' : ''}
       ${textSearchWhere.join('.')}
@@ -250,8 +253,8 @@ export const search = async (query) => {
 
     // Compute the total number of pages (used for pagination)
     const paginationWhereCondition = `
-      ${route.baseWhere.join('.')}
-      ${route.baseWhere.length > 1 ? '.' : ''}
+      ${baseWhere.join('.')}
+      ${baseWhere.length > 1 ? '.' : ''}
       ${extraWhere.join('.')}
       ${extraWhere.length > 1 ? '.' : ''}
       ${extraFilter.length > 0 ? `FILTER(${extraFilter.join(' && ')})` : ''}
@@ -264,8 +267,8 @@ export const search = async (query) => {
         SELECT (COUNT(DISTINCT ?id) AS ?count) WHERE {
           {
             SELECT DISTINCT ?id WHERE {
-              ${route.baseWhere.join('.')}
-              ${route.baseWhere.length > 1 ? '.' : ''}
+              ${baseWhere.join('.')}
+              ${baseWhere.length > 1 ? '.' : ''}
               {
                 ${textSearchWhere.join('.')}
                 ${textSearchWhere.length > 1 ? '.' : ''}
