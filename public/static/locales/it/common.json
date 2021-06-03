@@ -119,5 +119,8 @@
   "listing": {
     "items": "{{count}} item nella lista",
     "items_plural": " {{count}} item nella lista"
+  },
+  "footer": {
+    "contact": "Contattaci:"
   }
 }

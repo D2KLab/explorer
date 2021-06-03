@@ -34,9 +34,12 @@ const Credits = styled.div`
 
   a {
     color: inherit;
+    text-decoration: none;
+    font-weight: bold;
 
     &:hover {
       color: inherit;
+      text-decoration: underline;
     }
   }
 `;
@@ -66,11 +69,17 @@ const Logo = styled.img`
 `;
 
 const Footer = ({ className }) => {
-  const { t } = useTranslation('project');
+  const { t } = useTranslation(['common', 'project']);
   return (
     <Container className={className}>
       <Credits>
-        <p>{t('footer.text')}</p>
+        <p dangerouslySetInnerHTML={{ __html: t('project:footer.text') }} />
+        {typeof config.footer.email === 'string' && (
+          <p>
+            {t('common:footer.contact')}{' '}
+            <a href={`mailto:${config.footer.email}`}>{config.footer.email}</a>
+          </p>
+        )}
       </Credits>
       <LogoContainer>
         {Array.isArray(config.footer.logo) ? (
