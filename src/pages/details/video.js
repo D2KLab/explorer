@@ -19,7 +19,7 @@ import Debug from '@components/Debug';
 import PageTitle from '@components/PageTitle';
 import Media, { ThumbnailContainer } from '@components/Media';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
-import GraphIcon from '@components/GraphIcon';
+import GraphLink from '@components/GraphLink';
 import MetadataList from '@components/MetadataList';
 import SaveButton from '@components/SaveButton';
 import breakpoints from '@styles/breakpoints';
@@ -632,15 +632,7 @@ const VideoDetailsPage = ({
               </DesktopContainer>
             </Element>
             <Element marginBottom={12} display="flex">
-              <GraphIcon uri={result['@graph']} />
-              {session && (
-                <SaveButton
-                  type={query.type}
-                  item={result}
-                  saved={isItemSaved}
-                  onChange={onItemSaveChange}
-                />
-              )}
+              <GraphLink uri={result['@graph']} icon label />
               {result.legalBody && (
                 <LegalBody>
                   {Array.isArray(result.legalBody)

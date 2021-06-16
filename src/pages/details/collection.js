@@ -17,7 +17,6 @@ import Debug from '@components/Debug';
 import PageTitle from '@components/PageTitle';
 import SaveButton from '@components/SaveButton';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
-import GraphIcon from '@components/GraphIcon';
 import MetadataList from '@components/MetadataList';
 import breakpoints from '@styles/breakpoints';
 import { uriToId, absoluteUrl, generateMediaUrl } from '@helpers/utils';
@@ -140,7 +139,7 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
               </Element>
             </Element>
             <Element marginBottom={12} display="flex">
-              <GraphIcon uri={result['@graph']} />
+              <GraphLink uri={result['@graph']} icon label />
               {result.legalBody && (
                 <LegalBody>
                   {Array.isArray(result.legalBody)

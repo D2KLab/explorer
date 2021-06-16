@@ -22,7 +22,7 @@ import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import PageTitle from '@components/PageTitle';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
-import GraphIcon from '@components/GraphIcon';
+import GraphLink from '@components/GraphLink';
 import MetadataList from '@components/MetadataList';
 import SaveButton from '@components/SaveButton';
 import breakpoints from '@styles/breakpoints';
@@ -501,7 +501,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
               </Element>
             </DesktopContainer>
             <Element marginBottom={12} display="flex">
-              <GraphIcon uri={result['@graph']} />
+              <GraphLink uri={result['@graph']} icon label />
               {result.legalBody && (
                 <LegalBody>
                   {Array.isArray(result.legalBody)
