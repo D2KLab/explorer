@@ -159,6 +159,12 @@ export const search = async (query) => {
       );
     }
 
+    // URIs
+    if (query.similarity && query[`${query.similarity}_uris`]) {
+      const uris = query[`${query.similarity}_uris`].split(',');
+      extraWhere.push(`VALUES ?id { ${uris.map((uri) => `<${uri}>`).join(' ')} }`);
+    }
+
     // Sort by
     let orderByVariable = null;
     if (query.sort) {

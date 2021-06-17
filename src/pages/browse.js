@@ -304,6 +304,29 @@ const BrowsePage = ({ initialData }) => {
     );
   };
 
+  const onSimilarityChange = (selectedOption) => {
+    const { value } = selectedOption;
+
+    const newQuery = {
+      ...query,
+      similarity: value,
+    };
+
+    // Reset page index
+    setSize(1);
+    setInitialPage(1);
+    delete newQuery.page;
+
+    return Router.replace(
+      {
+        pathname,
+        query: newQuery,
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
+
   const toggleMap = () => {
     const mapVisibility = !isMapVisible;
     setIsMapVisible(mapVisibility);
@@ -338,6 +361,11 @@ const BrowsePage = ({ initialData }) => {
       label: t(`project:filters.${filter.id}`, filter.label),
       value: filter.id,
     }));
+
+  const similarityOptions = ['visual', 'semantic'].map((similarity) => ({
+    label: t(`common:similarity.${similarity}`, similarity),
+    value: similarity,
+  }));
 
   const renderResults = (results) => {
     return results.map((result) => {
@@ -458,6 +486,29 @@ const BrowsePage = ({ initialData }) => {
                 })}
               />
             </Option>
+            {query.similarity && (
+              <Option>
+                <Label htmlFor="select_sort">{t('search:labels.similarity')}</Label>
+                <StyledSelect
+                  inputId="select_similarity"
+                  name="similarity"
+                  placeholder={t('search:labels.similarity')}
+                  options={similarityOptions}
+                  value={similarityOptions.find((o) => o.value === query.similarity)}
+                  onChange={onSimilarityChange}
+                  theme={(theme) => ({
+                    ...theme,
+                    borderRadius: 0,
+                    colors: {
+                      ...theme.colors,
+                      primary: '#000',
+                      neutral0: '#eee',
+                      primary25: '#ddd',
+                    },
+                  })}
+                />
+              </Option>
+            )}
             {config.plugins.virtualLoom && (
               <Option>
                 <Button primary onClick={toggleMap} title={t('search:buttons.toggleMap')}>

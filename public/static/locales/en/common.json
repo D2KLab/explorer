@@ -53,7 +53,8 @@
     "downloadJSON": "Linked Data JSON",
     "downloadSelectedImage": "Download selected image",
     "editQuery": "Edit the query",
-    "permalink": "permalink"
+    "permalink": "permalink",
+    "similar": "View similar"
   },
   "list": {
     "items": "Items in the list",
@@ -104,7 +105,9 @@
     "title": "Home",
     "searchByImage": {
       "dropTitle": "Drop the files here ...",
-      "dropText": "Drag 'n drop some files here, or click to select files"
+      "dropText": "Drag 'n drop some files here, or click to select files",
+      "uploading": "Uploading image...",
+      "processing": "Processing the image"
     }
   },
   "vocabulary": {
@@ -122,5 +125,9 @@
   },
   "footer": {
     "contact": "Contact us:"
+  },
+  "similarity": {
+    "visual": "Visually similar",
+    "semantic": "Similar works"
   }
 }

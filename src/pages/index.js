@@ -1,4 +1,5 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useDialogState, Dialog, DialogDisclosure } from 'reakit/Dialog';
@@ -7,12 +8,14 @@ import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
 import { Camera } from '@styled-icons/boxicons-solid/Camera';
 import { Button as ReakitButton } from 'reakit';
 
+import Element from '@components/Element';
 import Layout from '@components/Layout';
 import Header from '@components/Header';
 import Footer from '@components/Footer';
 import Body from '@components/Body';
 import SearchInput from '@components/SearchInput';
 import PageTitle from '@components/PageTitle';
+import Spinner from '@components/Spinner';
 import breakpoints from '@styles/breakpoints';
 import { useTranslation } from '~/i18n';
 import config from '~/config';
@@ -260,28 +263,76 @@ const Dropzone = styled.div`
 
 const HomePage = () => {
   const { t } = useTranslation(['common', 'home', 'project']);
+  const router = useRouter();
+  const [processStatus, setProcessStatus] = useState(null);
+  const [uploadPercent, setUploadPercent] = useState(0);
+  const [similarity, setSimilarity] = useState('visual');
 
   // Search by image
   const dialog = useDialogState();
-  const onDrop = useCallback(
-    (/* acceptedFiles */) => {
-      // TODO: do something with the files
-    },
-    []
-  );
-  const { acceptedFiles, getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const onDrop = useCallback((acceptedFiles) => {
+    setProcessStatus('uploading');
+
+    const image = acceptedFiles[0];
+    const formData = new FormData();
+    formData.append('image', image);
+
+    const xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = (event) => {
+      if (event.loaded >= event.total) {
+        setProcessStatus('processing');
+        setUploadPercent(Math.floor((event.loaded / event.total) * 100));
+      }
+    };
+    xhr.onloadend = () => {
+      setProcessStatus(null);
+      if (xhr.status === 200) {
+        const { visualUris, semanticUris } = xhr.response;
+        const params = new URLSearchParams();
+        params.append('type', 'object');
+        params.append('similarity', similarity);
+        params.append('visual_uris', visualUris);
+        params.append('semantic_uris', semanticUris);
+        router.push(`/browse?${params.toString()}`);
+      } else {
+        console.log(`Upload error ${xhr.status}`);
+      }
+    };
+    xhr.responseType = 'json';
+    xhr.open('POST', '/api/image-search');
+    xhr.send(formData);
+  }, []);
+  const { acceptedFiles, getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    multiple: false,
+  });
   const files = acceptedFiles.map((file) => (
     <li key={file.path}>
       {file.path} - {file.size} bytes
     </li>
   ));
 
+  const imageDragZone = useRef();
+  useEffect(() => {
+    function showImageDialog() {
+      dialog.show();
+    }
+    if (imageDragZone && imageDragZone.current) {
+      imageDragZone.current.addEventListener('dragenter', showImageDialog, false);
+      return () => {
+        if (imageDragZone && imageDragZone.current) {
+          imageDragZone.current.removeEventListener('dragenter', showImageDialog, false);
+        }
+      };
+    }
+  }, []);
+
   return (
     <Layout>
       <PageTitle title={t('common:home.title')} />
       <Header />
       <Body>
-        <Hero>
+        <Hero ref={imageDragZone}>
           <HeroTop>
             {config.home.hero.showHeadline && <Title>{t('home:hero.headline')}</Title>}
             {config.home.hero.showLogo && <Logo />}
@@ -311,18 +362,43 @@ const HomePage = () => {
                     {...dialog}
                     modal={false}
                     aria-label={t('common:buttons.searchByImage')}
-                    {...getRootProps()}
                   >
                     <h4>{t('common:buttons.searchByImage')}</h4>
-                    <Dropzone>
-                      <input {...getInputProps()} />
-                      {isDragActive ? (
-                        <p>{t('common:home.searchByImage.dropTitle')}</p>
-                      ) : (
-                        <p>{t('common:home.searchByImage.dropText')}</p>
-                      )}
-                      <ul>{files}</ul>
-                    </Dropzone>
+                    <Element marginTop="1em" marginBottom="1em">
+                      <label>
+                        <input
+                          type="radio"
+                          checked={similarity === 'visual'}
+                          onClick={() => setSimilarity('visual')}
+                        />
+                        Visually similar images
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          checked={similarity === 'semantic'}
+                          onClick={() => setSimilarity('semantic')}
+                        />
+                        Similar works
+                      </label>
+                    </Element>
+                    <Element {...getRootProps()}>
+                      <Dropzone>
+                        <input {...getInputProps()} />
+                        {processStatus === null &&
+                          (isDragActive ? (
+                            <p>{t('common:home.searchByImage.dropTitle')}</p>
+                          ) : (
+                            <p>{t('common:home.searchByImage.dropText')}</p>
+                          ))}
+                        {processStatus !== null && (
+                          <>
+                            <Spinner /> {t(`common:home.searchByImage.${processStatus}`)}
+                            {processStatus === 'uploading' && <>({uploadPercent}%)</>}
+                          </>
+                        )}
+                      </Dropzone>
+                    </Element>
                   </StyledUploadDialog>
                 </>
               ) : null}

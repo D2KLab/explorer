@@ -53,7 +53,8 @@
     "downloadJSON": "Dati collegati a JSON",
     "downloadSelectedImage": "Scarica l'immagine selezionata",
     "editQuery": "Scrivi la domanda",
-    "permalink": "permalink"
+    "permalink": "permalink",
+    "similar": "Visualizza simili"
   },
   "list": {
     "items": "Items nella lista",
@@ -104,7 +105,9 @@
     "title": "Home",
     "searchByImage": {
       "dropTitle": "Rilascia i file qui ...",
-      "dropText": "Trascina e rilascia i file qui, o fai click per selezionare i file"
+      "dropText": "Trascina e rilascia i file qui, o fai click per selezionare i file",
+      "uploading": "Caricamento dell'immagine...",
+      "processing": "Elaborazione dell'immagine..."
     }
   },
   "vocabulary": {
@@ -122,5 +125,9 @@
   },
   "footer": {
     "contact": "Contattaci:"
+  },
+  "similarity": {
+    "visual": "Visivamente simile",
+    "semantic": "Opere simili"
   }
 }

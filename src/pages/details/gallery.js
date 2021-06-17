@@ -229,6 +229,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   const { query } = useRouter();
   const [session] = NextAuth.useSession();
   const route = config.routes[query.type];
+  const [isLoadingSimilar, setIsLoadingSimilar] = useState(false);
 
   if (!result) {
     return <DefaultErrorPage statusCode={404} title={t('common:errors.resultNotFound')} />;
@@ -311,7 +312,6 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   };
 
   const downloadMenu = useMenuState();
-
   const download = (format) => {
     switch (format) {
       case 'vljson': {
@@ -336,6 +336,21 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
       default:
         break;
     }
+  };
+
+  const similarityMenu = useMenuState();
+  const viewSimilar = async (similarity) => {
+    similarityMenu.hide();
+    setIsLoadingSimilar(true);
+
+    const data = await (
+      await fetch(`/api/image-search?uri=${encodeURIComponent(images[0]?.url)}`, {
+        method: 'POST',
+      })
+    ).json();
+
+    console.log('data:', data);
+    setIsLoadingSimilar(false);
   };
 
   const virtualLoomMenu = useMenuState();
@@ -513,20 +528,26 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
             <Element marginBottom={24}>
               <MetadataList metadata={result} query={query} route={route} />
             </Element>
-            <MenuButton {...downloadMenu} as={Button} primary>
-              {t('common:buttons.download')}
-            </MenuButton>
-            <StyledMenu {...downloadMenu} aria-label="Download">
-              <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('vljson')}>
-                {t('common:buttons.virtualLoom.download')}
-              </MenuItem>
-              <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('json')}>
-                {t('common:buttons.downloadJSON')}
-              </MenuItem>
-              <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('image')}>
-                {t('common:buttons.downloadSelectedImage')}
-              </MenuItem>
-            </StyledMenu>
+            <>
+              <MenuButton {...downloadMenu} as={Button} primary>
+                {t('common:buttons.download')}
+              </MenuButton>
+              <StyledMenu {...downloadMenu} aria-label="Download">
+                <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('vljson')}>
+                  {t('common:buttons.virtualLoom.download')}
+                </MenuItem>
+                <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('json')}>
+                  {t('common:buttons.downloadJSON')}
+                </MenuItem>
+                <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('image')}>
+                  {t('common:buttons.downloadSelectedImage')}
+                </MenuItem>
+              </StyledMenu>
+            </>
+            <Button primary onClick={() => viewSimilar()} loading={isLoadingSimilar}>
+              {t('common:buttons.similar')}
+            </Button>
+
             {/* <RelatedVideos>
               <h2>Related</h2>
               <RelatedVideosList>

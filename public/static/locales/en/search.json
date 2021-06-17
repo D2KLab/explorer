@@ -10,6 +10,7 @@
   "labels": {
     "searchResults": "{{totalResults}} search results",
     "sortBy": "Sort by",
+    "similarity": "Similarity",
     "select": "Select...",
     "browse": "Browse {{type}}",
     "noResults": "Your search did not match any documents",
