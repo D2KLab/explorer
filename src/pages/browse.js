@@ -254,7 +254,7 @@ const BrowsePage = ({ initialData }) => {
   const loadPage = (pageNumber) => {
     setSize(1);
     setInitialPage(pageNumber);
-    return Router.push(
+    return Router.replace(
       {
         pathname,
         query: {
@@ -294,7 +294,7 @@ const BrowsePage = ({ initialData }) => {
     setInitialPage(1);
     delete newQuery.page;
 
-    return Router.push(
+    return Router.replace(
       {
         pathname,
         query: newQuery,
@@ -414,7 +414,7 @@ const BrowsePage = ({ initialData }) => {
 
   const onScrollToPage = (pageIndex) => {
     if (initialPage + pageIndex !== query.page) {
-      Router.push(
+      Router.replace(
         {
           pathname,
           query: {
