@@ -226,7 +226,8 @@ const LegalBody = styled.small`
 
 const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   const { t, i18n } = useTranslation(['common']);
-  const { query } = useRouter();
+  const router = useRouter();
+  const { query } = router;
   const [session] = NextAuth.useSession();
   const route = config.routes[query.type];
   const [isLoadingSimilar, setIsLoadingSimilar] = useState(false);
@@ -349,7 +350,14 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
       })
     ).json();
 
-    console.log('data:', data);
+    const { visualUris, semanticUris } = data;
+    const params = new URLSearchParams();
+    params.append('type', 'object');
+    params.append('similarity', similarity);
+    params.append('visual_uris', visualUris);
+    params.append('semantic_uris', semanticUris);
+    router.push(`/browse?${params.toString()}`);
+
     setIsLoadingSimilar(false);
   };
 
@@ -528,11 +536,11 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
             <Element marginBottom={24}>
               <MetadataList metadata={result} query={query} route={route} />
             </Element>
-            <>
+            <Element marginBottom={24}>
               <MenuButton {...downloadMenu} as={Button} primary>
                 {t('common:buttons.download')}
               </MenuButton>
-              <StyledMenu {...downloadMenu} aria-label="Download">
+              <StyledMenu {...downloadMenu} aria-label={t('common:buttons.download')}>
                 <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('vljson')}>
                   {t('common:buttons.virtualLoom.download')}
                 </MenuItem>
@@ -543,10 +551,30 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                   {t('common:buttons.downloadSelectedImage')}
                 </MenuItem>
               </StyledMenu>
-            </>
-            <Button primary onClick={() => viewSimilar()} loading={isLoadingSimilar}>
-              {t('common:buttons.similar')}
-            </Button>
+            </Element>
+            <Element>
+              <MenuButton {...similarityMenu} as={Button} primary loading={isLoadingSimilar}>
+                {t('common:buttons.similar')}
+              </MenuButton>
+              <StyledMenu {...similarityMenu} aria-label={t('common:buttons.similar')}>
+                <MenuItem
+                  {...similarityMenu}
+                  as={Button}
+                  primary
+                  onClick={() => viewSimilar('visual')}
+                >
+                  {t('common:similarity.visual')}
+                </MenuItem>
+                <MenuItem
+                  {...similarityMenu}
+                  as={Button}
+                  primary
+                  onClick={() => viewSimilar('semantic')}
+                >
+                  {t('common:similarity.semantic')}
+                </MenuItem>
+              </StyledMenu>
+            </Element>
 
             {/* <RelatedVideos>
               <h2>Related</h2>
