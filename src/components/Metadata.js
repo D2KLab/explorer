@@ -30,11 +30,11 @@ const Data = styled.dd`
   font-weight: 500;
 `;
 
-const Metadata = ({ className, label, children }) => {
+const Metadata = ({ className, label, labelStyle, valueStyle, children }) => {
   return (
     <Element as="dl" marginY="1em" className={className}>
-      <Label>{label}</Label>
-      <Data>{children}</Data>
+      <Label style={labelStyle}>{label}</Label>
+      <Data style={valueStyle}>{children}</Data>
     </Element>
   );
 };

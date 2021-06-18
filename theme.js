@@ -12,6 +12,7 @@ const theme = {
     secondary: '#144168',
     linkHover: '#a02a0c',
     light: '#f5b1a1',
+    prediction: '#00578c',
   },
   home: {
     textSearchButton: {
