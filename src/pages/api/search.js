@@ -166,7 +166,7 @@ export const search = async (query) => {
     }
 
     // Sort by
-    let orderByVariable = null;
+    let orderByVariable = 'id';
     if (query.sort) {
       const sortFilter = route.filters.find((filter) => filter.id === query.sort);
       if (sortFilter && typeof sortFilter.whereFunc === 'function') {
