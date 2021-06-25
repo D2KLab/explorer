@@ -32,7 +32,6 @@ function generateValue(
   metaName,
   metaIndex,
   meta,
-  isPredicted,
   tooltipPrediction
 ) {
   // Ignore empty meta objects
@@ -92,6 +91,8 @@ function generateValue(
     return <>{printableValue}</>;
   }
 
+  const isPredicted = typeof meta.score !== 'undefined';
+
   return (
     <>
       <a
@@ -150,8 +151,6 @@ const MetadataList = ({ metadata, query, route }) => {
   return (
     <>
       {displayedMetadata.flatMap(([metaName, meta], index) => {
-        const isPredicted = metaName.startsWith('__');
-
         const values = [];
         if (Array.isArray(meta)) {
           /* Example:
@@ -165,10 +164,9 @@ const MetadataList = ({ metadata, query, route }) => {
               query.type,
               route,
               metadata,
-              metaName.replace(/__/, ''),
+              metaName,
               i,
               subMeta,
-              isPredicted,
               tooltipPrediction
             );
             if (value) {
@@ -184,10 +182,9 @@ const MetadataList = ({ metadata, query, route }) => {
             query.type,
             route,
             metadata,
-            metaName.replace(/__/, ''),
+            metaName,
             index,
             meta,
-            isPredicted,
             tooltipPrediction
           );
           if (value) {
