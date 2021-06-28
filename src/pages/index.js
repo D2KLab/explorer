@@ -290,7 +290,7 @@ const HomePage = () => {
         const { visualUris, semanticUris } = xhr.response;
         const params = new URLSearchParams();
         params.append('type', 'object');
-        params.append('similarity', similarity);
+        params.append('similarity_type', similarity);
         params.append('visual_uris', visualUris);
         params.append('semantic_uris', semanticUris);
         router.push(`/browse?${params.toString()}`);

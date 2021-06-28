@@ -353,7 +353,8 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
     const { visualUris, semanticUris } = data;
     const params = new URLSearchParams();
     params.append('type', 'object');
-    params.append('similarity', similarity);
+    params.append('similarity_type', similarity);
+    params.append('similarity_entity', result['@id']);
     params.append('visual_uris', visualUris);
     params.append('semantic_uris', semanticUris);
     router.push(`/browse?${params.toString()}`);

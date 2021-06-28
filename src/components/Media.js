@@ -13,8 +13,8 @@ export const ThumbnailContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 150px;
-  max-height: 150px;
+  width: ${({ width }) => width};
+  max-height: ${({ height }) => height};
   position: relative;
 `;
 
@@ -61,6 +61,7 @@ export const Subtitle = styled.span`
 export const Container = styled.div`
   display: flex;
   flex-direction: ${({ direction }) => direction};
+  align-items: center;
 
   ${ThumbnailContainer} {
     max-width: 100%;
@@ -70,12 +71,21 @@ export const Container = styled.div`
   }
 `;
 
-const Media = ({ className, thumbnail, title, subtitle, graphUri, direction = 'column' }) => {
+const Media = ({
+  className,
+  thumbnail,
+  title,
+  subtitle,
+  graphUri,
+  width = '150px',
+  height = '150px',
+  direction = 'column',
+}) => {
   const Placeholder = <Thumbnail src={config.search.placeholderImage} alt={title} />;
 
   return (
     <Container className={className} direction={direction}>
-      <ThumbnailContainer>
+      <ThumbnailContainer width={width} height={height}>
         <Thumbnail
           as={Img}
           src={thumbnail}

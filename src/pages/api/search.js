@@ -160,8 +160,8 @@ export const search = async (query) => {
     }
 
     // URIs
-    if (query.similarity && query[`${query.similarity}_uris`]) {
-      const uris = query[`${query.similarity}_uris`].split(',');
+    if (query.similarity_type && query[`${query.similarity_type}_uris`]) {
+      const uris = query[`${query.similarity_type}_uris`].split(',');
       extraWhere.push(`VALUES ?id { ${uris.map((uri) => `<${uri}>`).join(' ')} }`);
     }
 

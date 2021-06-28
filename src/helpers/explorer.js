@@ -117,3 +117,20 @@ export function getEntityMainLabel(entity, { route, language }) {
     })
     .join(', ');
 }
+
+export const getEntityMainImage = (result, { route }) => {
+  let mainImage = null;
+
+  if (typeof route.imageFunc === 'function') {
+    mainImage = route.imageFunc(result);
+  } else if (result.representation && result.representation.image) {
+    mainImage = Array.isArray(result.representation.image)
+      ? result.representation.image.shift()
+      : result.representation.image;
+  } else if (Array.isArray(result.representation)) {
+    mainImage =
+      result.representation[0].image || result.representation[0]['@id'] || result.representation[0];
+  }
+
+  return mainImage;
+};

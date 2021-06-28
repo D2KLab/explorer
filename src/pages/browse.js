@@ -28,7 +28,7 @@ import ScrollDetector from '@components/ScrollDetector';
 import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import useDebounce from '@helpers/useDebounce';
 import useOnScreen from '@helpers/useOnScreen';
-import { getEntityMainLabel } from '@helpers/explorer';
+import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
 import { search, getFilters } from '@pages/api/search';
 import breakpoints, { sizes } from '@styles/breakpoints';
 import { useTranslation } from '~/i18n';
@@ -150,7 +150,7 @@ const ResultPage = styled.h3`
   margin-bottom: 1rem;
 `;
 
-const BrowsePage = ({ initialData }) => {
+const BrowsePage = ({ initialData, similarityEntity }) => {
   const { req, query, pathname } = useRouter();
   const { t, i18n } = useTranslation(['common', 'search']);
   const [isMapVisible, setIsMapVisible] = useState(false);
@@ -309,7 +309,7 @@ const BrowsePage = ({ initialData }) => {
 
     const newQuery = {
       ...query,
-      similarity: value,
+      similarity_type: value,
     };
 
     // Reset page index
@@ -369,21 +369,7 @@ const BrowsePage = ({ initialData }) => {
 
   const renderResults = (results) => {
     return results.map((result) => {
-      let mainImage = null;
-
-      if (typeof route.imageFunc === 'function') {
-        mainImage = route.imageFunc(result);
-      } else if (result.representation && result.representation.image) {
-        mainImage = Array.isArray(result.representation.image)
-          ? result.representation.image.shift()
-          : result.representation.image;
-      } else if (Array.isArray(result.representation)) {
-        mainImage =
-          result.representation[0].image ||
-          result.representation[0]['@id'] ||
-          result.representation[0];
-      }
-
+      const mainImage = getEntityMainImage(result, { route });
       const label = getEntityMainLabel(result, { route, language: i18n.language });
       const subtitle = typeof route.subtitleFunc === 'function' ? route.subtitleFunc(result) : null;
 
@@ -464,6 +450,34 @@ const BrowsePage = ({ initialData }) => {
               ? t('search:labels.loading')
               : t('search:labels.searchResults', { totalResults })}
           </StyledTitle>
+          {similarityEntity && (
+            <Element marginBottom={24}>
+              <Link
+                href={`/details/${route.details.view}?id=${encodeURIComponent(
+                  uriToId(similarityEntity['@id'], {
+                    base: route.uriBase,
+                  })
+                )}&type=${query.type}`}
+                as={`/${query.type}/${encodeURI(
+                  uriToId(similarityEntity['@id'], { base: route.uriBase })
+                )}`}
+                passHref
+              >
+                <a>
+                  <Media
+                    title={getEntityMainLabel(similarityEntity, { route, language: i18n.language })}
+                    thumbnail={generateMediaUrl(
+                      getEntityMainImage(similarityEntity, { route }),
+                      300
+                    )}
+                    direction="row"
+                    width="50px"
+                    height="50px"
+                  />
+                </a>
+              </Link>
+            </Element>
+          )}
           <OptionsBar>
             <Option>
               <Label htmlFor="select_sort">{t('search:labels.sortBy')}</Label>
@@ -486,7 +500,7 @@ const BrowsePage = ({ initialData }) => {
                 })}
               />
             </Option>
-            {query.similarity && (
+            {query.similarity_type && (
               <Option>
                 <Label htmlFor="select_sort">{t('search:labels.similarity')}</Label>
                 <StyledSelect
@@ -494,7 +508,7 @@ const BrowsePage = ({ initialData }) => {
                   name="similarity"
                   placeholder={t('search:labels.similarity')}
                   options={similarityOptions}
-                  value={similarityOptions.find((o) => o.value === query.similarity)}
+                  value={similarityOptions.find((o) => o.value === query.similarity_type)}
                   onChange={onSimilarityChange}
                   theme={(theme) => ({
                     ...theme,
@@ -611,9 +625,31 @@ const BrowsePage = ({ initialData }) => {
   );
 };
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps({ req, query }) {
   const filters = await getFilters(query);
   const searchData = await search(query);
+
+  let similarityEntity;
+  if (query.similarity_entity) {
+    const route = config.routes[query.type];
+    similarityEntity = await (
+      await fetch(
+        `${absoluteUrl(req)}/api/entity?${queryString.stringify({
+          id: uriToId(query.similarity_entity, { base: route.uriBase }),
+          type: query.type,
+        })}`,
+        {
+          headers:
+            req && req.headers
+              ? {
+                  cookie: req.headers.cookie,
+                }
+              : undefined,
+        }
+      )
+    ).json();
+  }
+
   return {
     props: {
       initialData: {
@@ -622,6 +658,7 @@ export async function getServerSideProps({ query }) {
         debugSparqlQuery: searchData.debugSparqlQuery,
         filters,
       },
+      similarityEntity: (similarityEntity && similarityEntity.result) || null,
       namespacesRequired: ['common', 'search'],
     },
   };
