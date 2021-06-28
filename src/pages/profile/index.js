@@ -314,7 +314,11 @@ const ProfilePage = ({
                     <ListItem key={list._id}>
                       <Element>
                         <ListItemTitle>
-                          <h3>{list.name}</h3>
+                          <NextLink href={`/lists/${list._id}`} passHref>
+                            <a style={{ color: 'inherit', textDecoration: 'inherit' }}>
+                              <h3>{list.name}</h3>
+                            </a>
+                          </NextLink>
                           <ListSettings list={list} />
                         </ListItemTitle>
                         <ListItemSubtitle>
