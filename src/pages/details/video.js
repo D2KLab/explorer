@@ -625,12 +625,10 @@ const VideoDetailsPage = ({
         )}
         <Columns>
           <Primary>
-            <Element marginBottom={24}>
-              <DesktopContainer>
-                <Title>{label}</Title>
-                {renderPermalink()}
-              </DesktopContainer>
-            </Element>
+            <DesktopContainer style={{ marginBottom: 24 }}>
+              <Title>{label}</Title>
+              {renderPermalink()}
+            </DesktopContainer>
             <Element marginBottom={12} display="flex">
               <GraphLink uri={result['@graph']} icon label />
               {result.legalBody && (

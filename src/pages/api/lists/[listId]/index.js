@@ -32,8 +32,6 @@ export default withRequestValidation({
   const isOwner = user && list && list.user.equals(user._id);
 
   if (req.method === 'GET') {
-    res.status(200).json(list);
-
     if (!list.is_public && !isOwner) {
       res.status(403).json({
         error: {
@@ -43,6 +41,7 @@ export default withRequestValidation({
       });
       return;
     }
+    res.status(200).json(list);
   }
 
   // Owner operations

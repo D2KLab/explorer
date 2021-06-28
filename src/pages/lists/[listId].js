@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import { getSession } from 'next-auth/client';
+import queryString from 'query-string';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
 import Layout from '@components/Layout';
 import Body from '@components/Body';
 import Content from '@components/Content';
+import Button from '@components/Button';
 import Media from '@components/Media';
 import Element from '@components/Element';
 import Title from '@components/Title';
@@ -14,10 +16,9 @@ import PageTitle from '@components/PageTitle';
 import ListSettings from '@components/ListSettings';
 import ListDeletion from '@components/ListDeletion';
 import { Navbar, NavItem } from '@components/Navbar';
-import { absoluteUrl, uriToId, generateMediaUrl, getQueryObject } from '@helpers/utils';
+import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import { getSessionUser, getListById } from '@helpers/database';
-import SparqlClient from '@helpers/sparql';
-import { getEntityMainLabel } from '@helpers/explorer';
+import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
 import config from '~/config';
 import { useTranslation, Trans } from '~/i18n';
 
@@ -95,7 +96,14 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
 
     return (
       <Element marginY={24}>
-        <h2>{t('list.operations')}</h2>
+        <Element marginBottom={12}>
+          <h2>{t('list.operations')}</h2>
+        </Element>
+        <Element marginBottom={12} display="flex">
+          <Link href={`/api/lists/${list._id}/download`} passHref>
+            <Button primary>{t('common:buttons.download')}</Button>
+          </Link>
+        </Element>
         <Element marginY={12}>
           <ListDeletion list={list} />
         </Element>
@@ -228,32 +236,26 @@ export async function getServerSideProps(ctx) {
       }) || [];
 
     if (route) {
-      const searchQuery = JSON.parse(JSON.stringify(getQueryObject(route.query)));
-      searchQuery.$filter = searchQuery.$filter || [];
-      searchQuery.$filter.push(`?id = <${item.uri}>`);
+      const entity = await (
+        await fetch(
+          `${absoluteUrl(req)}/api/entity?${queryString.stringify({
+            id: uriToId(item.uri, { base: route.uriBase }),
+            type: item.type,
+          })}`,
+          {
+            headers:
+              req && req.headers
+                ? {
+                    cookie: req.headers.cookie,
+                  }
+                : undefined,
+          }
+        )
+      ).json();
 
-      try {
-        const searchRes = await SparqlClient.query(searchQuery, {
-          endpoint: config.api.endpoint,
-          debug: config.debug,
-        });
-        const result = searchRes['@graph'][0];
-
-        let mainImage = null;
-
-        if (typeof route.imageFunc === 'function') {
-          mainImage = route.imageFunc(result);
-        } else if (result.representation && result.representation.image) {
-          mainImage = Array.isArray(result.representation.image)
-            ? result.representation.image.shift()
-            : result.representation.image;
-        } else if (Array.isArray(result.representation)) {
-          mainImage =
-            result.representation[0].image ||
-            result.representation[0]['@id'] ||
-            result.representation[0];
-        }
-
+      if (entity && entity.result) {
+        const { result } = entity;
+        const mainImage = await getEntityMainImage(result, { route });
         const label = getEntityMainLabel(result, { route, language: ctx.req.language });
 
         list.items[i] = {
@@ -264,8 +266,6 @@ export async function getServerSideProps(ctx) {
           graph: result['@graph'] || null,
           route: routeName,
         };
-      } catch (err) {
-        console.error(err);
       }
     }
   }
