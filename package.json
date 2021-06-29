@@ -51,7 +51,7 @@
     "redis": "^3.0.2",
     "rrweb": "^0.9.11",
     "rrweb-player": "^0.6.6",
-    "sparql-transformer": "git+https://github.com/D2KLab/sparql-transformer.git",
+    "sparql-transformer": "^2.7.3",
     "styled-components": "^5.2.0",
     "styled-icons": "^10.22.0",
     "styled-reset": "^4.3.1",
