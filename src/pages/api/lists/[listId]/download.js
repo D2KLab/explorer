@@ -5,7 +5,7 @@ import NextAuth from 'next-auth/client';
 import queryString from 'query-string';
 
 import { getListById, getSessionUser } from '@helpers/database';
-import { absoluteUrl, uriToId } from '@helpers/utils';
+import { absoluteUrl, uriToId, slugify } from '@helpers/utils';
 import { withRequestValidation } from '@helpers/api';
 import { default as cfg } from '~/config';
 
@@ -57,6 +57,8 @@ export default withRequestValidation({
   }
 
   const zip = new AdmZip();
+  const listFolder = slugify(list.name);
+
   for (let i = 0; i < list.items.length; i += 1) {
     const item = list.items[i];
     const route = cfg.routes[item.type];
@@ -80,15 +82,27 @@ export default withRequestValidation({
 
       if (entity && entity.result) {
         const { result } = entity;
+        const resultFolder = `${result.label.replace(/\//, '-')}-${uriToId(result['@id'], {
+          base: route.uriBase,
+        })}`;
+
+        // Add representations to the Zip
         for (let j = 0; j < result.representation.length; j += 1) {
           const imageBuffer = await downloadImageAsBuffer(result.representation[j].image);
           if (imageBuffer) {
-            zip.addFile(path.basename(result.representation[j].image), imageBuffer);
+            zip.addFile(
+              path.join(listFolder, resultFolder, path.basename(result.representation[j].image)),
+              imageBuffer
+            );
           }
         }
 
+        // Add JSON metadata to the Zip
         const content = JSON.stringify(result, null, 2);
-        zip.addFile(`${result.identifier}.json`, Buffer.alloc(content.length, content));
+        zip.addFile(
+          path.join(listFolder, resultFolder, `${result.identifier}.json`),
+          Buffer.alloc(content.length, content)
+        );
       }
     }
   }
