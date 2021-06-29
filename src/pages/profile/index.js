@@ -21,7 +21,7 @@ import ListDeletion from '@components/ListDeletion';
 import ListShare from '@components/ListShare';
 import { ProviderButton } from '@components/ProviderButton';
 import breakpoints from '@styles/breakpoints';
-import { absoluteUrl } from '@helpers/utils';
+import { absoluteUrl, slugify } from '@helpers/utils';
 import { getSessionUser, getUserLists, getUserAccounts } from '@helpers/database';
 import { useTranslation, Trans } from '~/i18n';
 
@@ -314,7 +314,7 @@ const ProfilePage = ({
                     <ListItem key={list._id}>
                       <Element>
                         <ListItemTitle>
-                          <NextLink href={`/lists/${list._id}`} passHref>
+                          <NextLink href={`/lists/${slugify(list.name)}-${list._id}`} passHref>
                             <a style={{ color: 'inherit', textDecoration: 'inherit' }}>
                               <h3>{list.name}</h3>
                             </a>
@@ -358,7 +358,7 @@ const ProfilePage = ({
                           </ListDeletion>
                         </ListItemButton>
                         <ListItemButton>
-                          <NextLink href={`/lists/${list._id}`}>
+                          <NextLink href={`/lists/${slugify(list.name)}-${list._id}`} passHref>
                             <Button primary>{t('profile.lists.open')}</Button>
                           </NextLink>
                         </ListItemButton>

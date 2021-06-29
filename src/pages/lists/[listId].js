@@ -16,7 +16,7 @@ import PageTitle from '@components/PageTitle';
 import ListSettings from '@components/ListSettings';
 import ListDeletion from '@components/ListDeletion';
 import { Navbar, NavItem } from '@components/Navbar';
-import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
+import { absoluteUrl, uriToId, generateMediaUrl, slugify } from '@helpers/utils';
 import { getSessionUser, getListById } from '@helpers/database';
 import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
 import config from '~/config';
@@ -101,7 +101,9 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
         </Element>
         <Element marginBottom={12} display="flex">
           <Link href={`/api/lists/${list._id}/download`} passHref>
-            <Button primary>{t('common:buttons.download')}</Button>
+            <Button primary target="_blank">
+              {t('common:buttons.download')}
+            </Button>
           </Link>
         </Element>
         <Element marginY={12}>
@@ -203,7 +205,7 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
 export async function getServerSideProps(ctx) {
   const { req, res, query } = ctx;
   const session = await getSession(ctx);
-  const list = await getListById(query.listId);
+  const list = await getListById(query.listId.split('-').pop());
 
   if (!list) {
     // List not found
@@ -274,7 +276,7 @@ export async function getServerSideProps(ctx) {
     props: {
       list: JSON.parse(JSON.stringify(list)), // serialize the list
       isOwner,
-      shareLink: `${absoluteUrl(req)}/lists/${list._id}`,
+      shareLink: `${absoluteUrl(req)}/lists/${slugify(list.name)}-${list._id}`,
     },
   };
 }
