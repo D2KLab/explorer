@@ -3,6 +3,7 @@ import AdmZip from 'adm-zip';
 import { Duplex } from 'stream';
 import NextAuth from 'next-auth/client';
 import queryString from 'query-string';
+import json2csv from 'json2csv';
 
 import { getListById, getSessionUser } from '@helpers/database';
 import { absoluteUrl, uriToId, slugify } from '@helpers/utils';
@@ -21,6 +22,24 @@ const downloadImageAsBuffer = async (imageUrl) => {
   const arrayBuffer = await response.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   return buffer;
+};
+
+const flattenObject = (obj) => {
+  const flattenKeys = {};
+  for (const i in obj) {
+    if (!obj.hasOwnProperty(i)) continue;
+    if (typeof obj[i] === 'object') {
+      // flattenKeys[i] = obj[i];
+      const flatObject = flattenObject(obj[i]);
+      for (const j in flatObject) {
+        if (!flatObject.hasOwnProperty(j)) continue;
+        flattenKeys[`${i}.${j}`] = flatObject[j];
+      }
+    } else {
+      flattenKeys[i] = obj[i];
+    }
+  }
+  return flattenKeys;
 };
 
 export default withRequestValidation({
@@ -58,6 +77,9 @@ export default withRequestValidation({
 
   const zip = new AdmZip();
   const listFolder = slugify(list.name);
+  const results = [];
+  const flatResults = [];
+  const flatResultsKeys = new Set();
 
   for (let i = 0; i < list.items.length; i += 1) {
     const item = list.items[i];
@@ -86,6 +108,8 @@ export default withRequestValidation({
           base: route.uriBase,
         })}`;
 
+        results.push(result);
+
         // Add representations to the Zip
         for (let j = 0; j < result.representation.length; j += 1) {
           const imageBuffer = await downloadImageAsBuffer(result.representation[j].image);
@@ -97,6 +121,16 @@ export default withRequestValidation({
           }
         }
 
+        // Add CSV metadata to the Zip
+        const flatResult = flattenObject(result);
+        Object.keys(flatResult).forEach((key) => flatResultsKeys.add(key));
+        flatResults.push(flatResult);
+        const csv = json2csv.parse(flatResult, { header: true, fields: Object.keys(flatResult) });
+        zip.addFile(
+          path.join(listFolder, resultFolder, `${result.identifier}.csv`),
+          Buffer.alloc(csv.length, csv)
+        );
+
         // Add JSON metadata to the Zip
         const content = JSON.stringify(result, null, 2);
         zip.addFile(
@@ -107,10 +141,25 @@ export default withRequestValidation({
     }
   }
 
+  // Add all items to a single JSON file
+  const contentResults = JSON.stringify(results, null, 2);
+  zip.addFile(
+    path.join(listFolder, 'items.json'),
+    Buffer.alloc(contentResults.length, contentResults)
+  );
+
+  // Add all items to a single CSV file
+  const csvResults = json2csv.parse(flatResults, {
+    fields: Array.from(flatResultsKeys),
+    header: true,
+  });
+  zip.addFile(path.join(listFolder, 'items.csv'), Buffer.alloc(csvResults.length, csvResults));
+
   const willSendthis = zip.toBuffer();
   res.writeHead(200, {
     'Content-Type': 'application/zip',
     'Content-Length': willSendthis.length,
+    'Content-Disposition': `attachment; filename=${JSON.stringify(`${listFolder}.zip`)}`,
   });
   const readStream = bufferToStream(willSendthis);
   readStream.pipe(res);

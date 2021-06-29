@@ -25,6 +25,7 @@
     "formidable": "^1.2.2",
     "intersection-observer": "^0.11.0",
     "js-cookie": "^2.2.1",
+    "json2csv": "^5.0.6",
     "mongodb": "^3.6.3",
     "next": "^10.2.0",
     "next-auth": "^3.19.6",
