@@ -1,7 +1,6 @@
 import config from '~/config';
 
-const SPARQLQueryLink = ({ query, children }) => {
-  return (
+const SPARQLQueryLink = ({ query, children }) => (
     <a
       target="_blank"
       rel="noopener noreferrer"
@@ -10,6 +9,5 @@ const SPARQLQueryLink = ({ query, children }) => {
       {children}
     </a>
   );
-};
 
 export default SPARQLQueryLink;

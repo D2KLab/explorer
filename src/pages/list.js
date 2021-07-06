@@ -17,8 +17,9 @@ import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import breakpoints from '@styles/breakpoints';
 import SparqlClient from '@helpers/sparql';
 import { getQueryObject } from '@helpers/utils';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import config from '~/config';
-import { useTranslation } from '~/i18n';
 
 const Columns = styled.div`
   display: flex;
@@ -120,8 +121,7 @@ const ListDetailsPage = ({ items, debugSparqlQuery }) => {
             <h2>{t('common:listing.items', { count: filteredItems.length })}</h2>
             <Results>
               <ul>
-                {filteredItems.map((item) => {
-                  return (
+                {filteredItems.map((item) => (
                     <Item>
                       <Link href={getUseWithLink(useWith[0], item)} passHref>
                         <a>
@@ -130,8 +130,7 @@ const ListDetailsPage = ({ items, debugSparqlQuery }) => {
                         </a>
                       </Link>
                     </Item>
-                  );
-                })}
+                  ))}
               </ul>
             </Results>
             <Debug>
@@ -156,7 +155,7 @@ const ListDetailsPage = ({ items, debugSparqlQuery }) => {
   );
 };
 
-ListDetailsPage.getInitialProps = async ({ query, req }) => {
+export async function getServerSideProps({ query, req, locale }) {
   const route = config.routes[query.type];
   const items = [];
   let debugSparqlQuery = null;
@@ -183,9 +182,11 @@ ListDetailsPage.getInitialProps = async ({ query, req }) => {
   }
 
   return {
-    items,
-    debugSparqlQuery,
-    namespacesRequired: ['common'],
+    props: {
+      ...await serverSideTranslations(locale, ['common']),
+      items,
+      debugSparqlQuery,
+    }
   };
 };
 

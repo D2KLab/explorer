@@ -17,12 +17,14 @@ import Debug from '@components/Debug';
 import PageTitle from '@components/PageTitle';
 import SaveButton from '@components/SaveButton';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
+import GraphLink from '@components/GraphLink';
 import MetadataList from '@components/MetadataList';
 import breakpoints from '@styles/breakpoints';
 import { uriToId, absoluteUrl, generateMediaUrl } from '@helpers/utils';
 import { findRouteByRDFType, getEntityMainLabel } from '@helpers/explorer';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import config from '~/config';
-import { useTranslation } from '~/i18n';
 
 const Columns = styled.div`
   display: flex;
@@ -72,7 +74,7 @@ const LegalBody = styled.small`
 `;
 
 const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
-  const { t, i18n } = useTranslation(['common']);
+  const { t, i18n } = useTranslation(['common', 'project']);
   const [session] = NextAuth.useSession();
   const { query } = useRouter();
   const [isItemSaved, setIsItemSaved] = useState(inList);
@@ -243,7 +245,7 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   );
 };
 
-CollectionDetailsPage.getInitialProps = async ({ req, res, query }) => {
+export async function getServerSideProps({ req, res, query, locale }) {
   const { result, inList, debugSparqlQuery } = await (
     await fetch(`${absoluteUrl(req)}/api/entity?${queryString.stringify(query)}`, {
       headers:
@@ -260,10 +262,12 @@ CollectionDetailsPage.getInitialProps = async ({ req, res, query }) => {
   }
 
   return {
-    result,
-    inList,
-    debugSparqlQuery,
-    namespacesRequired: ['common'],
+    props: {
+      ...await serverSideTranslations(locale, ['common', 'project']),
+      result,
+      inList,
+      debugSparqlQuery,
+    }
   };
 };
 

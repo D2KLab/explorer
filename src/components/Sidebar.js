@@ -9,7 +9,7 @@ import Button from '@components/Button';
 import Input from '@components/Input';
 import useDebounce from '@helpers/useDebounce';
 import useDidMountEffect from '@helpers/useDidMountEffect';
-import { useTranslation } from '~/i18n';
+import { useTranslation }from 'next-i18next';
 import config from '~/config';
 
 const getValue = (opts, val) => opts.find((o) => o.value === val);
@@ -225,8 +225,7 @@ const Sidebar = ({ className, onSearch, submitOnChange = false, type, filters, q
     setFields(clearedFields);
   };
 
-  const renderSelectedOption = (item) => {
-    return (
+  const renderSelectedOption = (item) => (
       <>
         {item.label}{' '}
         {config.plugins.skosmos && (
@@ -245,7 +244,6 @@ const Sidebar = ({ className, onSearch, submitOnChange = false, type, filters, q
         )}
       </>
     );
-  };
 
   const renderFilter = (filter) => {
     const field = fields[`field_filter_${filter.id}`];
@@ -292,8 +290,7 @@ const Sidebar = ({ className, onSearch, submitOnChange = false, type, filters, q
     );
   };
 
-  const renderOption = (filter) => {
-    return (
+  const renderOption = (filter) => (
       <Option key={filter.id}>
         <span>{t(`project:filters.${filter.id}`, filter.label)}</span>
         <StyledSwitch
@@ -313,7 +310,6 @@ const Sidebar = ({ className, onSearch, submitOnChange = false, type, filters, q
         />
       </Option>
     );
-  };
 
   // Execute search when fields change
   const debouncedFields = useDebounce(fields, 500);

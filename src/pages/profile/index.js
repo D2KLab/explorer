@@ -23,7 +23,8 @@ import { ProviderButton } from '@components/ProviderButton';
 import breakpoints from '@styles/breakpoints';
 import { absoluteUrl, slugify } from '@helpers/utils';
 import { getSessionUser, getUserLists, getUserAccounts } from '@helpers/database';
-import { useTranslation, Trans } from '~/i18n';
+import { useTranslation, Trans } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const StyledDialogDisclosure = styled(DialogDisclosure)`
   appearance: none;
@@ -177,8 +178,7 @@ const ProfilePage = ({
     Router.reload();
   };
 
-  const renderOperations = () => {
-    return (
+  const renderOperations = () => (
       <Element marginY={24} display="flex" flexDirection="column">
         <h3 style={{ color: '#dc3535', fontWeight: 'bold' }}>{t('profile.deleteAccount.title')}</h3>
         <DialogDisclosure
@@ -232,10 +232,8 @@ const ProfilePage = ({
         </StyledDialogBackdrop>
       </Element>
     );
-  };
 
-  const renderAccounts = () => {
-    return (
+  const renderAccounts = () => (
       <>
         <Element marginBottom={24}>
           <h3>{t('profile.connectedAccounts.title')}</h3>
@@ -279,7 +277,6 @@ const ProfilePage = ({
         </Element>
       </>
     );
-  };
 
   const PlaceholderAvatar = <Avatar src="/images/avatar-placeholder.png" alt="" />;
 
@@ -396,6 +393,7 @@ export async function getServerSideProps(ctx) {
 
   return {
     props: {
+      ...await serverSideTranslations(ctx.locale, ['common', 'project']),
       providers: await getProviders(ctx),
       csrfToken: await getCsrfToken(ctx),
       session,

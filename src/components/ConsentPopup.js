@@ -6,7 +6,7 @@ import Switch from 'react-switch';
 
 import Element from '@components/Element';
 import Button from '@components/Button';
-import { useTranslation } from '~/i18n';
+import { useTranslation } from 'next-i18next';
 
 const StyledDialogBackdrop = styled(DialogBackdrop)`
   width: 100%;

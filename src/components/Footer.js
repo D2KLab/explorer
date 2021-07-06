@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import breakpoints from '@styles/breakpoints';
-import { useTranslation } from '~/i18n';
+import { useTranslation } from 'next-i18next';
 import config from '~/config';
 
 /**

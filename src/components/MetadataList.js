@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Metadata from '@components/Metadata';
 import { uriToId } from '@helpers/utils';
 import { findRouteByRDFType } from '@helpers/explorer';
-import { useTranslation } from '~/i18n';
+import { useTranslation } from 'next-i18next';
 import config from '~/config';
 import theme from '~/theme';
 

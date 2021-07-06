@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import NextAuth from 'next-auth/client';
-import DefaultErrorPage from 'next/error';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import queryString from 'query-string';
 import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
 import { saveAs } from 'file-saver';
@@ -12,6 +12,7 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import Cookies from 'js-cookie';
 
+import NotFoundPage from '@pages/404';
 import Header from '@components/Header';
 import Footer from '@components/Footer';
 import Layout from '@components/Layout';
@@ -28,8 +29,8 @@ import SaveButton from '@components/SaveButton';
 import breakpoints from '@styles/breakpoints';
 import { absoluteUrl, generateMediaUrl } from '@helpers/utils';
 import { getEntityMainLabel } from '@helpers/explorer';
+import { useTranslation } from 'next-i18next';
 import config from '~/config';
-import { useTranslation } from '~/i18n';
 
 const Columns = styled.div`
   display: flex;
@@ -225,7 +226,7 @@ const LegalBody = styled.small`
 `;
 
 const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
-  const { t, i18n } = useTranslation(['common']);
+  const { t, i18n } = useTranslation(['common', 'project']);
   const router = useRouter();
   const { query } = router;
   const [session] = NextAuth.useSession();
@@ -368,8 +369,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
     virtualLoomMenu.show(e);
   });
 
-  const customRenderThumb = (children) => {
-    return Carousel.defaultProps.renderThumbs(children).concat(
+  const customRenderThumb = (children) => Carousel.defaultProps.renderThumbs(children).concat(
       <Element key="virtual-loom">
         <VirtualLoomButton onClick={virtualLoomOnClick}>
           <img src="/images/virtual-loom-button.png" alt="Virtual Loom" />
@@ -389,7 +389,6 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
         </StyledMenu>
       </Element>
     );
-  };
 
   const [isItemSaved, setIsItemSaved] = useState(inList);
   const onItemSaveChange = (status) => {
@@ -625,8 +624,8 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   );
 };
 
-GalleryDetailsPage.getInitialProps = async ({ req, res, query }) => {
-  const { result, inList, debugSparqlQuery } = await (
+export async function getServerSideProps({ req, res, query, locale }) {
+  const { result = null, inList = false, debugSparqlQuery } = await (
     await fetch(`${absoluteUrl(req)}/api/entity?${queryString.stringify(query)}`, {
       headers:
         req && req.headers
@@ -642,10 +641,12 @@ GalleryDetailsPage.getInitialProps = async ({ req, res, query }) => {
   }
 
   return {
-    result,
-    inList,
-    debugSparqlQuery,
-    namespacesRequired: ['common'],
+    props: {
+      ...await serverSideTranslations(locale, ['common', 'project']),
+      result,
+      inList,
+      debugSparqlQuery,
+    }
   };
 };
 

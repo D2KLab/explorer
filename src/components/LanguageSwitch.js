@@ -2,9 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
 import { DownArrow } from '@styled-icons/boxicons-solid/DownArrow';
+import { useRouter } from 'next/router';
 
 import Element from '@components/Element';
-import { useTranslation } from '~/i18n';
+import { useTranslation } from 'next-i18next';
 import config from '~/config';
 
 /**
@@ -59,6 +60,7 @@ const StyledDownArrow = styled(DownArrow)`
 const LanguageSwitch = ({ className }) => {
   const menu = useMenuState();
   const { i18n } = useTranslation();
+  const router = useRouter();
 
   return (
     <Element className={className}>
@@ -73,7 +75,7 @@ const LanguageSwitch = ({ className }) => {
             key={langKey}
             onClick={() => {
               menu.hide();
-              i18n.changeLanguage(langKey);
+              router.push(router.asPath, undefined, { locale: langKey });
             }}
           >
             {langLabel}

@@ -13,6 +13,7 @@ import PageTitle from '@components/PageTitle';
 import Button from '@components/Button';
 import { getCaptures, getCaptureEvents } from '@helpers/database';
 import breakpoints from '@styles/breakpoints';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Container = styled.div`
   display: flex;
@@ -112,15 +113,13 @@ const RRWebPage = ({ captures, selectedCapture, events }) => {
     Router.reload();
   };
 
-  const renderNavigation = () => {
-    return captures.map((capture) => (
+  const renderNavigation = () => captures.map((capture) => (
       <Anchor selected={capture.capture_session_id === query.id}>
         <a href={`/rrweb?id=${encodeURIComponent(capture.capture_session_id)}`}>
           {capture.capture_session_id}
         </a>
       </Anchor>
     ));
-  };
 
   return (
     <Layout>
@@ -174,18 +173,18 @@ const RRWebPage = ({ captures, selectedCapture, events }) => {
   );
 };
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps({ query, locale }) {
   const captures = await getCaptures();
   const events = query.id ? await getCaptureEvents(query.id) : [];
 
   return {
     props: {
+      ...await serverSideTranslations(locale, ['common', 'project']),
       captures: JSON.parse(JSON.stringify(captures)), // serialize captures list
       selectedCapture: JSON.parse(
         JSON.stringify(captures.find((capture) => capture.capture_session_id === query.id) || null)
       ),
       events,
-      namespacesRequired: ['common'],
     },
   };
 }

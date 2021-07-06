@@ -4,7 +4,7 @@ import { Button as ReakitButton } from 'reakit';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
 
 import SearchInput from '@components/SearchInput';
-import { useTranslation } from '~/i18n';
+import { useTranslation } from 'next-i18next';
 
 const Form = styled.div`
   display: flex;

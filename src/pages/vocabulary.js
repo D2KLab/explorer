@@ -7,6 +7,8 @@ import 'intersection-observer';
 import { ChevronRight } from '@styled-icons/entypo/ChevronRight';
 import { ChevronDown } from '@styled-icons/entypo/ChevronDown';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
+import { useTranslation, Trans } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -22,7 +24,6 @@ import breakpoints from '@styles/breakpoints';
 import SparqlClient from '@helpers/sparql';
 import { getQueryObject } from '@helpers/utils';
 import config from '~/config';
-import { useTranslation, Trans } from '~/i18n';
 
 const Hero = styled.div`
   width: 100%;
@@ -191,11 +192,9 @@ const cleanupItem = (obj) =>
     })
   );
 
-const getResultItems = (result) => {
-  return (Array.isArray(result.items) ? result.items : [result.items].filter((x) => x)).map(
+const getResultItems = (result) => (Array.isArray(result.items) ? result.items : [result.items].filter((x) => x)).map(
     cleanupItem
   );
-};
 
 const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
   const { t } = useTranslation(['common', 'project']);
@@ -240,15 +239,13 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
     return { pathname: `/${withConfig.route}`, query: withQuery };
   };
 
-  const getItemsCount = (items, start) => {
-    return items.reduce((acc, cur) => {
+  const getItemsCount = (items, start) => items.reduce((acc, cur) => {
       acc += cur.count || 0;
       if (Array.isArray(cur.items)) {
         acc += getItemsCount(cur.items, 0);
       }
       return acc;
     }, start);
-  };
 
   const renderResult = (result) => {
     const items = getResultItems(result);
@@ -410,7 +407,7 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
   );
 };
 
-export async function getServerSideProps({ query, req }) {
+export async function getServerSideProps({ query, req, locale }) {
   const route = config.routes[query.type];
 
   const debugSparqlQuery = {};
@@ -453,6 +450,7 @@ export async function getServerSideProps({ query, req }) {
 
   return {
     props: {
+      ...await serverSideTranslations(locale, ['common', 'project']),
       results,
       featured,
       debugSparqlQuery,

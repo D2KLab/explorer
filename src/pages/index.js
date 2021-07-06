@@ -17,7 +17,8 @@ import SearchInput from '@components/SearchInput';
 import PageTitle from '@components/PageTitle';
 import Spinner from '@components/Spinner';
 import breakpoints from '@styles/breakpoints';
-import { useTranslation } from '~/i18n';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import config from '~/config';
 
 const Hero = styled.div`
@@ -302,15 +303,10 @@ const HomePage = () => {
     xhr.open('POST', '/api/image-search');
     xhr.send(formData);
   }, []);
-  const { acceptedFiles, getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
   });
-  const files = acceptedFiles.map((file) => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
-    </li>
-  ));
 
   const imageDragZone = useRef();
   useEffect(() => {
@@ -369,7 +365,7 @@ const HomePage = () => {
                         <input
                           type="radio"
                           checked={similarity === 'visual'}
-                          onClick={() => setSimilarity('visual')}
+                          onChange={() => setSimilarity('visual')}
                         />
                         Visually similar images
                       </label>
@@ -377,7 +373,7 @@ const HomePage = () => {
                         <input
                           type="radio"
                           checked={similarity === 'semantic'}
-                          onClick={() => setSimilarity('semantic')}
+                          onChange={() => setSimilarity('semantic')}
                         />
                         Similar works
                       </label>
@@ -431,10 +427,10 @@ const HomePage = () => {
   );
 };
 
-HomePage.getInitialProps = () => {
-  return {
-    namespacesRequired: ['common', 'home'],
-  };
-};
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...await serverSideTranslations(locale, ['common', 'home']),
+  },
+});
 
 export default HomePage;

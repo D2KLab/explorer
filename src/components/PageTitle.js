@@ -1,7 +1,7 @@
 import Head from 'next/head';
 
+import { useTranslation } from 'next-i18next';
 import config from '~/config';
-import { useTranslation } from '~/i18n';
 
 const PageTitle = ({ title }) => {
   const { t } = useTranslation('project');

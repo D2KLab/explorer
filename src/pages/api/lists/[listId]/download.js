@@ -8,6 +8,7 @@ import json2csv from 'json2csv';
 import { getListById, getSessionUser } from '@helpers/database';
 import { absoluteUrl, uriToId, slugify } from '@helpers/utils';
 import { withRequestValidation } from '@helpers/api';
+// eslint-disable-next-line import/no-named-default
 import { default as cfg } from '~/config';
 
 const bufferToStream = (buffer) => {
@@ -26,12 +27,15 @@ const downloadImageAsBuffer = async (imageUrl) => {
 
 const flattenObject = (obj) => {
   const flattenKeys = {};
+  // eslint-disable-next-line no-restricted-syntax
   for (const i in obj) {
+    // eslint-disable-next-line no-prototype-builtins, no-continue
     if (!obj.hasOwnProperty(i)) continue;
     if (typeof obj[i] === 'object') {
-      // flattenKeys[i] = obj[i];
       const flatObject = flattenObject(obj[i]);
+      // eslint-disable-next-line no-restricted-syntax
       for (const j in flatObject) {
+        // eslint-disable-next-line no-prototype-builtins, no-continue
         if (!flatObject.hasOwnProperty(j)) continue;
         flattenKeys[`${i}.${j}`] = flatObject[j];
       }

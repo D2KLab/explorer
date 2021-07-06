@@ -1,19 +1,9 @@
-const { nextI18NextRewrites } = require('next-i18next/rewrites');
-
+const { i18n } = require('./next-i18next.config');
 const config = require('./config');
 
-const localeSubpaths = Object.keys(config.search.languages).reduce((langs, l) => {
-  langs[l] = l;
-  return langs;
-}, {});
-
 module.exports = {
-  publicRuntimeConfig: {
-    localeSubpaths,
-  },
-  rewrites: async () => {
-    return [
-      ...nextI18NextRewrites(localeSubpaths),
+  i18n,
+  rewrites: async () => [
       ...Object.entries(config.routes).flatMap(([routeName, route]) => {
         const rewrites = [
           {
@@ -29,6 +19,5 @@ module.exports = {
         }
         return rewrites;
       }),
-    ];
-  },
+    ],
 };

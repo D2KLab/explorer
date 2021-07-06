@@ -3,7 +3,7 @@
   "env": {
     "browser": true
   },
-  "extends": ["airbnb", "prettier", "prettier/react"],
+  "extends": ["airbnb", "prettier"],
   "plugins": ["import"],
   "settings": {
     "import/resolver": {

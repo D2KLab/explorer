@@ -19,8 +19,9 @@ import { Navbar, NavItem } from '@components/Navbar';
 import { absoluteUrl, uriToId, generateMediaUrl, slugify } from '@helpers/utils';
 import { getSessionUser, getListById } from '@helpers/database';
 import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
+import { useTranslation, Trans } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import config from '~/config';
-import { useTranslation, Trans } from '~/i18n';
 
 const StyledMedia = styled(Media)`
   margin-left: var(--card-margin);
@@ -37,8 +38,7 @@ const Results = styled.div`
 const ListsPage = ({ isOwner, list, shareLink, error }) => {
   const { t } = useTranslation('common');
 
-  const renderListItems = () => {
-    return (
+  const renderListItems = () => (
       <Element marginY={24}>
         <h2>{t('list.items')}</h2>
         <Element marginY={12}>
@@ -46,9 +46,7 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
             <Results>
               {list.items.map((item) => {
                 const [, route] =
-                  Object.entries(config.routes).find(([routeName]) => {
-                    return routeName === item.route;
-                  }) || [];
+                  Object.entries(config.routes).find(([routeName]) => routeName === item.route) || [];
 
                 if (!route) {
                   return null;
@@ -87,7 +85,6 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
         </Element>
       </Element>
     );
-  };
 
   const renderOperations = () => {
     if (!isOwner) {
@@ -233,9 +230,7 @@ export async function getServerSideProps(ctx) {
   for (let i = 0; i < list.items.length; i += 1) {
     const item = list.items[i];
     const [routeName, route] =
-      Object.entries(config.routes).find(([rName]) => {
-        return rName === item.type;
-      }) || [];
+      Object.entries(config.routes).find(([rName]) => rName === item.type) || [];
 
     if (route) {
       const entity = await (
@@ -274,6 +269,7 @@ export async function getServerSideProps(ctx) {
 
   return {
     props: {
+      ...await serverSideTranslations(ctx.locale, ['common']),
       list: JSON.parse(JSON.stringify(list)), // serialize the list
       isOwner,
       shareLink: `${absoluteUrl(req)}/lists/${slugify(list.name)}-${list._id}`,

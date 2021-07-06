@@ -9,7 +9,7 @@ import Router from 'next/router';
 
 import Element from '@components/Element';
 import Spinner from '@components/Spinner';
-import { useTranslation, Trans } from '~/i18n';
+import { useTranslation, Trans } from 'next-i18next';
 
 /**
  * Profile button.

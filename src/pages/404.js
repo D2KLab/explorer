@@ -6,7 +6,7 @@ import Footer from '@components/Footer';
 import Layout from '@components/Layout';
 import Body from '@components/Body';
 import PageTitle from '@components/PageTitle';
-import { useTranslation } from '~/i18n';
+import { useTranslation } from 'next-i18next';
 
 const Container = styled.div`
   padding: 5em 0;

@@ -7,7 +7,7 @@ import Autosuggest from 'react-autosuggest';
 import Spinner from '@components/Spinner';
 import { uriToId, generateMediaUrl } from '@helpers/utils';
 import { findRouteByRDFType, getEntityMainLabel } from '@helpers/explorer';
-import { useTranslation } from '~/i18n';
+import { useTranslation } from 'next-i18next';
 import config from '~/config';
 
 const SuggestionContent = styled.span`
@@ -150,8 +150,7 @@ const SearchInput = ({ className, placeholder, ariaLabel = 'Search input', ...pr
     );
   };
 
-  const renderSuggestionsContainer = ({ containerProps, children }) => {
-    return (
+  const renderSuggestionsContainer = ({ containerProps, children }) => (
       <div {...containerProps}>
         {children}
         <div className="react-autosuggest__suggestion">
@@ -167,7 +166,6 @@ const SearchInput = ({ className, placeholder, ariaLabel = 'Search input', ...pr
         </div>
       </div>
     );
-  };
 
   const onChange = (event, { newValue }) => {
     setInputValue(newValue);

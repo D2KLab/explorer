@@ -7,7 +7,7 @@ import { Heart as HeartSolidIcon } from '@styled-icons/boxicons-solid/Heart';
 import Button from '@components/Button';
 import Input from '@components/Input';
 import Element from '@components/Element';
-import { useTranslation } from '~/i18n';
+import { useTranslation } from 'next-i18next';
 
 const StyledDialog = styled(Dialog)`
   z-index: 2000;

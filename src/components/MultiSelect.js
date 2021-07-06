@@ -41,9 +41,7 @@ const Container = styled.div`
   }
 `;
 
-const defaultRenderSelectedOption = (item) => {
-  return <>{item.label}</>;
-};
+const defaultRenderSelectedOption = (item) => <>{item.label}</>;
 
 const MultiSelect = ({
   className,
@@ -65,9 +63,7 @@ const MultiSelect = ({
     }
   };
 
-  const getValues = () => {
-    return Array.isArray(value) ? value : [value].filter((x) => x);
-  };
+  const getValues = () => Array.isArray(value) ? value : [value].filter((x) => x);
 
   const onSelectChange = (newValue /* meta */) => {
     const values = getValues();

@@ -31,7 +31,8 @@ import useOnScreen from '@helpers/useOnScreen';
 import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
 import { search, getFilters } from '@pages/api/search';
 import breakpoints, { sizes } from '@styles/breakpoints';
-import { useTranslation } from '~/i18n';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import config from '~/config';
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
@@ -152,7 +153,7 @@ const ResultPage = styled.h3`
 
 const BrowsePage = ({ initialData, similarityEntity }) => {
   const { req, query, pathname } = useRouter();
-  const { t, i18n } = useTranslation(['common', 'search']);
+  const { t, i18n } = useTranslation(['common', 'search', 'project']);
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [isPageLoading, setIsPageLoading] = useState(false);
@@ -197,7 +198,7 @@ const BrowsePage = ({ initialData, similarityEntity }) => {
   totalPages = Math.ceil(totalResults / PAGE_SIZE);
 
   if (typeof window !== 'undefined') {
-    const debouncedHandleResize = useDebounce(function handleResize() {
+    const debouncedHandleResize = useDebounce(() => {
       setSidebarCollapsed(window.innerWidth <= sizes.mobile);
     }, 1000);
     useEffect(() => {
@@ -367,8 +368,7 @@ const BrowsePage = ({ initialData, similarityEntity }) => {
     value: similarity,
   }));
 
-  const renderResults = (results) => {
-    return results.map((result) => {
+  const renderResults = (results) => results.map((result) => {
       const mainImage = getEntityMainImage(result, { route });
       const label = getEntityMainLabel(result, { route, language: i18n.language });
       const subtitle = typeof route.subtitleFunc === 'function' ? route.subtitleFunc(result) : null;
@@ -396,7 +396,6 @@ const BrowsePage = ({ initialData, similarityEntity }) => {
         </Link>
       );
     });
-  };
 
   const onScrollToPage = (pageIndex) => {
     if (initialPage + pageIndex !== query.page) {
@@ -414,9 +413,7 @@ const BrowsePage = ({ initialData, similarityEntity }) => {
     }
   };
 
-  const renderEmptyResults = () => {
-    return <p>{t('search:labels.noResults')}</p>;
-  };
+  const renderEmptyResults = () => <p>{t('search:labels.noResults')}</p>;
 
   Router.events.on('routeChangeStart', () => setIsPageLoading(true));
   Router.events.on('routeChangeComplete', () => setIsPageLoading(false));
@@ -625,7 +622,7 @@ const BrowsePage = ({ initialData, similarityEntity }) => {
   );
 };
 
-export async function getServerSideProps({ req, query }) {
+export async function getServerSideProps({ req, query, locale }) {
   const filters = await getFilters(query);
   const searchData = await search(query);
 
@@ -652,6 +649,7 @@ export async function getServerSideProps({ req, query }) {
 
   return {
     props: {
+      ...await serverSideTranslations(locale, ['common', 'search', 'project']),
       initialData: {
         results: searchData.results,
         totalResults: searchData.totalResults,
@@ -659,7 +657,6 @@ export async function getServerSideProps({ req, query }) {
         filters,
       },
       similarityEntity: (similarityEntity && similarityEntity.result) || null,
-      namespacesRequired: ['common', 'search'],
     },
   };
 }

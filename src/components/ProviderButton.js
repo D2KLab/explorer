@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import Button from '@components/Button';
-import { useTranslation } from '~/i18n';
+import { useTranslation } from 'next-i18next';
 
 export const BaseButton = styled(Button)`
   color: #fff;

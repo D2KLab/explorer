@@ -47,8 +47,7 @@ const StyledSpinner = styled(Spinner)`
   margin-right: 0.5rem;
 `;
 
-const Button = forwardRef(({ loading, primary, secondary, href, children, ...props }, ref) => {
-  return (
+const Button = forwardRef(({ loading, primary, secondary, href, children, ...props }, ref) => (
     <Container
       {...props}
       as={href ? 'a' : null}
@@ -61,7 +60,6 @@ const Button = forwardRef(({ loading, primary, secondary, href, children, ...pro
       {loading && <StyledSpinner color="#fff" size={24} />}
       {children}
     </Container>
-  );
-});
+  ));
 
 export default Button;

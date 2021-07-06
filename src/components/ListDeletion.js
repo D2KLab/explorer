@@ -5,7 +5,7 @@ import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit
 
 import Element from '@components/Element';
 import Button from '@components/Button';
-import { useTranslation, Trans } from '~/i18n';
+import { useTranslation, Trans } from 'next-i18next';
 
 const StyledDialogBackdrop = styled(DialogBackdrop)`
   width: 100%;

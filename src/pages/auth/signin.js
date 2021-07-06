@@ -9,7 +9,8 @@ import Element from '@components/Element';
 import PageTitle from '@components/PageTitle';
 import Title from '@components/Title';
 import { ProviderButton } from '@components/ProviderButton';
-import { useTranslation } from '~/i18n';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const SignInPage = ({ providers, csrfToken }) => {
   const { t } = useTranslation('common');
@@ -29,16 +30,14 @@ const SignInPage = ({ providers, csrfToken }) => {
           <Content>
             <Element display="flex" flexDirection="column">
               {providers &&
-                Object.values(providers).map((provider) => {
-                  return (
+                Object.values(providers).map((provider) => (
                     <Element key={provider.name} marginY={12}>
                       <form action={provider.signinUrl} method="POST">
                         <input type="hidden" name="csrfToken" defaultValue={csrfToken} />
                         <ProviderButton provider={provider} type="submit" />
                       </form>
                     </Element>
-                  );
-                })}
+                  ))}
             </Element>
           </Content>
         </Element>
@@ -53,6 +52,7 @@ export default SignInPage;
 export async function getServerSideProps(ctx) {
   return {
     props: {
+      ...await serverSideTranslations(ctx.locale, ['common']),
       providers: await getProviders(ctx),
       csrfToken: await getCsrfToken(ctx),
     },

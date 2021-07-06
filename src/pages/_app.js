@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import NextAuth from 'next-auth/client';
 import App from 'next/app';
 import { withRouter } from 'next/router';
@@ -11,9 +10,9 @@ import Cookies from 'js-cookie';
 import NProgress from '@components/NProgress';
 import ConsentPopup from '@components/ConsentPopup';
 import RRWebRecorder from '@components/RRWebRecorder';
+import { appWithTranslation } from 'next-i18next';
 import theme from '~/theme';
 import config from '~/config';
-import { appWithTranslation } from '~/i18n';
 
 const handleRouteChange = (url) => {
   if (typeof window?.gtag !== 'undefined' && typeof config.analytics?.id !== 'undefined') {

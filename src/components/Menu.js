@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 import LanguageSwitch from '@components/LanguageSwitch';
 import breakpoints from '@styles/breakpoints';
+import { useTranslation } from 'next-i18next';
 import config from '~/config';
-import { useTranslation } from '~/i18n';
 
 /**
  * Side menu in use with a Burger button

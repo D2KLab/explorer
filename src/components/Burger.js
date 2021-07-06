@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import breakpoints from '@styles/breakpoints';
-import { useTranslation } from '~/i18n';
+import { useTranslation } from 'next-i18next';
 
 /**
  * Burger menu.

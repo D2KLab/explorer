@@ -6,7 +6,7 @@ import SearchBox from '@components/SearchBox';
 import LanguageSwitch from '@components/LanguageSwitch';
 import ProfileButton from '@components/ProfileButton';
 import { OpenInNew } from '@styled-icons/material/OpenInNew';
-import { useTranslation } from '~/i18n';
+import { useTranslation } from 'next-i18next';
 import config from '~/config';
 
 /**

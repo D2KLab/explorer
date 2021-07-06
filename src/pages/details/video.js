@@ -26,7 +26,8 @@ import breakpoints from '@styles/breakpoints';
 import { absoluteUrl, getQueryObject, uriToId } from '@helpers/utils';
 import SparqlClient from '@helpers/sparql';
 import { getEntityMainLabel } from '@helpers/explorer';
-import { useTranslation } from '~/i18n';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import config from '~/config';
 
 const Columns = styled.div`
@@ -311,7 +312,7 @@ const VideoDetailsPage = ({
   captions,
   subtitles,
 }) => {
-  const { t, i18n } = useTranslation(['common']);
+  const { t, i18n } = useTranslation(['common', 'project']);
 
   if (!result) {
     return <DefaultErrorPage statusCode={404} title={t('common:errors.resultNotFound')} />;
@@ -357,9 +358,6 @@ const VideoDetailsPage = ({
       setVideoPlayedSeconds(seconds);
     }
   };
-
-  // Remove '00:' at start if all segments are not hours long
-  const removeZeroes = videoSegments.every((segment) => segment.end.startsWith('00:'));
 
   const renderVideoSegment = (segment) => {
     const segmentTitle = (Array.isArray(segment.title)
@@ -434,7 +432,7 @@ const VideoDetailsPage = ({
   const tab = useTabState();
 
   useEffect(() => {
-    const debouncedHandleResize = debounce(function handleResize() {
+    const debouncedHandleResize = debounce(() => {
       updateFaceRectangles();
     }, 1000);
     window.addEventListener('resize', debouncedHandleResize);
@@ -465,8 +463,7 @@ const VideoDetailsPage = ({
         {hasAnnotations && (
           <StyledTabPanel {...tab}>
             <ul>
-              {annotations.map((ann) => {
-                return (
+              {annotations.map((ann) => (
                   <Segment key={ann['@id']}>
                     <SegmentButton onClick={() => seekVideoTo(ann.startSeconds)}>
                       <SegmentTime>
@@ -480,15 +477,13 @@ const VideoDetailsPage = ({
                       </p>
                     </SegmentText>
                   </Segment>
-                );
-              })}
+                ))}
             </ul>
           </StyledTabPanel>
         )}
         {hasFaceTracks && (
           <StyledTabPanel {...tab}>
-            {faceTracks.map((track) => {
-              return (
+            {faceTracks.map((track) => (
                 <Segment key={track.track_id}>
                   <SegmentButton onClick={() => seekVideoTo(track.start_npt)}>
                     <SegmentTime>
@@ -505,14 +500,12 @@ const VideoDetailsPage = ({
                     </p>
                   </SegmentText>
                 </Segment>
-              );
-            })}
+              ))}
           </StyledTabPanel>
         )}
         {hasCaptions && (
           <StyledTabPanel {...tab}>
-            {captions.map((caption) => {
-              return (
+            {captions.map((caption) => (
                 <Segment key={caption['@id']}>
                   <SegmentButton onClick={() => seekVideoTo(caption.startSeconds)}>
                     <SegmentTime>
@@ -524,8 +517,7 @@ const VideoDetailsPage = ({
                     <p>{caption.text}</p>
                   </SegmentText>
                 </Segment>
-              );
-            })}
+              ))}
           </StyledTabPanel>
         )}
       </Element>
@@ -723,7 +715,7 @@ const VideoDetailsPage = ({
   );
 };
 
-VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
+export async function getServerSideProps({ req, res, query, locale }) {
   const { result, inList, debugSparqlQuery } = await (
     await fetch(`${absoluteUrl(req)}/api/entity?${queryString.stringify(query)}`, {
       headers:
@@ -740,7 +732,6 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
   let faceTracks = [];
   const annotations = [];
   const captions = [];
-  let producerSummary = null;
   const subtitles = [];
 
   if (result) {
@@ -861,16 +852,18 @@ VideoDetailsPage.getInitialProps = async ({ req, res, query }) => {
   }
 
   return {
-    result,
-    inList,
-    mediaUrl,
-    videoSegments,
-    debugSparqlQuery,
-    faceTracks,
-    annotations,
-    captions,
-    subtitles,
-    namespacesRequired: ['common'],
+    props: {
+      ...await serverSideTranslations(locale, ['common', 'project']),
+      result,
+      inList,
+      mediaUrl,
+      videoSegments,
+      debugSparqlQuery,
+      faceTracks,
+      annotations,
+      captions,
+      subtitles,
+    }
   };
 };
 
