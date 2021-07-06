@@ -266,6 +266,7 @@ const HomePage = () => {
   const { t } = useTranslation(['common', 'home', 'project']);
   const router = useRouter();
   const [processStatus, setProcessStatus] = useState(null);
+  const [processError, setProcessError] = useState(null);
   const [uploadPercent, setUploadPercent] = useState(0);
   const [similarity, setSimilarity] = useState('visual');
 
@@ -273,6 +274,7 @@ const HomePage = () => {
   const dialog = useDialogState();
   const onDrop = useCallback((acceptedFiles) => {
     setProcessStatus('uploading');
+    setProcessError(null);
 
     const image = acceptedFiles[0];
     const formData = new FormData();
@@ -286,7 +288,6 @@ const HomePage = () => {
       }
     };
     xhr.onloadend = () => {
-      setProcessStatus(null);
       if (xhr.status === 200) {
         const { visualUris, semanticUris } = xhr.response;
         const params = new URLSearchParams();
@@ -296,6 +297,9 @@ const HomePage = () => {
         params.append('semantic_uris', semanticUris);
         router.push(`/browse?${params.toString()}`);
       } else {
+        const { error } = xhr.response;
+        setProcessStatus(null);
+        setProcessError(error.message);
         console.log(`Upload error ${xhr.status}`);
       }
     };
@@ -393,6 +397,7 @@ const HomePage = () => {
                             {processStatus === 'uploading' && <>({uploadPercent}%)</>}
                           </>
                         )}
+                        {processError !== null && <span style={{ color: '#dc3545' }}>{processError}</span>}
                       </Dropzone>
                     </Element>
                   </StyledUploadDialog>
