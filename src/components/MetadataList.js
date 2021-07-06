@@ -1,7 +1,5 @@
-import { QuestionCircle } from '@styled-icons/fa-solid/QuestionCircle';
-import { Tooltip, TooltipReference, useTooltipState } from 'reakit/Tooltip';
-import styled from 'styled-components';
 import Metadata from '@components/Metadata';
+import Prediction from '@components/Prediction';
 import { uriToId } from '@helpers/utils';
 import { findRouteByRDFType } from '@helpers/explorer';
 import { useTranslation } from 'next-i18next';
@@ -12,27 +10,13 @@ import theme from '~/theme';
  * Metadata list.
  */
 
-const StyledTooltip = styled(Tooltip)`
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  color: rgb(255, 255, 255);
-  background-color: rgba(33, 33, 33, 0.9);
-  font-size: 0.8em;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  z-index: 999;
-`;
-
 function generateValue(
   currentRouteName,
   currentRoute,
   metadata,
   metaName,
   metaIndex,
-  meta,
-  tooltipPrediction
+  meta
 ) {
   // Ignore empty meta objects
   if (typeof meta === 'object' && Object.keys(meta).length === 0) {
@@ -89,34 +73,13 @@ function generateValue(
 
   const isPredicted = typeof meta.score !== 'undefined';
 
-  function renderPrediction(score) {
-    return (
-      <>
-      {isPredicted && (
-        <>
-          {' '}
-          <small style={isPredicted ? { color: theme.colors.prediction, fontStyle: 'italic' } : {}}>
-            {Math.floor(score * 100)}%
-          </small>{' '}
-          <TooltipReference
-            {...tooltipPrediction}
-            as={QuestionCircle}
-            size={16}
-            color={theme.colors.prediction}
-            style={{ cursor: 'pointer' }}
-          />
-          <StyledTooltip {...tooltipPrediction}>
-            This prediction was based from textual and visual analysis.
-          </StyledTooltip>
-        </>
-      )}
-      </>
-    );
-  }
+
 
   function renderValue(score) {
+    const prediction = isPredicted && <Prediction score={score} />;
+
     if (!url) {
-      return <>{printableValue}{renderPrediction(score)}</>;
+      return <>{printableValue}{prediction}</>;
     }
 
     return (
@@ -127,7 +90,7 @@ function generateValue(
         >
           {printableValue}
         </a>
-        {renderPrediction(score)}
+        {prediction}
         {skosmosUri && config.plugins.skosmos && (
           <small>
             {metaName} (
@@ -155,7 +118,6 @@ function generateValue(
 
 const MetadataList = ({ metadata, query, route }) => {
   const { t } = useTranslation('project');
-  const tooltipPrediction = useTooltipState();
 
   const displayedMetadata = Object.entries(metadata).filter(([metaName]) => {
     if (['@id', '@type', '@graph', 'label', 'representation', 'legalBody'].includes(metaName))
@@ -183,8 +145,7 @@ const MetadataList = ({ metadata, query, route }) => {
               metadata,
               metaName,
               i,
-              subMeta,
-              tooltipPrediction
+              subMeta
             );
             if (value) {
               values.push(value);
@@ -201,8 +162,7 @@ const MetadataList = ({ metadata, query, route }) => {
             metadata,
             metaName,
             index,
-            meta,
-            tooltipPrediction
+            meta
           );
           if (value) {
             values.push(value);
