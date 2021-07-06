@@ -306,7 +306,7 @@ const HomePage = () => {
     xhr.responseType = 'json';
     xhr.open('POST', '/api/image-search');
     xhr.send(formData);
-  }, []);
+  }, [similarity]);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
