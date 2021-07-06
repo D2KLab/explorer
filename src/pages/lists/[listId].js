@@ -63,7 +63,7 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
                     as={`/${item.route}/${encodeURI(uriToId(item.id, { base: route.uriBase }))}`}
                     passHref
                   >
-                    <a>
+                    <a style={{ color: 'inherit', textDecoration: 'inherit' }}>
                       <StyledMedia
                         title={item.title}
                         subtitle={item.subtitle}
