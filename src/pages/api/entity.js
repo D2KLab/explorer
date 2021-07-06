@@ -41,7 +41,7 @@ export default withRequestValidation({
     debug: config.debug,
   });
 
-  const result = queryRes && removeEmptyObjects(queryRes['@graph'][0]);
+  const result = queryRes && queryRes['@graph'][0] && removeEmptyObjects(queryRes['@graph'][0]);
   if (result) {
     await fillWithVocabularies(result);
 
