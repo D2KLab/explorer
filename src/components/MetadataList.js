@@ -87,25 +87,16 @@ function generateValue(
     return undefined;
   }
 
-  if (!url) {
-    return <>{printableValue}</>;
-  }
-
   const isPredicted = typeof meta.score !== 'undefined';
 
-  return (
-    <>
-      <a
-        href={url}
-        style={isPredicted ? { color: theme.colors.prediction, fontStyle: 'italic' } : {}}
-      >
-        {printableValue}
-      </a>
+  function renderPrediction(score) {
+    return (
+      <>
       {isPredicted && (
         <>
           {' '}
           <small style={isPredicted ? { color: theme.colors.prediction, fontStyle: 'italic' } : {}}>
-            ({Math.floor(meta.score * 100)}%)
+            {Math.floor(score * 100)}%
           </small>{' '}
           <TooltipReference
             {...tooltipPrediction}
@@ -119,21 +110,47 @@ function generateValue(
           </StyledTooltip>
         </>
       )}
-      {skosmosUri && config.plugins.skosmos && (
-        <small>
-          {metaName} (
-          <a
-            href={`${config.plugins.skosmos.baseUrl}${meta['@id']}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            def
-          </a>
-          )
-        </small>
-      )}
-    </>
-  );
+      </>
+    );
+  }
+
+  function renderValue(score) {
+    if (!url) {
+      return <>{printableValue}{renderPrediction(score)}</>;
+    }
+
+    return (
+      <>
+        <a
+          href={url}
+          style={isPredicted ? { color: theme.colors.prediction, fontStyle: 'italic' } : {}}
+        >
+          {printableValue}
+        </a>
+        {renderPrediction(score)}
+        {skosmosUri && config.plugins.skosmos && (
+          <small>
+            {metaName} (
+            <a
+              href={`${config.plugins.skosmos.baseUrl}${meta['@id']}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              def
+            </a>
+            )
+          </small>
+        )}
+      </>
+    );
+  }
+
+  if (isPredicted) {
+    const scores = Array.isArray(meta.score) ? meta.score : [meta.score];
+    return <ul>{scores.map(score => (<li>{renderValue(score)}</li>))}</ul>;
+  }
+
+  return renderValue();
 }
 
 const MetadataList = ({ metadata, query, route }) => {
