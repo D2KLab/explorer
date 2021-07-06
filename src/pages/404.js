@@ -14,18 +14,19 @@ const Container = styled.div`
   text-align: center;
 `;
 
-const NotFoundPage = () => {
+const NotFoundPage = ({ title = "404 - Uh oh!", text, children }) => {
   const { t } = useTranslation('common');
 
   return (
     <Layout>
-      <PageTitle title="404 - Uh oh!" />
+      <PageTitle title={title} />
       <Header />
       <Body>
         <Container>
-          <h1>404 - Uh oh!</h1>
-          <p>{t('errors.pageNotFound')}</p>
+          <h1>{title}</h1>
+          <p>{text || t('errors.pageNotFound')}</p>
         </Container>
+        {children}
       </Body>
       <Footer />
     </Layout>

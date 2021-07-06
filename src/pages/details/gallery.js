@@ -234,7 +234,26 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   const [isLoadingSimilar, setIsLoadingSimilar] = useState(false);
 
   if (!result) {
-    return <DefaultErrorPage statusCode={404} title={t('common:errors.resultNotFound')} />;
+    return (
+      <>
+        <NotFoundPage text={t('common:errors.resultNotFound')}>
+          <Debug>
+            <Metadata label="HTTP Parameters">
+              <pre>{JSON.stringify(query, null, 2)}</pre>
+            </Metadata>
+            <Metadata label="Query Result">
+              <pre>{JSON.stringify(result, null, 2)}</pre>
+            </Metadata>
+            <Metadata label="SPARQL Query">
+              <SPARQLQueryLink query={debugSparqlQuery}>
+                {t('common:buttons.editQuery')}
+              </SPARQLQueryLink>
+              <pre>{debugSparqlQuery}</pre>
+            </Metadata>
+          </Debug>
+        </NotFoundPage>;
+      </>
+    );
   }
 
   const images = [];
