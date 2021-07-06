@@ -42,11 +42,15 @@ export function withRequestValidation(options = {}) {
         .then(() => WrappedFunction(req, res))
         .catch((err) => {
           const statusCode = err.statusCode || 500;
+          const error = {
+            status: err.statusCode,
+            message: err.message,
+          };
+          if (typeof process !== 'undefined' && process.env.NODE_ENV === 'development') {
+            error.stack = err.stack;
+          }
           res.status(statusCode).json({
-            error: {
-              status: err.statusCode,
-              message: err.message,
-            },
+            error,
           });
         });
   };
