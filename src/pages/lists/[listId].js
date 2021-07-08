@@ -253,7 +253,7 @@ export async function getServerSideProps(ctx) {
       if (entity && entity.result) {
         const { result } = entity;
         const mainImage = await getEntityMainImage(result, { route });
-        const label = getEntityMainLabel(result, { route, language: ctx.req.language });
+        const label = getEntityMainLabel(result, { route, language: ctx.locale });
 
         list.items[i] = {
           id: result['@id'],
