@@ -407,7 +407,7 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
   );
 };
 
-export async function getServerSideProps({ query, req, locale }) {
+export async function getServerSideProps({ query, locale }) {
   const route = config.routes[query.type];
 
   const debugSparqlQuery = {};
