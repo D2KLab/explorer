@@ -16,6 +16,7 @@ const GraphLink = ({
   label,
 }) => {
   const graph = config.graphs[uri];
+  if (!graph) return null;
   return (
     <a className={className} href={graph.url} target={target} rel={rel} style={style}>
       {icon && <GraphIcon uri={uri} style={{ verticalAlign: 'top' }} />}
