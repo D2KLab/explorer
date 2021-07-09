@@ -1,10 +1,7 @@
-const NodeCache = require('node-cache');
 const sparqlTransformer = require('sparql-transformer').default;
-const config = require('../../config');
 
-if (!(global.sparqlCache instanceof NodeCache)) {
-  global.sparqlCache = global.sparqlCache || new NodeCache();
-}
+const cache = require("./cache");
+const config = require('../../config');
 
 export const getSparqlQuery = async (query) => {
   let sparqlQuery = null;
@@ -25,27 +22,27 @@ export const getSparqlQuery = async (query) => {
   return sparqlQuery;
 };
 
-export const query = async (queryObject, { endpoint, debug, ttl = 0 } = {}) => {
+export const query = async (queryObject, { endpoint, debug } = {}) => {
   const sparqlQuery = await getSparqlQuery(queryObject);
+  let results = null;
   if (sparqlQuery) {
-    const cachedRes = global.sparqlCache.get(sparqlQuery);
-    if (typeof cachedRes !== 'undefined') {
-      return cachedRes;
-    }
-  }
-  try {
-    const res = await sparqlTransformer(queryObject, {
-      endpoint,
-      debug,
+    const cacheKey = JSON.stringify(sparqlQuery);
+    await cache.exists(cacheKey).then(async (reply) => {
+      if (reply !== 1) {
+        const resQuery = await sparqlTransformer(queryObject, {
+          endpoint,
+          debug,
+        });
+        if (resQuery) {
+          await cache.set(cacheKey, JSON.stringify(resQuery));
+        }
+        results = resQuery;
+      } else {
+        results = JSON.parse(await cache.get(cacheKey));
+      }
     });
-    if (sparqlQuery) {
-      global.sparqlCache.set(sparqlQuery, res, ttl);
-    }
-    return res;
-  } catch (err) {
-    console.error(err);
   }
-  return null;
+  return results;
 };
 
 export default {

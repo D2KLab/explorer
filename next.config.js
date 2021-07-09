@@ -20,4 +20,11 @@ module.exports = {
         return rewrites;
       }),
     ],
+  webpack: (cfg, { isServer }) => {
+    if (!isServer) {
+      cfg.resolve.fallback.net = false;
+      cfg.resolve.fallback.tls = false;
+    }
+    return cfg;
+  }
 };

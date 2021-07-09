@@ -44,12 +44,12 @@ export const get = (key) => {
   });
 };
 
-export const set = (key, value) => {
+export const set = (key, value, expiry=86400) => {
   if (!client) {
     return Promise.resolve(undefined);
   }
   return new Promise((resolve, reject) => {
-    client.set(key, value, (err, reply) => {
+    client.set(key, value, 'EX', expiry, (err, reply) => {
       if (err) {
         reject(err);
         return;
