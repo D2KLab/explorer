@@ -75,8 +75,8 @@ function generateValue(
 
 
 
-  function renderValue(score) {
-    const prediction = isPredicted && <Prediction score={score} />;
+  function renderValue(score, kind, explanation, used) {
+    const prediction = isPredicted && <Prediction score={score} kind={kind} explanation={explanation} used={used} />;
 
     if (!url) {
       return <>{printableValue}{prediction}</>;
@@ -110,7 +110,10 @@ function generateValue(
 
   if (isPredicted) {
     const scores = Array.isArray(meta.score) ? meta.score : [meta.score];
-    return <ul>{scores.map(score => (<li>{renderValue(score)}</li>))}</ul>;
+    const kinds = Array.isArray(meta.kind) ? meta.kind : [meta.kind];
+    const explanation = Array.isArray(meta.explanation) ? meta.explanation : [meta.explanation];
+    const used = Array.isArray(meta.used) ? meta.used : [meta.used];
+    return <ul>{scores.map((score, i) => (<li>{renderValue(score, kinds[i], explanation[i], used[i])}</li>))}</ul>;
   }
 
   return renderValue();
