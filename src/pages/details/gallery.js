@@ -27,7 +27,7 @@ import GraphLink from '@components/GraphLink';
 import MetadataList from '@components/MetadataList';
 import SaveButton from '@components/SaveButton';
 import breakpoints from '@styles/breakpoints';
-import { absoluteUrl, generateMediaUrl } from '@helpers/utils';
+import { absoluteUrl, generateMediaUrl, uriToId } from '@helpers/utils';
 import { getEntityMainLabel } from '@helpers/explorer';
 import { useTranslation } from 'next-i18next';
 import config from '~/config';
@@ -374,9 +374,9 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
     const params = new URLSearchParams();
     params.append('type', 'object');
     params.append('similarity_type', similarity);
-    params.append('similarity_entity', result['@id']);
-    params.append('visual_uris', visualUris);
-    params.append('semantic_uris', semanticUris);
+    params.append('similarity_entity', uriToId(result['@id'], { base: route.uriBase }));
+    params.append('visual_uris', visualUris.map(uri => uriToId(uri, { base: route.uriBase })));
+    params.append('semantic_uris', semanticUris.map(uri => uriToId(uri, { base: route.uriBase })));
     router.push(`/browse?${params.toString()}`);
 
     setIsLoadingSimilar(false);

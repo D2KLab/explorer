@@ -7,6 +7,8 @@ import { useDropzone } from 'react-dropzone';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
 import { Camera } from '@styled-icons/boxicons-solid/Camera';
 import { Button as ReakitButton } from 'reakit';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import Element from '@components/Element';
 import Layout from '@components/Layout';
@@ -17,8 +19,7 @@ import SearchInput from '@components/SearchInput';
 import PageTitle from '@components/PageTitle';
 import Spinner from '@components/Spinner';
 import breakpoints from '@styles/breakpoints';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { uriToId } from '@helpers/utils';
 import config from '~/config';
 
 const Hero = styled.div`
@@ -291,10 +292,12 @@ const HomePage = () => {
       if (xhr.status === 200) {
         const { visualUris, semanticUris } = xhr.response;
         const params = new URLSearchParams();
-        params.append('type', 'object');
+        const routeType = 'object';
+        const route = config.routes[routeType];
+        params.append('type', routeType);
         params.append('similarity_type', similarity);
-        params.append('visual_uris', visualUris);
-        params.append('semantic_uris', semanticUris);
+        params.append('visual_uris', visualUris.map(uri => uriToId(uri, { base: route.uriBase })));
+        params.append('semantic_uris', semanticUris.map(uri => uriToId(uri, { base: route.uriBase })));
         router.push(`/browse?${params.toString()}`);
       } else {
         const { error } = xhr.response;

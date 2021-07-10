@@ -632,7 +632,7 @@ export async function getServerSideProps({ req, query, locale }) {
     similarityEntity = await (
       await fetch(
         `${absoluteUrl(req)}/api/entity?${queryString.stringify({
-          id: uriToId(query.similarity_entity, { base: route.uriBase }),
+          id: query.similarity_entity,
           type: query.type,
         })}`,
         {

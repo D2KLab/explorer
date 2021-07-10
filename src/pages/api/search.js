@@ -3,7 +3,7 @@ import asyncPool from 'tiny-async-pool';
 import { withRequestValidation } from '@helpers/api';
 import SparqlClient from '@helpers/sparql';
 import { fillWithVocabularies } from '@helpers/explorer';
-import { removeEmptyObjects, getQueryObject } from '@helpers/utils';
+import { removeEmptyObjects, getQueryObject, idToUri } from '@helpers/utils';
 import config from '~/config';
 
 export const getFilters = async (query) => {
@@ -147,7 +147,7 @@ export const search = async (query) => {
 
     // URIs
     if (query.similarity_type && query[`${query.similarity_type}_uris`]) {
-      const uris = query[`${query.similarity_type}_uris`].split(',');
+      const uris = query[`${query.similarity_type}_uris`].split(',').map(id => idToUri(id, { base: route.uriBase }));
       extraWhere.push(`VALUES ?id { ${uris.map((uri) => `<${uri}>`).join(' ')} }`);
     }
 
