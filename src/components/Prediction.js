@@ -4,7 +4,7 @@ import { Tooltip, TooltipReference, useTooltipState } from 'reakit/Tooltip';
 import { QuestionCircle } from '@styled-icons/fa-solid/QuestionCircle';
 
 import breakpoints from '@styles/breakpoints';
-import { generateMediaUrl } from '@helpers/utils';
+import { generateMediaUrl, linkify } from '@helpers/utils';
 import theme from '~/theme';
 
 const StyledTooltip = styled(Tooltip)`
@@ -62,16 +62,13 @@ const PredictionDetails = styled.div`
 `;
 
 const Prediction = ({ prediction }) => {
-  const { score, kind, used } = prediction;
+  const { score, kind, used, explanation } = prediction;
+  const explanations = Array.isArray(explanation) ? explanation : [explanation];
 
   const dialog = useDialogState({ modal: true });
   const kindTexts = {
     'http://data.silknow.org/actor/jsi-text-analysis/1': 'text analysis',
     'http://data.silknow.org/actor/luh-image-analysis/1': 'visual analysis',
-  };
-  const explanationTexts = {
-    'http://data.silknow.org/actor/jsi-text-analysis/1': 'Predictions made using a....',
-    'http://data.silknow.org/actor/luh-image-analysis/1': `Predictions made using a CNN-based image classification software. Given an input image, the model, available at <a href="https://zenodo.org/record/4742418" target="_blank" rel="noopener noreferrer">https://zenodo.org/record/4742418</a>, is able to predict values for five properties, namely production 'timespan', 'production place', 'technique', 'material' and 'depiction'. It has been trained based on a February 2021 snapshot of the Knowledge Graph. The multi-task learning (MTL) variant is being used in a multi-class classification (mutually exclusive classes) fashion based on the softmax function for computing the class scores.`
   };
 
   const tooltipPrediction = useTooltipState();
@@ -85,7 +82,7 @@ const Prediction = ({ prediction }) => {
         >
           <PredictionDetails>
             <img src={generateMediaUrl(used, 200, 200)} alt="" />
-            <p dangerouslySetInnerHTML={{ __html: explanationTexts[kind] }} />
+            <p dangerouslySetInnerHTML={{ __html: explanations.map(text => linkify(text)).join('\n') }} />
           </PredictionDetails>
         </StyledDialog>
       </StyledDialogBackdrop>
