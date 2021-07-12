@@ -34,14 +34,16 @@ function generateValue(
       Array.isArray(currentRoute.filters) &&
       currentRoute.filters.find((f) => f.id === metaName);
 
-    url = meta['@id'];
+    const metaId = meta['@id'];
     if (route) {
-      url = `/${routeName}/${encodeURI(uriToId(meta['@id'], { base: route.uriBase }))}`;
+      url = `/${routeName}/${encodeURI(uriToId(metaId, { base: route.uriBase }))}`;
     } else if (filter) {
-      url = `/${currentRouteName}?field_filter_${metaName}=${encodeURIComponent(meta['@id'])}`;
+      url = `/${currentRouteName}?field_filter_${metaName}=${encodeURIComponent(metaId)}`;
       if (filter.hasSkosmosDefinition) {
-        skosmosUri = meta['@id'];
+        skosmosUri = metaId;
       }
+    } else {
+      url = metaId;
     }
 
     if (Array.isArray(meta.label)) {
@@ -53,7 +55,7 @@ function generateValue(
       // Example: {"@id":"http://data.silknow.org/collection/ec0f9a6f-7b69-31c4-80a6-c0a9cde663a5","@type":"http://erlangen-crm.org/current/E78_Collection","label":"European Sculpture and Decorative Arts"}
       printableValue = meta.label;
     } else {
-      printableValue = meta['@id'];
+      printableValue = metaId;
       url = null;
     }
   } else {
@@ -71,15 +73,13 @@ function generateValue(
     return undefined;
   }
 
-  const isPredicted = typeof meta.score !== 'undefined';
+  const isPredicted = typeof meta.prediction !== 'undefined';
 
-
-
-  function renderValue(score, kind, explanation, used) {
-    const prediction = isPredicted && <Prediction score={score} kind={kind} explanation={explanation} used={used} />;
+  function renderValue(prediction) {
+    const predictionElement = isPredicted && <Prediction prediction={prediction} />;
 
     if (!url) {
-      return <>{printableValue}{prediction}</>;
+      return <>{printableValue}{predictionElement}</>;
     }
 
     return (
@@ -90,7 +90,7 @@ function generateValue(
         >
           {printableValue}
         </a>
-        {prediction}
+        {predictionElement}
         {skosmosUri && config.plugins.skosmos && (
           <small>
             {metaName} (
@@ -109,11 +109,8 @@ function generateValue(
   }
 
   if (isPredicted) {
-    const scores = Array.isArray(meta.score) ? meta.score : [meta.score];
-    const kinds = Array.isArray(meta.kind) ? meta.kind : [meta.kind];
-    const explanation = Array.isArray(meta.explanation) ? meta.explanation : [meta.explanation];
-    const used = Array.isArray(meta.used) ? meta.used : [meta.used];
-    return <ul>{scores.map((score, i) => (<li>{renderValue(score, kinds[i], explanation[i], used[i])}</li>))}</ul>;
+    const predictions = Array.isArray(meta.prediction) ? meta.prediction : [meta.prediction];
+    return <ul>{predictions.map((pred) => (<li>{renderValue(pred)}</li>))}</ul>;
   }
 
   return renderValue();
@@ -134,6 +131,7 @@ const MetadataList = ({ metadata, query, route }) => {
     <>
       {displayedMetadata.flatMap(([metaName, meta], index) => {
         const values = [];
+        const metaId = meta['@id'];
         if (Array.isArray(meta)) {
           /* Example:
             [
@@ -154,9 +152,9 @@ const MetadataList = ({ metadata, query, route }) => {
               values.push(value);
             }
           });
-        } else if (typeof meta['@id'] === 'object') {
+        } else if (typeof metaId === 'object') {
           // Example: { '@id': { '@language': 'en', '@value': 'hand embroidery' } }
-          values.push(<span>{meta['@id']['@value']}</span>);
+          values.push(<span>{metaId['@value']}</span>);
         } else {
           // Example: { '@id': 'http://data.silknow.org/collection/4051dfc9-1267-3530-bac8-40011f2e3daa', '@type': 'E78_Collection', label: 'Textiles and Fashion Collection' }
           const value = generateValue(

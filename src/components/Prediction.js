@@ -47,7 +47,9 @@ const StyledDialog = styled(Dialog)`
   overflow: auto;
 `;
 
-const Prediction = ({ score, kind, used }) => {
+const Prediction = ({ prediction }) => {
+  const { score, kind, used } = prediction;
+
   const dialog = useDialogState({ modal: true });
   const kindTexts = {
     'http://data.silknow.org/actor/jsi-text-analysis/1': 'text analysis',
