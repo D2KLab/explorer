@@ -3,7 +3,7 @@ import { useDialogState, Dialog, DialogBackdrop } from 'reakit/Dialog';
 import { Tooltip, TooltipReference, useTooltipState } from 'reakit/Tooltip';
 import { QuestionCircle } from '@styled-icons/fa-solid/QuestionCircle';
 
-import Element from '@components/Element';
+import breakpoints from '@styles/breakpoints';
 import { generateMediaUrl } from '@helpers/utils';
 import theme from '~/theme';
 
@@ -47,6 +47,20 @@ const StyledDialog = styled(Dialog)`
   overflow: auto;
 `;
 
+const PredictionDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  ${breakpoints.weirdMedium`
+    flex-direction: row;
+
+    img {
+      margin-right: 1rem;
+    }
+  `}
+`;
+
 const Prediction = ({ prediction }) => {
   const { score, kind, used } = prediction;
 
@@ -69,9 +83,10 @@ const Prediction = ({ prediction }) => {
           modal
           aria-label=""
         >
-          <Element marginBottom={24} style={{ whiteSpace: 'pre-line' }}>
+          <PredictionDetails>
+            <img src={generateMediaUrl(used, 200, 200)} alt="" />
             <p dangerouslySetInnerHTML={{ __html: explanationTexts[kind] }} />
-          </Element>
+          </PredictionDetails>
         </StyledDialog>
       </StyledDialogBackdrop>
       {' '}
@@ -87,12 +102,12 @@ const Prediction = ({ prediction }) => {
         onClick={() => dialog.show()}
       />
       <StyledTooltip {...tooltipPrediction}>
-        {kind === 'http://data.silknow.org/actor/luh-image-analysis/1' && <img style={{verticalAlign:'middle'}} src={generateMediaUrl(used, 64, 64)} alt="" />}
+        {kind === 'http://data.silknow.org/actor/luh-image-analysis/1' && <img style={{ verticalAlign:'middle', marginRight: '0.5rem' }} src={generateMediaUrl(used, 80, 80)} alt="" />}
         {' '}
         This value has been predicted by {kindTexts[kind]}. Click to know more.
       </StyledTooltip>
       {' '}
-      {kind === 'http://data.silknow.org/actor/luh-image-analysis/1' && <img style={{verticalAlign:'middle'}} src={generateMediaUrl(used, 16, 16)} alt="" />}
+      {kind === 'http://data.silknow.org/actor/luh-image-analysis/1' && <img style={{ verticalAlign:'middle' }} src={generateMediaUrl(used, 16, 16)} alt="" />}
 
     </>
   );
