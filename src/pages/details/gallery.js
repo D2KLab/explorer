@@ -364,22 +364,11 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
     similarityMenu.hide();
     setIsLoadingSimilar(true);
 
-    const data = await (
-      await fetch(`/api/image-search?uri=${encodeURIComponent(images[0]?.url)}`, {
-        method: 'POST',
-      })
-    ).json();
-
-    const { visualUris, semanticUris } = data;
     const params = new URLSearchParams();
     params.append('type', 'object');
     params.append('similarity_type', similarity);
     params.append('similarity_entity', uriToId(result['@id'], { base: route.uriBase }));
-    params.append('visual_uris', visualUris.map(uri => uriToId(uri, { base: route.uriBase })));
-    params.append('semantic_uris', semanticUris.map(uri => uriToId(uri, { base: route.uriBase })));
     router.push(`/browse?${params.toString()}`);
-
-    setIsLoadingSimilar(false);
   };
 
   const virtualLoomMenu = useMenuState();

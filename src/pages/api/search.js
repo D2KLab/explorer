@@ -4,6 +4,8 @@ import { withRequestValidation } from '@helpers/api';
 import SparqlClient from '@helpers/sparql';
 import { fillWithVocabularies } from '@helpers/explorer';
 import { removeEmptyObjects, getQueryObject, idToUri } from '@helpers/utils';
+import { getEntity } from '@pages/api/entity';
+import { searchImage } from '@pages/api/image-search';
 import config from '~/config';
 
 export const getFilters = async (query) => {
@@ -146,9 +148,24 @@ export const search = async (query) => {
     }
 
     // URIs
-    if (query.similarity_type && query[`${query.similarity_type}_uris`]) {
-      const uris = query[`${query.similarity_type}_uris`].split(',').map(id => idToUri(id, { base: route.uriBase }));
-      extraWhere.push(`VALUES ?id { ${uris.map((uri) => `<${uri}>`).join(' ')} }`);
+    if (query.similarity_type) {
+      const uris = [];
+      if (query[`${query.similarity_type}_uris`]) {
+        uris.push(...query[`${query.similarity_type}_uris`].split(',').map(id => idToUri(id, { base: route.uriBase })));
+      } else if (query.similarity_entity) {
+        const similarityEntity = await getEntity({
+          id: query.similarity_entity,
+          type: query.type,
+        });
+
+        if (similarityEntity) {
+          const data = await searchImage(similarityEntity.representation[0]?.image);
+          uris.push(...data[`${query.similarity_type}Uris`]);
+        }
+      }
+      if (uris.length > 0) {
+        extraWhere.push(`VALUES ?id { ${uris.map((uri) => `<${uri}>`).join(' ')} }`);
+      }
     }
 
     // Sort by

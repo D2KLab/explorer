@@ -12,6 +12,28 @@ export const config = {
   },
 };
 
+export const searchImage = async (image) => {
+  const formData = new FormData();
+
+  if (typeof image === 'object' && typeof image.path !== 'undefined') {
+    formData.append('file', fs.createReadStream(image.path));
+  } else {
+    const response = await fetch(image);
+    if (!response.ok) throw new Error(`Unexpected Response: ${response.statusText}`);
+    await streamPipeline(response.body, fs.createWriteStream('./placeholder.jpg'));
+    formData.append('file', fs.createReadStream('./placeholder.jpg'));
+  }
+
+  const data = await (
+    await fetch(`https://silknow-image-retrieval.tools.eurecom.fr/api/retrieve`, {
+      method: 'POST',
+      body: formData,
+    })
+  ).json();
+
+  return data;
+}
+
 const handleUpload = (req) => new Promise((resolve, reject) => {
     const form = new IncomingForm({ keepExtensions: true, maxFileSize: 5 * 1024 * 1024 });
     form.parse(req, (err, fields, files) => {
@@ -27,23 +49,7 @@ export default withRequestValidation({
   const { image } = files;
   const { uri } = req.query;
 
-  const formData = new FormData();
-  if (image) {
-    formData.append('file', fs.createReadStream(image.path));
-  } else {
-    const response = await fetch(uri);
-    if (!response.ok) throw new Error(`Unexpected Response: ${response.statusText}`);
-    await streamPipeline(response.body, fs.createWriteStream('./placeholder.jpg'));
+  const result = await searchImage(image || uri);
 
-    formData.append('file', fs.createReadStream('./placeholder.jpg'));
-  }
-
-  const data = await (
-    await fetch(`https://silknow-image-retrieval.tools.eurecom.fr/api/retrieve`, {
-      method: 'POST',
-      body: formData,
-    })
-  ).json();
-
-  res.status(200).json(data);
+  res.status(200).json(result);
 });
