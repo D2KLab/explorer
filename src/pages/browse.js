@@ -555,40 +555,44 @@ const BrowsePage = ({ initialData, similarityEntity }) => {
                   </Fragment>
                 );
               })}
-              <Element marginBottom={24}>
-                <Button
-                  primary
-                  style={{ width: '100%' }}
-                  ref={$loadMoreButton}
-                  loading={isLoadingMore}
-                  disabled={isReachingEnd}
-                  onClick={() => {
-                    loadMore();
-                  }}
-                >
-                  {isLoadingMore ? t('search:labels.loading') : t('search:buttons.loadMore')}
-                </Button>
-              </Element>
-              <PaginationContainer>
-                <ReactPaginate
-                  previousLabel={t('search:buttons.paginatePrevious')}
-                  previousAriaLabel={t('search:buttons.paginatePrevious')}
-                  nextLabel={t('search:buttons.paginateNext')}
-                  nextAriaLabel={t('search:buttons.paginateNext')}
-                  breakLabel="..."
-                  breakClassName="break"
-                  pageCount={totalPages}
-                  initialPage={initialPage - 1}
-                  forcePage={currentPage - 1}
-                  marginPagesDisplayed={2}
-                  pageRangeDisplayed={5}
-                  onPageChange={onPageChange}
-                  disableInitialCallback
-                  containerClassName="pagination"
-                  subContainerClassName="pages pagination"
-                  activeClassName="active"
-                />
-              </PaginationContainer>
+              {typeof query.similarity_type === 'undefined' && (
+                <>
+                  <Element marginBottom={24}>
+                    <Button
+                      primary
+                      style={{ width: '100%' }}
+                      ref={$loadMoreButton}
+                      loading={isLoadingMore}
+                      disabled={isReachingEnd}
+                      onClick={() => {
+                        loadMore();
+                      }}
+                    >
+                      {isLoadingMore ? t('search:labels.loading') : t('search:buttons.loadMore')}
+                    </Button>
+                  </Element>
+                  <PaginationContainer>
+                    <ReactPaginate
+                      previousLabel={t('search:buttons.paginatePrevious')}
+                      previousAriaLabel={t('search:buttons.paginatePrevious')}
+                      nextLabel={t('search:buttons.paginateNext')}
+                      nextAriaLabel={t('search:buttons.paginateNext')}
+                      breakLabel="..."
+                      breakClassName="break"
+                      pageCount={totalPages}
+                      initialPage={initialPage - 1}
+                      forcePage={currentPage - 1}
+                      marginPagesDisplayed={2}
+                      pageRangeDisplayed={5}
+                      onPageChange={onPageChange}
+                      disableInitialCallback
+                      containerClassName="pagination"
+                      subContainerClassName="pages pagination"
+                      activeClassName="active"
+                    />
+                  </PaginationContainer>
+                </>
+              )}
             </>
           )}
           <Debug>
