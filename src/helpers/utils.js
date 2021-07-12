@@ -67,11 +67,20 @@ export function absoluteUrl(req, localhostAddress = 'localhost:3000') {
 }
 
 export function removeEmptyObjects(obj) {
-  Object.keys(obj).forEach((k) => {
-    if (Array.isArray(obj[k])) {
-      obj[k] = obj[k].filter((v) => typeof v !== 'object' || Object.keys(v).length > 0);
-    }
-  });
+  Object
+    .entries(obj)
+    .forEach(([k, v]) => {
+      if (v && typeof v === 'object') {
+        removeEmptyObjects(v);
+      }
+      if (v && typeof v === 'object' && !Object.keys(v).length || v === null || typeof v === 'undefined') {
+        if (Array.isArray(obj)) {
+          obj.splice(k, 1);
+        } else if (!Array.isArray(obj[k])) {
+          delete obj[k];
+        }
+      }
+    });
   return obj;
 }
 
@@ -91,5 +100,5 @@ export function slugify(text) {
     .trim()
     .replace(/\s+/g, '-')
     .replace(/[^\w-]+/g, '')
-    .replace(/--+/g, '-');
-}
+    .replace(/--+/g, '-')
+};

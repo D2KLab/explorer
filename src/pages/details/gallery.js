@@ -297,7 +297,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
       },
       materials: Array.isArray(result.material)
         ? result.material.map((v) => v.label)
-        : [result.material.label].filter((x) => x),
+        : [result?.material?.label].filter((x) => x),
       endpoint: 'http://grlc.eurecom.fr/api-git/silknow/api/',
       analytics: Cookies.get('consent') === '1',
     };
