@@ -2,7 +2,7 @@ import NextAuth from 'next-auth/client';
 
 import { withRequestValidation } from '@helpers/api';
 import { idToUri, removeEmptyObjects, getQueryObject } from '@helpers/utils';
-import { fillWithVocabularies } from '@helpers/explorer';
+import { fillWithVocabularies } from '@helpers/vocabulary';
 import { getSessionUser, getUserLists } from '@helpers/database';
 import SparqlClient from '@helpers/sparql';
 import config from '~/config';

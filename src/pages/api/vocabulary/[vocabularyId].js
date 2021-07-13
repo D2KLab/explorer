@@ -1,5 +1,5 @@
 import { withRequestValidation } from '@helpers/api';
-import { getVocabularyItems } from '@helpers/explorer';
+import { getVocabularyItems } from '@helpers/vocabulary';
 import config from '~/config';
 
 export default withRequestValidation({

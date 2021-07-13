@@ -2,7 +2,7 @@ import asyncPool from 'tiny-async-pool';
 
 import { withRequestValidation } from '@helpers/api';
 import SparqlClient from '@helpers/sparql';
-import { fillWithVocabularies } from '@helpers/explorer';
+import { fillWithVocabularies } from '@helpers/vocabulary';
 import { removeEmptyObjects, getQueryObject, idToUri } from '@helpers/utils';
 import { getEntity } from '@pages/api/entity';
 import { searchImage } from '@pages/api/image-search';
