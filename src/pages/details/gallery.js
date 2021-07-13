@@ -284,9 +284,9 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
         x: result.dimension?.width,
         y: result.dimension?.height,
       },
-      technique: (Array.isArray(result.technique)
+      technique: ((Array.isArray(result.technique)
         ? result.technique.map((v) => v.label)
-        : [result.technique.label]
+        : [result?.technique?.label]).filter(x => x)
       ).filter((x) => x),
       weaving: 'Plain', // @TODO: do not hardcode weaving
       backgroundColor: {
