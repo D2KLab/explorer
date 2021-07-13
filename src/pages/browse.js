@@ -627,7 +627,7 @@ const BrowsePage = ({ initialData, similarityEntity }) => {
 };
 
 export async function getServerSideProps({ req, query, locale }) {
-  const filters = await getFilters(query);
+  const filters = await getFilters(query, { language: locale });
   const searchData = await search(query);
 
   let similarityEntity;

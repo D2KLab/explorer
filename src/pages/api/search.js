@@ -8,7 +8,7 @@ import { getEntity } from '@pages/api/entity';
 import { searchImage } from '@pages/api/image-search';
 import config from '~/config';
 
-export const getFilters = async (query) => {
+export const getFilters = async (query, { language }) => {
   const route = config.routes[query.type];
   if (!route) {
     return [];
@@ -23,11 +23,11 @@ export const getFilters = async (query) => {
 
     let filterQuery = null;
     if (filter.query) {
-      filterQuery = getQueryObject(filter.query);
+      filterQuery = getQueryObject(filter.query, { language });
     } else if (filter.vocabulary) {
       const vocabulary = config.vocabularies[filter.vocabulary];
       if (vocabulary) {
-        filterQuery = getQueryObject(vocabulary.query);
+        filterQuery = getQueryObject(vocabulary.query, { language });
       }
     }
 
