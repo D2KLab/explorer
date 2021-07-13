@@ -48,7 +48,7 @@ export const getFilters = async (query) => {
 
         // Sort values by label
         filterValues.sort(
-          (a, b) => typeof a.label === 'string' && a.label.localeCompare(b.label)
+          (a, b) => typeof a.label === 'string' && a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' })
         );
       }
     }
