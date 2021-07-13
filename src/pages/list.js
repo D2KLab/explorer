@@ -56,7 +56,7 @@ const Item = styled.li`
 `;
 
 const ListDetailsPage = ({ items, debugSparqlQuery }) => {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(['common', 'project']);
   const { query } = useRouter();
 
   const route = config.routes[query.type];
@@ -183,7 +183,7 @@ export async function getServerSideProps({ query, req, locale }) {
 
   return {
     props: {
-      ...await serverSideTranslations(locale, ['common']),
+      ...await serverSideTranslations(locale, ['common', 'project']),
       items,
       debugSparqlQuery,
     }
