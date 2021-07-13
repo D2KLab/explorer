@@ -127,7 +127,7 @@
     "contact": "Contactez-nous :"
   },
   "similarity": {
-    "visual": "Visuellement similaire",
-    "semantic": "Ouvrages similaires"
+    "visual": "Images visuellement similaires",
+    "semantic": "Objets avec des propriétés similaires"
   }
 }

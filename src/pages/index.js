@@ -374,7 +374,7 @@ const HomePage = () => {
                           checked={similarity === 'visual'}
                           onChange={() => setSimilarity('visual')}
                         />
-                        Visually similar images
+                        {t('common:similarity.visual')}
                       </label>
                       <label>
                         <input
@@ -382,7 +382,7 @@ const HomePage = () => {
                           checked={similarity === 'semantic'}
                           onChange={() => setSimilarity('semantic')}
                         />
-                        Similar works
+                        {t('common:similarity.semantic')}
                       </label>
                     </Element>
                     <Element {...getRootProps()}>
