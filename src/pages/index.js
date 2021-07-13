@@ -299,15 +299,26 @@ const HomePage = () => {
         params.append('visual_uris', visualUris.map(uri => uriToId(uri, { base: route.uriBase })));
         params.append('semantic_uris', semanticUris.map(uri => uriToId(uri, { base: route.uriBase })));
         router.push(`/browse?${params.toString()}`);
-      } else {
-        const { error } = xhr.response;
-        setProcessStatus(null);
-        setProcessError(error.message);
-        console.log(`Upload error ${xhr.status}`);
       }
     };
+    xhr.onreadystatechange = function () {
+      // In local files, status is 0 upon success in Mozilla Firefox
+      if(xhr.readyState === XMLHttpRequest.DONE) {
+        const { status } = xhr;
+        if (status < 200 || status > 400) {
+          setProcessStatus(null);
+          setProcessError(xhr.statusText);
+          console.log(`Upload error ${xhr.status}`);
+        }
+      }
+    };
+    xhr.onerror = (error) => {
+      setProcessStatus(null);
+      setProcessError(error.message);
+      console.log(`Upload error ${xhr.status}`);
+    }
     xhr.responseType = 'json';
-    xhr.open('POST', '/api/image-search');
+    xhr.open('POST', '/api/image-search', true);
     xhr.send(formData);
   }, [similarity]);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
