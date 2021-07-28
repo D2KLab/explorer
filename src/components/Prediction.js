@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useDialogState, Dialog, DialogBackdrop } from 'reakit/Dialog';
 import { Tooltip, TooltipReference, useTooltipState } from 'reakit/Tooltip';
 import { QuestionCircle } from '@styled-icons/fa-solid/QuestionCircle';
+import { useTranslation } from 'next-i18next';
 
 import breakpoints from '@styles/breakpoints';
 import { generateMediaUrl, linkify } from '@helpers/utils';
@@ -62,14 +63,11 @@ const PredictionDetails = styled.div`
 `;
 
 const Prediction = ({ prediction }) => {
+  const { t } = useTranslation('project');
   const { score, kind, used, explanation } = prediction;
   const explanations = Array.isArray(explanation) ? explanation : [explanation];
 
   const dialog = useDialogState({ modal: true });
-  const kindTexts = {
-    'http://data.silknow.org/actor/jsi-text-analysis/1': 'text analysis',
-    'http://data.silknow.org/actor/luh-image-analysis/1': 'visual analysis',
-  };
 
   const tooltipPrediction = useTooltipState();
   return (
@@ -101,7 +99,7 @@ const Prediction = ({ prediction }) => {
       <StyledTooltip {...tooltipPrediction}>
         {kind === 'http://data.silknow.org/actor/luh-image-analysis/1' && <img style={{ verticalAlign:'middle', marginRight: '0.5rem' }} src={generateMediaUrl(used, 80, 80)} alt="" />}
         {' '}
-        This value has been predicted by {kindTexts[kind]}. Click to know more.
+        {t('project:predictions.text', { kind: t(`predictions.kinds.${kind}`, { ns: 'project', nsSeparator: null }) })}
       </StyledTooltip>
       {' '}
       {kind === 'http://data.silknow.org/actor/luh-image-analysis/1' && <img style={{ verticalAlign:'middle' }} src={generateMediaUrl(used, 16, 16)} alt="" />}
