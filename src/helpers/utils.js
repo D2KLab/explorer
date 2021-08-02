@@ -104,6 +104,8 @@ export function slugify(text) {
 };
 
 export function linkify(text) {
+  if (typeof text !== 'string') return text;
+
   let replacedText;
 
   // URLs starting with http://, https://, or ftp://
