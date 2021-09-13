@@ -526,6 +526,15 @@ const VideoDetailsPage = ({
 
   const renderPermalink = () => (
     <Element display="flex" alignItems="center" justifyContent="space-between" marginY={12}>
+      {result.sameAs && (
+        <small>
+          (
+            <a href={result.sameAs} target="_blank" rel="noopener noreferrer">
+              {t('common:buttons.original')}
+            </a>
+          )
+        </small>
+      )}
       {route.details.showPermalink && (
         <small>
           (

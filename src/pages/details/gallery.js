@@ -441,6 +441,15 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                   justifyContent="space-between"
                   marginY={12}
                 >
+                  {result.sameAs && (
+                    <small>
+                      (
+                        <a href={result.sameAs} target="_blank" rel="noopener noreferrer">
+                          {t('common:buttons.original')}
+                        </a>
+                      )
+                    </small>
+                  )}
                   {route.details.showPermalink && (
                     <small>
                       (
@@ -512,6 +521,15 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                 justifyContent="space-between"
                 marginY={12}
               >
+                {result.sameAs && (
+                  <small>
+                    (
+                      <a href={result.sameAs} target="_blank" rel="noopener noreferrer">
+                        {t('common:buttons.original')}
+                      </a>
+                    )
+                  </small>
+                )}
                 {route.details.showPermalink && (
                   <small>
                     (
