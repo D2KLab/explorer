@@ -42,8 +42,6 @@ function generateValue(
       if (filter.hasSkosmosDefinition) {
         skosmosUri = metaId;
       }
-    } else {
-      url = metaId;
     }
 
     if (Array.isArray(meta.label)) {
