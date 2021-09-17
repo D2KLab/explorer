@@ -118,7 +118,7 @@ const MetadataList = ({ metadata, query, route }) => {
   const { t } = useTranslation('project');
 
   const displayedMetadata = Object.entries(metadata).filter(([metaName]) => {
-    if (['@id', '@type', '@graph', 'label', 'representation', 'legalBody'].includes(metaName))
+    if (['@id', '@type', '@graph', 'label', 'representation'].includes(metaName))
       return false;
     if (Array.isArray(route.details.excludedMetadata)) {
       return !route.details.excludedMetadata.includes(metaName);
