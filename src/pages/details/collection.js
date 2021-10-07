@@ -69,10 +69,6 @@ const Description = styled.div`
   white-space: pre-line;
 `;
 
-const LegalBody = styled.small`
-  margin-left: 8px;
-`;
-
 const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   const { t, i18n } = useTranslation(['common', 'project']);
   const [session] = NextAuth.useSession();
@@ -151,15 +147,6 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
             </Element>
             <Element marginBottom={12} display="flex">
               <GraphLink uri={result['@graph']} icon label />
-              {result.legalBody && (
-                <Element>
-                  <LegalBody>
-                    ({Array.isArray(result.legalBody)
-                      ? result.legalBody.map((body) => body.label)
-                      : result.legalBody.label})
-                  </LegalBody>
-                </Element>
-              )}
             </Element>
             <p>{result.description || t('common:collection.noDescription')}</p>
             <Element marginBottom={24}>

@@ -221,10 +221,6 @@ const Description = styled.div`
   white-space: pre-line;
 `;
 
-const LegalBody = styled.small`
-  margin-left: 8px;
-`;
-
 const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   const { t, i18n } = useTranslation(['common', 'project']);
   const router = useRouter();
@@ -551,15 +547,6 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
             </DesktopContainer>
             <Element marginBottom={12} display="flex">
               <GraphLink uri={result['@graph']} icon label />
-              {result.legalBody && (
-                <Element>
-                  <LegalBody>
-                    ({Array.isArray(result.legalBody)
-                      ? result.legalBody.map((body) => body.label)
-                      : result.legalBody.label})
-                  </LegalBody>
-                </Element>
-              )}
             </Element>
             <Element marginBottom={24}>
               <MetadataList metadata={result} query={query} route={route} />

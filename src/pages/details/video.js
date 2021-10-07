@@ -169,10 +169,6 @@ const Description = styled.div`
   white-space: pre-line;
 `;
 
-const LegalBody = styled.small`
-  margin-left: 8px;
-`;
-
 const StyledTab = styled(Tab)`
   appearance: none;
   background-color: #fff;
@@ -632,15 +628,6 @@ const VideoDetailsPage = ({
             </DesktopContainer>
             <Element marginBottom={12} display="flex">
               <GraphLink uri={result['@graph']} icon label />
-              {result.legalBody && (
-                <Element>
-                  <LegalBody>
-                    ({Array.isArray(result.legalBody)
-                      ? result.legalBody.map((body) => body.label)
-                      : result.legalBody.label})
-                  </LegalBody>
-                </Element>
-              )}
             </Element>
             {result.description && (
               <Element marginBottom={24}>
