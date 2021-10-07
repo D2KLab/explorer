@@ -117,6 +117,12 @@ const Primary = styled.div`
         }
       }
 
+      .subtitle {
+        white-space: pre-line;
+        text-align: left;
+        padding: 0.5em 1em;
+      }
+
       img {
         width: auto;
         max-width: 100%;
@@ -479,7 +485,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                   >
                     <img src={generateMediaUrl(image.url, 1024)} alt={image.label} />
                     {image.description && <p className="legend">{image.description}</p>}
-                    {image.label && <div className="subtitle">{image.label}</div>}
+                    {image.label && <div className="subtitle">{Array.isArray(image.label) ? image.label.join('\n') : image.label}</div>}
                   </div>
                 ))}
               </Carousel>
