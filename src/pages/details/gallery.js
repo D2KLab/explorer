@@ -384,7 +384,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
         <VirtualLoomButton onClick={virtualLoomOnClick}>
           <img src="/images/virtual-loom-button.png" alt="Virtual Loom" />
         </VirtualLoomButton>
-        <StyledMenu {...virtualLoomMenu} aria-label="Virtual Loom">
+        <StyledMenu {...virtualLoomMenu} aria-label="Virtual Loom" style={{position:'absolute', left: 0}}>
           <MenuItem {...virtualLoomMenu} as={Button} primary onClick={onClickVirtualLoomButton}>
             {t('common:buttons.virtualLoom.web')}
           </MenuItem>
