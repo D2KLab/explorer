@@ -218,13 +218,17 @@ export const search = async (query) => {
       debugSparqlQuery = await SparqlClient.getSparqlQuery(mainSearchQuery);
     }
     // Call the endpoint with the main search query
-    const resMainSearch = await SparqlClient.query(mainSearchQuery, {
-      endpoint: config.api.endpoint,
-      debug: config.debug,
-    });
     const entities = [];
-    if (resMainSearch) {
-      entities.push(...resMainSearch['@graph']);
+    try {
+      const resMainSearch = await SparqlClient.query(mainSearchQuery, {
+        endpoint: config.api.endpoint,
+        debug: config.debug,
+      });
+      if (resMainSearch) {
+        entities.push(...resMainSearch['@graph']);
+      }
+    } catch (e) {
+      console.error(e);
     }
 
     // Loop through each entity and get the details
