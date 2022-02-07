@@ -293,11 +293,15 @@ export const search = async (query) => {
         ${query.approximate ? 'LIMIT 1000' : ''}
       `,
     };
-    const resPagination = await SparqlClient.query(paginationQuery, {
-      endpoint: config.api.endpoint,
-      debug: config.debug,
-    });
-    totalResults = resPagination && resPagination[0] ? parseInt(resPagination[0].id, 10) : 0;
+    try {
+      const resPagination = await SparqlClient.query(paginationQuery, {
+        endpoint: config.api.endpoint,
+        debug: config.debug,
+      });
+      totalResults = resPagination && resPagination[0] ? parseInt(resPagination[0].id, 10) : 0;
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   return {
