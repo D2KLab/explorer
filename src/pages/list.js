@@ -76,7 +76,7 @@ const ListDetailsPage = ({ items, debugSparqlQuery }) => {
       return '';
     }
     const withQuery = {};
-    const filter = withRoute.filters.find((f) => f.id && f.id === withConfig.filter);
+    const filter = (withRoute.filters || []).find((f) => f.id && f.id === withConfig.filter);
     if (filter) {
       const val = filter.isMulti ? [item['@id']] : item['@id'];
       withQuery[`field_filter_${filter.id}`] = val;

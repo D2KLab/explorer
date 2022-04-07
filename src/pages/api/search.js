@@ -10,7 +10,7 @@ import config from '~/config';
 
 export const getFilters = async (query, { language }) => {
   const route = config.routes[query.type];
-  if (!route) {
+  if (!route || !Array.isArray(route.filters)) {
     return [];
   }
 
@@ -171,7 +171,7 @@ export const search = async (query) => {
     // Sort by
     let orderByVariable = 'id';
     if (query.sort) {
-      const sortFilter = route.filters.find((filter) => filter.id === query.sort);
+      const sortFilter = (route.filters || []).find((filter) => filter.id === query.sort);
       if (sortFilter && typeof sortFilter.whereFunc === 'function') {
         extraWhere.push(`OPTIONAL { ${sortFilter.whereFunc().join(' . ')} }`);
         orderByVariable = query.sort;

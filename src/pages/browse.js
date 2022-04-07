@@ -356,7 +356,7 @@ const BrowsePage = ({ initialData, similarityEntity }) => {
     return <DefaultErrorPage statusCode={404} title={t('common:errors.routeNotFound')} />;
   }
 
-  const sortOptions = route.filters
+  const sortOptions = (route.filters || [])
     .filter((filter) => filter.isSortable === true)
     .map((filter) => ({
       label: t(`project:filters.${filter.id}`, filter.label),
