@@ -244,7 +244,7 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
 };
 
 export async function getServerSideProps({ req, res, query, locale }) {
-  const { result, inList, debugSparqlQuery } = await (
+  const { result = null, inList, debugSparqlQuery } = await (
     await fetch(`${absoluteUrl(req)}/api/entity?${queryString.stringify(query)}`, {
       headers:
         req && req.headers
