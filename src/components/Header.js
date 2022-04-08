@@ -20,6 +20,8 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   font-size: 0.875rem;
+
+  ${({ theme }) => theme?.components?.Header?.Container};
 `;
 
 const StyledLanguageSwitch = styled(LanguageSwitch)`
@@ -28,6 +30,8 @@ const StyledLanguageSwitch = styled(LanguageSwitch)`
   ${breakpoints.weirdMedium`
     display: flex;
   `}
+
+  ${({ theme }) => theme?.components?.Header?.StyledLanguageSwitch};
 `;
 
 const StyledProfileButton = styled(ProfileButton)`
@@ -36,6 +40,8 @@ const StyledProfileButton = styled(ProfileButton)`
   ${breakpoints.weirdMedium`
     margin-left: 0;
   `}
+
+  ${({ theme }) => theme?.components?.Header?.StyledProfileButton};
 `;
 
 const LogoContainer = styled.a`
@@ -47,17 +53,23 @@ const LogoContainer = styled.a`
     margin-left: 2em;
     margin-right: 2em;
   `}
+
+  ${({ theme }) => theme?.components?.Header?.LogoContainer};
 `;
 
 const Logo = styled.img`
   max-width: 128px;
   max-height: 54px;
   flex: 0 0 auto;
+
+  ${({ theme }) => theme?.components?.Header?.Logo};
 `;
 
 const LogoTitle = styled.span`
   color: #000;
   font-size: 2em;
+
+  ${({ theme }) => theme?.components?.Header?.LogoTitle};
 `;
 
 const NavContainer = styled.div`
@@ -66,6 +78,8 @@ const NavContainer = styled.div`
   ${breakpoints.weirdMedium`
     display: flex;
   `}
+
+  ${({ theme }) => theme?.components?.Header?.NavContainer};
 `;
 
 const NavList = styled.ul`
@@ -76,10 +90,14 @@ const NavList = styled.ul`
   text-align: right;
   align-items: center;
   margin: 0px;
+
+  ${({ theme }) => theme?.components?.Header?.NavList};
 `;
 
 const NavItem = styled.li`
   padding: 0 1em;
+
+  ${({ theme }) => theme?.components?.Header?.NavItem};
 `;
 
 const NavLink = styled.a`
@@ -89,6 +107,8 @@ const NavLink = styled.a`
   display: flex;
   align-items: center;
   line-height: 54px;
+
+  ${({ theme }) => theme?.components?.Header?.NavLink};
 `;
 
 const SearchContainer = styled.div`
@@ -100,6 +120,8 @@ const SearchContainer = styled.div`
   ${breakpoints.tablet`
     display: block;
   `}
+
+  ${({ theme }) => theme?.components?.Header?.SearchContainer};
 `;
 
 const Header = ({ className }) => {

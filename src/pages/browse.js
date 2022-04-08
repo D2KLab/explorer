@@ -34,8 +34,22 @@ import breakpoints, { sizes } from '@styles/breakpoints';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import config from '~/config';
+import mainTheme from '~/theme';
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
+
+const selectTheme = (theme) => ({
+  ...theme,
+  borderRadius: 0,
+  ...mainTheme.select,
+  colors: {
+    ...theme.colors,
+    primary: '#000',
+    neutral0: '#eee',
+    primary25: '#ddd',
+    ...mainTheme.select?.colors,
+  },
+})
 
 const StyledSelect = styled(Select)`
   min-width: 200px;
@@ -485,16 +499,7 @@ const BrowsePage = ({ initialData, similarityEntity }) => {
                 options={sortOptions}
                 value={sortOptions.find((o) => o.value === query.sort)}
                 onChange={onSortChange}
-                theme={(theme) => ({
-                  ...theme,
-                  borderRadius: 0,
-                  colors: {
-                    ...theme.colors,
-                    primary: '#000',
-                    neutral0: '#eee',
-                    primary25: '#ddd',
-                  },
-                })}
+                theme={selectTheme}
               />
             </Option>
             {query.similarity_type && (
@@ -507,16 +512,7 @@ const BrowsePage = ({ initialData, similarityEntity }) => {
                   options={similarityOptions}
                   value={similarityOptions.find((o) => o.value === query.similarity_type)}
                   onChange={onSimilarityChange}
-                  theme={(theme) => ({
-                    ...theme,
-                    borderRadius: 0,
-                    colors: {
-                      ...theme.colors,
-                      primary: '#000',
-                      neutral0: '#eee',
-                      primary25: '#ddd',
-                    },
-                  })}
+                  theme={selectTheme}
                 />
               </Option>
             )}

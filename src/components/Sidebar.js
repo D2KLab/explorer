@@ -27,10 +27,14 @@ const Container = styled.div`
         `${theme.header.height} - ${theme.header.borderBottomWidth} - ${theme.footer.minHeight}`}
     );
   `}
+
+  ${({ theme }) => theme?.components?.Sidebar?.Container};
 `;
 
 const StyledSwitch = styled(Switch)`
   margin-left: 5px;
+
+  ${({ theme }) => theme?.components?.Sidebar?.StyledSwitch};
 `;
 
 const ButtonsBar = styled.div`
@@ -38,12 +42,16 @@ const ButtonsBar = styled.div`
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 24px;
+
+  ${({ theme }) => theme?.components?.Sidebar?.ButtonsBar};
 `;
 
 const MobileButtonsBar = styled(ButtonsBar)`
   ${breakpoints.mobile`
     display: none;
   `}
+
+  ${({ theme }) => theme?.components?.Sidebar?.MobileButtonsBar};
 `;
 
 const ClearButton = styled(Button)`
@@ -51,6 +59,8 @@ const ClearButton = styled(Button)`
   color: #000;
   flex: 0 1 120px;
   justify-content: center;
+
+  ${({ theme }) => theme?.components?.Sidebar?.ClearButton};
 `;
 
 const FilterButton = styled(Button)`
@@ -58,9 +68,13 @@ const FilterButton = styled(Button)`
   color: #fff;
   flex: 0 1 120px;
   justify-content: center;
+
+  ${({ theme }) => theme?.components?.Sidebar?.FilterButton};
 `;
 
-const Fields = styled.div``;
+const Fields = styled.div`
+  ${({ theme }) => theme?.components?.Sidebar?.Fields};
+`;
 
 const Field = styled.div`
   margin-bottom: 24px;
@@ -74,6 +88,8 @@ const Field = styled.div`
   ${Input} {
     width: 100%;
   }
+
+  ${({ theme }) => theme?.components?.Sidebar?.Field};
 `;
 
 const Option = styled.div`
@@ -84,6 +100,8 @@ const Option = styled.div`
   > span {
     flex: 1;
   }
+
+  ${({ theme }) => theme?.components?.Sidebar?.Option};
 `;
 
 const Sidebar = ({ className, onSearch, submitOnChange = false, type, filters, query }) => {

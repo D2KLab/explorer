@@ -108,4 +108,6 @@ export default createGlobalStyle`
   em {
     font-style: italic;
   }
+
+  ${theme.globalStyle};
 `;

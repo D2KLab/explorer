@@ -16,11 +16,12 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: ${({ theme }) => theme.footer.minHeight};
 
   ${breakpoints.tablet`
     flex-direction: row;
   `}
+
+  ${({ theme }) => theme?.components?.Footer?.Container};
 `;
 
 const Credits = styled.div`
