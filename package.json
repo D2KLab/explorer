@@ -46,6 +46,7 @@
     "react-sticky-box": "^0.9.3",
     "react-swipeable-views": "^0.14.0",
     "react-switch": "^6.0.0",
+    "react-tagcloud": "^2.2.0",
     "reakit": "^1.3.8",
     "redis": "^3.1.2",
     "rrweb": "^0.9.14",
