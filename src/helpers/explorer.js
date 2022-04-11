@@ -78,3 +78,10 @@ export const getEntityMainImage = (result, { route }) => {
 
   return mainImage;
 };
+
+export const generatePermalink = (uri) => {
+  if (typeof config.api.permalinkUrl === 'function') {
+    return config.api.permalinkUrl(uri);
+  }
+  return uri;
+}

@@ -21,7 +21,7 @@ import GraphLink from '@components/GraphLink';
 import MetadataList from '@components/MetadataList';
 import breakpoints from '@styles/breakpoints';
 import { uriToId, absoluteUrl, generateMediaUrl } from '@helpers/utils';
-import { findRouteByRDFType, getEntityMainLabel } from '@helpers/explorer';
+import { findRouteByRDFType, generatePermalink, getEntityMainLabel } from '@helpers/explorer';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import config from '~/config';
@@ -129,7 +129,7 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                 {route.details.showPermalink && (
                   <small>
                     (
-                    <a href={result['@id']} target="_blank" rel="noopener noreferrer">
+                    <a href={generatePermalink(result['@id'])} target="_blank" rel="noopener noreferrer">
                       {t('common:buttons.permalink')}
                     </a>
                     )

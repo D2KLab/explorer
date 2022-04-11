@@ -25,7 +25,7 @@ import SaveButton from '@components/SaveButton';
 import breakpoints from '@styles/breakpoints';
 import { absoluteUrl, getQueryObject, uriToId } from '@helpers/utils';
 import SparqlClient from '@helpers/sparql';
-import { getEntityMainLabel } from '@helpers/explorer';
+import { generatePermalink, getEntityMainLabel } from '@helpers/explorer';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import config from '~/config';
@@ -534,7 +534,7 @@ const VideoDetailsPage = ({
       {route.details.showPermalink && (
         <small>
           (
-          <a href={result['@id']} target="_blank" rel="noopener noreferrer">
+          <a href={generatePermalink(result['@id'])} target="_blank" rel="noopener noreferrer">
             {t('common:buttons.permalink')}
           </a>
           )
