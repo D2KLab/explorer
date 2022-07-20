@@ -1,10 +1,10 @@
 import { useRef, useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import Router, { useRouter } from 'next/router';
-import StickyBox from 'react-sticky-box';
 import rrwebPlayer from 'rrweb-player';
 import 'rrweb-player/dist/style.css';
 
+import StickyBox from '@components/StickyBox';
 import Layout from '@components/Layout';
 import Header from '@components/Header';
 import Body from '@components/Body';

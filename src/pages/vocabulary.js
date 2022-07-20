@@ -2,7 +2,6 @@ import { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import StickyBox from 'react-sticky-box';
 import 'intersection-observer';
 import { ChevronRight } from '@styled-icons/entypo/ChevronRight';
 import { ChevronDown } from '@styled-icons/entypo/ChevronDown';
@@ -10,6 +9,7 @@ import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
 import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
+import StickyBox from '@components/StickyBox';
 import Header from '@components/Header';
 import Footer from '@components/Footer';
 import Layout from '@components/Layout';
