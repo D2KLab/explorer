@@ -175,6 +175,7 @@ export async function getServerSideProps({ query, req, locale }) {
     const res = await SparqlClient.query(listQuery, {
       endpoint: config.api.endpoint,
       debug: config.debug,
+      params: config.api.params,
     });
     if (res) {
       items.push(...res['@graph']);

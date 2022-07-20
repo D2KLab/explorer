@@ -35,6 +35,7 @@ export const getFilters = async (query, { language }) => {
       const resQuery = await SparqlClient.query(filterQuery, {
         endpoint: config.api.endpoint,
         debug: config.debug,
+        params: config.api.params,
       });
       if (resQuery) {
         filterValues = resQuery['@graph'].map((row) => {
@@ -223,6 +224,7 @@ export const search = async (query) => {
       const resMainSearch = await SparqlClient.query(mainSearchQuery, {
         endpoint: config.api.endpoint,
         debug: config.debug,
+        params: config.api.params,
       });
       if (resMainSearch) {
         entities.push(...resMainSearch['@graph']);
@@ -246,6 +248,7 @@ export const search = async (query) => {
           const resSearchDetails = await SparqlClient.query(searchDetailsQuery, {
             endpoint: config.api.endpoint,
             debug: config.debug,
+            params: config.api.params,
           });
 
           const details = [];
@@ -297,6 +300,7 @@ export const search = async (query) => {
       const resPagination = await SparqlClient.query(paginationQuery, {
         endpoint: config.api.endpoint,
         debug: config.debug,
+        params: config.api.params,
       });
       totalResults = resPagination && resPagination[0] ? parseInt(resPagination[0].id, 10) : 0;
     } catch (e) {

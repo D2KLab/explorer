@@ -22,7 +22,7 @@ export const getSparqlQuery = async (query) => {
   return sparqlQuery;
 };
 
-export const query = async (queryObject, { endpoint, debug } = {}) => {
+export const query = async (queryObject, { endpoint, debug = false, params = {} } = {}) => {
   const sparqlQuery = await getSparqlQuery(queryObject);
   let results = null;
   if (sparqlQuery) {
@@ -32,6 +32,7 @@ export const query = async (queryObject, { endpoint, debug } = {}) => {
         const resQuery = await sparqlTransformer(queryObject, {
           endpoint,
           debug,
+          params
         });
         if (resQuery) {
           await cache.set(cacheKey, JSON.stringify(resQuery));

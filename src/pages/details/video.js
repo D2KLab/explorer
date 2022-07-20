@@ -754,6 +754,7 @@ export async function getServerSideProps({ req, res, query, locale }) {
       const resp = await SparqlClient.query(videoSegmentsQuery, {
         endpoint: config.api.endpoint,
         debug: config.debug,
+        params: config.api.params,
       });
 
       resp['@graph'].forEach((segment) => {

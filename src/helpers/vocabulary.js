@@ -18,6 +18,7 @@ export async function getVocabularyItems(vocabularyId, options = { language: 'en
   const resSearch = await SparqlClient.query(searchQuery, {
     endpoint: config.api.endpoint,
     debug: config.debug,
+    params: config.api.params,
   });
 
   if (resSearch) {

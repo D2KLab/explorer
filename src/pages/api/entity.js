@@ -36,6 +36,7 @@ export const getEntity = async (query) => {
   const queryRes = await SparqlClient.query(searchQuery, {
     endpoint: config.api.endpoint,
     debug: config.debug,
+    params: config.api.params,
   });
 
   const result = queryRes && queryRes['@graph'][0] && removeEmptyObjects(queryRes['@graph'][0]);
