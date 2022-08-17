@@ -19,7 +19,7 @@ const StyledImage = styled.img`
 
 const GraphIcon = ({ className, size = 24, uri, style }) => {
   const graph = config.graphs[uri];
-  if (!graph) {
+  if (!graph || !graph.icon) {
     return null;
   }
   return (

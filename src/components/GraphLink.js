@@ -8,7 +8,7 @@ import config from '~/config';
 
 const GraphLink = ({
   className,
-  style,
+  style = {},
   target = '_blank',
   rel = 'noopener noreferrer',
   uri,
@@ -18,8 +18,8 @@ const GraphLink = ({
   const graph = config.graphs[uri];
   if (!graph) return null;
   return (
-    <a className={className} href={graph.url} target={target} rel={rel} style={style}>
-      {icon && <GraphIcon uri={uri} style={{ verticalAlign: 'top' }} />}
+    <a className={className} href={graph.url} target={target} rel={rel} style={{ display: 'flex', alignItems: 'center', ...style }}>
+      {icon && <GraphIcon uri={uri} />}
       {label && <small style={{ marginLeft: '0.5em' }}>{graph.label}</small>}
     </a>
   );
