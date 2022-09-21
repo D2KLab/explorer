@@ -91,9 +91,7 @@ module.exports = {
             $langTag: 'hide',
           },
           whereFunc: () => ['?id <http://dbpedia.org/ontology/language> ?language'],
-          filterFunc: (values) => {
-            return [values.map((val) => `?language = <${val}>`).join(' || ')];
-          },
+          filterFunc: (values) => [values.map((val) => `?language = <${val}>`).join(' || ')],
         },
         {
           id: 'show-only-images',
