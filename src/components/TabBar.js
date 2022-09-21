@@ -85,7 +85,8 @@ const Tabs = ({ className, children }) => {
       <TabContent>
         <SwipeableViews index={selectedTab} onChangeIndex={(index) => setSelectedTab(index)}>
           {Children.map(children, (comp, index) => (
-            <div value={selectedTab} index={index}>
+            // eslint-disable-next-line react/no-array-index-key
+            <div value={selectedTab} key={index}>
               {comp}
             </div>
           ))}

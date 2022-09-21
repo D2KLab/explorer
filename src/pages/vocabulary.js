@@ -3,8 +3,8 @@ import styled, { css } from 'styled-components';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import 'intersection-observer';
-import { ChevronRight } from '@styled-icons/entypo/ChevronRight';
-import { ChevronDown } from '@styled-icons/entypo/ChevronDown';
+import { ChevronRight } from '@styled-icons/boxicons-regular/ChevronRight';
+import { ChevronDown } from '@styled-icons/boxicons-regular/ChevronDown';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
 import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'

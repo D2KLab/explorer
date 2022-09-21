@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useDialogState, Dialog, DialogBackdrop } from 'reakit/Dialog';
 import { Tooltip, TooltipReference, useTooltipState } from 'reakit/Tooltip';
-import { QuestionCircle } from '@styled-icons/fa-solid/QuestionCircle';
+import { CircleQuestion } from '@styled-icons/fa-solid/CircleQuestion';
 import { useTranslation } from 'next-i18next';
 
 import breakpoints from '@styles/breakpoints';
@@ -90,7 +90,7 @@ const Prediction = ({ prediction }) => {
       </small>{' '}
       <TooltipReference
         {...tooltipPrediction}
-        as={QuestionCircle}
+        as={CircleQuestion}
         size={16}
         color={theme.colors.prediction}
         style={{ cursor: 'pointer' }}

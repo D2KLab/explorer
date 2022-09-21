@@ -6,7 +6,7 @@ import DefaultErrorPage from 'next/error';
 import queryString from 'query-string';
 import { useSWRInfinite } from 'swr';
 import { Grid as GridIcon } from '@styled-icons/boxicons-solid/Grid';
-import { MapMarkedAlt as MapIcon } from '@styled-icons/fa-solid/MapMarkedAlt';
+import { MapLocationDot } from '@styled-icons/fa-solid/MapLocationDot';
 import ReactPaginate from 'react-paginate';
 
 import Header from '@components/Header';
@@ -519,7 +519,7 @@ const BrowsePage = ({ initialData, similarityEntity }) => {
             {config.plugins.virtualLoom && (
               <Option>
                 <Button primary onClick={toggleMap} title={t('search:buttons.toggleMap')}>
-                  {isMapVisible ? <GridIcon height="20" /> : <MapIcon height="20" />}
+                  {isMapVisible ? <GridIcon height="20" /> : <MapLocationDot height="20" />}
                 </Button>
               </Option>
             )}

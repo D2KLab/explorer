@@ -5,7 +5,7 @@ import breakpoints from '@styles/breakpoints';
 import SearchBox from '@components/SearchBox';
 import LanguageSwitch from '@components/LanguageSwitch';
 import ProfileButton from '@components/ProfileButton';
-import { OpenInNew } from '@styled-icons/material/OpenInNew';
+import { WindowOpen } from '@styled-icons/boxicons-regular/WindowOpen';
 import { useTranslation } from 'next-i18next';
 import config from '~/config';
 
@@ -165,7 +165,7 @@ const Header = ({ className }) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Thesaurus <OpenInNew style={{ width: '1rem', height: '1rem' }} />
+                Thesaurus <WindowOpen style={{ width: '1rem', height: '1rem' }} />
               </NavLink>
             </NavItem>
           )}
