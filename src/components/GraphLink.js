@@ -19,8 +19,8 @@ const GraphLink = ({
   if (!graph) return null;
   return (
     <a className={className} href={graph.url} target={target} rel={rel} style={{ display: 'flex', alignItems: 'center', ...style }}>
-      {icon && <GraphIcon uri={uri} />}
-      {label && <small style={{ marginLeft: '0.5em' }}>{graph.label}</small>}
+      {icon && <GraphIcon uri={uri} style={{ marginRight: '0.5em' }} />}
+      {label && <small>{graph.label}</small>}
     </a>
   );
 };
