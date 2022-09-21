@@ -185,7 +185,7 @@ export const search = async (query) => {
     const defaultPerPage = 20; // default number of results per page
     const itemsPerPage =
       Math.max(minPerPage, Math.min(maxPerPage, parseInt(query.per_page, 10))) || defaultPerPage;
-    // We cannoy use sparql-transformer $limit/$offset/$orderby because the $limit property limits the whole
+    // We cannot use sparql-transformer $limit/$offset/$orderby because the $limit property limits the whole
     // query results, while we actually need to limit the number of unique ?id results
     // The subquery is also used to compute the total number of pages for the pagination component
     const whereCondition = `
