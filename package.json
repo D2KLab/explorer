@@ -54,7 +54,7 @@
     "redis": "^3.1.2",
     "rrweb": "^0.9.14",
     "rrweb-player": "^0.7.1",
-    "sparql-transformer": "^2.8.0",
+    "sparql-transformer": "^2.9.0",
     "styled-components": "^5.3.0",
     "styled-reset": "^4.3.4",
     "styled-system": "^5.1.5",
