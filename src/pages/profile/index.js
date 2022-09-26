@@ -25,7 +25,6 @@ import { absoluteUrl, slugify } from '@helpers/utils';
 import { getSessionUser, getUserLists, getUserAccounts } from '@helpers/database';
 import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { getToken } from 'next-auth/jwt';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth';
 
@@ -379,7 +378,7 @@ const ProfilePage = ({
 export default ProfilePage;
 
 export async function getServerSideProps(ctx) {
-  const { req, res } = ctx;
+  const { req } = ctx;
   const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions);
   const user = await getSessionUser(session);
 
