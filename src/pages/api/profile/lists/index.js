@@ -8,7 +8,7 @@ export default withRequestValidation({
   allowedMethods: ['GET', 'POST'],
 })(async (req, res) => {
   const session = await unstable_getServerSession(req, res, authOptions)
-  console.log('session===',session);
+
   // Get user informations
   const user = await getSessionUser(session);
 
