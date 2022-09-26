@@ -1,15 +1,16 @@
 import { getSessionUser, getUserLists, createUserList } from '@helpers/database';
 import { withRequestValidation } from '@helpers/api';
-import { getToken } from 'next-auth/jwt';
+import { unstable_getServerSession } from 'next-auth';
+import { authOptions } from '@pages/api/auth/[...nextauth]';
 
 export default withRequestValidation({
   useSession: true,
   allowedMethods: ['GET', 'POST'],
 })(async (req, res) => {
-  const token = await getToken({ req });
-
+  const session = await unstable_getServerSession(req, res, authOptions)
+  console.log('session===',session);
   // Get user informations
-  const user = await getSessionUser(token);
+  const user = await getSessionUser(session);
 
   if (req.method === 'GET') {
     // Get user lists

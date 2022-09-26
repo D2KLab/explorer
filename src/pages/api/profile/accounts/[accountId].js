@@ -1,15 +1,16 @@
 import { getSessionUser, getUserAccounts, removeUserAccount } from '@helpers/database';
 import { withRequestValidation } from '@helpers/api';
-import { getToken } from 'next-auth/jwt';
+import { unstable_getServerSession } from 'next-auth';
+import { authOptions } from '@pages/api/auth/[...nextauth]';
 
 export default withRequestValidation({
   useSession: true,
   allowedMethods: ['GET', 'DELETE'],
 })(async (req, res) => {
-  const token = await getToken({ req });
+  const session = await unstable_getServerSession(req, res, authOptions)
 
   // Get user
-  const user = await getSessionUser(token);
+  const user = await getSessionUser(session);
 
   // Get user accounts
   const { accountId } = req.query;

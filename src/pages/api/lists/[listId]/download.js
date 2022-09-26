@@ -9,7 +9,8 @@ import { absoluteUrl, uriToId, slugify } from '@helpers/utils';
 import { withRequestValidation } from '@helpers/api';
 // eslint-disable-next-line import/no-named-default
 import { default as cfg } from '~/config';
-import { getToken } from 'next-auth/jwt';
+import { unstable_getServerSession } from 'next-auth';
+import { authOptions } from '@pages/api/auth/[...nextauth]';
 
 const bufferToStream = (buffer) => {
   const stream = new Duplex();
@@ -62,8 +63,8 @@ export default withRequestValidation({
   }
 
   // Get user informations
-  const token = await getToken({ req });
-  const user = await getSessionUser(token);
+  const session = await unstable_getServerSession(req, res, authOptions)
+  const user = await getSessionUser(session);
 
   const isOwner = user && list && list.user.equals(user._id);
 

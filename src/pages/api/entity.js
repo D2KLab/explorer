@@ -4,7 +4,8 @@ import { fillWithVocabularies } from '@helpers/vocabulary';
 import { getSessionUser, getUserLists } from '@helpers/database';
 import SparqlClient from '@helpers/sparql';
 import config from '~/config';
-import { getToken } from 'next-auth/jwt';
+import { unstable_getServerSession } from 'next-auth';
+import { authOptions } from './auth/[...nextauth]';
 
 const getEntityQuery = (route, query) => {
   if (!route) {
@@ -70,8 +71,8 @@ export default withRequestValidation({
   }
 
   if (req) {
-    const token = await getToken({ req });
-    const user = await getSessionUser(token);
+    const session = await unstable_getServerSession(req, res, authOptions)
+    const user = await getSessionUser(session);
     if (user) {
       // Check if this item is in a user list and flag it accordingly.
       const loadedLists = await getUserLists(user);

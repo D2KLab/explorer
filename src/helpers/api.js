@@ -1,5 +1,6 @@
-import NextAuth from 'next-auth/react';
 import { STATUS_CODES } from 'http';
+import { unstable_getServerSession } from 'next-auth';
+import { authOptions } from '@pages/api/auth/[...nextauth]';
 
 export class HTTPError extends Error {
   constructor(code, message, extras) {
@@ -16,7 +17,7 @@ export async function validateRequest(req, res, options = {}) {
     // Check for a valid session
     let session = null;
     try {
-      session = await NextAuth.getSession({ req });
+      session = await unstable_getServerSession(req, res, authOptions)
     } catch (e) {
       // NextAuth.getSession currently throws an error if baseUrl cookie is not defined
     }
