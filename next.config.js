@@ -26,12 +26,5 @@ module.exports = {
       cfg.resolve.fallback.tls = false;
     }
     return cfg;
-  },
-  webpackDevMiddleware: cfg => {
-    cfg.watchOptions = {
-      poll: 800,
-      aggregateTimeout: 300,
-    }
-    return cfg
-  },
+  }
 };

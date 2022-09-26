@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { Img } from 'react-image';
 import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
-import { getSession, getProviders, getCsrfToken, signout } from 'next-auth/client';
+import { getProviders, getCsrfToken, signout } from 'next-auth/react';
 import NextLink from 'next/link';
 import Router from 'next/router';
 import { ShareAlt as ShareIcon } from '@styled-icons/boxicons-solid/ShareAlt';
@@ -25,6 +25,9 @@ import { absoluteUrl, slugify } from '@helpers/utils';
 import { getSessionUser, getUserLists, getUserAccounts } from '@helpers/database';
 import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { getToken } from 'next-auth/jwt';
+import { authOptions } from '@pages/api/auth/[...nextauth]';
+import { unstable_getServerSession } from 'next-auth';
 
 const StyledDialogDisclosure = styled(DialogDisclosure)`
   appearance: none;
@@ -149,9 +152,9 @@ const StyledTrashIcon = styled(TrashIcon)`
 `;
 
 const ProfilePage = ({
+  session,
   providers,
   csrfToken,
-  session,
   accounts,
   lists,
   baseUrl,
@@ -180,7 +183,7 @@ const ProfilePage = ({
 
   const renderOperations = () => (
       <Element marginY={24} display="flex" flexDirection="column">
-        <h3 style={{ color: '#dc3535', fontWeight: 'bold' }}>{t('profile.deleteAccount.title')}</h3>
+        <h3 style={{ color: '#dc3535', fontWeight: 'bold' }}>{t('common:profile.deleteAccount.title')}</h3>
         <DialogDisclosure
           {...deleteProfileDialog}
           as={DeleteButton}
@@ -188,25 +191,25 @@ const ProfilePage = ({
           text="#dc3545"
           loading={isDeletingAccount}
         >
-          {t('profile.deleteAccount.title')}
+          {t('common:profile.deleteAccount.title')}
         </DialogDisclosure>
         <StyledDialogBackdrop {...deleteProfileDialog}>
           <StyledDialog
             {...deleteProfileDialog}
             modal
-            aria-label={t('profile.deleteAccount.title')}
+            aria-label={t('common:profile.deleteAccount.title')}
           >
-            <h2>{t('profile.deleteAccount.title')}</h2>
+            <h2>{t('common:profile.deleteAccount.title')}</h2>
             <p>
               <Trans
                 i18nKey="common:profile.deleteAccount.text"
                 components={[<strong />, <strong />]}
               />
             </p>
-            <p>{t('profile.deleteAccount.consequences')}</p>
+            <p>{t('common:profile.deleteAccount.consequences')}</p>
             <ul style={{ listStyleType: 'disc', paddingLeft: 20, margin: '1em 0' }}>
-              <li>{t('profile.deleteAccount.lists')}</li>
-              <li>{t('profile.deleteAccount.sessions')}</li>
+              <li>{t('common:profile.deleteAccount.lists')}</li>
+              <li>{t('common:profile.deleteAccount.sessions')}</li>
             </ul>
             <Element display="flex" alignItems="center" justifyContent="space-between">
               <Button
@@ -216,7 +219,7 @@ const ProfilePage = ({
                   deleteProfileDialog.hide();
                 }}
               >
-                {t('profile.deleteAccount.cancel')}
+                {t('common:profile.deleteAccount.cancel')}
               </Button>
               <Button
                 type="button"
@@ -225,7 +228,7 @@ const ProfilePage = ({
                 loading={isDeletingAccount}
                 onClick={deleteProfile}
               >
-                {t('profile.deleteAccount.confirm')}
+                {t('common:profile.deleteAccount.confirm')}
               </Button>
             </Element>
           </StyledDialog>
@@ -236,11 +239,11 @@ const ProfilePage = ({
   const renderAccounts = () => (
       <>
         <Element marginBottom={24}>
-          <h3>{t('profile.connectedAccounts.title')}</h3>
+          <h3>{t('common:profile.connectedAccounts.title')}</h3>
           <ul>
-            {accounts.map((account) => (
+            {accounts?.map((account) => (
               <Element as="li" key={account._id} marginBottom={12}>
-                {account.providerId.substr(0, 1).toUpperCase() + account.providerId.substr(1)}
+                {account.provider.substr(0, 1).toUpperCase() + account.provider.substr(1)}
                 <Button
                   primary
                   onClick={() => {
@@ -248,18 +251,18 @@ const ProfilePage = ({
                   }}
                   loading={isUnlinkingAccount}
                 >
-                  {t('profile.connectedAccounts.unlink')}
+                  {t('common:profile.connectedAccounts.unlink')}
                 </Button>
               </Element>
             ))}
           </ul>
         </Element>
         <Element marginBottom={24}>
-          <h3>{t('profile.connectedAccounts.new')}</h3>
+          <h3>{t('common:profile.connectedAccounts.new')}</h3>
           <Element display="flex" flexDirection="column">
             {providers &&
               Object.values(providers).map((provider) => {
-                if (accounts.find((account) => account.providerId === provider.id)) {
+                if (accounts.find((account) => account.provider === provider.id)) {
                   // Do not display a button if this provider is already linked to the user
                   return null;
                 }
@@ -282,7 +285,7 @@ const ProfilePage = ({
 
   return (
     <Layout>
-      <PageTitle title={t('profile.title')} />
+      <PageTitle title={t('common:profile.title')} />
       <Header />
       <Body hasSidebar>
         <Content>
@@ -301,9 +304,9 @@ const ProfilePage = ({
               {renderOperations()}
             </ProfileSidebar>
             <ProfileContent>
-              <h1 style={{ marginBottom: 24 }}>{t('profile.lists.title')}</h1>
+              <h1 style={{ marginBottom: 24 }}>{t('common:profile.lists.title')}</h1>
               <ul>
-                {lists.map((list) => {
+                {lists?.map((list) => {
                   const shareListDialog = useDialogState();
                   const deleteListDialog = useDialogState();
 
@@ -319,9 +322,9 @@ const ProfilePage = ({
                           <ListSettings list={list} />
                         </ListItemTitle>
                         <ListItemSubtitle>
-                          {t('profile.lists.count', { count: list.items.length })} |{' '}
+                          {t('common:profile.lists.count', { count: list.items.length })} |{' '}
                           <Trans
-                            i18nKey="profile.lists.lastEdit"
+                            i18nKey="common:profile.lists.lastEdit"
                             components={[
                               <time
                                 dateTime={new Date(list.updated_at).toISOString()}
@@ -356,7 +359,7 @@ const ProfilePage = ({
                         </ListItemButton>
                         <ListItemButton>
                           <NextLink href={`/lists/${slugify(list.name)}-${list._id}`} passHref>
-                            <Button primary>{t('profile.lists.open')}</Button>
+                            <Button primary>{t('common:profile.lists.open')}</Button>
                           </NextLink>
                         </ListItemButton>
                       </Element>
@@ -373,16 +376,20 @@ const ProfilePage = ({
   );
 };
 
+export default ProfilePage;
+
 export async function getServerSideProps(ctx) {
   const { req, res } = ctx;
-  const session = await getSession(ctx);
+  const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions);
   const user = await getSessionUser(session);
 
   if (!user) {
-    res.setHeader('location', '/auth/signin');
-    res.statusCode = 302;
-    res.end();
-    return { props: {} };
+    return {
+      redirect: {
+        destination: '/auth/signin',
+        permanent: false,
+      },
+    }
   }
 
   // Get user lists
@@ -394,9 +401,9 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       ...await serverSideTranslations(ctx.locale, ['common', 'project']),
+      session,
       providers: await getProviders(ctx),
       csrfToken: await getCsrfToken(ctx),
-      session,
       accounts: JSON.parse(JSON.stringify(accounts)), // serialize the accounts
       lists: JSON.parse(JSON.stringify(lists)), // serialize the lists
       baseUrl: absoluteUrl(req),
@@ -404,5 +411,3 @@ export async function getServerSideProps(ctx) {
     },
   };
 }
-
-export default ProfilePage;

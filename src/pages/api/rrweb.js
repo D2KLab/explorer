@@ -1,15 +1,15 @@
-import NextAuth from 'next-auth/client';
-import { ObjectID } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import cookie from 'cookie';
 
 import { withRequestValidation } from '@helpers/api';
 import { connectToDatabase, getSessionUser } from '@helpers/database';
+import { getToken } from 'next-auth/jwt';
 
 export default withRequestValidation({
   allowedMethods: ['POST'],
 })(async (req, res) => {
-  const session = await NextAuth.getSession({ req });
-  const user = await getSessionUser(session);
+  const token = await getToken({ req });
+  const user = await getSessionUser(token);
   const db = await connectToDatabase();
 
   if (req.body.delete) {
@@ -43,7 +43,7 @@ export default withRequestValidation({
     {
       $set: {
         capture_session_id: rrweb,
-        user: user && new ObjectID(user._id),
+        user: user && new ObjectId(user._id),
         updated_at: new Date(),
       },
       $setOnInsert: { created_at: new Date() },

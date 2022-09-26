@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
 import queryString from 'query-string';
-import NextAuth from 'next-auth/client';
+import { useSession } from 'next-auth/react';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -71,7 +71,8 @@ const Description = styled.div`
 
 const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   const { t, i18n } = useTranslation(['common', 'project']);
-  const [session] = NextAuth.useSession();
+  const { data: session } = useSession();
+
   const { query } = useRouter();
   const [isItemSaved, setIsItemSaved] = useState(inList);
 

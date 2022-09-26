@@ -1,16 +1,15 @@
-import NextAuth from 'next-auth/client';
-
 import { getSessionUser, getUserLists, createUserList } from '@helpers/database';
 import { withRequestValidation } from '@helpers/api';
+import { getToken } from 'next-auth/jwt';
 
 export default withRequestValidation({
   useSession: true,
   allowedMethods: ['GET', 'POST'],
 })(async (req, res) => {
-  const session = await NextAuth.getSession({ req });
+  const token = await getToken({ req });
 
   // Get user informations
-  const user = await getSessionUser(session);
+  const user = await getSessionUser(token);
 
   if (req.method === 'GET') {
     // Get user lists

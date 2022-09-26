@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import Link from 'next/link';
-import { getSession } from 'next-auth/client';
 import queryString from 'query-string';
 
 import Header from '@components/Header';
@@ -22,6 +21,7 @@ import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
 import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import config from '~/config';
+import { getToken } from 'next-auth/jwt';
 
 const StyledMedia = styled(Media)`
   margin-left: var(--card-margin);
@@ -201,7 +201,7 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
 
 export async function getServerSideProps(ctx) {
   const { req, res, query } = ctx;
-  const session = await getSession(ctx);
+  const token = await getToken({ req });
   const list = await getListById(query.listId.split('-').pop());
 
   if (!list) {
@@ -215,7 +215,7 @@ export async function getServerSideProps(ctx) {
   }
 
   // Get current user
-  const user = await getSessionUser(session);
+  const user = await getSessionUser(token);
 
   const isOwner = user && list && list.user.equals(user._id);
 

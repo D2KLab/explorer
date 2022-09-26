@@ -1,11 +1,10 @@
-import NextAuth from 'next-auth/client';
-
 import { withRequestValidation } from '@helpers/api';
 import { idToUri, removeEmptyObjects, getQueryObject } from '@helpers/utils';
 import { fillWithVocabularies } from '@helpers/vocabulary';
 import { getSessionUser, getUserLists } from '@helpers/database';
 import SparqlClient from '@helpers/sparql';
 import config from '~/config';
+import { getToken } from 'next-auth/jwt';
 
 const getEntityQuery = (route, query) => {
   if (!route) {
@@ -71,8 +70,8 @@ export default withRequestValidation({
   }
 
   if (req) {
-    const session = await NextAuth.getSession({ req });
-    const user = await getSessionUser(session);
+    const token = await getToken({ req });
+    const user = await getSessionUser(token);
     if (user) {
       // Check if this item is in a user list and flag it accordingly.
       const loadedLists = await getUserLists(user);

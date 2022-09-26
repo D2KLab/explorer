@@ -4,7 +4,7 @@ import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
 import { Img } from 'react-image';
 import { DownArrow } from '@styled-icons/boxicons-solid/DownArrow';
 import { User } from '@styled-icons/boxicons-solid/User';
-import NextAuth from 'next-auth/client';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import Router from 'next/router';
 
 import Element from '@components/Element';
@@ -93,7 +93,9 @@ const StyledUserIcon = styled(User)`
 const ProfileButton = ({ className }) => {
   const { t } = useTranslation('common');
   const menu = useMenuState();
-  const [session, loading] = NextAuth.useSession();
+
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
 
   const renderSessionMenuItems = () => {
     if (!session || !session.user) {
@@ -127,7 +129,7 @@ const ProfileButton = ({ className }) => {
             menu.hide();
           }}
         >
-          {t('profileButton.yourProfile')}
+          {t('common:profileButton.yourProfile')}
         </StyledMenuItem>
         <StyledDivider />
         <StyledMenuItem
@@ -135,11 +137,11 @@ const ProfileButton = ({ className }) => {
           href="/api/auth/signout"
           onClick={(e) => {
             e.preventDefault();
-            NextAuth.signout();
+            signOut();
             menu.hide();
           }}
         >
-          {t('profileButton.signOut')}
+          {t('common:profileButton.signOut')}
         </StyledMenuItem>
       </>
     );
@@ -148,7 +150,7 @@ const ProfileButton = ({ className }) => {
   const renderMenu = () => (
     <>
       <StyledMenuButton {...menu}>
-        {session && session.user && session.user.image ? (
+        {session?.user?.image ? (
           <StyledUserIcon
             as={Img}
             loader={<StyledUserIcon />}
@@ -160,10 +162,10 @@ const ProfileButton = ({ className }) => {
         ) : (
           <StyledUserIcon />
         )}
-        {t('profileButton.label')}
+        {t('common:profileButton.label')}
         <StyledDownArrow />
       </StyledMenuButton>
-      <StyledMenu {...menu} aria-label={t('profileButton.label')}>
+      <StyledMenu {...menu} aria-label={t('common:profileButton.label')}>
         {session ? (
           renderSessionMenuItems(session, menu)
         ) : (
@@ -172,11 +174,11 @@ const ProfileButton = ({ className }) => {
             href="/api/signin"
             onClick={(e) => {
               e.preventDefault();
-              NextAuth.signin();
+              signIn();
               menu.hide();
             }}
           >
-            {t('profileButton.signIn')}
+            {t('common:profileButton.signIn')}
           </StyledMenuItem>
         )}
       </StyledMenu>

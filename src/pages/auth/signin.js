@@ -1,4 +1,4 @@
-import { getProviders, getCsrfToken } from 'next-auth/client';
+import { getProviders, getCsrfToken } from 'next-auth/react';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -16,7 +16,7 @@ const SignInPage = ({ providers, csrfToken }) => {
   const { t } = useTranslation('common');
   return (
     <Layout>
-      <PageTitle title={t('profileButton.signIn')} />
+      <PageTitle title={t('common:profileButton.signIn')} />
       <Header />
       <Body>
         <Element
@@ -26,7 +26,7 @@ const SignInPage = ({ providers, csrfToken }) => {
           flexDirection="column"
           flex={1}
         >
-          <Title>{t('profileButton.signIn')}</Title>
+          <Title>{t('common:profileButton.signIn')}</Title>
           <Content>
             <Element display="flex" flexDirection="column">
               {providers &&

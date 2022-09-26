@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth/client';
+import NextAuth from 'next-auth/react';
 import { STATUS_CODES } from 'http';
 
 export class HTTPError extends Error {

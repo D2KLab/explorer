@@ -1,5 +1,3 @@
-import NextAuth from 'next-auth/client';
-
 import {
   getListById,
   getSessionUser,
@@ -9,6 +7,7 @@ import {
   updateList,
 } from '@helpers/database';
 import { withRequestValidation } from '@helpers/api';
+import { getToken } from 'next-auth/jwt';
 
 export default withRequestValidation({
   allowedMethods: ['GET', 'PUT', 'DELETE'],
@@ -26,8 +25,8 @@ export default withRequestValidation({
   }
 
   // Get user informations
-  const session = await NextAuth.getSession({ req });
-  const user = await getSessionUser(session);
+  const token = await getToken({ req });
+  const user = await getSessionUser(token);
 
   const isOwner = user && list && list.user.equals(user._id);
 

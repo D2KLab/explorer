@@ -57,6 +57,12 @@
       {
         "allow": ["_id"]
       }
+    ],
+    "camelcase": [
+      "error",
+      {
+        "ignoreImports": true
+      }
     ]
   }
 }

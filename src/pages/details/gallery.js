@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import NextAuth from 'next-auth/client';
+import { useSession } from 'next-auth/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import queryString from 'query-string';
 import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
@@ -231,7 +231,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
   const { t, i18n } = useTranslation(['common', 'project']);
   const router = useRouter();
   const { query } = router;
-  const [session] = NextAuth.useSession();
+  const { data: session } = useSession();
   const route = config.routes[query.type];
   const [isLoadingSimilar, setIsLoadingSimilar] = useState(false);
 

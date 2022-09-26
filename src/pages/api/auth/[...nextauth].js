@@ -1,70 +1,37 @@
 import NextAuth from 'next-auth';
-import Providers from 'next-auth/providers';
+import GoogleProvider from 'next-auth/providers/google';
+import FacebookProvider from 'next-auth/providers/facebook';
+import TwitterProvider from 'next-auth/providers/twitter';
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
+import clientPromise from '@helpers/mongodb';
 
-const options = {
+export const authOptions = {
   site: process.env.SITE,
+  adapter: MongoDBAdapter(clientPromise),
   providers: [
-    /*
-    Providers.Email({
-      // Configure with an SMTP connection string or an object for nodemailer https://nodemailer.com/
-      server: process.env.EMAIL_SERVER,
-      // Email services often only allow sending email from a valid/verified address
-      from: process.env.EMAIL_FROM,
-    }),
-    */
-    // When configuring oAuth providers you will need to make sure you get permission to request
-    // the users email address to be able to verify their identity
-    Providers.Google({
+    GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
     }),
-    Providers.Facebook({
+    FacebookProvider({
       clientId: process.env.FACEBOOK_ID,
       clientSecret: process.env.FACEBOOK_SECRET,
     }),
-    Providers.Twitter({
+    TwitterProvider({
       clientId: process.env.TWITTER_ID,
       clientSecret: process.env.TWITTER_SECRET,
+      version: "2.0"
     }),
-    /*
-    Providers.GitHub({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET
-    }),
-    Providers.Twitch({
-      clientId: process.env.TWITCH_ID,
-      clientSecret: process.env.TWITCH_SECRET
-    }),
-    */
   ],
   pages: {
     signIn: '/auth/signin',
   },
-  // Database configuration can be a JavaScript object or database connection
-  // string. By default, NextAuth loads TypeORM which is compatible with MySQL,
-  // Postgres, MongoDB and other popular SQL and noSQL databases.
-  // You can also specify a custom adapter if TypeORM doesn't meet your needs.
-  //
-  // This example configuration is for an SQLite in-memory database. For options
-  // see https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md
-  database: {
-    type: 'mongodb',
-    url: process.env.MONGODB_URI,
-    // The `synchronize: true` option automatically creates tables/collections.
-    // You should use this in development or on first run only as it may result
-    // in data loss if used in production.
-    synchronize: process.env.NODE_ENV !== 'production',
-  },
   callbacks: {
-    session: async (session, user) =>
-      // Expose user id
-       Promise.resolve({ ...session, user: { ...session.user, id: user.id } })
-    ,
+    session: async ({ session, user }) => ({
+      ...session,
+      user,
+    }),
   },
-  // sessionMaxAge: 30*24*60*60*1000, // Expire sessions after 30 days of being idle
-  // sessionUpdateAge: 24*60*60*1000, // Update session expiry only if session was updated more recently than the last 24 hours
-  // verificationMaxAge: 24*60*60*1000, // Expire erification links (for email sign in) after 24 hours
-  debug: false, // Set to true to enable debug messages to be displayed
 };
 
-export default async (req, res) => NextAuth(req, res, options);
+export default NextAuth(authOptions);

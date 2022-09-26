@@ -1,7 +1,6 @@
 import path from 'path';
 import AdmZip from 'adm-zip';
 import { Duplex } from 'stream';
-import NextAuth from 'next-auth/client';
 import queryString from 'query-string';
 import json2csv from 'json2csv';
 
@@ -10,6 +9,7 @@ import { absoluteUrl, uriToId, slugify } from '@helpers/utils';
 import { withRequestValidation } from '@helpers/api';
 // eslint-disable-next-line import/no-named-default
 import { default as cfg } from '~/config';
+import { getToken } from 'next-auth/jwt';
 
 const bufferToStream = (buffer) => {
   const stream = new Duplex();
@@ -62,8 +62,8 @@ export default withRequestValidation({
   }
 
   // Get user informations
-  const session = await NextAuth.getSession({ req });
-  const user = await getSessionUser(session);
+  const token = await getToken({ req });
+  const user = await getSessionUser(token);
 
   const isOwner = user && list && list.user.equals(user._id);
 

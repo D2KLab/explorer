@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
 import ReactPlayer from 'react-player';
 import queryString from 'query-string';
-import NextAuth from 'next-auth/client';
+import { useSession } from 'next-auth/react';
 import { useTabState, Tab, TabList, TabPanel } from 'reakit/Tab';
 import Link from 'next/link';
 
@@ -314,7 +314,7 @@ const VideoDetailsPage = ({
     return <DefaultErrorPage statusCode={404} title={t('common:errors.resultNotFound')} />;
   }
 
-  const [session] = NextAuth.useSession();
+  const { data: session } = useSession();
 
   const { query } = useRouter();
   const route = config.routes[query.type];

@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth/client';
+import { SessionProvider } from 'next-auth/react';
 import App from 'next/app';
 import { withRouter } from 'next/router';
 import { ThemeProvider } from 'styled-components';
@@ -63,9 +63,9 @@ class MyApp extends App {
             <div />
           )}
           {config.plugins?.consent?.show && Cookies.get('consent') === '1' && <RRWebRecorder />}
-          <NextAuth.Provider options={{ site: process.env.SITE }} session={session}>
+          <SessionProvider session={session} site={process.env.SITE} refetchInterval={5 * 60}>
             <Component {...pageProps} />
-          </NextAuth.Provider>
+          </SessionProvider>
         </ReakitProvider>
       </ThemeProvider>
     );
