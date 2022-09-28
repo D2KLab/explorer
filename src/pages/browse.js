@@ -210,17 +210,18 @@ function BrowsePage({ initialData, similarityEntity }) {
   }
   totalPages = Math.ceil(totalResults / PAGE_SIZE);
 
-  if (typeof window !== 'undefined') {
-    const debouncedHandleResize = useDebounce(() => {
+  const debouncedHandleResize = useDebounce(() => {
+    if (typeof window !== 'undefined') {
       setSidebarCollapsed(window.innerWidth <= sizes.mobile);
-    }, 1000);
-    useEffect(() => {
-      window.addEventListener('resize', debouncedHandleResize);
-      return () => {
-        window.removeEventListener('resize', debouncedHandleResize);
-      };
-    });
-  }
+    }
+  }, 1000);
+
+  useEffect(() => {
+    window?.addEventListener('resize', debouncedHandleResize);
+    return () => {
+      window?.removeEventListener('resize', debouncedHandleResize);
+    };
+  });
 
   const onSearch = (fields) => {
     const isMapSearch = isMapVisible; // && mapRef.current?.src?.startsWith(window.location.origin);
