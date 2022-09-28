@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
 import queryString from 'query-string';
-import { useSWRInfinite } from 'swr';
+import useSWRInfinite from 'swr/infinite';
 import { Grid as GridIcon } from '@styled-icons/boxicons-solid/Grid';
 import { MapLocationDot } from '@styled-icons/fa-solid/MapLocationDot';
 import ReactPaginate from 'react-paginate';
