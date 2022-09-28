@@ -2,6 +2,9 @@ const { i18n } = require('./next-i18next.config');
 const config = require('./config');
 
 module.exports = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   compiler: {
     styledComponents: true,
   },
