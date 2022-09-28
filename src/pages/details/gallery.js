@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
@@ -370,10 +370,6 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
   };
 
   const virtualLoomMenu = useMenuState();
-  const virtualLoomOnClick = useCallback((e) => {
-    e.stopPropagation();
-    virtualLoomMenu.show(e);
-  });
 
   const customRenderThumb = (children) => Carousel.defaultProps.renderThumbs(children).concat(
       <Element key="virtual-loom">
