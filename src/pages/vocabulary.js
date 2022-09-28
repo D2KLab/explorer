@@ -177,7 +177,7 @@ const SearchIcon = styled(SearchAlt2)`
   color: inherit;
 `;
 
-const DropdownItem = styled.a`
+const DropdownItem = styled.div`
   cursor: pointer;
 `;
 
