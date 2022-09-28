@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import queryString from 'query-string';
-import { useMenuState, Menu, MenuItem, MenuButton } from 'ariakit';
+import { useMenuState, Menu, MenuItem, MenuButton, MenuButtonArrow } from 'ariakit';
 import { saveAs } from 'file-saver';
 import Lightbox from 'react-18-image-lightbox';
 import 'react-18-image-lightbox/style.css';
@@ -219,10 +219,6 @@ const MobileContainer = styled.div`
   `};
 `;
 
-const VirtualLoomButton = styled.a`
-  display: block;
-`;
-
 const Description = styled.div`
   white-space: pre-line;
 `;
@@ -381,9 +377,9 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
 
   const customRenderThumb = (children) => Carousel.defaultProps.renderThumbs(children).concat(
       <Element key="virtual-loom">
-        <VirtualLoomButton onClick={virtualLoomOnClick}>
+        <MenuButton state={virtualLoomMenu}>
           <img src="/images/virtual-loom-button.png" alt="Virtual Loom" />
-        </VirtualLoomButton>
+        </MenuButton>
         <StyledMenu state={virtualLoomMenu} aria-label="Virtual Loom" style={{position:'absolute', left: 0}}>
           <MenuItem state={virtualLoomMenu} as={Button} primary onClick={onClickVirtualLoomButton}>
             {t('common:buttons.virtualLoom.web')}
@@ -536,7 +532,8 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
             </Element>
             <Element marginBottom={24}>
               <MenuButton state={downloadMenu} as={Button} primary>
-                {t('common:buttons.download')}
+                {t('common:buttons.download')}{' '}
+                <MenuButtonArrow />
               </MenuButton>
               <StyledMenu state={downloadMenu} aria-label={t('common:buttons.download')}>
                 <MenuItem state={downloadMenu} as={Button} primary onClick={() => download('vljson')}>
@@ -552,7 +549,8 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
             </Element>
             <Element>
               <MenuButton state={similarityMenu} as={Button} primary loading={isLoadingSimilar}>
-                {t('common:buttons.similar')}
+                {t('common:buttons.similar')}{' '}
+                <MenuButtonArrow />
               </MenuButton>
               <StyledMenu state={similarityMenu} aria-label={t('common:buttons.similar')}>
                 <MenuItem
@@ -573,18 +571,6 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
                 </MenuItem>
               </StyledMenu>
             </Element>
-
-            {/* <RelatedVideos>
-              <h2>Related</h2>
-              <RelatedVideosList>
-                <Media
-                  title="Video Title"
-                  subtitle="Program Title"
-                  thumbnail="/images/thumbnail.jpg"
-                  direction="row"
-                />
-              </RelatedVideosList>
-            </RelatedVideos> */}
           </Secondary>
           <Tertiary>
             {result.description && (
