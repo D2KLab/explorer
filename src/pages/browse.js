@@ -591,7 +591,7 @@ function BrowsePage({ initialData, similarityEntity }) {
                       breakClassName="break"
                       pageCount={totalPages}
                       initialPage={initialPage - 1}
-                      forcePage={currentPage - 1}
+                      forcePage={currentPage > 1 ? currentPage - 1 : undefined}
                       marginPagesDisplayed={2}
                       pageRangeDisplayed={5}
                       onPageChange={onPageChange}
