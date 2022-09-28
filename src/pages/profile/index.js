@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { Img } from 'react-image';
 import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import { getProviders, getCsrfToken, signout } from 'next-auth/react';
 import NextLink from 'next/link';
@@ -27,6 +26,7 @@ import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth';
+import ImageWithFallback from '@components/ImageWithFallback';
 
 const StyledDialogDisclosure = styled(DialogDisclosure)`
   appearance: none;
@@ -79,10 +79,8 @@ const UserName = styled.h1`
   text-align: center;
 `;
 
-const Avatar = styled.img`
+const Avatar = styled(ImageWithFallback)`
   border-radius: 100%;
-  height: 96px;
-  width: auto;
   display: block;
   margin: 0 auto;
 `;
@@ -264,8 +262,6 @@ function ProfilePage({
       </>
     );
 
-  const PlaceholderAvatar = <Avatar src="/images/avatar-placeholder.png" alt="" />;
-
   return (
     <Layout>
       <PageTitle title={t('common:profile.title')} />
@@ -275,12 +271,12 @@ function ProfilePage({
           <ProfileContainer>
             <ProfileSidebar>
               <Avatar
-                as={Img}
-                loader={PlaceholderAvatar}
-                unloader={PlaceholderAvatar}
+                fallbackSrc="/images/avatar-placeholder.png"
                 src={session.user.image}
                 title={session.user.name}
                 alt=""
+                width={96}
+                height={96}
               />
               <UserName>{session.user.name}</UserName>
               {renderAccounts(accounts, providers)}

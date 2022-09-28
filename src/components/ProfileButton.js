@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { useMenuState, Menu, MenuItem, MenuButton } from 'ariakit';
-import { Img } from 'react-image';
 import { DownArrow } from '@styled-icons/boxicons-solid/DownArrow';
 import { User } from '@styled-icons/boxicons-solid/User';
 import { signIn, signOut, useSession } from 'next-auth/react';
@@ -151,9 +150,6 @@ function ProfileButton({ className }) {
       <StyledMenuButton state={menu}>
         {session?.user?.image ? (
           <StyledUserIcon
-            as={Img}
-            loader={<StyledUserIcon />}
-            unloader={<StyledUserIcon />}
             src={session.user.image}
             title={session.user.name}
             alt=""

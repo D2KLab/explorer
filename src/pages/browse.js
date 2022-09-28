@@ -478,8 +478,8 @@ function BrowsePage({ initialData, similarityEntity }) {
                       300
                     )}
                     direction="row"
-                    width="50px"
-                    height="50px"
+                    width={50}
+                    height={50}
                   />
                 </a>
               </Link>

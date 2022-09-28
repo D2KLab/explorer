@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import styled from 'styled-components';
-import { Img } from 'react-image';
+import Image from 'next/image';
 
 import GraphIcon from '@components/GraphIcon';
 import config from '~/config';
@@ -13,12 +14,12 @@ export const ThumbnailContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: ${({ width }) => width};
-  max-height: ${({ height }) => height};
+  width: ${({ width }) => width}px;
+  height: ${({ height }) => height}px;
   position: relative;
 `;
 
-export const Thumbnail = styled.img`
+export const Thumbnail = styled(Image)`
   max-width: 100%;
   max-height: 100%;
   height: auto;
@@ -65,7 +66,6 @@ export const Container = styled.div`
 
   ${ThumbnailContainer} {
     max-width: 100%;
-    height: 150px;
     margin-right: ${({ direction }) => (direction === 'row' ? '8px' : 0)};
     margin-bottom: ${({ direction }) => (direction === 'row' ? 0 : '8px')};
   }
@@ -77,22 +77,39 @@ function Media({
   title,
   subtitle,
   graphUri,
-  width = '150px',
-  height = '150px',
+  width = 150,
+  height = 150,
   direction = 'column',
+  ...props
 }) {
-  const Placeholder = <Thumbnail src={config.search.placeholderImage} alt={title} />;
+  const [imageVisible, setImageVisible] = useState(true);
+  const [placeholderVisible, setPlaceholderVisible] = useState(true);
 
   return (
-    <Container className={className} direction={direction}>
+    <Container className={className} direction={direction} {...props}>
       <ThumbnailContainer width={width} height={height}>
-        <Thumbnail
-          as={Img}
-          src={thumbnail}
-          alt={title}
-          loader={Placeholder}
-          unloader={Placeholder}
-        />
+        {config.search?.placeholderImage && placeholderVisible && (
+          <Thumbnail
+            src={config.search.placeholderImage}
+            alt=""
+            layout="fill"
+          />
+        )}
+        {thumbnail && imageVisible && (
+          <Thumbnail
+            src={thumbnail}
+            alt=""
+            layout="fill"
+            onLoadingComplete={() => {
+              setImageVisible(true);
+              setPlaceholderVisible(false);
+            }}
+            onError={() => {
+              setImageVisible(false);
+              setPlaceholderVisible(true);
+            }}
+          />
+        )}
         {graphUri && (
           <GraphIconContainer>
             <GraphIcon uri={graphUri} />
