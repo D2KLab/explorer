@@ -6,7 +6,7 @@ import config from '~/config';
  * Displays a graph link, given a graph URI. The url has to be set in config.js.
  */
 
-const GraphLink = ({
+function GraphLink({
   className,
   style = {},
   target = '_blank',
@@ -14,7 +14,7 @@ const GraphLink = ({
   uri,
   icon,
   label,
-}) => {
+}) {
   const graph = config.graphs[uri];
   if (!graph) return null;
   return (
@@ -23,6 +23,6 @@ const GraphLink = ({
       {label && <small>{graph.label}</small>}
     </a>
   );
-};
+}
 
 export default GraphLink;

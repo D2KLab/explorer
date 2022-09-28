@@ -1,24 +1,12 @@
-import { MongoClient, ObjectId } from 'mongodb';
+import { ObjectId } from 'mongodb';
+import clientPromise from '@helpers/mongodb';
 
 let cachedDb = null;
 
 export const connectToDatabase = async () => {
-  if (cachedDb) {
-    // Using existing connection
-    return Promise.resolve(cachedDb);
-  }
-
-  return MongoClient.connect(process.env.MONGODB_URI, {
-    useUnifiedTopology: true,
-  })
-    .then((client) => {
-      cachedDb = client.db();
-      return cachedDb;
-    })
-    .catch((error) => {
-      console.log('Mongo connect Error');
-      console.log(error);
-    });
+  const client = await clientPromise;
+  cachedDb = client.db();
+  return cachedDb;
 };
 
 export const getListById = async (listId) => {

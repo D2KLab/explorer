@@ -71,7 +71,7 @@ export const Container = styled.div`
   }
 `;
 
-const Media = ({
+function Media({
   className,
   thumbnail,
   title,
@@ -80,7 +80,7 @@ const Media = ({
   width = '150px',
   height = '150px',
   direction = 'column',
-}) => {
+}) {
   const Placeholder = <Thumbnail src={config.search.placeholderImage} alt={title} />;
 
   return (
@@ -105,6 +105,6 @@ const Media = ({
       </TextContainer>
     </Container>
   );
-};
+}
 
 export default Media;

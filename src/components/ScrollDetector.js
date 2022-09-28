@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react';
 
 import useOnScreen from '@helpers/useOnScreen';
 
-const ScrollDetector = ({ onAppears, onDisappears, rootMargin, ...props }) => {
+function ScrollDetector({ onAppears, onDisappears, rootMargin, ...props }) {
   const $ref = useRef(null);
   const isRefOnScreen = useOnScreen($ref, rootMargin);
 
@@ -12,6 +12,6 @@ const ScrollDetector = ({ onAppears, onDisappears, rootMargin, ...props }) => {
   }, [isRefOnScreen]);
 
   return <span ref={$ref} {...props} />;
-};
+}
 
 export default ScrollDetector;

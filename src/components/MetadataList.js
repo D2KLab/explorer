@@ -114,7 +114,7 @@ function generateValue(
   return renderValue();
 }
 
-const MetadataList = ({ metadata, query, route }) => {
+function MetadataList({ metadata, query, route }) {
   const { t } = useTranslation('project');
 
   const displayedMetadata = Object.entries(metadata).filter(([metaName]) => {
@@ -184,6 +184,6 @@ const MetadataList = ({ metadata, query, route }) => {
       })}
     </>
   );
-};
+}
 
 export default MetadataList;

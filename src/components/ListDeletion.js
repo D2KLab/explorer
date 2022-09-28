@@ -1,25 +1,11 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import Router from 'next/router';
-import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
+import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 
 import Element from '@components/Element';
 import Button from '@components/Button';
 import { useTranslation, Trans } from 'next-i18next';
-
-const StyledDialogBackdrop = styled(DialogBackdrop)`
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  z-index: 2000;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 const StyledDialog = styled(Dialog)`
   background-color: #fff;
@@ -29,7 +15,7 @@ const StyledDialog = styled(Dialog)`
   outline: 0;
 `;
 
-const ListDeletion = ({ list, dialogState, children }) => {
+function ListDeletion({ list, dialogState, children }) {
   const { t } = useTranslation('common');
   const [isDeleting, setIsDeleting] = useState(false);
   const deleteListDialog = dialogState || useDialogState();
@@ -45,38 +31,46 @@ const ListDeletion = ({ list, dialogState, children }) => {
   return (
     <>
       {(children && children) || (
-        <DialogDisclosure {...deleteListDialog} as={Button} primary loading={isDeleting}>
+        <DialogDisclosure state={deleteListDialog} as={Button} primary loading={isDeleting}>
           {t('listDeletion.title')}
         </DialogDisclosure>
       )}
-      <StyledDialogBackdrop {...deleteListDialog}>
-        <StyledDialog {...deleteListDialog} modal aria-label={t('listDeletion.title')}>
-          <h2>{t('listDeletion.title')}</h2>
-          <p>
-            <Trans
-              i18nKey="common:listDeletion.confirmText"
-              components={[<strong />]}
-              values={{ name: list.name }}
-            />
-          </p>
-          <Element display="flex" alignItems="center" justifyContent="space-between">
-            <Button
-              type="button"
-              secondary
-              onClick={() => {
-                deleteListDialog.hide();
-              }}
-            >
-              {t('buttons.cancel')}
-            </Button>
-            <Button type="button" primary loading={isDeleting} onClick={deleteList}>
-              {t('listDeletion.deleteButton')}
-            </Button>
-          </Element>
-        </StyledDialog>
-      </StyledDialogBackdrop>
+      <StyledDialog state={deleteListDialog} modal aria-label={t('listDeletion.title')} backdrop backdropProps={{
+          style: {
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            width: '100%',
+            height: '100%',
+            zIndex: 2000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }
+        }}>
+        <h2>{t('listDeletion.title')}</h2>
+        <p>
+          <Trans
+            i18nKey="common:listDeletion.confirmText"
+            components={[<strong />]}
+            values={{ name: list.name }}
+          />
+        </p>
+        <Element display="flex" alignItems="center" justifyContent="space-between">
+          <Button
+            type="button"
+            secondary
+            onClick={() => {
+              deleteListDialog.hide();
+            }}
+          >
+            {t('buttons.cancel')}
+          </Button>
+          <Button type="button" primary loading={isDeleting} onClick={deleteList}>
+            {t('listDeletion.deleteButton')}
+          </Button>
+        </Element>
+      </StyledDialog>
     </>
   );
-};
+}
 
 export default ListDeletion;

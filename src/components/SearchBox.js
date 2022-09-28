@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Router from 'next/router';
-import { Button as ReakitButton } from 'reakit';
+import { Button as ReakitButton } from 'ariakit';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
 
 import SearchInput from '@components/SearchInput';
@@ -42,7 +42,7 @@ const handleSubmit = (event) => {
   event.preventDefault();
 };
 
-const SearchBox = ({ className, placeholder = 'Search', onSubmit = handleSubmit }) => {
+function SearchBox({ className, placeholder = 'Search', onSubmit = handleSubmit }) {
   const { t } = useTranslation('common');
   return (
     <Form className={className} action="/browse" method="POST" onSubmit={onSubmit}>
@@ -52,6 +52,6 @@ const SearchBox = ({ className, placeholder = 'Search', onSubmit = handleSubmit 
       <StyledSearchInput type="search" name="q" placeholder={placeholder} />
     </Form>
   );
-};
+}
 
 export default SearchBox;

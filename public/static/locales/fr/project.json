@@ -1,7 +1,7 @@
 {
   "search": "Rechercher",
   "footer": {
-    "text": "The data contained in Exploratory Search comes from DBpedia.\nThe Search Explorer has been developed at EURECOM."
+    "text": "Les données contenues dans Exploratory Search proviennent de DBpedia.\nL'explorateur de recherche a été développé à EURECOM."
   },
   "metadata": {},
   "routes": {},

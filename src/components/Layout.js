@@ -34,7 +34,7 @@ export const useOnClickOutside = (ref, handler) => {
   }, [ref, handler]);
 };
 
-const Layout = ({ children }) => {
+function Layout({ children }) {
   const [open, setOpen] = useState(false);
   const node = useRef();
   useOnClickOutside(node, () => setOpen(false));
@@ -49,6 +49,6 @@ const Layout = ({ children }) => {
       </div>
     </>
   );
-};
+}
 
 export default Layout;

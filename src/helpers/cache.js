@@ -1,62 +1,38 @@
-import redis from 'redis';
+import { createClient } from 'redis';
 
 let client = null;
 
-try {
-  client = redis.createClient(process.env.REDIS_URL, {
+const connect = async () => {
+  client = createClient({
+    url: process.env.REDIS_URL,
     retry_strategy: (options) => {
       const { error } = options;
       console.log(error);
       return Math.min(options.attempt * 100, 3000);
     },
   });
-} catch (err) {
-  console.error(err);
+  return client.connect();
 }
 
-export const exists = (key) => {
+export const exists = async (key) => {
   if (!client) {
-    return Promise.resolve(undefined);
+    await connect();
   }
-  return new Promise((resolve, reject) => {
-    client.exists(key, (err, reply) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      resolve(reply);
-    });
-  });
+  return client.exists(key);
 };
 
-export const get = (key) => {
+export const get = async (key) => {
   if (!client) {
-    return Promise.resolve(undefined);
+    await connect();
   }
-  return new Promise((resolve, reject) => {
-    client.get(key, (err, reply) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      resolve(reply);
-    });
-  });
+  return client.get(key);
 };
 
-export const set = (key, value, expiry=86400) => {
+export const set = async (key, value, expiry=86400) => {
   if (!client) {
-    return Promise.resolve(undefined);
+    await connect();
   }
-  return new Promise((resolve, reject) => {
-    client.set(key, value, 'EX', expiry, (err, reply) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      resolve(reply);
-    });
-  });
+  return client.set(key, value, 'EX', expiry);
 };
 
 export default {

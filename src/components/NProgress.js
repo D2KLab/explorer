@@ -1,36 +1,44 @@
 import { createGlobalStyle } from 'styled-components';
-import NProgress from 'nprogress';
-import Router from 'next/router';
+// eslint-disable-next-line import/no-named-default
+import { default as NProgressRoot } from 'nprogress';
 
 import theme from '~/theme';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 let timeout;
 
 const start = () => {
   if (typeof window !== 'undefined') {
-    timeout = setTimeout(NProgress.start, 100);
+    timeout = setTimeout(NProgressRoot.start, 100);
   }
 };
 
 const done = () => {
   clearTimeout(timeout);
   if (typeof window !== 'undefined') {
-    NProgress.done();
+    NProgressRoot.done();
   }
 };
 
-Router.events.on('routeChangeStart', start);
-Router.events.on('routeChangeComplete', done);
-Router.events.on('routeChangeError', done);
+function NProgress() {
+  const router = useRouter();
 
-NProgress.configure({
-  minimum: 0.15,
-  trickleRate: 0.07,
-  trickleSpeed: 360,
-  showSpinner: false,
-});
+  useEffect(() => {
+    NProgressRoot.configure({
+      minimum: 0.15,
+      trickleRate: 0.07,
+      trickleSpeed: 360,
+      showSpinner: false,
+    });
 
-export default createGlobalStyle`
+    router.events.on('routeChangeStart', start);
+    router.events.on('routeChangeComplete', done);
+    router.events.on('routeChangeError', done);
+  }, []);
+};
+
+export const NProgressStyle = createGlobalStyle`
   /* Make clicks pass-through */
   #nprogress {
     pointer-events: none;
@@ -111,3 +119,5 @@ export default createGlobalStyle`
     }
   }
 `;
+
+export default NProgress;

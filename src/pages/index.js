@@ -1,12 +1,11 @@
-import React, { useCallback, useState, useRef, useEffect } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styled from 'styled-components';
-import { useDialogState, Dialog, DialogDisclosure } from 'reakit/Dialog';
+import { Button as ReakitButton, useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import { useDropzone } from 'react-dropzone';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
 import { Camera } from '@styled-icons/boxicons-solid/Camera';
-import { Button as ReakitButton } from 'reakit';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
@@ -263,7 +262,7 @@ const Dropzone = styled.div`
   }
 `;
 
-const HomePage = () => {
+function HomePage() {
   const { t } = useTranslation(['common', 'home', 'project']);
   const router = useRouter();
   const [processStatus, setProcessStatus] = useState(null);
@@ -368,12 +367,12 @@ const HomePage = () => {
                     as={DialogDisclosure}
                     type="button"
                     aria-label={t('common:buttons.searchByImage')}
-                    {...dialog}
+                    state={dialog}
                   >
                     <CameraIcon />
                   </CameraButton>
                   <StyledUploadDialog
-                    {...dialog}
+                    state={dialog}
                     modal={false}
                     aria-label={t('common:buttons.searchByImage')}
                   >
@@ -444,11 +443,11 @@ const HomePage = () => {
       <Footer />
     </Layout>
   );
-};
+}
 
 export const getStaticProps = async ({ locale }) => ({
   props: {
-    ...await serverSideTranslations(locale, ['common', 'home']),
+    ...await serverSideTranslations(locale, ['common', 'home', 'project', 'search']),
   },
 });
 

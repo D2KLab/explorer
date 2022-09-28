@@ -165,7 +165,7 @@ const ResultPage = styled.h3`
   margin-bottom: 1rem;
 `;
 
-const BrowsePage = ({ initialData, similarityEntity }) => {
+function BrowsePage({ initialData, similarityEntity }) {
   const { req, query, pathname } = useRouter();
   const { t, i18n } = useTranslation(['common', 'search', 'project']);
   const [isMapVisible, setIsMapVisible] = useState(false);
@@ -429,10 +429,6 @@ const BrowsePage = ({ initialData, similarityEntity }) => {
 
   const renderEmptyResults = () => <p>{t('search:labels.noResults')}</p>;
 
-  Router.events.on('routeChangeStart', () => setIsPageLoading(true));
-  Router.events.on('routeChangeComplete', () => setIsPageLoading(false));
-  Router.events.on('routeChangeError', () => setIsPageLoading(false));
-
   return (
     <Layout>
       <PageTitle title={t('search:labels.browse', { type: query.type })} />
@@ -620,7 +616,7 @@ const BrowsePage = ({ initialData, similarityEntity }) => {
       <Footer />
     </Layout>
   );
-};
+}
 
 export async function getServerSideProps({ req, query, locale }) {
   const filters = await getFilters(query, { language: locale });

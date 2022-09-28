@@ -17,7 +17,7 @@
  */
 
 /* eslint-disable */
-import React, {useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import ResizeObserver from "resize-observer-polyfill";
 
 const getScrollParent = (node) => {

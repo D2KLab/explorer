@@ -1,6 +1,6 @@
 import fs from 'fs';
 import FormData from 'form-data';
-import { IncomingForm } from 'formidable';
+import formidable from 'formidable';
 import { withRequestValidation } from '@helpers/api';
 import util from 'util';
 
@@ -35,7 +35,7 @@ export const searchImage = async (image) => {
 }
 
 const handleUpload = (req) => new Promise((resolve, reject) => {
-    const form = new IncomingForm({ keepExtensions: true, maxFileSize: 5 * 1024 * 1024 });
+    const form = formidable({ keepExtensions: true, maxFileSize: 5 * 1024 * 1024 });
     form.parse(req, (err, fields, files) => {
       if (err) return reject(err);
       resolve({ fields, files });

@@ -12,7 +12,7 @@ import { ProviderButton } from '@components/ProviderButton';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-const SignInPage = ({ providers, csrfToken }) => {
+function SignInPage({ providers, csrfToken }) {
   const { t } = useTranslation('common');
   return (
     <Layout>
@@ -45,14 +45,14 @@ const SignInPage = ({ providers, csrfToken }) => {
       <Footer />
     </Layout>
   );
-};
+}
 
 export default SignInPage;
 
 export async function getServerSideProps(ctx) {
   return {
     props: {
-      ...await serverSideTranslations(ctx.locale, ['common']),
+      ...await serverSideTranslations(ctx.locale, ['common', 'project']),
       providers: await getProviders(ctx),
       csrfToken: await getCsrfToken(ctx),
     },

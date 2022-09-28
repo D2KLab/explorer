@@ -57,7 +57,7 @@ const StyledLanguageSwitch = styled(LanguageSwitch)`
   color: #fff;
 `;
 
-const Menu = ({ className, open, ...props }) => {
+function Menu({ className, open, ...props }) {
   const { t } = useTranslation('project');
   const isHidden = !!open;
   const tabIndex = isHidden ? 0 : -1;
@@ -74,7 +74,7 @@ const Menu = ({ className, open, ...props }) => {
       ))}
     </StyledMenu>
   );
-};
+}
 
 Menu.propTypes = {
   open: PropTypes.bool.isRequired,

@@ -1,6 +1,5 @@
-import React from 'react';
 import styled from 'styled-components';
-import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
+import { useMenuState, Menu, MenuItem, MenuButton } from 'ariakit';
 import { Img } from 'react-image';
 import { DownArrow } from '@styled-icons/boxicons-solid/DownArrow';
 import { User } from '@styled-icons/boxicons-solid/User';
@@ -90,7 +89,7 @@ const StyledUserIcon = styled(User)`
   margin: 0 0.2em;
 `;
 
-const ProfileButton = ({ className }) => {
+function ProfileButton({ className }) {
   const { t } = useTranslation('common');
   const menu = useMenuState();
 
@@ -105,7 +104,7 @@ const ProfileButton = ({ className }) => {
     return (
       <>
         <StyledMenuItem
-          {...menu}
+          state={menu}
           onClick={() => {
             Router.push({
               pathname: '/profile',
@@ -121,7 +120,7 @@ const ProfileButton = ({ className }) => {
         </StyledMenuItem>
         <StyledDivider />
         <StyledMenuItem
-          {...menu}
+          state={menu}
           onClick={() => {
             Router.push({
               pathname: '/profile',
@@ -133,7 +132,7 @@ const ProfileButton = ({ className }) => {
         </StyledMenuItem>
         <StyledDivider />
         <StyledMenuItem
-          {...menu}
+          state={menu}
           href="/api/auth/signout"
           onClick={(e) => {
             e.preventDefault();
@@ -149,7 +148,7 @@ const ProfileButton = ({ className }) => {
 
   const renderMenu = () => (
     <>
-      <StyledMenuButton {...menu}>
+      <StyledMenuButton state={menu}>
         {session?.user?.image ? (
           <StyledUserIcon
             as={Img}
@@ -165,12 +164,12 @@ const ProfileButton = ({ className }) => {
         {t('common:profileButton.label')}
         <StyledDownArrow />
       </StyledMenuButton>
-      <StyledMenu {...menu} aria-label={t('common:profileButton.label')}>
+      <StyledMenu state={menu} aria-label={t('common:profileButton.label')}>
         {session ? (
           renderSessionMenuItems(session, menu)
         ) : (
           <StyledMenuItem
-            {...menu}
+            state={menu}
             href="/api/signin"
             onClick={(e) => {
               e.preventDefault();
@@ -190,6 +189,6 @@ const ProfileButton = ({ className }) => {
       {loading ? <Spinner size="24" /> : renderMenu()}
     </Element>
   );
-};
+}
 
 export default ProfileButton;

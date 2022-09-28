@@ -92,7 +92,7 @@ function debounce(fn, time) {
   };
 }
 
-const SearchInput = ({ className, placeholder, ariaLabel = 'Search input', ...props }) => {
+function SearchInput({ className, placeholder, ariaLabel = 'Search input', ...props }) {
   const [inputValue, setInputValue] = useState('');
   const [totalResults, setTotalResults] = useState(0);
   const [suggestions, setSuggestions] = useState([]);
@@ -217,6 +217,6 @@ const SearchInput = ({ className, placeholder, ariaLabel = 'Search input', ...pr
       {isLoading && <Spinner size="24" style={{ marginRight: '1em' }} />}
     </Container>
   );
-};
+}
 
 export default SearchInput;

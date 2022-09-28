@@ -2,6 +2,9 @@ const { i18n } = require('./next-i18next.config');
 const config = require('./config');
 
 module.exports = {
+  compiler: {
+    styledComponents: true,
+  },
   i18n,
   rewrites: async () => [
       ...Object.entries(config.routes).flatMap(([routeName, route]) => {
@@ -20,11 +23,30 @@ module.exports = {
         return rewrites;
       }),
     ],
-  webpack: (cfg, { isServer }) => {
-    if (!isServer) {
+  webpack: (cfg, context) => {
+    // Some libraries import Node modules but don't use them in the browser.
+    // Tell Webpack to provide empty mocks for them so importing them works.
+    if (!context.isServer) {
+      cfg.resolve.fallback.fs = false;
+      cfg.resolve.fallback.child_process = false;
       cfg.resolve.fallback.net = false;
       cfg.resolve.fallback.tls = false;
     }
+
+    // Required to make Fast Refresh work with Docker
+    // see: https://github.com/vercel/next.js/issues/36774#issuecomment-1211818610
+    cfg.watchOptions = {
+      poll: 1000,
+      aggregateTimeout: 300
+    }
+
+    // Allow importing SVG via Webpack
+    cfg.module.rules.push({
+      test: /\.svg$/i,
+      issuer: /\.[jt]sx?$/,
+      use: ['@svgr/webpack'],
+    });
+
     return cfg;
-  }
+  },
 };

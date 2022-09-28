@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import styled from 'styled-components';
-import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
+import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import { Heart as HeartIcon } from '@styled-icons/boxicons-regular/Heart';
 import { Heart as HeartSolidIcon } from '@styled-icons/boxicons-solid/Heart';
 
@@ -44,21 +44,6 @@ const StyledDialogDisclosure = styled(DialogDisclosure)`
   }
 `;
 
-const StyledDialogBackdrop = styled(DialogBackdrop)`
-  background-color: rgba(0, 0, 0, 0.5);
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  z-index: 2000;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
 const StyledHeartIcon = styled(HeartIcon)`
   color: #222;
   height: 16px;
@@ -97,7 +82,7 @@ const StyledItem = styled.li`
   }
 `;
 
-const SaveButton = ({ item, type, saved, onChange }) => {
+function SaveButton({ item, type, saved, onChange }) {
   const { t } = useTranslation('common');
   const [loading, setLoading] = useState(false);
   const [lists, setLists] = useState([]);
@@ -177,80 +162,88 @@ const SaveButton = ({ item, type, saved, onChange }) => {
         onClick={useCallback((event) => {
           loadLists(event);
         })}
-        {...dialog}
+        state={dialog}
       >
         {saved ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
         <StyledLabel>{saved ? t('saveButton.saved') : t('saveButton.save')}</StyledLabel>
       </StyledDialogDisclosure>
-      <StyledDialogBackdrop {...dialog}>
-        <StyledDialog {...dialog} modal aria-label={t('saveButton.title')}>
-          <h2>{t('saveButton.title')}</h2>
-          <Element marginY={12}>
-            {listFormVisible ? (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  createListWithItem();
-                }}
+      <StyledDialog state={dialog} modal aria-label={t('saveButton.title')} backdrop backdropProps={{
+          style: {
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            width: '100%',
+            height: '100%',
+            zIndex: 2000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }
+        }}>
+        <h2>{t('saveButton.title')}</h2>
+        <Element marginY={12}>
+          {listFormVisible ? (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                createListWithItem();
+              }}
+            >
+              <Input
+                type="text"
+                placeholder={t('saveButton.labels.listName')}
+                value={newListName}
+                onChange={(e) => setNewListName(e.target.value)}
+                autoFocus
+              />
+              <Element
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                marginY={12}
               >
-                <Input
-                  type="text"
-                  placeholder={t('saveButton.labels.listName')}
-                  value={newListName}
-                  onChange={(e) => setNewListName(e.target.value)}
-                  autoFocus
-                />
-                <Element
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="space-between"
-                  marginY={12}
+                <Button
+                  type="button"
+                  secondary
+                  onClick={() => {
+                    setNewListName('');
+                    setListFormVisible(false);
+                  }}
                 >
-                  <Button
-                    type="button"
-                    secondary
-                    onClick={() => {
-                      setNewListName('');
-                      setListFormVisible(false);
-                    }}
-                  >
-                    {t('buttons.cancel')}
-                  </Button>
-                  <Button type="button" primary onClick={createListWithItem}>
-                    {saved ? t('saveButton.saved') : t('saveButton.save')}
-                  </Button>
-                </Element>
-              </form>
-            ) : (
-              <Button type="button" primary onClick={() => setListFormVisible(true)}>
-                {t('saveButton.createButton')}
-              </Button>
-            )}
-          </Element>
-          {loading ? (
-            <p>{t('saveButton.loading')}</p>
+                  {t('buttons.cancel')}
+                </Button>
+                <Button type="button" primary onClick={createListWithItem}>
+                  {saved ? t('saveButton.saved') : t('saveButton.save')}
+                </Button>
+              </Element>
+            </form>
           ) : (
-            <StyledList>
-              {lists.map((list) => {
-                const isItemInList = list.items.some(
-                  (it) => it.uri === item['@id'] && it.type === type
-                );
-                return (
-                  <StyledItem
-                    key={list._id}
-                    onClick={() => (isItemInList ? removeFromList(list) : addToList(list))}
-                  >
-                    {isItemInList ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
-                    <StyledLabel>{list.name}</StyledLabel>
-                  </StyledItem>
-                );
-              })}
-            </StyledList>
+            <Button type="button" primary onClick={() => setListFormVisible(true)}>
+              {t('saveButton.createButton')}
+            </Button>
           )}
-        </StyledDialog>
-      </StyledDialogBackdrop>
+        </Element>
+        {loading ? (
+          <p>{t('saveButton.loading')}</p>
+        ) : (
+          <StyledList>
+            {lists.map((list) => {
+              const isItemInList = list.items.some(
+                (it) => it.uri === item['@id'] && it.type === type
+              );
+              return (
+                <StyledItem
+                  key={list._id}
+                  onClick={() => (isItemInList ? removeFromList(list) : addToList(list))}
+                >
+                  {isItemInList ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
+                  <StyledLabel>{list.name}</StyledLabel>
+                </StyledItem>
+              );
+            })}
+          </StyledList>
+        )}
+      </StyledDialog>
     </div>
   );
-};
+}
 
 export default SaveButton;

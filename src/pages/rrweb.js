@@ -76,7 +76,7 @@ const Player = styled.div`
   }
 `;
 
-const RRWebPage = ({ captures, selectedCapture, events }) => {
+function RRWebPage({ captures, selectedCapture, events }) {
   const refPlayer = useRef();
   const { query } = useRouter();
   const [isDeletingCapture, setIsDeletingCapture] = useState(false);
@@ -171,7 +171,7 @@ const RRWebPage = ({ captures, selectedCapture, events }) => {
       </Body>
     </Layout>
   );
-};
+}
 
 export async function getServerSideProps({ query, locale }) {
   const captures = await getCaptures();

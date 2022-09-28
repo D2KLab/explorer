@@ -5,7 +5,7 @@ import DefaultErrorPage from 'next/error';
 import ReactPlayer from 'react-player';
 import queryString from 'query-string';
 import { useSession } from 'next-auth/react';
-import { useTabState, Tab, TabList, TabPanel } from 'reakit/Tab';
+import { useTabState, Tab, TabList, TabPanel } from 'ariakit';
 import Link from 'next/link';
 
 import Header from '@components/Header';
@@ -297,7 +297,7 @@ function debounce(fn, ms) {
   };
 }
 
-const VideoDetailsPage = ({
+function VideoDetailsPage({
   result,
   inList,
   mediaUrl,
@@ -307,7 +307,7 @@ const VideoDetailsPage = ({
   faceTracks,
   captions,
   subtitles,
-}) => {
+}) {
   const { t, i18n } = useTranslation(['common', 'project']);
 
   if (!result) {
@@ -445,19 +445,19 @@ const VideoDetailsPage = ({
 
     return (
       <Element flex="0.7">
-        <StyledTabList {...tab} aria-label="Analysis">
-          {hasVideoSegments && <StyledTab {...tab}>Segments</StyledTab>}
-          {hasAnnotations && <StyledTab {...tab}>NER</StyledTab>}
-          {hasFaceTracks && <StyledTab {...tab}>FaceRec</StyledTab>}
-          {hasCaptions && <StyledTab {...tab}>DeepCaptions</StyledTab>}
+        <StyledTabList state={tab} aria-label="Analysis">
+          {hasVideoSegments && <StyledTab state={tab}>Segments</StyledTab>}
+          {hasAnnotations && <StyledTab state={tab}>NER</StyledTab>}
+          {hasFaceTracks && <StyledTab state={tab}>FaceRec</StyledTab>}
+          {hasCaptions && <StyledTab state={tab}>DeepCaptions</StyledTab>}
         </StyledTabList>
         {hasVideoSegments && (
-          <StyledTabPanel {...tab}>
+          <StyledTabPanel state={tab}>
             <VideoSegments>{videoSegments.map(renderVideoSegment)}</VideoSegments>
           </StyledTabPanel>
         )}
         {hasAnnotations && (
-          <StyledTabPanel {...tab}>
+          <StyledTabPanel state={tab}>
             <ul>
               {annotations.map((ann) => (
                   <Segment key={ann['@id']}>
@@ -478,7 +478,7 @@ const VideoDetailsPage = ({
           </StyledTabPanel>
         )}
         {hasFaceTracks && (
-          <StyledTabPanel {...tab}>
+          <StyledTabPanel state={tab}>
             {faceTracks.map((track) => (
                 <Segment key={track.track_id}>
                   <SegmentButton onClick={() => seekVideoTo(track.start_npt)}>
@@ -500,7 +500,7 @@ const VideoDetailsPage = ({
           </StyledTabPanel>
         )}
         {hasCaptions && (
-          <StyledTabPanel {...tab}>
+          <StyledTabPanel state={tab}>
             {captions.map((caption) => (
                 <Segment key={caption['@id']}>
                   <SegmentButton onClick={() => seekVideoTo(caption.startSeconds)}>
@@ -711,7 +711,7 @@ const VideoDetailsPage = ({
       <Footer />
     </Layout>
   );
-};
+}
 
 export async function getServerSideProps({ req, res, query, locale }) {
   const { result = null, inList, debugSparqlQuery } = await (

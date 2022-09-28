@@ -36,7 +36,7 @@ const Results = styled.div`
   margin-bottom: 24px;
 `;
 
-const ListsPage = ({ isOwner, list, shareLink, error }) => {
+function ListsPage({ isOwner, list, shareLink, error }) {
   const { t } = useTranslation('common');
 
   const renderListItems = () => (
@@ -198,7 +198,7 @@ const ListsPage = ({ isOwner, list, shareLink, error }) => {
       <Footer />
     </Layout>
   );
-};
+}
 
 export async function getServerSideProps(ctx) {
   const { req, res, query } = ctx;
@@ -270,7 +270,7 @@ export async function getServerSideProps(ctx) {
 
   return {
     props: {
-      ...await serverSideTranslations(ctx.locale, ['common']),
+      ...await serverSideTranslations(ctx.locale, ['common', 'project']),
       list: JSON.parse(JSON.stringify(list)), // serialize the list
       isOwner,
       shareLink: `${absoluteUrl(req)}/lists/${slugify(list.name)}-${list._id}`,

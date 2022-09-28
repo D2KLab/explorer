@@ -8,6 +8,15 @@ import { getEntity } from '@pages/api/entity';
 import { searchImage } from '@pages/api/image-search';
 import config from '~/config';
 
+const asyncPoolAll = async (...args) => {
+  const results = [];
+  // eslint-disable-next-line no-restricted-syntax
+  for await (const result of asyncPool(...args)) {
+    results.push(result);
+  }
+  return results;
+}
+
 export const getFilters = async (query, { language }) => {
   const route = config.routes[query.type];
   if (!route || !Array.isArray(route.filters)) {
@@ -237,7 +246,7 @@ export const search = async (query) => {
     const maxConcurrentRequests = 3;
     results.push(
       ...(
-        await asyncPool(maxConcurrentRequests, entities, async (entity) => {
+        await asyncPoolAll(maxConcurrentRequests, entities, async (entity) => {
           const searchDetailsQuery = JSON.parse(JSON.stringify(getQueryObject(route.query)));
           searchDetailsQuery.$where = searchDetailsQuery.$where || [];
           searchDetailsQuery.$filter = searchDetailsQuery.$filter || [];

@@ -32,11 +32,11 @@ export const providersButtons = {
   Twitter: TwitterButton,
 };
 
-export const ProviderButton = ({ provider, ...props }) => {
+export function ProviderButton({ provider, ...props }) {
   const { t } = useTranslation('common');
   const Container = providersButtons[provider.name] || Button;
 
   return <Container {...props}>{t('providerButton.label', { provider: provider.name })}</Container>;
-};
+}
 
 export default ProviderButton;

@@ -69,7 +69,7 @@ const Description = styled.div`
   white-space: pre-line;
 `;
 
-const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
+function CollectionDetailsPage({ result, inList, debugSparqlQuery }) {
   const { t, i18n } = useTranslation(['common', 'project']);
   const { data: session } = useSession();
 
@@ -242,7 +242,7 @@ const CollectionDetailsPage = ({ result, inList, debugSparqlQuery }) => {
       <Footer />
     </Layout>
   );
-};
+}
 
 export async function getServerSideProps({ req, res, query, locale }) {
   const { result = null, inList, debugSparqlQuery } = await (

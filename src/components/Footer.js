@@ -69,7 +69,7 @@ const Logo = styled.img`
   }
 `;
 
-const Footer = ({ className }) => {
+function Footer({ className }) {
   const { t } = useTranslation(['common', 'project']);
   return (
     <Container className={className}>
@@ -97,6 +97,6 @@ const Footer = ({ className }) => {
       </LogoContainer>
     </Container>
   );
-};
+}
 
 export default Footer;

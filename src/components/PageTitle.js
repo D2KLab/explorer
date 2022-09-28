@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useTranslation } from 'next-i18next';
 import config from '~/config';
 
-const PageTitle = ({ title }) => {
+function PageTitle({ title }) {
   const { t } = useTranslation('project');
   return (
     <Head>
@@ -11,6 +11,6 @@ const PageTitle = ({ title }) => {
       <meta name="description" content={t('site.description', config?.metadata?.description)} />
     </Head>
   );
-};
+}
 
 export default PageTitle;

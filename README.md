@@ -22,6 +22,8 @@ git clone https://github.com/D2KLab/explorer
 cd explorer
 ```
 
+- Copy the file `.env.default` into a new file called `.env` and edit the variables based on your environment.
+
 - Install the dependencies:
 
 ```bash

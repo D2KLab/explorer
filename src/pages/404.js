@@ -7,6 +7,7 @@ import Layout from '@components/Layout';
 import Body from '@components/Body';
 import PageTitle from '@components/PageTitle';
 import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Container = styled.div`
   padding: 5em 0;
@@ -14,7 +15,7 @@ const Container = styled.div`
   text-align: center;
 `;
 
-const NotFoundPage = ({ title = "404 - Uh oh!", text, children }) => {
+function NotFoundPage({ title = "404 - Uh oh!", text, children }) {
   const { t } = useTranslation('common');
 
   return (
@@ -31,6 +32,12 @@ const NotFoundPage = ({ title = "404 - Uh oh!", text, children }) => {
       <Footer />
     </Layout>
   );
-};
+}
+
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...await serverSideTranslations(locale, ['common', 'project']),
+  },
+});
 
 export default NotFoundPage;

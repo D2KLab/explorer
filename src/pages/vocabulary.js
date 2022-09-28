@@ -196,7 +196,7 @@ const getResultItems = (result) => (Array.isArray(result.items) ? result.items :
     cleanupItem
   );
 
-const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
+function VocabularyPage({ results, featured, debugSparqlQuery }) {
   const { t } = useTranslation(['common', 'project']);
   const router = useRouter();
 
@@ -405,7 +405,7 @@ const VocabularyPage = ({ results, featured, debugSparqlQuery }) => {
       <Footer />
     </Layout>
   );
-};
+}
 
 export async function getServerSideProps({ query, locale }) {
   const route = config.routes[query.type];

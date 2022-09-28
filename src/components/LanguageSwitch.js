@@ -1,6 +1,5 @@
-import React from 'react';
 import styled from 'styled-components';
-import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
+import { useMenuState, Menu, MenuItem, MenuButton } from 'ariakit';
 import { DownArrow } from '@styled-icons/boxicons-solid/DownArrow';
 import { useRouter } from 'next/router';
 
@@ -57,21 +56,21 @@ const StyledDownArrow = styled(DownArrow)`
   color: inherit;
 `;
 
-const LanguageSwitch = ({ className }) => {
+function LanguageSwitch({ className }) {
   const menu = useMenuState();
   const { i18n } = useTranslation();
   const router = useRouter();
 
   return (
     <Element className={className}>
-      <StyledMenuButton {...menu}>
+      <StyledMenuButton state={menu}>
         <span>{config.search.languages[i18n.language]}</span>
         <StyledDownArrow />
       </StyledMenuButton>
-      <StyledMenu {...menu} aria-label={config.search.languages[i18n.language]}>
+      <StyledMenu state={menu} aria-label={config.search.languages[i18n.language]}>
         {Object.entries(config.search.languages).map(([langKey, langLabel]) => (
           <StyledMenuItem
-            {...menu}
+            state={menu}
             key={langKey}
             onClick={() => {
               menu.hide();
@@ -84,6 +83,6 @@ const LanguageSwitch = ({ className }) => {
       </StyledMenu>
     </Element>
   );
-};
+}
 
 export default LanguageSwitch;

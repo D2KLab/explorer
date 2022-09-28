@@ -55,7 +55,7 @@ const Item = styled.li`
   margin: 1em 0;
 `;
 
-const ListDetailsPage = ({ items, debugSparqlQuery }) => {
+function ListDetailsPage({ items, debugSparqlQuery }) {
   const { t } = useTranslation(['common', 'project']);
   const { query } = useRouter();
 
@@ -153,7 +153,7 @@ const ListDetailsPage = ({ items, debugSparqlQuery }) => {
       <Footer />
     </Layout>
   );
-};
+}
 
 export async function getServerSideProps({ query, req, locale }) {
   const route = config.routes[query.type];

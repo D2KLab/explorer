@@ -4,8 +4,8 @@ import Body from '@components/Body';
 import Content from '@components/Content';
 import PageTitle from '@components/PageTitle';
 
-const PrivacyPolicyPage = () => (
-    <Layout>
+function PrivacyPolicyPage() {
+  return <Layout>
       <PageTitle title="Privacy Policy" />
       <Header />
       <Body>
@@ -15,6 +15,6 @@ const PrivacyPolicyPage = () => (
         </Content>
       </Body>
     </Layout>
-  );
+}
 
 export default PrivacyPolicyPage;

@@ -1,27 +1,12 @@
 import styled, { useTheme } from 'styled-components';
 import { useState, useEffect } from 'react';
-import { useDialogState, Dialog, DialogBackdrop } from 'reakit/Dialog';
+import { useDialogState, Dialog } from 'ariakit';
 import Cookies from 'js-cookie';
 import Switch from 'react-switch';
 
 import Element from '@components/Element';
 import Button from '@components/Button';
 import { useTranslation } from 'next-i18next';
-
-const StyledDialogBackdrop = styled(DialogBackdrop)`
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  z-index: 2000;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.75);
-`;
 
 const StyledDialog = styled(Dialog)`
   max-width: 960px;
@@ -40,7 +25,7 @@ const StyledSwitch = styled(Switch)`
   margin-right: 0.5em;
 `;
 
-const ConsentPopup = () => {
+function ConsentPopup() {
   const { t } = useTranslation(['common', 'project']);
   const theme = useTheme();
   const dialog = useDialogState({ modal: true, visible: true });
@@ -63,100 +48,98 @@ const ConsentPopup = () => {
 
   return (
     <div>
-      <StyledDialogBackdrop {...dialog}>
-        <StyledDialog
-          {...dialog}
-          modal
-          aria-label={title}
-          hideOnClickOutside={false}
-          hideOnEsc={false}
+      <StyledDialog
+        modal
+        state={dialog}
+        aria-label={title}
+        hideOnClickOutside={false}
+        hideOnEsc={false}
+      >
+        <Element marginBottom={24}>
+          <h2>{title}</h2>
+        </Element>
+        <form
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: 'min-content',
+            overflowX: 'hidden',
+          }}
+          onSubmit={(e) => {
+            e.stopPropagation();
+            onSubmit();
+            dialog.hide();
+          }}
         >
-          <Element marginBottom={24}>
-            <h2>{title}</h2>
-          </Element>
-          <form
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              minHeight: 'min-content',
-              overflowX: 'hidden',
-            }}
-            onSubmit={(e) => {
-              e.stopPropagation();
-              onSubmit();
-              dialog.hide();
-            }}
+          <Element
+            style={{ whiteSpace: 'pre-line', overflowY: 'auto', overflowX: 'hidden' }}
+            dangerouslySetInnerHTML={{ __html: t('project:consent.text') }}
+          />
+          <Element
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+            marginTop={24}
           >
             <Element
-              style={{ whiteSpace: 'pre-line', overflowY: 'auto', overflowX: 'hidden' }}
-              dangerouslySetInnerHTML={{ __html: t('project:consent.text') }}
-            />
-            <Element
               display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              marginTop={24}
+              flexDirection="column"
+              paddingLeft="0.5em"
+              paddingBottom="0.5em"
             >
-              <Element
-                display="flex"
-                flexDirection="column"
-                paddingLeft="0.5em"
-                paddingBottom="0.5em"
-              >
-                <label style={{ marginBottom: '1em' }}>
-                  <StyledSwitch
-                    onChange={handleSwitchChange}
-                    checked={consenting === true}
-                    onColor={theme.colors.light}
-                    offHandleColor="#f0f0f0"
-                    onHandleColor={theme.colors.primary}
-                    handleDiameter={24}
-                    uncheckedIcon={false}
-                    checkedIcon={false}
-                    boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                    activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                    height={16}
-                    width={36}
-                    id="consent_accept"
-                  />
-                  {t('project:consent.accept')}
-                </label>
-                <label>
-                  <StyledSwitch
-                    onChange={handleSwitchChange}
-                    checked={consenting === false}
-                    onColor={theme.colors.light}
-                    offHandleColor="#f0f0f0"
-                    onHandleColor={theme.colors.primary}
-                    handleDiameter={24}
-                    uncheckedIcon={false}
-                    checkedIcon={false}
-                    boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                    activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                    height={16}
-                    width={36}
-                    id="consent_decline"
-                  />
-                  {t('project:consent.decline')}
-                </label>
-              </Element>
-              <Element>
-                <Button
-                  type="button"
-                  primary
-                  onClick={() => {
-                    onSubmit();
-                  }}
-                >
-                  {t('project:consent.submit')}
-                </Button>
-              </Element>
+              <label style={{ marginBottom: '1em' }}>
+                <StyledSwitch
+                  onChange={handleSwitchChange}
+                  checked={consenting === true}
+                  onColor={theme.colors.light}
+                  offHandleColor="#f0f0f0"
+                  onHandleColor={theme.colors.primary}
+                  handleDiameter={24}
+                  uncheckedIcon={false}
+                  checkedIcon={false}
+                  boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                  activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                  height={16}
+                  width={36}
+                  id="consent_accept"
+                />
+                {t('project:consent.accept')}
+              </label>
+              <label>
+                <StyledSwitch
+                  onChange={handleSwitchChange}
+                  checked={consenting === false}
+                  onColor={theme.colors.light}
+                  offHandleColor="#f0f0f0"
+                  onHandleColor={theme.colors.primary}
+                  handleDiameter={24}
+                  uncheckedIcon={false}
+                  checkedIcon={false}
+                  boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                  activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                  height={16}
+                  width={36}
+                  id="consent_decline"
+                />
+                {t('project:consent.decline')}
+              </label>
             </Element>
-          </form>
-        </StyledDialog>
-      </StyledDialogBackdrop>
+            <Element>
+              <Button
+                type="button"
+                primary
+                onClick={() => {
+                  onSubmit();
+                }}
+              >
+                {t('project:consent.submit')}
+              </Button>
+            </Element>
+          </Element>
+        </form>
+      </StyledDialog>
     </div>
   );
-};
+}
 
 export default ConsentPopup;

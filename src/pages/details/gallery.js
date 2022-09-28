@@ -4,10 +4,10 @@ import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import queryString from 'query-string';
-import { useMenuState, Menu, MenuItem, MenuButton } from 'reakit/Menu';
+import { useMenuState, Menu, MenuItem, MenuButton } from 'ariakit';
 import { saveAs } from 'file-saver';
-import Lightbox from 'react-image-lightbox';
-import 'react-image-lightbox/style.css';
+import Lightbox from 'react-18-image-lightbox';
+import 'react-18-image-lightbox/style.css';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import Cookies from 'js-cookie';
@@ -227,7 +227,7 @@ const Description = styled.div`
   white-space: pre-line;
 `;
 
-const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
+function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
   const { t, i18n } = useTranslation(['common', 'project']);
   const router = useRouter();
   const { query } = router;
@@ -384,12 +384,12 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
         <VirtualLoomButton onClick={virtualLoomOnClick}>
           <img src="/images/virtual-loom-button.png" alt="Virtual Loom" />
         </VirtualLoomButton>
-        <StyledMenu {...virtualLoomMenu} aria-label="Virtual Loom" style={{position:'absolute', left: 0}}>
-          <MenuItem {...virtualLoomMenu} as={Button} primary onClick={onClickVirtualLoomButton}>
+        <StyledMenu state={virtualLoomMenu} aria-label="Virtual Loom" style={{position:'absolute', left: 0}}>
+          <MenuItem state={virtualLoomMenu} as={Button} primary onClick={onClickVirtualLoomButton}>
             {t('common:buttons.virtualLoom.web')}
           </MenuItem>
           <MenuItem
-            {...virtualLoomMenu}
+            state={virtualLoomMenu}
             as={Button}
             primary
             href={generateVirtualLoomURL().replace(/^https?:\/\//, 'vloom://')}
@@ -489,29 +489,6 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                   </div>
                 ))}
               </Carousel>
-
-              {/*
-              <Analysis>
-                <Tabs>
-                  <Tab label="Transcript">
-                    <p>Transcript.</p>
-                    {lipsum}
-                  </Tab>
-                  <Tab label="Face Rec">
-                    <p>Face Rec.</p>
-                    {lipsum}
-                  </Tab>
-                  <Tab label="Audio">
-                    <p>Audio.</p>
-                    {lipsum}
-                  </Tab>
-                  <Tab label="Object Det">
-                    <p>Object Det.</p>
-                    {lipsum}
-                  </Tab>
-                </Tabs>
-              </Analysis>
-              */}
             </Primary>
           )}
           <Secondary>
@@ -558,28 +535,28 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
               <MetadataList metadata={result} query={query} route={route} />
             </Element>
             <Element marginBottom={24}>
-              <MenuButton {...downloadMenu} as={Button} primary>
+              <MenuButton state={downloadMenu} as={Button} primary>
                 {t('common:buttons.download')}
               </MenuButton>
-              <StyledMenu {...downloadMenu} aria-label={t('common:buttons.download')}>
-                <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('vljson')}>
+              <StyledMenu state={downloadMenu} aria-label={t('common:buttons.download')}>
+                <MenuItem state={downloadMenu} as={Button} primary onClick={() => download('vljson')}>
                   {t('common:buttons.virtualLoom.download')}
                 </MenuItem>
-                <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('json')}>
+                <MenuItem state={downloadMenu} as={Button} primary onClick={() => download('json')}>
                   {t('common:buttons.downloadJSON')}
                 </MenuItem>
-                <MenuItem {...downloadMenu} as={Button} primary onClick={() => download('image')}>
+                <MenuItem state={downloadMenu} as={Button} primary onClick={() => download('image')}>
                   {t('common:buttons.downloadSelectedImage')}
                 </MenuItem>
               </StyledMenu>
             </Element>
             <Element>
-              <MenuButton {...similarityMenu} as={Button} primary loading={isLoadingSimilar}>
+              <MenuButton state={similarityMenu} as={Button} primary loading={isLoadingSimilar}>
                 {t('common:buttons.similar')}
               </MenuButton>
-              <StyledMenu {...similarityMenu} aria-label={t('common:buttons.similar')}>
+              <StyledMenu state={similarityMenu} aria-label={t('common:buttons.similar')}>
                 <MenuItem
-                  {...similarityMenu}
+                  state={similarityMenu}
                   as={Button}
                   primary
                   onClick={() => viewSimilar('visual')}
@@ -587,7 +564,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
                   {t('common:similarity.visual')}
                 </MenuItem>
                 <MenuItem
-                  {...similarityMenu}
+                  state={similarityMenu}
                   as={Button}
                   primary
                   onClick={() => viewSimilar('semantic')}
@@ -643,7 +620,7 @@ const GalleryDetailsPage = ({ result, inList, debugSparqlQuery }) => {
       <Footer />
     </Layout>
   );
-};
+}
 
 export async function getServerSideProps({ req, res, query, locale }) {
   const { result = null, inList = false, debugSparqlQuery } = await (

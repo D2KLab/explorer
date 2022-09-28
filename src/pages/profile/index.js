@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { Img } from 'react-image';
-import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
+import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import { getProviders, getCsrfToken, signout } from 'next-auth/react';
 import NextLink from 'next/link';
 import Router from 'next/router';
@@ -33,20 +33,6 @@ const StyledDialogDisclosure = styled(DialogDisclosure)`
   background-color: transparent;
   border: none;
   cursor: pointer;
-`;
-
-const StyledDialogBackdrop = styled(DialogBackdrop)`
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  z-index: 2000;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
 
 const StyledDialog = styled(Dialog)`
@@ -150,7 +136,7 @@ const StyledTrashIcon = styled(TrashIcon)`
   }
 `;
 
-const ProfilePage = ({
+function ProfilePage({
   session,
   providers,
   csrfToken,
@@ -158,7 +144,7 @@ const ProfilePage = ({
   lists,
   baseUrl,
   facebookAppId,
-}) => {
+}) {
   const { t } = useTranslation('common');
   const deleteProfileDialog = useDialogState();
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
@@ -184,7 +170,7 @@ const ProfilePage = ({
       <Element marginY={24} display="flex" flexDirection="column">
         <h3 style={{ color: '#dc3535', fontWeight: 'bold' }}>{t('common:profile.deleteAccount.title')}</h3>
         <DialogDisclosure
-          {...deleteProfileDialog}
+          state={deleteProfileDialog}
           as={DeleteButton}
           bg="#fff"
           text="#dc3545"
@@ -192,46 +178,44 @@ const ProfilePage = ({
         >
           {t('common:profile.deleteAccount.title')}
         </DialogDisclosure>
-        <StyledDialogBackdrop {...deleteProfileDialog}>
-          <StyledDialog
-            {...deleteProfileDialog}
-            modal
-            aria-label={t('common:profile.deleteAccount.title')}
-          >
-            <h2>{t('common:profile.deleteAccount.title')}</h2>
-            <p>
-              <Trans
-                i18nKey="common:profile.deleteAccount.text"
-                components={[<strong />, <strong />]}
-              />
-            </p>
-            <p>{t('common:profile.deleteAccount.consequences')}</p>
-            <ul style={{ listStyleType: 'disc', paddingLeft: 20, margin: '1em 0' }}>
-              <li>{t('common:profile.deleteAccount.lists')}</li>
-              <li>{t('common:profile.deleteAccount.sessions')}</li>
-            </ul>
-            <Element display="flex" alignItems="center" justifyContent="space-between">
-              <Button
-                type="button"
-                secondary
-                onClick={() => {
-                  deleteProfileDialog.hide();
-                }}
-              >
-                {t('common:profile.deleteAccount.cancel')}
-              </Button>
-              <Button
-                type="button"
-                bg="#dc3545"
-                text="#fff"
-                loading={isDeletingAccount}
-                onClick={deleteProfile}
-              >
-                {t('common:profile.deleteAccount.confirm')}
-              </Button>
-            </Element>
-          </StyledDialog>
-        </StyledDialogBackdrop>
+        <StyledDialog
+          state={deleteProfileDialog}
+          modal
+          aria-label={t('common:profile.deleteAccount.title')}
+        >
+          <h2>{t('common:profile.deleteAccount.title')}</h2>
+          <p>
+            <Trans
+              i18nKey="common:profile.deleteAccount.text"
+              components={[<strong />, <strong />]}
+            />
+          </p>
+          <p>{t('common:profile.deleteAccount.consequences')}</p>
+          <ul style={{ listStyleType: 'disc', paddingLeft: 20, margin: '1em 0' }}>
+            <li>{t('common:profile.deleteAccount.lists')}</li>
+            <li>{t('common:profile.deleteAccount.sessions')}</li>
+          </ul>
+          <Element display="flex" alignItems="center" justifyContent="space-between">
+            <Button
+              type="button"
+              secondary
+              onClick={() => {
+                deleteProfileDialog.hide();
+              }}
+            >
+              {t('common:profile.deleteAccount.cancel')}
+            </Button>
+            <Button
+              type="button"
+              bg="#dc3545"
+              text="#fff"
+              loading={isDeletingAccount}
+              onClick={deleteProfile}
+            >
+              {t('common:profile.deleteAccount.confirm')}
+            </Button>
+          </Element>
+        </StyledDialog>
       </Element>
     );
 
@@ -344,14 +328,14 @@ const ProfilePage = ({
                             shareUrl={`${baseUrl}/lists/${list._id}`}
                             dialogState={shareListDialog}
                           >
-                            <StyledDialogDisclosure {...shareListDialog}>
+                            <StyledDialogDisclosure state={shareListDialog}>
                               <StyledShareIcon />
                             </StyledDialogDisclosure>
                           </ListShare>
                         </ListItemButton>
                         <ListItemButton>
                           <ListDeletion list={list} dialogState={deleteListDialog}>
-                            <StyledDialogDisclosure {...deleteListDialog}>
+                            <StyledDialogDisclosure state={deleteListDialog}>
                               <StyledTrashIcon />
                             </StyledDialogDisclosure>
                           </ListDeletion>
@@ -373,7 +357,7 @@ const ProfilePage = ({
       <Footer />
     </Layout>
   );
-};
+}
 
 export default ProfilePage;
 

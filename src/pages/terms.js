@@ -4,8 +4,8 @@ import Body from '@components/Body';
 import Content from '@components/Content';
 import PageTitle from '@components/PageTitle';
 
-const TermsOfServicePage = () => (
-    <Layout>
+function TermsOfServicePage() {
+  return <Layout>
       <PageTitle title="Terms of Service" />
       <Header />
       <Body>
@@ -15,6 +15,6 @@ const TermsOfServicePage = () => (
         </Content>
       </Body>
     </Layout>
-  );
+}
 
 export default TermsOfServicePage;

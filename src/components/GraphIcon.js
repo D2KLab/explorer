@@ -17,7 +17,7 @@ const StyledImage = styled.img`
   ${({ theme }) => theme?.components?.GraphIcon?.StyledImage};
 `;
 
-const GraphIcon = ({ className, size = 24, uri, style }) => {
+function GraphIcon({ className, size = 24, uri, style }) {
   const graph = config.graphs[uri];
   if (!graph || !graph.icon) {
     return null;
@@ -32,6 +32,6 @@ const GraphIcon = ({ className, size = 24, uri, style }) => {
       style={style}
     />
   );
-};
+}
 
 export default GraphIcon;

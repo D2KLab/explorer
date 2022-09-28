@@ -104,7 +104,7 @@ const Option = styled.div`
   ${({ theme }) => theme?.components?.Sidebar?.Option};
 `;
 
-const Sidebar = ({ className, onSearch, submitOnChange = false, type, filters, query }) => {
+function Sidebar({ className, onSearch, submitOnChange = false, type, filters, query }) {
   const theme = useTheme();
   const { t, i18n } = useTranslation(['project', 'search']);
 
@@ -405,6 +405,6 @@ const Sidebar = ({ className, onSearch, submitOnChange = false, type, filters, q
       </form>
     </Container>
   );
-};
+}
 
 export default Sidebar;

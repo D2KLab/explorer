@@ -124,7 +124,7 @@ const SearchContainer = styled.div`
   ${({ theme }) => theme?.components?.Header?.SearchContainer};
 `;
 
-const Header = ({ className }) => {
+function Header({ className }) {
   const { t } = useTranslation('project');
   return (
     <Container className={className}>
@@ -178,6 +178,6 @@ const Header = ({ className }) => {
       <StyledProfileButton />
     </Container>
   );
-};
+}
 
 export default Header;

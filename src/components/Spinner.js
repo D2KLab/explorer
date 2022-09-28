@@ -35,10 +35,10 @@ const StyledSpinner = styled.svg`
   }
 `;
 
-const Spinner = ({ size, color, ...props }) => (
-  <StyledSpinner size={size} color={color} viewBox="0 0 50 50" {...props}>
+function Spinner({ size, color, ...props }) {
+  return <StyledSpinner size={size} color={color} viewBox="0 0 50 50" {...props}>
     <circle cx="25" cy="25" r="20" fill="none" strokeWidth="2" />
   </StyledSpinner>
-);
+}
 
 export default Spinner;

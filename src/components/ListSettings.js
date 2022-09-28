@@ -1,7 +1,7 @@
 import styled, { useTheme } from 'styled-components';
 import { useEffect, useState } from 'react';
 import Router from 'next/router';
-import { useDialogState, Dialog, DialogDisclosure, DialogBackdrop } from 'reakit/Dialog';
+import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import { Edit as SettingsIcon } from '@styled-icons/boxicons-regular/Edit';
 import Switch from 'react-switch';
 
@@ -9,20 +9,6 @@ import Element from '@components/Element';
 import Input from '@components/Input';
 import Button from '@components/Button';
 import { useTranslation } from 'next-i18next';
-
-const StyledDialogBackdrop = styled(DialogBackdrop)`
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  z-index: 2000;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 const StyledDialog = styled(Dialog)`
   background-color: #fff;
@@ -49,7 +35,7 @@ const StyledSettingsIcon = styled(SettingsIcon)`
   }
 `;
 
-const ListSettings = ({ list }) => {
+function ListSettings({ list }) {
   const theme = useTheme();
   const { t } = useTranslation('common');
   const settingsDialog = useDialogState();
@@ -77,71 +63,79 @@ const ListSettings = ({ list }) => {
 
   return (
     <>
-      <StyledDialogDisclosure {...settingsDialog}>
+      <StyledDialogDisclosure state={settingsDialog}>
         <StyledSettingsIcon />
       </StyledDialogDisclosure>
-      <StyledDialogBackdrop {...settingsDialog}>
-        <StyledDialog {...settingsDialog} modal aria-label={t('listSettings.title')}>
-          <Element marginBottom={24}>
-            <h2>{t('listSettings.title')}</h2>
+      <StyledDialog state={settingsDialog} modal aria-label={t('listSettings.title')} backdrop backdropProps={{
+          style: {
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            width: '100%',
+            height: '100%',
+            zIndex: 2000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }
+        }}>
+        <Element marginBottom={24}>
+          <h2>{t('listSettings.title')}</h2>
+        </Element>
+        <form
+          onSubmit={async (e) => {
+            e.stopPropagation();
+            await updateSettings();
+            settingsDialog.hide();
+          }}
+        >
+          <Element display="flex" alignItems="center" marginBottom={24}>
+            <label>
+              <Element paddingRight={12}>{t('listSettings.labels.name')}</Element>
+              <Input
+                name="list_name"
+                type="text"
+                placeholder={t('listSettings.labels.name')}
+                value={listName}
+                onChange={(e) => setListName(e.target.value)}
+              />
+            </label>
           </Element>
-          <form
-            onSubmit={async (e) => {
-              e.stopPropagation();
-              await updateSettings();
-              settingsDialog.hide();
-            }}
-          >
-            <Element display="flex" alignItems="center" marginBottom={24}>
-              <label>
-                <Element paddingRight={12}>{t('listSettings.labels.name')}</Element>
-                <Input
-                  name="list_name"
-                  type="text"
-                  placeholder={t('listSettings.labels.name')}
-                  value={listName}
-                  onChange={(e) => setListName(e.target.value)}
-                />
-              </label>
-            </Element>
-            <Element display="flex" alignItems="center" marginBottom={24}>
-              <label>
-                <Element paddingRight={12}>{t('listSettings.labels.public')}</Element>
-                <Switch
-                  onChange={(checked) => setListPublic(checked)}
-                  checked={listPublic}
-                  onColor={theme.colors.light}
-                  offHandleColor="#f0f0f0"
-                  onHandleColor={theme.colors.primary}
-                  handleDiameter={24}
-                  uncheckedIcon={false}
-                  checkedIcon={false}
-                  boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                  activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                  height={16}
-                  width={36}
-                />
-              </label>
-            </Element>
-            <Element display="flex" justifyContent="space-between" marginTop={24}>
-              <Button
-                type="button"
-                secondary
-                onClick={() => {
-                  settingsDialog.hide();
-                }}
-              >
-                {t('buttons.cancel')}
-              </Button>
-              <Button type="submit" primary loading={isUpdating}>
-                {t('buttons.save')}
-              </Button>
-            </Element>
-          </form>
-        </StyledDialog>
-      </StyledDialogBackdrop>
+          <Element display="flex" alignItems="center" marginBottom={24}>
+            <label>
+              <Element paddingRight={12}>{t('listSettings.labels.public')}</Element>
+              <Switch
+                onChange={(checked) => setListPublic(checked)}
+                checked={listPublic}
+                onColor={theme.colors.light}
+                offHandleColor="#f0f0f0"
+                onHandleColor={theme.colors.primary}
+                handleDiameter={24}
+                uncheckedIcon={false}
+                checkedIcon={false}
+                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                height={16}
+                width={36}
+              />
+            </label>
+          </Element>
+          <Element display="flex" justifyContent="space-between" marginTop={24}>
+            <Button
+              type="button"
+              secondary
+              onClick={() => {
+                settingsDialog.hide();
+              }}
+            >
+              {t('buttons.cancel')}
+            </Button>
+            <Button type="submit" primary loading={isUpdating}>
+              {t('buttons.save')}
+            </Button>
+          </Element>
+        </form>
+      </StyledDialog>
     </>
   );
-};
+}
 
 export default ListSettings;

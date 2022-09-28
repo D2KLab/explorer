@@ -53,7 +53,7 @@ export const StyledBurger = styled.button`
   }
 `;
 
-const Burger = ({ className, open, setOpen, ...props }) => {
+function Burger({ className, open, setOpen, ...props }) {
   const { t } = useTranslation('common');
   const isExpanded = !!open;
 
@@ -71,7 +71,7 @@ const Burger = ({ className, open, setOpen, ...props }) => {
       <span />
     </StyledBurger>
   );
-};
+}
 
 Burger.propTypes = {
   open: PropTypes.bool.isRequired,

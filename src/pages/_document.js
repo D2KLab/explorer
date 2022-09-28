@@ -33,6 +33,18 @@ export default class MyDocument extends Document {
     return (
       <Html {...i18nDocumentProps}>
         <Head>
+          <link rel="icon" href="/images/favicon.png" type="image/png" />
+          <link rel="shortcut icon" href="/images/favicon.png" type="image/png" />
+          {/* Import Lato font */}
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Lato:300,400,700,800"
+          />
+          <link
+            rel="preload"
+            as="style"
+            href="https://fonts.googleapis.com/css?family=Lato:300,400,700,800"
+          />
           {/* Global site tag (gtag.js) - Google Analytics */}
           {typeof config.analytics?.id !== 'undefined' && (
             <>
