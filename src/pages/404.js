@@ -36,7 +36,7 @@ function NotFoundPage({ title = "404 - Uh oh!", text, children }) {
 
 export const getStaticProps = async ({ locale }) => ({
   props: {
-    ...await serverSideTranslations(locale, ['common', 'project']),
+    ...await serverSideTranslations(locale, ['common', 'project', 'search']),
   },
 });
 

@@ -644,7 +644,7 @@ export async function getServerSideProps({ req, query, locale }) {
 
   return {
     props: {
-      ...await serverSideTranslations(locale, ['common', 'search', 'project']),
+      ...await serverSideTranslations(locale, ['common', 'project', 'search']),
       initialData: {
         results: searchData.results,
         totalResults: searchData.totalResults,

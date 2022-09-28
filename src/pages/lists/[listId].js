@@ -270,7 +270,7 @@ export async function getServerSideProps(ctx) {
 
   return {
     props: {
-      ...await serverSideTranslations(ctx.locale, ['common', 'project']),
+      ...await serverSideTranslations(ctx.locale, ['common', 'project', 'search']),
       list: JSON.parse(JSON.stringify(list)), // serialize the list
       isOwner,
       shareLink: `${absoluteUrl(req)}/lists/${slugify(list.name)}-${list._id}`,

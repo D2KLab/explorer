@@ -179,7 +179,7 @@ export async function getServerSideProps({ query, locale }) {
 
   return {
     props: {
-      ...await serverSideTranslations(locale, ['common', 'project']),
+      ...await serverSideTranslations(locale, ['common', 'project', 'search']),
       captures: JSON.parse(JSON.stringify(captures)), // serialize captures list
       selectedCapture: JSON.parse(
         JSON.stringify(captures.find((capture) => capture.capture_session_id === query.id) || null)

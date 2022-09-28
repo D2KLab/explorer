@@ -383,7 +383,7 @@ export async function getServerSideProps(ctx) {
 
   return {
     props: {
-      ...await serverSideTranslations(ctx.locale, ['common', 'project']),
+      ...await serverSideTranslations(ctx.locale, ['common', 'project', 'search']),
       session,
       providers: await getProviders(ctx),
       csrfToken: await getCsrfToken(ctx),

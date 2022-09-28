@@ -184,7 +184,7 @@ export async function getServerSideProps({ query, req, locale }) {
 
   return {
     props: {
-      ...await serverSideTranslations(locale, ['common', 'project']),
+      ...await serverSideTranslations(locale, ['common', 'project', 'search']),
       items,
       debugSparqlQuery,
     }

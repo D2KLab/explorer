@@ -52,7 +52,7 @@ export default SignInPage;
 export async function getServerSideProps(ctx) {
   return {
     props: {
-      ...await serverSideTranslations(ctx.locale, ['common', 'project']),
+      ...await serverSideTranslations(ctx.locale, ['common', 'project', 'search']),
       providers: await getProviders(ctx),
       csrfToken: await getCsrfToken(ctx),
     },
