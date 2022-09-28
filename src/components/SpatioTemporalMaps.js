@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import { useTranslation } from 'next-i18next';
 import config from '~/config';
 
-const SpatioTemporalMaps = ({ mapRef, query }) => {
+function SpatioTemporalMaps({ mapRef, query }) {
   const { i18n } = useTranslation();
 
   const params = useMemo(() => ({
@@ -26,6 +26,6 @@ const SpatioTemporalMaps = ({ mapRef, query }) => {
       />
     </div>
   );
-};
+}
 
 export default SpatioTemporalMaps;
