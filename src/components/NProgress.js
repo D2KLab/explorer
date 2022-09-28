@@ -35,6 +35,12 @@ function NProgress() {
     router.events.on('routeChangeStart', start);
     router.events.on('routeChangeComplete', done);
     router.events.on('routeChangeError', done);
+
+    return () => {
+      router.events.off('routeChangeStart', start);
+      router.events.off('routeChangeComplete', done);
+      router.events.off('routeChangeError', done);
+    };
   }, []);
 };
 
