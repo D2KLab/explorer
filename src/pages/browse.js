@@ -165,7 +165,8 @@ const ResultPage = styled.h3`
 `;
 
 function BrowsePage({ initialData, similarityEntity }) {
-  const { req, query, pathname } = useRouter();
+  const router = useRouter();
+  const { req, query, pathname } = router;
   const { t, i18n } = useTranslation(['common', 'search', 'project']);
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(true);
@@ -254,6 +255,7 @@ function BrowsePage({ initialData, similarityEntity }) {
     setInitialPage(1);
     delete newQuery.page;
 
+    setIsPageLoading(true);
     Router.push(
       {
         pathname,
@@ -269,6 +271,7 @@ function BrowsePage({ initialData, similarityEntity }) {
   const loadPage = (pageNumber) => {
     setSize(1);
     setInitialPage(pageNumber);
+    setIsPageLoading(true);
     return Router.replace(
       {
         pathname,
@@ -309,6 +312,7 @@ function BrowsePage({ initialData, similarityEntity }) {
     setInitialPage(1);
     delete newQuery.page;
 
+    setIsPageLoading(true);
     return Router.replace(
       {
         pathname,
@@ -363,6 +367,20 @@ function BrowsePage({ initialData, similarityEntity }) {
   useEffect(() => {
     if (isOnScreen) loadMore();
   }, [isOnScreen]);
+
+  useEffect(() => {
+    const onDoneLoading = () => {
+      setIsPageLoading(false);
+    }
+
+    router.events.on('routeChangeComplete', onDoneLoading);
+    router.events.on('routeChangeError', onDoneLoading);
+
+    return () => {
+      router.events.off('routeChangeComplete', onDoneLoading);
+      router.events.off('routeChangeError', onDoneLoading);
+    };
+  }, []);
 
   const route = config.routes[query.type];
 
