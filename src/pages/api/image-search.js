@@ -24,12 +24,18 @@ export const searchImage = async (image) => {
     formData.append('file', fs.createReadStream('./placeholder.jpg'));
   }
 
-  const data = await (
-    await fetch(`https://silknow-image-retrieval.tools.eurecom.fr/api/retrieve`, {
-      method: 'POST',
-      body: formData,
-    })
-  ).json();
+  const res = await fetch(`https://silknow-image-retrieval.tools.eurecom.fr/api/retrieve`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  const data = await res.json();
+  if (data.message) {
+    throw new Error({
+      statusCode: res.status,
+      message: data.message
+    });
+  }
 
   return data;
 }
