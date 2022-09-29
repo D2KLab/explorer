@@ -10,7 +10,8 @@
     "start": "next start",
     "build": "next build",
     "export": "next export",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prepare": "husky install"
   },
   "engines": {
     "node": ">=16.0.0"
