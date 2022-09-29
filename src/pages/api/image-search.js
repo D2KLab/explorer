@@ -15,8 +15,8 @@ export const config = {
 export const searchImage = async (image) => {
   const formData = new FormData();
 
-  if (typeof image === 'object' && typeof image.path !== 'undefined') {
-    formData.append('file', fs.createReadStream(image.path));
+  if (typeof image === 'object' && typeof image.filepath !== 'undefined') {
+    formData.append('file', fs.createReadStream(image.filepath));
   } else {
     const response = await fetch(image);
     if (!response.ok) throw new Error(`Unexpected Response: ${response.statusText}`);
