@@ -57,10 +57,7 @@ export const searchImage = async (image) => {
 
   const data = await res.json();
   if (data.message) {
-    throw new Error({
-      statusCode: res.status,
-      message: data.message
-    });
+    throw new Error(data.message);
   }
 
   return data;
