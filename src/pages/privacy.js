@@ -5,7 +5,8 @@ import Content from '@components/Content';
 import PageTitle from '@components/PageTitle';
 
 function PrivacyPolicyPage() {
-  return <Layout>
+  return (
+    <Layout>
       <PageTitle title="Privacy Policy" />
       <Header />
       <Body>
@@ -15,6 +16,7 @@ function PrivacyPolicyPage() {
         </Content>
       </Body>
     </Layout>
+  );
 }
 
 export default PrivacyPolicyPage;

@@ -93,7 +93,7 @@ function ProfileButton({ className }) {
   const menu = useMenuState();
 
   const { data: session, status } = useSession();
-  const loading = status === "loading";
+  const loading = status === 'loading';
 
   const renderSessionMenuItems = () => {
     if (!session || !session.user) {
@@ -113,7 +113,7 @@ function ProfileButton({ className }) {
         >
           <Trans
             i18nKey="common:profileButton.signedAs"
-            components={[<strong />]}
+            components={[<strong key="0" />]}
             values={{ name: session.user.name }}
           />
         </StyledMenuItem>
@@ -149,11 +149,7 @@ function ProfileButton({ className }) {
     <>
       <StyledMenuButton state={menu}>
         {session?.user?.image ? (
-          <StyledUserIcon
-            src={session.user.image}
-            title={session.user.name}
-            alt=""
-          />
+          <StyledUserIcon src={session.user.image} title={session.user.name} alt="" />
         ) : (
           <StyledUserIcon />
         )}

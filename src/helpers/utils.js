@@ -67,20 +67,22 @@ export function absoluteUrl(req, localhostAddress = 'localhost:3000') {
 }
 
 export function removeEmptyObjects(obj) {
-  Object
-    .entries(obj)
-    .forEach(([k, v]) => {
-      if (v && typeof v === 'object') {
-        removeEmptyObjects(v);
+  Object.entries(obj).forEach(([k, v]) => {
+    if (v && typeof v === 'object') {
+      removeEmptyObjects(v);
+    }
+    if (
+      (v && typeof v === 'object' && !Object.keys(v).length) ||
+      v === null ||
+      typeof v === 'undefined'
+    ) {
+      if (Array.isArray(obj)) {
+        obj.splice(k, 1);
+      } else if (!Array.isArray(obj[k])) {
+        delete obj[k];
       }
-      if (v && typeof v === 'object' && !Object.keys(v).length || v === null || typeof v === 'undefined') {
-        if (Array.isArray(obj)) {
-          obj.splice(k, 1);
-        } else if (!Array.isArray(obj[k])) {
-          delete obj[k];
-        }
-      }
-    });
+    }
+  });
   return obj;
 }
 
@@ -100,8 +102,8 @@ export function slugify(text) {
     .trim()
     .replace(/\s+/g, '-')
     .replace(/[^\w-]+/g, '')
-    .replace(/--+/g, '-')
-};
+    .replace(/--+/g, '-');
+}
 
 export function linkify(text) {
   if (typeof text !== 'string') return text;
@@ -114,7 +116,10 @@ export function linkify(text) {
 
   // URLs starting with "www." (without // before it, or it'd re-link the ones done above).
   const replacePattern2 = /(^|[^/])(www\.[\S]+(\b|$))/gim;
-  replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+  replacedText = replacedText.replace(
+    replacePattern2,
+    '$1<a href="http://$2" target="_blank">$2</a>'
+  );
 
   // Change email addresses to mailto:: links.
   const replacePattern3 = /(([a-zA-Z0-9\-_.])+@[a-zA-Z_]+?(\.[a-zA-Z]{2,6})+)/gim;

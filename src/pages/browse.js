@@ -49,7 +49,7 @@ const selectTheme = (theme) => ({
     primary25: '#ddd',
     ...mainTheme.select?.colors,
   },
-})
+});
 
 const StyledSelect = styled(Select)`
   min-width: 200px;
@@ -193,7 +193,12 @@ function BrowsePage({ initialData, similarityEntity }) {
   };
 
   const PAGE_SIZE = 20;
-  const { data = [initialData], error, size, setSize } = useSWRInfinite(getKey, fetcher, {
+  const {
+    data = [initialData],
+    error,
+    size,
+    setSize,
+  } = useSWRInfinite(getKey, fetcher, {
     persistSize: true,
   });
   const isLoadingInitialData = !data && !error;
@@ -371,7 +376,7 @@ function BrowsePage({ initialData, similarityEntity }) {
   useEffect(() => {
     const onDoneLoading = () => {
       setIsPageLoading(false);
-    }
+    };
 
     router.events.on('routeChangeComplete', onDoneLoading);
     router.events.on('routeChangeError', onDoneLoading);
@@ -400,7 +405,8 @@ function BrowsePage({ initialData, similarityEntity }) {
     value: similarity,
   }));
 
-  const renderResults = (results) => results.map((result) => {
+  const renderResults = (results) =>
+    results.map((result) => {
       const mainImage = getEntityMainImage(result, { route });
       const label = getEntityMainLabel(result, { route, language: i18n.language });
       const subtitle = typeof route.subtitleFunc === 'function' ? route.subtitleFunc(result) : null;
@@ -662,7 +668,7 @@ export async function getServerSideProps({ req, query, locale }) {
 
   return {
     props: {
-      ...await serverSideTranslations(locale, ['common', 'project', 'search']),
+      ...(await serverSideTranslations(locale, ['common', 'project', 'search'])),
       initialData: {
         results: searchData.results,
         totalResults: searchData.totalResults,

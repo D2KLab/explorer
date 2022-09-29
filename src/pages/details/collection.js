@@ -121,16 +121,20 @@ function CollectionDetailsPage({ result, inList, debugSparqlQuery }) {
                 {result.sameAs && (
                   <small>
                     (
-                      <a href={result.sameAs} target="_blank" rel="noopener noreferrer">
-                        {t('common:buttons.original')}
-                      </a>
+                    <a href={result.sameAs} target="_blank" rel="noopener noreferrer">
+                      {t('common:buttons.original')}
+                    </a>
                     )
                   </small>
                 )}
                 {route.details.showPermalink && (
                   <small>
                     (
-                    <a href={generatePermalink(result['@id'])} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={generatePermalink(result['@id'])}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {t('common:buttons.permalink')}
                     </a>
                     )
@@ -245,7 +249,11 @@ function CollectionDetailsPage({ result, inList, debugSparqlQuery }) {
 }
 
 export async function getServerSideProps({ req, res, query, locale }) {
-  const { result = null, inList, debugSparqlQuery } = await (
+  const {
+    result = null,
+    inList,
+    debugSparqlQuery,
+  } = await (
     await fetch(`${absoluteUrl(req)}/api/entity?${queryString.stringify(query)}`, {
       headers:
         req && req.headers
@@ -262,12 +270,12 @@ export async function getServerSideProps({ req, res, query, locale }) {
 
   return {
     props: {
-      ...await serverSideTranslations(locale, ['common', 'project', 'search']),
+      ...(await serverSideTranslations(locale, ['common', 'project', 'search'])),
       result,
       inList,
       debugSparqlQuery,
-    }
+    },
   };
-};
+}
 
 export default CollectionDetailsPage;

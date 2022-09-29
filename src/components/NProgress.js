@@ -1,5 +1,4 @@
 import { createGlobalStyle } from 'styled-components';
-// eslint-disable-next-line import/no-named-default
 import { default as NProgressRoot } from 'nprogress';
 
 import theme from '~/theme';
@@ -42,7 +41,7 @@ function NProgress() {
       router.events.off('routeChangeError', done);
     };
   }, []);
-};
+}
 
 export const NProgressStyle = createGlobalStyle`
   /* Make clicks pass-through */

@@ -1,17 +1,5 @@
 {
-  "env": {
-    "browser": true,
-    "es2021": true
-  },
-  "extends": ["plugin:react/recommended", "airbnb", "prettier"],
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": 12,
-    "sourceType": "module"
-  },
-  "plugins": ["react", "prettier"],
+  "extends": ["next", "prettier", "plugin:prettier/recommended"],
   "settings": {
     "import/resolver": {
       "babel-module": {
@@ -28,6 +16,7 @@
   },
   "rules": {
     "react/no-danger": 0,
+    "react-hooks/exhaustive-deps": 0,
     "react/react-in-jsx-scope": 0,
     "react/prop-types": 0,
     "react/jsx-filename-extension": 0,

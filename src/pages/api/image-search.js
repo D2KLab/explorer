@@ -36,15 +36,15 @@ export const searchImage = async (image) => {
           formData.append('file', fs.createReadStream(path.join(folder, './image.jpg')));
           resolve();
         });
-      }
-      finally {
+      } finally {
         try {
           if (tmpDir) {
             fs.rmSync(tmpDir, { recursive: true });
           }
-        }
-        catch (e) {
-          console.error(`An error has occurred while removing the temp folder at ${tmpDir}. Error: ${e}`);
+        } catch (e) {
+          console.error(
+            `An error has occurred while removing the temp folder at ${tmpDir}. Error: ${e}`
+          );
         }
       }
     });
@@ -61,9 +61,10 @@ export const searchImage = async (image) => {
   }
 
   return data;
-}
+};
 
-const handleUpload = (req) => new Promise((resolve, reject) => {
+const handleUpload = (req) =>
+  new Promise((resolve, reject) => {
     const form = formidable({ keepExtensions: true, maxFileSize: 5 * 1024 * 1024 });
     form.parse(req, (err, fields, files) => {
       if (err) return reject(err);

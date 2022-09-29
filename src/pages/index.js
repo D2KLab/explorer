@@ -272,54 +272,63 @@ function HomePage() {
 
   // Search by image
   const dialog = useDialogState();
-  const onDrop = useCallback((acceptedFiles) => {
-    setProcessStatus('uploading');
-    setProcessError(null);
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      setProcessStatus('uploading');
+      setProcessError(null);
 
-    const image = acceptedFiles[0];
-    const formData = new FormData();
-    formData.append('image', image);
+      const image = acceptedFiles[0];
+      const formData = new FormData();
+      formData.append('image', image);
 
-    const xhr = new XMLHttpRequest();
-    xhr.upload.onprogress = (event) => {
-      if (event.loaded >= event.total) {
-        setProcessStatus('processing');
-        setUploadPercent(Math.floor((event.loaded / event.total) * 100));
-      }
-    };
-    xhr.onloadend = () => {
-      if (xhr.status === 200) {
-        const { visualUris, semanticUris } = xhr.response;
-        const params = new URLSearchParams();
-        const routeType = 'object';
-        const route = config.routes[routeType];
-        params.append('type', routeType);
-        params.append('similarity_type', similarity);
-        params.append('visual_uris', visualUris.map(uri => uriToId(uri, { base: route.uriBase })));
-        params.append('semantic_uris', semanticUris.map(uri => uriToId(uri, { base: route.uriBase })));
-        router.push(`/browse?${params.toString()}`);
-      }
-    };
-    xhr.onreadystatechange = () => {
-      // In local files, status is 0 upon success in Mozilla Firefox
-      if(xhr.readyState === XMLHttpRequest.DONE) {
-        const { status } = xhr;
-        if (status < 200 || status > 400) {
-          setProcessStatus(null);
-          setProcessError(xhr.statusText);
-          console.log(`Upload error ${xhr.status}`);
+      const xhr = new XMLHttpRequest();
+      xhr.upload.onprogress = (event) => {
+        if (event.loaded >= event.total) {
+          setProcessStatus('processing');
+          setUploadPercent(Math.floor((event.loaded / event.total) * 100));
         }
-      }
-    };
-    xhr.onerror = (error) => {
-      setProcessStatus(null);
-      setProcessError(error.message);
-      console.log(`Upload error ${xhr.status}`);
-    }
-    xhr.responseType = 'json';
-    xhr.open('POST', '/api/image-search', true);
-    xhr.send(formData);
-  }, [similarity]);
+      };
+      xhr.onloadend = () => {
+        if (xhr.status === 200) {
+          const { visualUris, semanticUris } = xhr.response;
+          const params = new URLSearchParams();
+          const routeType = 'object';
+          const route = config.routes[routeType];
+          params.append('type', routeType);
+          params.append('similarity_type', similarity);
+          params.append(
+            'visual_uris',
+            visualUris.map((uri) => uriToId(uri, { base: route.uriBase }))
+          );
+          params.append(
+            'semantic_uris',
+            semanticUris.map((uri) => uriToId(uri, { base: route.uriBase }))
+          );
+          router.push(`/browse?${params.toString()}`);
+        }
+      };
+      xhr.onreadystatechange = () => {
+        // In local files, status is 0 upon success in Mozilla Firefox
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          const { status } = xhr;
+          if (status < 200 || status > 400) {
+            setProcessStatus(null);
+            setProcessError(xhr.statusText);
+            console.log(`Upload error ${xhr.status}`);
+          }
+        }
+      };
+      xhr.onerror = (error) => {
+        setProcessStatus(null);
+        setProcessError(error.message);
+        console.log(`Upload error ${xhr.status}`);
+      };
+      xhr.responseType = 'json';
+      xhr.open('POST', '/api/image-search', true);
+      xhr.send(formData);
+    },
+    [similarity]
+  );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
@@ -410,7 +419,9 @@ function HomePage() {
                             {processStatus === 'uploading' && <>({uploadPercent}%)</>}
                           </>
                         )}
-                        {processError !== null && <span style={{ color: '#dc3545' }}>{processError}</span>}
+                        {processError !== null && (
+                          <span style={{ color: '#dc3545' }}>{processError}</span>
+                        )}
                       </Dropzone>
                     </Element>
                   </StyledUploadDialog>
@@ -447,7 +458,7 @@ function HomePage() {
 
 export const getStaticProps = async ({ locale }) => ({
   props: {
-    ...await serverSideTranslations(locale, ['common', 'project', 'search', 'home']),
+    ...(await serverSideTranslations(locale, ['common', 'project', 'search', 'home'])),
   },
 });
 

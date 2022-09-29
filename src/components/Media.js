@@ -89,11 +89,7 @@ function Media({
     <Container className={className} direction={direction} {...props}>
       <ThumbnailContainer width={width} height={height}>
         {config.search?.placeholderImage && placeholderVisible && (
-          <Thumbnail
-            src={config.search.placeholderImage}
-            alt=""
-            layout="fill"
-          />
+          <Thumbnail src={config.search.placeholderImage} alt="" layout="fill" />
         )}
         {thumbnail && imageVisible && (
           <Thumbnail

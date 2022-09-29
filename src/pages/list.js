@@ -122,15 +122,15 @@ function ListDetailsPage({ items, debugSparqlQuery }) {
             <Results>
               <ul>
                 {filteredItems.map((item) => (
-                    <Item>
-                      <Link href={getUseWithLink(useWith[0], item)} passHref>
-                        <a>
-                          <GraphIcon uri={item['@id']} style={{ marginRight: '1em' }} />
-                          <span>{item.label}</span>
-                        </a>
-                      </Link>
-                    </Item>
-                  ))}
+                  <Item key={item['@id']}>
+                    <Link href={getUseWithLink(useWith[0], item)} passHref>
+                      <a>
+                        <GraphIcon uri={item['@id']} style={{ marginRight: '1em' }} />
+                        <span>{item.label}</span>
+                      </a>
+                    </Link>
+                  </Item>
+                ))}
               </ul>
             </Results>
             <Debug>
@@ -184,11 +184,11 @@ export async function getServerSideProps({ query, req, locale }) {
 
   return {
     props: {
-      ...await serverSideTranslations(locale, ['common', 'project', 'search']),
+      ...(await serverSideTranslations(locale, ['common', 'project', 'search'])),
       items,
       debugSparqlQuery,
-    }
+    },
   };
-};
+}
 
 export default ListDetailsPage;

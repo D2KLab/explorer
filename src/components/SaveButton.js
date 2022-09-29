@@ -156,18 +156,22 @@ function SaveButton({ item, type, saved, onChange }) {
     await loadLists();
   };
 
+  const onClick = useCallback((event) => {
+    loadLists(event);
+  }, []);
+
   return (
     <div>
-      <StyledDialogDisclosure
-        onClick={useCallback((event) => {
-          loadLists(event);
-        })}
-        state={dialog}
-      >
+      <StyledDialogDisclosure onClick={onClick} state={dialog}>
         {saved ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
         <StyledLabel>{saved ? t('saveButton.saved') : t('saveButton.save')}</StyledLabel>
       </StyledDialogDisclosure>
-      <StyledDialog state={dialog} modal aria-label={t('saveButton.title')} backdrop backdropProps={{
+      <StyledDialog
+        state={dialog}
+        modal
+        aria-label={t('saveButton.title')}
+        backdrop
+        backdropProps={{
           style: {
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
             width: '100%',
@@ -175,9 +179,10 @@ function SaveButton({ item, type, saved, onChange }) {
             zIndex: 2000,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
-          }
-        }}>
+            justifyContent: 'center',
+          },
+        }}
+      >
         <h2>{t('saveButton.title')}</h2>
         <Element marginY={12}>
           {listFormVisible ? (

@@ -20,7 +20,7 @@ const getEntityQuery = (route, query) => {
     })}>`
   );
   return searchQuery;
-}
+};
 
 export const getEntity = async (query) => {
   const route = config.routes[query.type];
@@ -71,7 +71,7 @@ export default withRequestValidation({
   }
 
   if (req) {
-    const session = await unstable_getServerSession(req, res, authOptions)
+    const session = await unstable_getServerSession(req, res, authOptions);
     const user = await getSessionUser(session);
     if (user) {
       // Check if this item is in a user list and flag it accordingly.

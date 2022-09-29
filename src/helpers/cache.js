@@ -12,7 +12,7 @@ const connect = async () => {
     },
   });
   return client.connect();
-}
+};
 
 export const exists = async (key) => {
   if (!client) {
@@ -28,15 +28,17 @@ export const get = async (key) => {
   return client.get(key);
 };
 
-export const set = async (key, value, expiry=86400) => {
+export const set = async (key, value, expiry = 86400) => {
   if (!client) {
     await connect();
   }
   return client.set(key, value, 'EX', expiry);
 };
 
-export default {
+const cache = {
   exists,
   get,
   set,
 };
+
+export default cache;

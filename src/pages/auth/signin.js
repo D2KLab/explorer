@@ -31,13 +31,13 @@ function SignInPage({ providers, csrfToken }) {
             <Element display="flex" flexDirection="column">
               {providers &&
                 Object.values(providers).map((provider) => (
-                    <Element key={provider.name} marginY={12}>
-                      <form action={provider.signinUrl} method="POST">
-                        <input type="hidden" name="csrfToken" defaultValue={csrfToken} />
-                        <ProviderButton provider={provider} type="submit" />
-                      </form>
-                    </Element>
-                  ))}
+                  <Element key={provider.name} marginY={12}>
+                    <form action={provider.signinUrl} method="POST">
+                      <input type="hidden" name="csrfToken" defaultValue={csrfToken} />
+                      <ProviderButton provider={provider} type="submit" />
+                    </form>
+                  </Element>
+                ))}
             </Element>
           </Content>
         </Element>
@@ -52,7 +52,7 @@ export default SignInPage;
 export async function getServerSideProps(ctx) {
   return {
     props: {
-      ...await serverSideTranslations(ctx.locale, ['common', 'project', 'search']),
+      ...(await serverSideTranslations(ctx.locale, ['common', 'project', 'search'])),
       providers: await getProviders(ctx),
       csrfToken: await getCsrfToken(ctx),
     },

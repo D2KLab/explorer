@@ -5,7 +5,8 @@ import Content from '@components/Content';
 import PageTitle from '@components/PageTitle';
 
 function TermsOfServicePage() {
-  return <Layout>
+  return (
+    <Layout>
       <PageTitle title="Terms of Service" />
       <Header />
       <Body>
@@ -15,6 +16,7 @@ function TermsOfServicePage() {
         </Content>
       </Body>
     </Layout>
+  );
 }
 
 export default TermsOfServicePage;

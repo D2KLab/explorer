@@ -151,21 +151,21 @@ function SearchInput({ className, placeholder, ariaLabel = 'Search input', ...pr
   };
 
   const renderSuggestionsContainer = ({ containerProps, children }) => (
-      <div {...containerProps}>
-        {children}
-        <div className="react-autosuggest__suggestion">
-          <SuggestionContent>
-            <SuggestionName>
-              <Link href={`/${config.search.route}?q=${encodeURIComponent(inputValue)}`}>
-                <a>
-                  <em>{t('search:labels.searchResults', { totalResults: `${totalResults}+` })}</em>
-                </a>
-              </Link>
-            </SuggestionName>
-          </SuggestionContent>
-        </div>
+    <div {...containerProps}>
+      {children}
+      <div className="react-autosuggest__suggestion">
+        <SuggestionContent>
+          <SuggestionName>
+            <Link href={`/${config.search.route}?q=${encodeURIComponent(inputValue)}`}>
+              <a>
+                <em>{t('search:labels.searchResults', { totalResults: `${totalResults}+` })}</em>
+              </a>
+            </Link>
+          </SuggestionName>
+        </SuggestionContent>
       </div>
-    );
+    </div>
+  );
 
   const onChange = (event, { newValue }) => {
     setInputValue(newValue);

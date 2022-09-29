@@ -66,7 +66,12 @@ function ListSettings({ list }) {
       <StyledDialogDisclosure state={settingsDialog}>
         <StyledSettingsIcon />
       </StyledDialogDisclosure>
-      <StyledDialog state={settingsDialog} modal aria-label={t('listSettings.title')} backdrop backdropProps={{
+      <StyledDialog
+        state={settingsDialog}
+        modal
+        aria-label={t('listSettings.title')}
+        backdrop
+        backdropProps={{
           style: {
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
             width: '100%',
@@ -74,9 +79,10 @@ function ListSettings({ list }) {
             zIndex: 2000,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
-          }
-        }}>
+            justifyContent: 'center',
+          },
+        }}
+      >
         <Element marginBottom={24}>
           <h2>{t('listSettings.title')}</h2>
         </Element>

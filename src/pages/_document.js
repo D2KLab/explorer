@@ -38,7 +38,7 @@ export default class MyDocument extends Document {
           {/* Import Lato font */}
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Lato:300,400,700,800"
+            href="https://fonts.googleapis.com/css?family=Lato:300,400,700,800&display=optional"
           />
           {/* Global site tag (gtag.js) - Google Analytics */}
           {typeof config.analytics?.id !== 'undefined' && (

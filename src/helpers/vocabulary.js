@@ -45,7 +45,9 @@ export async function fillWithVocabularies(item) {
         vocabulariesCache[key] = await getVocabularyItems(key);
       }
       const vocabularies = vocabulariesCache[key];
-      const itemVocabs = Array.isArray(item[key]) ? item[key] : [item[key]].filter((x) => x && (typeof x !== 'object' || Object.keys(x) > 0));
+      const itemVocabs = Array.isArray(item[key])
+        ? item[key]
+        : [item[key]].filter((x) => x && (typeof x !== 'object' || Object.keys(x) > 0));
       itemVocabs.forEach((itemVocab, j) => {
         const vocabulary = vocabularies.find((v) => v['@id'] === itemVocab['@id']);
         if (vocabulary) {

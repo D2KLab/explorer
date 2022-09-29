@@ -41,9 +41,11 @@ export const Container = styled.div`
 `;
 
 function Body({ className, hasSidebar, children }) {
-  return <Container className={className} hasSidebar={hasSidebar} role="main">
+  return (
+    <Container className={className} hasSidebar={hasSidebar} role="main">
       {children}
     </Container>
+  );
 }
 
 export default Body;

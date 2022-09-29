@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useMemo, useState, useEffect } from 'react';
 
 export default function useDebounce(value, delay) {

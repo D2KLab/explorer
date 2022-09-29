@@ -33,7 +33,7 @@ const customTheme = (theme) => ({
 });
 
 function Select({ ...props }) {
-  return <ReactSelect styles={customStyles} theme={customTheme} {...props} />
+  return <ReactSelect styles={customStyles} theme={customTheme} {...props} />;
 }
 
 export default Select;

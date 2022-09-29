@@ -230,6 +230,13 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
   const { data: session } = useSession();
   const route = config.routes[query.type];
   const [isLoadingSimilar, setIsLoadingSimilar] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const downloadMenu = useMenuState();
+  const similarityMenu = useMenuState();
+  const virtualLoomMenu = useMenuState();
+  const [isItemSaved, setIsItemSaved] = useState(inList);
+  const [lightboxIsOpen, setLightboxIsOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
   if (!result) {
     return (
@@ -249,7 +256,8 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
               <pre>{debugSparqlQuery}</pre>
             </Metadata>
           </Debug>
-        </NotFoundPage>;
+        </NotFoundPage>
+        ;
       </>
     );
   }
@@ -271,8 +279,6 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
 
   const pageTitle = getEntityMainLabel(result, { route, language: i18n.language });
 
-  const [currentSlide, setCurrentSlide] = useState(0);
-
   const generateVirtualLoomData = () => {
     const lang = i18n.language.toUpperCase();
     return {
@@ -282,10 +288,12 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
         x: result.dimension?.width,
         y: result.dimension?.height,
       },
-      technique: ((Array.isArray(result.technique)
+      technique: (Array.isArray(result.technique)
         ? result.technique.map((v) => v.label)
-        : [result?.technique?.label]).filter(x => x)
-      ).filter((x) => x),
+        : [result?.technique?.label]
+      )
+        .filter((x) => x)
+        .filter((x) => x),
       weaving: 'Plain', // @TODO: do not hardcode weaving
       backgroundColor: {
         r: 0.7075471878051758,
@@ -330,7 +338,6 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
     win.focus();
   };
 
-  const downloadMenu = useMenuState();
   const download = (format) => {
     switch (format) {
       case 'vljson': {
@@ -357,7 +364,6 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
     }
   };
 
-  const similarityMenu = useMenuState();
   const viewSimilar = async (similarity) => {
     similarityMenu.hide();
     setIsLoadingSimilar(true);
@@ -369,14 +375,17 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
     router.push(`/browse?${params.toString()}`);
   };
 
-  const virtualLoomMenu = useMenuState();
-
-  const customRenderThumb = (children) => Carousel.defaultProps.renderThumbs(children).concat(
+  const customRenderThumb = (children) =>
+    Carousel.defaultProps.renderThumbs(children).concat(
       <Element key="virtual-loom">
         <MenuButton state={virtualLoomMenu}>
           <img src="/images/virtual-loom-button.png" alt="Virtual Loom" />
         </MenuButton>
-        <StyledMenu state={virtualLoomMenu} aria-label="Virtual Loom" style={{position:'absolute', left: 0}}>
+        <StyledMenu
+          state={virtualLoomMenu}
+          aria-label="Virtual Loom"
+          style={{ position: 'absolute', left: 0 }}
+        >
           <MenuItem state={virtualLoomMenu} as={Button} primary onClick={onClickVirtualLoomButton}>
             {t('common:buttons.virtualLoom.web')}
           </MenuItem>
@@ -392,13 +401,9 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
       </Element>
     );
 
-  const [isItemSaved, setIsItemSaved] = useState(inList);
   const onItemSaveChange = (status) => {
     setIsItemSaved(status);
   };
-
-  const [lightboxIsOpen, setLightboxIsOpen] = useState(false);
-  const [lightboxIndex, setLightboxIndex] = useState(null);
 
   const showLightbox = (index) => {
     setLightboxIndex(Math.min(images.length - 1, Math.max(0, index)));
@@ -438,16 +443,20 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
                   {result.sameAs && (
                     <small>
                       (
-                        <a href={result.sameAs} target="_blank" rel="noopener noreferrer">
-                          {t('common:buttons.original')}
-                        </a>
+                      <a href={result.sameAs} target="_blank" rel="noopener noreferrer">
+                        {t('common:buttons.original')}
+                      </a>
                       )
                     </small>
                   )}
                   {route.details.showPermalink && (
                     <small>
                       (
-                      <a href={generatePermalink(result['@id'])} target="_blank" rel="noopener noreferrer">
+                      <a
+                        href={generatePermalink(result['@id'])}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         {t('common:buttons.permalink')}
                       </a>
                       )
@@ -477,7 +486,11 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
                   >
                     <img src={generateMediaUrl(image.url, 1024)} alt={image.label} />
                     {image.description && <p className="legend">{image.description}</p>}
-                    {image.label && <div className="subtitle">{Array.isArray(image.label) ? image.label.join('\n') : image.label}</div>}
+                    {image.label && (
+                      <div className="subtitle">
+                        {Array.isArray(image.label) ? image.label.join('\n') : image.label}
+                      </div>
+                    )}
                   </div>
                 ))}
               </Carousel>
@@ -495,16 +508,20 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
                 {result.sameAs && (
                   <small>
                     (
-                      <a href={result.sameAs} target="_blank" rel="noopener noreferrer">
-                        {t('common:buttons.original')}
-                      </a>
+                    <a href={result.sameAs} target="_blank" rel="noopener noreferrer">
+                      {t('common:buttons.original')}
+                    </a>
                     )
                   </small>
                 )}
                 {route.details.showPermalink && (
                   <small>
                     (
-                    <a href={generatePermalink(result['@id'])} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={generatePermalink(result['@id'])}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {t('common:buttons.permalink')}
                     </a>
                     )
@@ -528,25 +545,33 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
             </Element>
             <Element marginBottom={24}>
               <MenuButton state={downloadMenu} as={Button} primary>
-                {t('common:buttons.download')}{' '}
-                <MenuButtonArrow />
+                {t('common:buttons.download')} <MenuButtonArrow />
               </MenuButton>
               <StyledMenu state={downloadMenu} aria-label={t('common:buttons.download')}>
-                <MenuItem state={downloadMenu} as={Button} primary onClick={() => download('vljson')}>
+                <MenuItem
+                  state={downloadMenu}
+                  as={Button}
+                  primary
+                  onClick={() => download('vljson')}
+                >
                   {t('common:buttons.virtualLoom.download')}
                 </MenuItem>
                 <MenuItem state={downloadMenu} as={Button} primary onClick={() => download('json')}>
                   {t('common:buttons.downloadJSON')}
                 </MenuItem>
-                <MenuItem state={downloadMenu} as={Button} primary onClick={() => download('image')}>
+                <MenuItem
+                  state={downloadMenu}
+                  as={Button}
+                  primary
+                  onClick={() => download('image')}
+                >
                   {t('common:buttons.downloadSelectedImage')}
                 </MenuItem>
               </StyledMenu>
             </Element>
             <Element>
               <MenuButton state={similarityMenu} as={Button} primary loading={isLoadingSimilar}>
-                {t('common:buttons.similar')}{' '}
-                <MenuButtonArrow />
+                {t('common:buttons.similar')} <MenuButtonArrow />
               </MenuButton>
               <StyledMenu state={similarityMenu} aria-label={t('common:buttons.similar')}>
                 <MenuItem
@@ -605,7 +630,11 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
 }
 
 export async function getServerSideProps({ req, res, query, locale }) {
-  const { result = null, inList = false, debugSparqlQuery } = await (
+  const {
+    result = null,
+    inList = false,
+    debugSparqlQuery,
+  } = await (
     await fetch(`${absoluteUrl(req)}/api/entity?${queryString.stringify(query)}`, {
       headers:
         req && req.headers
@@ -622,12 +651,12 @@ export async function getServerSideProps({ req, res, query, locale }) {
 
   return {
     props: {
-      ...await serverSideTranslations(locale, ['common', 'project', 'search']),
+      ...(await serverSideTranslations(locale, ['common', 'project', 'search'])),
       result,
       inList,
       debugSparqlQuery,
-    }
+    },
   };
-};
+}
 
 export default GalleryDetailsPage;

@@ -7,7 +7,6 @@ import json2csv from 'json2csv';
 import { getListById, getSessionUser } from '@helpers/database';
 import { absoluteUrl, uriToId, slugify } from '@helpers/utils';
 import { withRequestValidation } from '@helpers/api';
-// eslint-disable-next-line import/no-named-default
 import { default as cfg } from '~/config';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
@@ -28,15 +27,11 @@ const downloadImageAsBuffer = async (imageUrl) => {
 
 const flattenObject = (obj) => {
   const flattenKeys = {};
-  // eslint-disable-next-line no-restricted-syntax
   for (const i in obj) {
-    // eslint-disable-next-line no-prototype-builtins, no-continue
     if (!obj.hasOwnProperty(i)) continue;
     if (typeof obj[i] === 'object') {
       const flatObject = flattenObject(obj[i]);
-      // eslint-disable-next-line no-restricted-syntax
       for (const j in flatObject) {
-        // eslint-disable-next-line no-prototype-builtins, no-continue
         if (!flatObject.hasOwnProperty(j)) continue;
         flattenKeys[`${i}.${j}`] = flatObject[j];
       }
@@ -63,7 +58,7 @@ export default withRequestValidation({
   }
 
   // Get user informations
-  const session = await unstable_getServerSession(req, res, authOptions)
+  const session = await unstable_getServerSession(req, res, authOptions);
   const user = await getSessionUser(session);
 
   const isOwner = user && list && list.user.equals(user._id);

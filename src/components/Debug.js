@@ -5,8 +5,7 @@ import config from '~/config';
  */
 
 function Debug({ children }) {
-  // eslint-disable-next-line react/jsx-no-useless-fragment
-  return config.debug === true ? <>{children}</> : null
+  return config.debug === true ? <>{children}</> : null;
 }
 
 export default Debug;

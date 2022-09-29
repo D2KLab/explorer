@@ -1,6 +1,6 @@
 const sparqlTransformer = require('sparql-transformer').default;
 
-const cache = require("./cache");
+const cache = require('./cache');
 const config = require('../../config');
 
 export const getSparqlQuery = async (query) => {
@@ -16,9 +16,7 @@ export const getSparqlQuery = async (query) => {
         return Promise.reject();
       },
     });
-  } catch (err) {
-    // eslint-disable-next-line no-empty
-  }
+  } catch (err) {}
   return sparqlQuery;
 };
 
@@ -32,7 +30,7 @@ export const query = async (queryObject, { endpoint, debug = false, params = {} 
         const resQuery = await sparqlTransformer(queryObject, {
           endpoint,
           debug,
-          params
+          params,
         });
         if (resQuery) {
           await cache.set(cacheKey, JSON.stringify(resQuery));
@@ -46,7 +44,9 @@ export const query = async (queryObject, { endpoint, debug = false, params = {} 
   return results;
 };
 
-export default {
+const sparql = {
   getSparqlQuery,
   query,
 };
+
+export default sparql;

@@ -75,12 +75,7 @@ function ConsentPopup() {
             style={{ whiteSpace: 'pre-line', overflowY: 'auto', overflowX: 'hidden' }}
             dangerouslySetInnerHTML={{ __html: t('project:consent.text') }}
           />
-          <Element
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-            marginTop={24}
-          >
+          <Element display="flex" alignItems="center" justifyContent="space-between" marginTop={24}>
             <Element
               display="flex"
               flexDirection="column"

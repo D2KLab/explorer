@@ -309,14 +309,28 @@ function VideoDetailsPage({
   subtitles,
 }) {
   const { t, i18n } = useTranslation(['common', 'project']);
+  const { data: session } = useSession();
+  const { query } = useRouter();
+  const [isItemSaved, setIsItemSaved] = useState(inList);
+  const [faceRectangles, setFaceRectangles] = useState([]);
+  const tab = useTabState();
+  const $videoPlayer = useRef(null);
+  const [videoPlayedSeconds, setVideoPlayedSeconds] = useState(0);
+
+  useEffect(() => {
+    const debouncedHandleResize = debounce(() => {
+      updateFaceRectangles();
+    }, 1000);
+    window.addEventListener('resize', debouncedHandleResize);
+    return () => {
+      window.removeEventListener('resize', debouncedHandleResize);
+    };
+  }, []);
 
   if (!result) {
     return <DefaultErrorPage statusCode={404} title={t('common:errors.resultNotFound')} />;
   }
 
-  const { data: session } = useSession();
-
-  const { query } = useRouter();
   const route = config.routes[query.type];
 
   const images = [];
@@ -336,13 +350,9 @@ function VideoDetailsPage({
 
   const label = getEntityMainLabel(result, { route, language: i18n.language });
 
-  const [isItemSaved, setIsItemSaved] = useState(inList);
   const onItemSaveChange = (status) => {
     setIsItemSaved(status);
   };
-
-  const $videoPlayer = useRef(null);
-  const [videoPlayedSeconds, setVideoPlayedSeconds] = useState(0);
 
   const seekVideoTo = (seconds) => {
     console.log('seekVideoTo', seconds);
@@ -356,15 +366,15 @@ function VideoDetailsPage({
   };
 
   const renderVideoSegment = (segment) => {
-    const segmentTitle = (Array.isArray(segment.title)
-      ? segment.title
-      : [segment.title].filter((x) => x)
+    const segmentTitle = (
+      Array.isArray(segment.title) ? segment.title : [segment.title].filter((x) => x)
     )
       .map((x) => x['@value'] || x)
       .pop();
-    const segmentDescription = (Array.isArray(segment.description)
-      ? segment.description
-      : [segment.description].filter((x) => x)
+    const segmentDescription = (
+      Array.isArray(segment.description)
+        ? segment.description
+        : [segment.description].filter((x) => x)
     )
       .map((x) => x['@value'] || x)
       .pop();
@@ -393,18 +403,12 @@ function VideoDetailsPage({
     );
   };
 
-  const [faceRectangles, setFaceRectangles] = useState([]);
-
   const updateFaceRectangles = () => {
     setFaceRectangles(
       faceTracks.map((track) => {
         if (!$videoPlayer.current || !$videoPlayer.current.getInternalPlayer()) return;
-        const {
-          videoWidth,
-          videoHeight,
-          offsetWidth,
-          offsetHeight,
-        } = $videoPlayer.current.getInternalPlayer();
+        const { videoWidth, videoHeight, offsetWidth, offsetHeight } =
+          $videoPlayer.current.getInternalPlayer();
         const bounds = adaptDimension(
           track.bounding,
           videoWidth,
@@ -424,18 +428,6 @@ function VideoDetailsPage({
   const onVideoProgress = ({ playedSeconds }) => {
     setVideoPlayedSeconds(playedSeconds);
   };
-
-  const tab = useTabState();
-
-  useEffect(() => {
-    const debouncedHandleResize = debounce(() => {
-      updateFaceRectangles();
-    }, 1000);
-    window.addEventListener('resize', debouncedHandleResize);
-    return () => {
-      window.removeEventListener('resize', debouncedHandleResize);
-    };
-  }, []);
 
   const renderAnalysis = () => {
     const hasVideoSegments = Array.isArray(videoSegments) && videoSegments.length > 0;
@@ -460,60 +452,60 @@ function VideoDetailsPage({
           <StyledTabPanel state={tab}>
             <ul>
               {annotations.map((ann) => (
-                  <Segment key={ann['@id']}>
-                    <SegmentButton onClick={() => seekVideoTo(ann.startSeconds)}>
-                      <SegmentTime>
-                        <time>{formatSegmentTime(ann.start)}</time> -{' '}
-                        <time>{formatSegmentTime(ann.end)}</time>
-                      </SegmentTime>
-                    </SegmentButton>
-                    <SegmentText>
-                      <p>
-                        {ann.body} <small>({ann.type})</small>
-                      </p>
-                    </SegmentText>
-                  </Segment>
-                ))}
+                <Segment key={ann['@id']}>
+                  <SegmentButton onClick={() => seekVideoTo(ann.startSeconds)}>
+                    <SegmentTime>
+                      <time>{formatSegmentTime(ann.start)}</time> -{' '}
+                      <time>{formatSegmentTime(ann.end)}</time>
+                    </SegmentTime>
+                  </SegmentButton>
+                  <SegmentText>
+                    <p>
+                      {ann.body} <small>({ann.type})</small>
+                    </p>
+                  </SegmentText>
+                </Segment>
+              ))}
             </ul>
           </StyledTabPanel>
         )}
         {hasFaceTracks && (
           <StyledTabPanel state={tab}>
             {faceTracks.map((track) => (
-                <Segment key={track.track_id}>
-                  <SegmentButton onClick={() => seekVideoTo(track.start_npt)}>
-                    <SegmentTime>
-                      <time>{formatSegmentTime(secondsToHumanTime(track.start_npt))}</time> -{' '}
-                      <time>{formatSegmentTime(secondsToHumanTime(track.end_npt))}</time>
-                    </SegmentTime>
-                  </SegmentButton>
-                  <SegmentText>
-                    <p>
-                      {track.name}{' '}
-                      <small style={{ color: '#aaa' }}>
-                        (Confidence: {track.confidence.toFixed(2)})
-                      </small>
-                    </p>
-                  </SegmentText>
-                </Segment>
-              ))}
+              <Segment key={track.track_id}>
+                <SegmentButton onClick={() => seekVideoTo(track.start_npt)}>
+                  <SegmentTime>
+                    <time>{formatSegmentTime(secondsToHumanTime(track.start_npt))}</time> -{' '}
+                    <time>{formatSegmentTime(secondsToHumanTime(track.end_npt))}</time>
+                  </SegmentTime>
+                </SegmentButton>
+                <SegmentText>
+                  <p>
+                    {track.name}{' '}
+                    <small style={{ color: '#aaa' }}>
+                      (Confidence: {track.confidence.toFixed(2)})
+                    </small>
+                  </p>
+                </SegmentText>
+              </Segment>
+            ))}
           </StyledTabPanel>
         )}
         {hasCaptions && (
           <StyledTabPanel state={tab}>
             {captions.map((caption) => (
-                <Segment key={caption['@id']}>
-                  <SegmentButton onClick={() => seekVideoTo(caption.startSeconds)}>
-                    <SegmentTime>
-                      <time>{formatSegmentTime(caption.start)}</time> -{' '}
-                      <time>{formatSegmentTime(caption.end)}</time>
-                    </SegmentTime>
-                  </SegmentButton>
-                  <SegmentText>
-                    <p>{caption.text}</p>
-                  </SegmentText>
-                </Segment>
-              ))}
+              <Segment key={caption['@id']}>
+                <SegmentButton onClick={() => seekVideoTo(caption.startSeconds)}>
+                  <SegmentTime>
+                    <time>{formatSegmentTime(caption.start)}</time> -{' '}
+                    <time>{formatSegmentTime(caption.end)}</time>
+                  </SegmentTime>
+                </SegmentButton>
+                <SegmentText>
+                  <p>{caption.text}</p>
+                </SegmentText>
+              </Segment>
+            ))}
           </StyledTabPanel>
         )}
       </Element>
@@ -525,9 +517,9 @@ function VideoDetailsPage({
       {result.sameAs && (
         <small>
           (
-            <a href={result.sameAs} target="_blank" rel="noopener noreferrer">
-              {t('common:buttons.original')}
-            </a>
+          <a href={result.sameAs} target="_blank" rel="noopener noreferrer">
+            {t('common:buttons.original')}
+          </a>
           )
         </small>
       )}
@@ -552,18 +544,21 @@ function VideoDetailsPage({
   );
 
   const relatedLinks = {
-    'http://data.memad.eu/f24/speciale-elections-europeennes/61273825d815bc5a40df44cb2c6a65edfde6c44c': {
-      title: 'Spéciale élections européennes : [1ère partie]',
-      image: 'https://platform.limecraft.com/api/production/2336/mo/807720/moa',
-    },
-    'http://data.memad.eu/f24/speciale-elections-europeennes/2d9371cabdf44cdbeb80e4e66ebcc6af0a6f9bf5': {
-      title: 'Spéciale élections européennes : [2ème partie]',
-      image: 'https://platform.limecraft.com/api/production/2336/mo/807722/moa',
-    },
-    'http://data.memad.eu/f24/speciale-elections-europeennes/293ada98496bab9a3cbce574442d9eccc2ddff3e': {
-      title: 'Spéciale élections européennes : [3ème partie]',
-      image: 'https://platform.limecraft.com/api/production/2336/mo/807782/moa',
-    },
+    'http://data.memad.eu/f24/speciale-elections-europeennes/61273825d815bc5a40df44cb2c6a65edfde6c44c':
+      {
+        title: 'Spéciale élections européennes : [1ère partie]',
+        image: 'https://platform.limecraft.com/api/production/2336/mo/807720/moa',
+      },
+    'http://data.memad.eu/f24/speciale-elections-europeennes/2d9371cabdf44cdbeb80e4e66ebcc6af0a6f9bf5':
+      {
+        title: 'Spéciale élections européennes : [2ème partie]',
+        image: 'https://platform.limecraft.com/api/production/2336/mo/807722/moa',
+      },
+    'http://data.memad.eu/f24/speciale-elections-europeennes/293ada98496bab9a3cbce574442d9eccc2ddff3e':
+      {
+        title: 'Spéciale élections européennes : [3ème partie]',
+        image: 'https://platform.limecraft.com/api/production/2336/mo/807782/moa',
+      },
     'http://data.memad.eu/fit/orphan/f8be6bfaf333982cb725c7b3f5b0a738a90712a6': {
       title: 'Soirée spéciale Elections européennes',
       image: 'https://platform.limecraft.com/api/production/2336/mo/811884/moa',
@@ -682,6 +677,7 @@ function VideoDetailsPage({
 
                     return (
                       <Link
+                        key={link}
                         href={`/details/${route.details.view}?id=${encodeURIComponent(
                           uriToId(link, {
                             base: route.uriBase,
@@ -714,7 +710,11 @@ function VideoDetailsPage({
 }
 
 export async function getServerSideProps({ req, res, query, locale }) {
-  const { result = null, inList, debugSparqlQuery } = await (
+  const {
+    result = null,
+    inList,
+    debugSparqlQuery,
+  } = await (
     await fetch(`${absoluteUrl(req)}/api/entity?${queryString.stringify(query)}`, {
       headers:
         req && req.headers
@@ -852,7 +852,7 @@ export async function getServerSideProps({ req, res, query, locale }) {
 
   return {
     props: {
-      ...await serverSideTranslations(locale, ['common', 'project', 'search']),
+      ...(await serverSideTranslations(locale, ['common', 'project', 'search'])),
       result,
       inList,
       mediaUrl,
@@ -862,8 +862,8 @@ export async function getServerSideProps({ req, res, query, locale }) {
       annotations,
       captions,
       subtitles,
-    }
+    },
   };
-};
+}
 
 export default VideoDetailsPage;

@@ -18,6 +18,7 @@ const StyledDialog = styled(Dialog)`
 function ListDeletion({ list, dialogState, children }) {
   const { t } = useTranslation('common');
   const [isDeleting, setIsDeleting] = useState(false);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const deleteListDialog = dialogState || useDialogState();
 
   const deleteList = async () => {
@@ -35,7 +36,12 @@ function ListDeletion({ list, dialogState, children }) {
           {t('listDeletion.title')}
         </DialogDisclosure>
       )}
-      <StyledDialog state={deleteListDialog} modal aria-label={t('listDeletion.title')} backdrop backdropProps={{
+      <StyledDialog
+        state={deleteListDialog}
+        modal
+        aria-label={t('listDeletion.title')}
+        backdrop
+        backdropProps={{
           style: {
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
             width: '100%',
@@ -43,14 +49,15 @@ function ListDeletion({ list, dialogState, children }) {
             zIndex: 2000,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
-          }
-        }}>
+            justifyContent: 'center',
+          },
+        }}
+      >
         <h2>{t('listDeletion.title')}</h2>
         <p>
           <Trans
             i18nKey="common:listDeletion.confirmText"
-            components={[<strong />]}
+            components={[<strong key="0" />]}
             values={{ name: list.name }}
           />
         </p>

@@ -83,7 +83,6 @@ function RRWebPage({ captures, selectedCapture, events }) {
 
   useEffect(() => {
     if (Array.isArray(events) && events.length > 1) {
-      // eslint-disable-next-line no-new, new-cap
       const replayer = new rrwebPlayer({
         target: refPlayer.current,
         props: {
@@ -113,8 +112,9 @@ function RRWebPage({ captures, selectedCapture, events }) {
     Router.reload();
   };
 
-  const renderNavigation = () => captures.map((capture) => (
-      <Anchor selected={capture.capture_session_id === query.id}>
+  const renderNavigation = () =>
+    captures.map((capture) => (
+      <Anchor key={capture.capture_session_id} selected={capture.capture_session_id === query.id}>
         <a href={`/rrweb?id=${encodeURIComponent(capture.capture_session_id)}`}>
           {capture.capture_session_id}
         </a>
@@ -179,7 +179,7 @@ export async function getServerSideProps({ query, locale }) {
 
   return {
     props: {
-      ...await serverSideTranslations(locale, ['common', 'project', 'search']),
+      ...(await serverSideTranslations(locale, ['common', 'project', 'search'])),
       captures: JSON.parse(JSON.stringify(captures)), // serialize captures list
       selectedCapture: JSON.parse(
         JSON.stringify(captures.find((capture) => capture.capture_session_id === query.id) || null)

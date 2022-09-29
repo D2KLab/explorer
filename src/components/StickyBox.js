@@ -16,16 +16,15 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-/* eslint-disable */
-import {useEffect, useRef, useState} from "react";
-import ResizeObserver from "resize-observer-polyfill";
+import { useEffect, useRef, useState } from 'react';
+import ResizeObserver from 'resize-observer-polyfill';
 
 const getScrollParent = (node) => {
   let parent = node;
   while ((parent = parent.parentElement)) {
-    const overflowYVal = getComputedStyle(parent, null).getPropertyValue("overflow-y");
+    const overflowYVal = getComputedStyle(parent, null).getPropertyValue('overflow-y');
     if (parent === document.body) return window;
-    if (overflowYVal === "auto" || overflowYVal === "scroll") return parent;
+    if (overflowYVal === 'auto' || overflowYVal === 'scroll') return parent;
   }
   return window;
 };
@@ -50,32 +49,31 @@ const getParentNode = (node) => {
   let currentParent = node.parentNode;
   while (currentParent) {
     const style = getComputedStyle(currentParent, null);
-    if (style.getPropertyValue("display") !== "contents") break;
+    if (style.getPropertyValue('display') !== 'contents') break;
     currentParent = currentParent.parentNode;
   }
   return currentParent || window;
 };
 
 let stickyProp = null;
-if (typeof CSS !== "undefined" && CSS.supports) {
-  if (CSS.supports("position", "sticky")) stickyProp = "sticky";
-  else if (CSS.supports("position", "-webkit-sticky")) stickyProp = "-webkit-sticky";
+if (typeof CSS !== 'undefined' && CSS.supports) {
+  if (CSS.supports('position', 'sticky')) stickyProp = 'sticky';
+  else if (CSS.supports('position', '-webkit-sticky')) stickyProp = '-webkit-sticky';
 }
 
 // Inspired by https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md#feature-detection
 let passiveArg = false;
 try {
-  var opts = Object.defineProperty({}, "passive", {
-    // eslint-disable-next-line getter-return
+  var opts = Object.defineProperty({}, 'passive', {
     get() {
-      passiveArg = {passive: true};
+      passiveArg = { passive: true };
     },
   });
-  window.addEventListener("testPassive", null, opts);
-  window.removeEventListener("testPassive", null, opts);
+  window.addEventListener('testPassive', null, opts);
+  window.removeEventListener('testPassive', null, opts);
 } catch (e) {}
 
-const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
+const registerNode = (node, { offsetTop, offsetBottom, bottom }) => {
   const scrollPane = getScrollParent(node);
   let latestScrollY = scrollPane === window ? window.scrollY : scrollPane.scrollTop;
 
@@ -83,11 +81,11 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
   let mode, offset, nodeHeight, naturalTop, parentHeight, scrollPaneOffset, viewPortHeight;
 
   const getCurrentOffset = () => {
-    if (mode === "relative") return offset;
-    if (mode === "stickyTop") {
+    if (mode === 'relative') return offset;
+    if (mode === 'stickyTop') {
       return Math.max(0, scrollPaneOffset + latestScrollY - naturalTop + offsetTop);
     }
-    if (mode === "stickyBottom") {
+    if (mode === 'stickyBottom') {
       return Math.max(
         0,
         scrollPaneOffset + latestScrollY + viewPortHeight - (naturalTop + nodeHeight + offsetBottom)
@@ -100,14 +98,14 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
       scrollY + scrollPaneOffset + viewPortHeight >=
       naturalTop + nodeHeight + offset + offsetBottom
     ) {
-      changeMode("stickyBottom");
+      changeMode('stickyBottom');
     }
   };
 
   const changeMode = (newMode) => {
     mode = newMode;
-    if (newMode === "relative") {
-      node.style.position = "relative";
+    if (newMode === 'relative') {
+      node.style.position = 'relative';
       if (bottom) {
         const nextBottom = Math.max(0, parentHeight - nodeHeight - offset);
         node.style.bottom = `${nextBottom}px`;
@@ -116,7 +114,7 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
       }
     } else {
       node.style.position = stickyProp;
-      if (newMode === "stickyBottom") {
+      if (newMode === 'stickyBottom') {
         if (bottom) {
           node.style.bottom = `${offsetBottom}px`;
         } else {
@@ -136,9 +134,9 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
 
   const initial = () => {
     if (bottom) {
-      if (mode !== "stickyBottom") changeMode("stickyBottom");
+      if (mode !== 'stickyBottom') changeMode('stickyBottom');
     } else {
-      if (mode !== "stickyTop") changeMode("stickyTop");
+      if (mode !== 'stickyTop') changeMode('stickyTop');
     }
   };
 
@@ -160,36 +158,36 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
     offset = getCurrentOffset();
     if (scrollDelta > 0) {
       // scroll down
-      if (mode === "stickyTop") {
+      if (mode === 'stickyTop') {
         if (scrollY + scrollPaneOffset + offsetTop > naturalTop) {
           if (
             scrollY + scrollPaneOffset + viewPortHeight <=
             naturalTop + nodeHeight + offset + offsetBottom
           ) {
-            changeMode("relative");
+            changeMode('relative');
           } else {
-            changeMode("stickyBottom");
+            changeMode('stickyBottom');
           }
         }
-      } else if (mode === "relative") {
+      } else if (mode === 'relative') {
         changeToStickyBottomIfBoxTooLow(scrollY);
       }
     } else {
       // scroll up
-      if (mode === "stickyBottom") {
+      if (mode === 'stickyBottom') {
         if (
           scrollPaneOffset + scrollY + viewPortHeight <
           naturalTop + parentHeight + offsetBottom
         ) {
           if (scrollPaneOffset + scrollY + offsetTop >= naturalTop + offset) {
-            changeMode("relative");
+            changeMode('relative');
           } else {
-            changeMode("stickyTop");
+            changeMode('stickyTop');
           }
         }
-      } else if (mode === "relative") {
+      } else if (mode === 'relative') {
         if (scrollPaneOffset + scrollY + offsetTop < naturalTop + offset) {
-          changeMode("stickyTop");
+          changeMode('stickyTop');
         }
       }
     }
@@ -205,7 +203,7 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
 
   const handleScrollPaneResize = () => {
     viewPortHeight = scrollPane.offsetHeight;
-    if (process.env.NODE_ENV !== "production" && viewPortHeight === 0) {
+    if (process.env.NODE_ENV !== 'production' && viewPortHeight === 0) {
       console.warn(
         `react-sticky-box's scroll pane has a height of 0. This seems odd. Please check this node:`,
         scrollPane
@@ -223,9 +221,9 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
   const handleParentNodeResize = () => {
     const parentNode = getParentNode(node);
     const computedParentStyle = getComputedStyle(parentNode, null);
-    const parentPaddingTop = parseInt(computedParentStyle.getPropertyValue("padding-top"), 10);
+    const parentPaddingTop = parseInt(computedParentStyle.getPropertyValue('padding-top'), 10);
     const parentPaddingBottom = parseInt(
-      computedParentStyle.getPropertyValue("padding-bottom"),
+      computedParentStyle.getPropertyValue('padding-bottom'),
       10
     );
     const verticalParentPadding = parentPaddingTop + parentPaddingBottom;
@@ -233,9 +231,9 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
     const oldParentHeight = parentHeight;
     parentHeight = parentNode.getBoundingClientRect().height - verticalParentPadding;
 
-    if (mode === "relative") {
+    if (mode === 'relative') {
       if (bottom) {
-        changeMode("relative");
+        changeMode('relative');
       } else {
         // If parent height decreased...
         if (oldParentHeight > parentHeight) {
@@ -243,13 +241,13 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
         }
       }
     }
-    if (oldParentHeight !== parentHeight && mode === "relative") {
+    if (oldParentHeight !== parentHeight && mode === 'relative') {
       latestScrollY = Number.POSITIVE_INFINITY;
       handleScroll();
     }
   };
 
-  const handleNodeResize = ({initial: initialArg} = {}) => {
+  const handleNodeResize = ({ initial: initialArg } = {}) => {
     const prevHeight = nodeHeight;
     nodeHeight = node.getBoundingClientRect().height;
     if (!initialArg && prevHeight !== nodeHeight) {
@@ -263,7 +261,7 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
         const lowestPossible = parentHeight - nodeHeight;
         const nextOffset = Math.min(lowestPossible, getCurrentOffset() + (bottom ? diff : 0));
         offset = Math.max(0, nextOffset);
-        if (!bottom || mode !== "stickyBottom") changeMode("relative");
+        if (!bottom || mode !== 'stickyBottom') changeMode('relative');
       }
     }
   };
@@ -274,10 +272,10 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
     unsubs.push(() => ro.disconnect());
   };
 
-  addListener(scrollPane, "scroll", handleScroll, passiveArg);
-  addListener(scrollPane, "mousewheel", handleScroll, passiveArg);
+  addListener(scrollPane, 'scroll', handleScroll, passiveArg);
+  addListener(scrollPane, 'mousewheel', handleScroll, passiveArg);
   if (scrollPane === window) {
-    addListener(window, "resize", handleWindowResize);
+    addListener(window, 'resize', handleWindowResize);
     handleWindowResize();
   } else {
     addResizeObserver(scrollPane, handleScrollPaneResize);
@@ -287,18 +285,18 @@ const registerNode = (node, {offsetTop, offsetBottom, bottom}) => {
   handleParentNodeResize();
 
   addResizeObserver(node, handleNodeResize);
-  handleNodeResize({initial: true});
+  handleNodeResize({ initial: true });
 
   initial();
 
   return () => unsubs.forEach((fn) => fn());
 };
 
-export const useStickyBox = ({offsetTop = 0, offsetBottom = 0, bottom = false} = {}) => {
+export const useStickyBox = ({ offsetTop = 0, offsetBottom = 0, bottom = false } = {}) => {
   const [node, setNode] = useState(null);
-  const argRef = useRef({offsetTop, offsetBottom, bottom});
+  const argRef = useRef({ offsetTop, offsetBottom, bottom });
   useEffect(() => {
-    argRef.current = {offsetTop, offsetBottom, bottom};
+    argRef.current = { offsetTop, offsetBottom, bottom };
   });
   useEffect(() => {
     if (!node) return;
@@ -307,8 +305,8 @@ export const useStickyBox = ({offsetTop = 0, offsetBottom = 0, bottom = false} =
   return setNode;
 };
 
-const StickyBox = ({offsetTop, offsetBottom, bottom, children, className, style}) => {
-  const ref = useStickyBox({offsetTop, offsetBottom, bottom});
+const StickyBox = ({ offsetTop, offsetBottom, bottom, children, className, style }) => {
+  const ref = useStickyBox({ offsetTop, offsetBottom, bottom });
   return (
     <div className={className} style={style} ref={ref}>
       {children}

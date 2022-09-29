@@ -9,7 +9,7 @@ import Button from '@components/Button';
 import Input from '@components/Input';
 import useDebounce from '@helpers/useDebounce';
 import useDidMountEffect from '@helpers/useDidMountEffect';
-import { useTranslation }from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import config from '~/config';
 
 const getValue = (opts, val) => opts.find((o) => o.value === val);
@@ -244,24 +244,24 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
   };
 
   const renderSelectedOption = (item) => (
-      <>
-        {item.label}{' '}
-        {config.plugins.skosmos && (
-          <small>
-            {' '}
-            (
-            <a
-              href={`${config.plugins.skosmos.baseUrl}${item.value}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              def
-            </a>
-            )
-          </small>
-        )}
-      </>
-    );
+    <>
+      {item.label}{' '}
+      {config.plugins.skosmos && (
+        <small>
+          {' '}
+          (
+          <a
+            href={`${config.plugins.skosmos.baseUrl}${item.value}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            def
+          </a>
+          )
+        </small>
+      )}
+    </>
+  );
 
   const renderFilter = (filter) => {
     const field = fields[`field_filter_${filter.id}`];
@@ -309,25 +309,25 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
   };
 
   const renderOption = (filter) => (
-      <Option key={filter.id}>
-        <span>{t(`project:filters.${filter.id}`, filter.label)}</span>
-        <StyledSwitch
-          onChange={handleSwitchChange}
-          checked={!!fields[`field_filter_${filter.id}`]}
-          onColor={theme.colors.light}
-          offHandleColor="#f0f0f0"
-          onHandleColor={theme.colors.primary}
-          handleDiameter={24}
-          uncheckedIcon={false}
-          checkedIcon={false}
-          boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-          activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-          height={16}
-          width={36}
-          id={`field_filter_${filter.id}`}
-        />
-      </Option>
-    );
+    <Option key={filter.id}>
+      <span>{t(`project:filters.${filter.id}`, filter.label)}</span>
+      <StyledSwitch
+        onChange={handleSwitchChange}
+        checked={!!fields[`field_filter_${filter.id}`]}
+        onColor={theme.colors.light}
+        offHandleColor="#f0f0f0"
+        onHandleColor={theme.colors.primary}
+        handleDiameter={24}
+        uncheckedIcon={false}
+        checkedIcon={false}
+        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+        height={16}
+        width={36}
+        id={`field_filter_${filter.id}`}
+      />
+    </Option>
+  );
 
   // Execute search when fields change
   const debouncedFields = useDebounce(fields, 500);

@@ -26,7 +26,7 @@ export default withRequestValidation({
   }
 
   // Get user informations
-  const session = await unstable_getServerSession(req, res, authOptions)
+  const session = await unstable_getServerSession(req, res, authOptions);
   const user = await getSessionUser(session);
 
   const isOwner = user && list && list.user.equals(user._id);

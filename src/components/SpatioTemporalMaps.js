@@ -8,12 +8,15 @@ import config from '~/config';
 function SpatioTemporalMaps({ mapRef, query }) {
   const { i18n } = useTranslation();
 
-  const params = useMemo(() => ({
+  const params = useMemo(
+    () => ({
       ...query,
       _analytics: Cookies.get('consent') === '1',
       _t: new Date().getTime(),
       _l: i18n.language,
-    }), [queryString.stringify(query)]);
+    }),
+    [queryString.stringify(query)]
+  );
 
   return (
     <div>

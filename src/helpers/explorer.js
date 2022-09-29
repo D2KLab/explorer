@@ -84,4 +84,4 @@ export const generatePermalink = (uri) => {
     return config.api.permalinkUrl(uri);
   }
   return uri;
-}
+};

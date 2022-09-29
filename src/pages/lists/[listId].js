@@ -40,52 +40,52 @@ function ListsPage({ isOwner, list, shareLink, error }) {
   const { t } = useTranslation('common');
 
   const renderListItems = () => (
-      <Element marginY={24}>
-        <h2>{t('list.items')}</h2>
-        <Element marginY={12}>
-          {list.items.length > 0 ? (
-            <Results>
-              {list.items.map((item) => {
-                const [, route] =
-                  Object.entries(config.routes).find(([routeName]) => routeName === item.route) || [];
+    <Element marginY={24}>
+      <h2>{t('list.items')}</h2>
+      <Element marginY={12}>
+        {list.items.length > 0 ? (
+          <Results>
+            {list.items.map((item) => {
+              const [, route] =
+                Object.entries(config.routes).find(([routeName]) => routeName === item.route) || [];
 
-                if (!route) {
-                  return null;
-                }
+              if (!route) {
+                return null;
+              }
 
-                return (
-                  <Link
-                    key={item.id}
-                    href={`/details/${route.details.view}?id=${encodeURIComponent(
-                      uriToId(item.id, {
-                        base: route.uriBase,
-                      })
-                    )}&type=${item.route}`}
-                    as={`/${item.route}/${encodeURI(uriToId(item.id, { base: route.uriBase }))}`}
-                    passHref
-                  >
-                    <a style={{ color: 'inherit', textDecoration: 'inherit' }}>
-                      <StyledMedia
-                        title={item.title}
-                        subtitle={item.subtitle}
-                        thumbnail={generateMediaUrl(item.image, 300)}
-                        direction="column"
-                        link={`/${item.route}/${encodeURI(
-                          uriToId(item.id, { base: route.uriBase })
-                        )}`}
-                        uri={item.graph}
-                      />
-                    </a>
-                  </Link>
-                );
-              })}
-            </Results>
-          ) : (
-            <p>{t('list.empty')}</p>
-          )}
-        </Element>
+              return (
+                <Link
+                  key={item.id}
+                  href={`/details/${route.details.view}?id=${encodeURIComponent(
+                    uriToId(item.id, {
+                      base: route.uriBase,
+                    })
+                  )}&type=${item.route}`}
+                  as={`/${item.route}/${encodeURI(uriToId(item.id, { base: route.uriBase }))}`}
+                  passHref
+                >
+                  <a style={{ color: 'inherit', textDecoration: 'inherit' }}>
+                    <StyledMedia
+                      title={item.title}
+                      subtitle={item.subtitle}
+                      thumbnail={generateMediaUrl(item.image, 300)}
+                      direction="column"
+                      link={`/${item.route}/${encodeURI(
+                        uriToId(item.id, { base: route.uriBase })
+                      )}`}
+                      uri={item.graph}
+                    />
+                  </a>
+                </Link>
+              );
+            })}
+          </Results>
+        ) : (
+          <p>{t('list.empty')}</p>
+        )}
       </Element>
-    );
+    </Element>
+  );
 
   const renderOperations = () => {
     if (!isOwner) {
@@ -131,6 +131,7 @@ function ListsPage({ isOwner, list, shareLink, error }) {
                     i18nKey="list.created"
                     components={[
                       <time
+                        key="0"
                         dateTime={new Date(list.created_at).toISOString()}
                         title={new Date(list.created_at).toString()}
                       />,
@@ -145,6 +146,7 @@ function ListsPage({ isOwner, list, shareLink, error }) {
                     i18nKey="list.updated"
                     components={[
                       <time
+                        key="0"
                         dateTime={new Date(list.updated_at).toISOString()}
                         title={new Date(list.updated_at).toString()}
                       />,
@@ -159,8 +161,9 @@ function ListsPage({ isOwner, list, shareLink, error }) {
                 <>
                   <p>
                     <Trans
+                      key="0"
                       i18nKey="common:list.privacy.text"
-                      components={[<strong />]}
+                      components={[<strong key="0" />]}
                       values={{
                         status: list.is_public
                           ? t('list.privacy.status.public')
@@ -172,7 +175,11 @@ function ListsPage({ isOwner, list, shareLink, error }) {
                     <p>
                       <Trans
                         i18nKey="common:list.shareLink"
-                        components={[<a href={shareLink}>{shareLink}</a>]}
+                        components={[
+                          <a key="0" href={shareLink}>
+                            {shareLink}
+                          </a>,
+                        ]}
                         values={{
                           link: shareLink,
                         }}
@@ -202,7 +209,7 @@ function ListsPage({ isOwner, list, shareLink, error }) {
 
 export async function getServerSideProps(ctx) {
   const { req, res, query } = ctx;
-  const session = await unstable_getServerSession(req, res, authOptions)
+  const session = await unstable_getServerSession(req, res, authOptions);
   const list = await getListById(query.listId.split('-').pop());
 
   if (!list) {
@@ -270,7 +277,7 @@ export async function getServerSideProps(ctx) {
 
   return {
     props: {
-      ...await serverSideTranslations(ctx.locale, ['common', 'project', 'search']),
+      ...(await serverSideTranslations(ctx.locale, ['common', 'project', 'search'])),
       list: JSON.parse(JSON.stringify(list)), // serialize the list
       isOwner,
       shareLink: `${absoluteUrl(req)}/lists/${slugify(list.name)}-${list._id}`,

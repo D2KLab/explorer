@@ -7,7 +7,7 @@ export default withRequestValidation({
   useSession: true,
   allowedMethods: ['GET', 'POST'],
 })(async (req, res) => {
-  const session = await unstable_getServerSession(req, res, authOptions)
+  const session = await unstable_getServerSession(req, res, authOptions);
 
   // Get user informations
   const user = await getSessionUser(session);

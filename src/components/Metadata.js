@@ -31,10 +31,12 @@ const Data = styled.dd`
 `;
 
 function Metadata({ className, label, labelStyle, valueStyle, children }) {
-  return <Element as="dl" marginY="1em" className={className}>
-    <Label style={labelStyle}>{label}</Label>
-    <Data style={valueStyle}>{children}</Data>
-  </Element>
+  return (
+    <Element as="dl" marginY="1em" className={className}>
+      <Label style={labelStyle}>{label}</Label>
+      <Data style={valueStyle}>{children}</Data>
+    </Element>
+  );
 }
 
 export default Metadata;

@@ -10,12 +10,11 @@ import config from '~/config';
 
 const asyncPoolAll = async (...args) => {
   const results = [];
-  // eslint-disable-next-line no-restricted-syntax
   for await (const result of asyncPool(...args)) {
     results.push(result);
   }
   return results;
-}
+};
 
 export const getFilters = async (query, { language }) => {
   const route = config.routes[query.type];
@@ -58,7 +57,9 @@ export const getFilters = async (query, { language }) => {
 
         // Sort values by label
         filterValues.sort(
-          (a, b) => typeof a.label === 'string' && a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' })
+          (a, b) =>
+            typeof a.label === 'string' &&
+            a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' })
         );
       }
     }
@@ -161,7 +162,11 @@ export const search = async (query) => {
     if (query.similarity_type) {
       const uris = [];
       if (query[`${query.similarity_type}_uris`]) {
-        uris.push(...query[`${query.similarity_type}_uris`].split(',').map(id => idToUri(id, { base: route.uriBase })));
+        uris.push(
+          ...query[`${query.similarity_type}_uris`]
+            .split(',')
+            .map((id) => idToUri(id, { base: route.uriBase }))
+        );
       } else if (query.similarity_entity) {
         const similarityEntity = await getEntity({
           id: query.similarity_entity,

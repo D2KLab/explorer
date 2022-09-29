@@ -15,7 +15,7 @@ export const customBreakpoint = (size, ...args) => {
       ${css(...args)}
     }
   `;
-}
+};
 
 export default Object.keys(sizes).reduce((accumulator, label) => {
   const emSize = sizes[label] / 16;

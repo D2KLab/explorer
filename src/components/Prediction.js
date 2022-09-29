@@ -56,17 +56,16 @@ function Prediction({ prediction }) {
   const tooltipPrediction = useTooltipState();
   return (
     <>
-      <StyledDialog
-        state={dialog}
-        modal
-        aria-label=""
-      >
+      <StyledDialog state={dialog} modal aria-label="">
         <PredictionDetails>
           <img src={generateMediaUrl(used, 200, 200)} alt="" />
-          <p dangerouslySetInnerHTML={{ __html: explanations.map(text => linkify(text)).join('\n') }} />
+          <p
+            dangerouslySetInnerHTML={{
+              __html: explanations.map((text) => linkify(text)).join('\n'),
+            }}
+          />
         </PredictionDetails>
-      </StyledDialog>
-      {' '}
+      </StyledDialog>{' '}
       <small style={{ color: theme.colors.prediction, fontStyle: 'italic' }}>
         {Math.floor(score * 100)}%
       </small>{' '}
@@ -79,12 +78,20 @@ function Prediction({ prediction }) {
         onClick={() => dialog.show()}
       />
       <StyledTooltip state={tooltipPrediction}>
-        {kind === 'http://data.silknow.org/actor/luh-image-analysis/' && <img style={{ verticalAlign:'middle', marginRight: '0.5rem' }} src={generateMediaUrl(used, 80, 80)} alt="" />}
-        {' '}
-        {t('project:predictions.text', { kind: t(`predictions.kinds.${kind}`, { ns: 'project', nsSeparator: null }) })}
-      </StyledTooltip>
-      {' '}
-      {kind === 'http://data.silknow.org/actor/luh-image-analysis/' && <img style={{ verticalAlign:'middle' }} src={generateMediaUrl(used, 16, 16)} alt="" />}
+        {kind === 'http://data.silknow.org/actor/luh-image-analysis/' && (
+          <img
+            style={{ verticalAlign: 'middle', marginRight: '0.5rem' }}
+            src={generateMediaUrl(used, 80, 80)}
+            alt=""
+          />
+        )}{' '}
+        {t('project:predictions.text', {
+          kind: t(`predictions.kinds.${kind}`, { ns: 'project', nsSeparator: null }),
+        })}
+      </StyledTooltip>{' '}
+      {kind === 'http://data.silknow.org/actor/luh-image-analysis/' && (
+        <img style={{ verticalAlign: 'middle' }} src={generateMediaUrl(used, 16, 16)} alt="" />
+      )}
     </>
   );
 }

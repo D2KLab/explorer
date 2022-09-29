@@ -36,6 +36,7 @@ const StyledDialog = styled(Dialog)`
 
 function ListShare({ list, dialogState, children, shareUrl, facebookAppId }) {
   const { t } = useTranslation('common');
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const shareDialog = dialogState || useDialogState();
   const title = list.name;
 
@@ -48,7 +49,12 @@ function ListShare({ list, dialogState, children, shareUrl, facebookAppId }) {
           {t('listShare.title')}
         </DialogDisclosure>
       )}
-      <StyledDialog state={shareDialog} modal aria-label={t('listShare.title')} backdrop backdropProps={{
+      <StyledDialog
+        state={shareDialog}
+        modal
+        aria-label={t('listShare.title')}
+        backdrop
+        backdropProps={{
           style: {
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
             width: '100%',
@@ -56,9 +62,10 @@ function ListShare({ list, dialogState, children, shareUrl, facebookAppId }) {
             zIndex: 2000,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
-          }
-        }}>
+            justifyContent: 'center',
+          },
+        }}
+      >
         <Element marginBottom={24}>
           <h2>{t('listShare.title')}</h2>
         </Element>

@@ -17,7 +17,7 @@ export async function validateRequest(req, res, options = {}) {
     // Check for a valid session
     let session = null;
     try {
-      session = await unstable_getServerSession(req, res, authOptions)
+      session = await unstable_getServerSession(req, res, authOptions);
     } catch (e) {
       // NextAuth.getSession currently throws an error if baseUrl cookie is not defined
     }

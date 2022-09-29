@@ -9,7 +9,7 @@ import { authOptions } from './auth/[...nextauth]';
 export default withRequestValidation({
   allowedMethods: ['POST'],
 })(async (req, res) => {
-  const session = await unstable_getServerSession(req, res, authOptions)
+  const session = await unstable_getServerSession(req, res, authOptions);
   const user = await getSessionUser(session);
   const db = await connectToDatabase();
 

@@ -7,7 +7,7 @@ import { ChevronRight } from '@styled-icons/boxicons-regular/ChevronRight';
 import { ChevronDown } from '@styled-icons/boxicons-regular/ChevronDown';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
 import { useTranslation, Trans } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import StickyBox from '@components/StickyBox';
 import Header from '@components/Header';
@@ -192,9 +192,8 @@ const cleanupItem = (obj) =>
     })
   );
 
-const getResultItems = (result) => (Array.isArray(result.items) ? result.items : [result.items].filter((x) => x)).map(
-    cleanupItem
-  );
+const getResultItems = (result) =>
+  (Array.isArray(result.items) ? result.items : [result.items].filter((x) => x)).map(cleanupItem);
 
 function VocabularyPage({ results, featured, debugSparqlQuery }) {
   const { t } = useTranslation(['common', 'project']);
@@ -239,7 +238,8 @@ function VocabularyPage({ results, featured, debugSparqlQuery }) {
     return { pathname: `/${withConfig.route}`, query: withQuery };
   };
 
-  const getItemsCount = (items, start) => items.reduce((acc, cur) => {
+  const getItemsCount = (items, start) =>
+    items.reduce((acc, cur) => {
       acc += cur.count || 0;
       if (Array.isArray(cur.items)) {
         acc += getItemsCount(cur.items, 0);
@@ -335,7 +335,7 @@ function VocabularyPage({ results, featured, debugSparqlQuery }) {
                       <Button primary>
                         <Trans
                           i18nKey="common:vocabulary.explore"
-                          components={[<span />, <span />]}
+                          components={[<span key="0" />, <span key="1" />]}
                           values={{
                             route: t(`project:routes.${withConfig.route}`).toLowerCase(),
                             item: (item.label || '').toLowerCase(),
@@ -451,7 +451,7 @@ export async function getServerSideProps({ query, locale }) {
 
   return {
     props: {
-      ...await serverSideTranslations(locale, ['common', 'project', 'search']),
+      ...(await serverSideTranslations(locale, ['common', 'project', 'search'])),
       results,
       featured,
       debugSparqlQuery,

@@ -134,15 +134,7 @@ const StyledTrashIcon = styled(TrashIcon)`
   }
 `;
 
-function ProfilePage({
-  session,
-  providers,
-  csrfToken,
-  accounts,
-  lists,
-  baseUrl,
-  facebookAppId,
-}) {
+function ProfilePage({ session, providers, csrfToken, accounts, lists, baseUrl, facebookAppId }) {
   const { t } = useTranslation('common');
   const deleteProfileDialog = useDialogState();
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
@@ -165,104 +157,106 @@ function ProfilePage({
   };
 
   const renderOperations = () => (
-      <Element marginY={24} display="flex" flexDirection="column">
-        <h3 style={{ color: '#dc3535', fontWeight: 'bold' }}>{t('common:profile.deleteAccount.title')}</h3>
-        <DialogDisclosure
-          state={deleteProfileDialog}
-          as={DeleteButton}
-          bg="#fff"
-          text="#dc3545"
-          loading={isDeletingAccount}
-        >
-          {t('common:profile.deleteAccount.title')}
-        </DialogDisclosure>
-        <StyledDialog
-          state={deleteProfileDialog}
-          modal
-          aria-label={t('common:profile.deleteAccount.title')}
-        >
-          <h2>{t('common:profile.deleteAccount.title')}</h2>
-          <p>
-            <Trans
-              i18nKey="common:profile.deleteAccount.text"
-              components={[<strong />, <strong />]}
-            />
-          </p>
-          <p>{t('common:profile.deleteAccount.consequences')}</p>
-          <ul style={{ listStyleType: 'disc', paddingLeft: 20, margin: '1em 0' }}>
-            <li>{t('common:profile.deleteAccount.lists')}</li>
-            <li>{t('common:profile.deleteAccount.sessions')}</li>
-          </ul>
-          <Element display="flex" alignItems="center" justifyContent="space-between">
-            <Button
-              type="button"
-              secondary
-              onClick={() => {
-                deleteProfileDialog.hide();
-              }}
-            >
-              {t('common:profile.deleteAccount.cancel')}
-            </Button>
-            <Button
-              type="button"
-              bg="#dc3545"
-              text="#fff"
-              loading={isDeletingAccount}
-              onClick={deleteProfile}
-            >
-              {t('common:profile.deleteAccount.confirm')}
-            </Button>
-          </Element>
-        </StyledDialog>
-      </Element>
-    );
+    <Element marginY={24} display="flex" flexDirection="column">
+      <h3 style={{ color: '#dc3535', fontWeight: 'bold' }}>
+        {t('common:profile.deleteAccount.title')}
+      </h3>
+      <DialogDisclosure
+        state={deleteProfileDialog}
+        as={DeleteButton}
+        bg="#fff"
+        text="#dc3545"
+        loading={isDeletingAccount}
+      >
+        {t('common:profile.deleteAccount.title')}
+      </DialogDisclosure>
+      <StyledDialog
+        state={deleteProfileDialog}
+        modal
+        aria-label={t('common:profile.deleteAccount.title')}
+      >
+        <h2>{t('common:profile.deleteAccount.title')}</h2>
+        <p>
+          <Trans
+            i18nKey="common:profile.deleteAccount.text"
+            components={[<strong key="0" />, <strong key="1" />]}
+          />
+        </p>
+        <p>{t('common:profile.deleteAccount.consequences')}</p>
+        <ul style={{ listStyleType: 'disc', paddingLeft: 20, margin: '1em 0' }}>
+          <li>{t('common:profile.deleteAccount.lists')}</li>
+          <li>{t('common:profile.deleteAccount.sessions')}</li>
+        </ul>
+        <Element display="flex" alignItems="center" justifyContent="space-between">
+          <Button
+            type="button"
+            secondary
+            onClick={() => {
+              deleteProfileDialog.hide();
+            }}
+          >
+            {t('common:profile.deleteAccount.cancel')}
+          </Button>
+          <Button
+            type="button"
+            bg="#dc3545"
+            text="#fff"
+            loading={isDeletingAccount}
+            onClick={deleteProfile}
+          >
+            {t('common:profile.deleteAccount.confirm')}
+          </Button>
+        </Element>
+      </StyledDialog>
+    </Element>
+  );
 
   const renderAccounts = () => (
-      <>
-        <Element marginBottom={24}>
-          <h3>{t('common:profile.connectedAccounts.title')}</h3>
-          <ul>
-            {accounts?.map((account) => (
-              <Element as="li" key={account._id} marginBottom={12}>
-                {account.provider.substr(0, 1).toUpperCase() + account.provider.substr(1)}
-                {accounts.length > 1 && (
-                  <Button
-                    primary
-                    onClick={() => {
-                      unlinkAccount(account);
-                    }}
-                    loading={isUnlinkingAccount}
-                  >
-                    {t('common:profile.connectedAccounts.unlink')}
-                  </Button>
-                )}
-              </Element>
-            ))}
-          </ul>
+    <>
+      <Element marginBottom={24}>
+        <h3>{t('common:profile.connectedAccounts.title')}</h3>
+        <ul>
+          {accounts?.map((account) => (
+            <Element as="li" key={account._id} marginBottom={12}>
+              {account.provider.substr(0, 1).toUpperCase() + account.provider.substr(1)}
+              {accounts.length > 1 && (
+                <Button
+                  primary
+                  onClick={() => {
+                    unlinkAccount(account);
+                  }}
+                  loading={isUnlinkingAccount}
+                >
+                  {t('common:profile.connectedAccounts.unlink')}
+                </Button>
+              )}
+            </Element>
+          ))}
+        </ul>
+      </Element>
+      <Element marginBottom={24}>
+        <h3>{t('common:profile.connectedAccounts.new')}</h3>
+        <Element display="flex" flexDirection="column">
+          {providers &&
+            Object.values(providers).map((provider) => {
+              if (accounts.find((account) => account.provider === provider.id)) {
+                // Do not display a button if this provider is already linked to the user
+                return null;
+              }
+              return (
+                <Element key={provider.name} marginBottom={12}>
+                  <form action={provider.signinUrl} method="POST">
+                    <input type="hidden" name="csrfToken" defaultValue={csrfToken} />
+                    <input type="hidden" name="callbackUrl" defaultValue={`${baseUrl}/profile`} />
+                    <ProviderButton provider={provider} type="submit" />
+                  </form>
+                </Element>
+              );
+            })}
         </Element>
-        <Element marginBottom={24}>
-          <h3>{t('common:profile.connectedAccounts.new')}</h3>
-          <Element display="flex" flexDirection="column">
-            {providers &&
-              Object.values(providers).map((provider) => {
-                if (accounts.find((account) => account.provider === provider.id)) {
-                  // Do not display a button if this provider is already linked to the user
-                  return null;
-                }
-                return (
-                  <Element key={provider.name} marginBottom={12}>
-                    <form action={provider.signinUrl} method="POST">
-                      <input type="hidden" name="csrfToken" defaultValue={csrfToken} />
-                      <input type="hidden" name="callbackUrl" defaultValue={`${baseUrl}/profile`} />
-                      <ProviderButton provider={provider} type="submit" />
-                    </form>
-                  </Element>
-                );
-              })}
-          </Element>
-        </Element>
-      </>
-    );
+      </Element>
+    </>
+  );
 
   return (
     <Layout>
@@ -288,7 +282,9 @@ function ProfilePage({
               <h1 style={{ marginBottom: 24 }}>{t('common:profile.lists.title')}</h1>
               <ul>
                 {lists?.map((list) => {
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
                   const shareListDialog = useDialogState();
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
                   const deleteListDialog = useDialogState();
 
                   return (
@@ -308,6 +304,7 @@ function ProfilePage({
                             i18nKey="common:profile.lists.lastEdit"
                             components={[
                               <time
+                                key="0"
                                 dateTime={new Date(list.updated_at).toISOString()}
                                 title={new Date(list.updated_at).toString()}
                               />,
@@ -370,7 +367,7 @@ export async function getServerSideProps(ctx) {
         destination: '/auth/signin',
         permanent: false,
       },
-    }
+    };
   }
 
   // Get user lists
@@ -381,7 +378,7 @@ export async function getServerSideProps(ctx) {
 
   return {
     props: {
-      ...await serverSideTranslations(ctx.locale, ['common', 'project', 'search']),
+      ...(await serverSideTranslations(ctx.locale, ['common', 'project', 'search'])),
       session,
       providers: await getProviders(ctx),
       csrfToken: await getCsrfToken(ctx),
