@@ -40,11 +40,6 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Lato:300,400,700,800"
           />
-          <link
-            rel="preload"
-            as="style"
-            href="https://fonts.googleapis.com/css?family=Lato:300,400,700,800"
-          />
           {/* Global site tag (gtag.js) - Google Analytics */}
           {typeof config.analytics?.id !== 'undefined' && (
             <>
