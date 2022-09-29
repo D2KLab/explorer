@@ -79,12 +79,12 @@ function Prediction({ prediction }) {
         onClick={() => dialog.show()}
       />
       <StyledTooltip state={tooltipPrediction}>
-        {kind === 'http://data.silknow.org/actor/luh-image-analysis/1' && <img style={{ verticalAlign:'middle', marginRight: '0.5rem' }} src={generateMediaUrl(used, 80, 80)} alt="" />}
+        {kind === 'http://data.silknow.org/actor/luh-image-analysis/' && <img style={{ verticalAlign:'middle', marginRight: '0.5rem' }} src={generateMediaUrl(used, 80, 80)} alt="" />}
         {' '}
         {t('project:predictions.text', { kind: t(`predictions.kinds.${kind}`, { ns: 'project', nsSeparator: null }) })}
       </StyledTooltip>
       {' '}
-      {kind === 'http://data.silknow.org/actor/luh-image-analysis/1' && <img style={{ verticalAlign:'middle' }} src={generateMediaUrl(used, 16, 16)} alt="" />}
+      {kind === 'http://data.silknow.org/actor/luh-image-analysis/' && <img style={{ verticalAlign:'middle' }} src={generateMediaUrl(used, 16, 16)} alt="" />}
     </>
   );
 }
