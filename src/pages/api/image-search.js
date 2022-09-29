@@ -1,4 +1,6 @@
+import os from 'os';
 import fs from 'fs';
+import path from 'path';
 import FormData from 'form-data';
 import formidable from 'formidable';
 import { withRequestValidation } from '@helpers/api';
@@ -20,8 +22,32 @@ export const searchImage = async (image) => {
   } else {
     const response = await fetch(image);
     if (!response.ok) throw new Error(`Unexpected Response: ${response.statusText}`);
-    await streamPipeline(response.body, fs.createWriteStream('./placeholder.jpg'));
-    formData.append('file', fs.createReadStream('./placeholder.jpg'));
+
+    await new Promise((resolve, reject) => {
+      let tmpDir;
+      try {
+        tmpDir = os.tmpdir();
+        fs.mkdtemp(`${tmpDir}${path.sep}`, async (err, folder) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          await streamPipeline(response.body, fs.createWriteStream(path.join(folder, 'image.jpg')));
+          formData.append('file', fs.createReadStream(path.join(folder, './image.jpg')));
+          resolve();
+        });
+      }
+      finally {
+        try {
+          if (tmpDir) {
+            fs.rmSync(tmpDir, { recursive: true });
+          }
+        }
+        catch (e) {
+          console.error(`An error has occurred while removing the temp folder at ${tmpDir}. Error: ${e}`);
+        }
+      }
+    });
   }
 
   const res = await fetch(`https://silknow-image-retrieval.tools.eurecom.fr/api/retrieve`, {
