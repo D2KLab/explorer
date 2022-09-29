@@ -225,15 +225,17 @@ function ProfilePage({
             {accounts?.map((account) => (
               <Element as="li" key={account._id} marginBottom={12}>
                 {account.provider.substr(0, 1).toUpperCase() + account.provider.substr(1)}
-                <Button
-                  primary
-                  onClick={() => {
-                    unlinkAccount(account);
-                  }}
-                  loading={isUnlinkingAccount}
-                >
-                  {t('common:profile.connectedAccounts.unlink')}
-                </Button>
+                {accounts.length > 1 && (
+                  <Button
+                    primary
+                    onClick={() => {
+                      unlinkAccount(account);
+                    }}
+                    loading={isUnlinkingAccount}
+                  >
+                    {t('common:profile.connectedAccounts.unlink')}
+                  </Button>
+                )}
               </Element>
             ))}
           </ul>
