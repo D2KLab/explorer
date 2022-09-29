@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useDialogState, Dialog, Tooltip, TooltipReference, useTooltipState } from 'ariakit';
+import { useDialogState, Dialog, Tooltip, TooltipAnchor, useTooltipState } from 'ariakit';
 import { CircleQuestion } from '@styled-icons/fa-solid/CircleQuestion';
 import { useTranslation } from 'next-i18next';
 
@@ -70,7 +70,7 @@ function Prediction({ prediction }) {
       <small style={{ color: theme.colors.prediction, fontStyle: 'italic' }}>
         {Math.floor(score * 100)}%
       </small>{' '}
-      <TooltipReference
+      <TooltipAnchor
         state={tooltipPrediction}
         as={CircleQuestion}
         size={16}
