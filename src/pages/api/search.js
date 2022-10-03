@@ -147,7 +147,6 @@ export const search = async (query) => {
 
               if (typeof filter.filterFunc === 'function') {
                 const filterRet = values.map((value) => filter.filterFunc(value, 0));
-                console.log('filterRet:', filterRet);
                 if (Array.isArray(filterRet)) {
                   extraFilter.push(`(${filterRet.join(' || ')})`);
                 } else {
