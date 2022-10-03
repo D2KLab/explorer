@@ -1,4 +1,10 @@
 {
+  "sidebar": {
+    "condition": {
+      "and": "ET",
+      "or": "OU"
+    }
+  },
   "profileButton": {
     "label": "Profile",
     "signIn": "Connexion",

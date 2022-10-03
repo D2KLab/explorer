@@ -79,6 +79,11 @@ export const getFilters = async (query, { language }) => {
   return filters;
 };
 
+const conditions = {
+  and: ' && ',
+  or: ' || ',
+};
+
 export const search = async (query) => {
   const results = [];
   let debugSparqlQuery = null;
@@ -115,11 +120,40 @@ export const search = async (query) => {
           }
 
           if (typeof val !== 'undefined') {
-            if (typeof filter.whereFunc === 'function') {
-              extraWhere.push(...filter.whereFunc(val));
+            let filterCondition =
+              filter.condition === 'user-defined'
+                ? query[`cond_filter_${filter.id}`]
+                : filter.condition;
+            if (!Object.keys(conditions).includes(filterCondition)) {
+              filterCondition = 'or';
             }
-            if (typeof filter.filterFunc === 'function') {
-              extraFilter.push(...filter.filterFunc(val).map((condition) => `(${condition})`));
+
+            const values = [].concat(val).filter((x) => x);
+
+            if (filterCondition === 'and') {
+              // AND condition is a little bit more complicated to handle
+              // We have to combine whereFunc and the content of filterFunc together
+              values.forEach((value, i) => {
+                const filterRet = filter.filterFunc(value, i);
+                extraWhere.push(`{
+                  ${filter.whereFunc(i).join(' . ')}
+                  ${filterRet ? `FILTER(${filterRet})` : ''}
+                }`);
+              });
+            } else if (filterCondition === 'or') {
+              if (typeof filter.whereFunc === 'function') {
+                extraWhere.push(...filter.whereFunc(0));
+              }
+
+              if (typeof filter.filterFunc === 'function') {
+                const filterRet = values.map((value) => filter.filterFunc(value, 0));
+                console.log('filterRet:', filterRet);
+                if (Array.isArray(filterRet)) {
+                  extraFilter.push(`(${filterRet.join(' || ')})`);
+                } else {
+                  extraFilter.push(filterRet);
+                }
+              }
             }
           }
         }

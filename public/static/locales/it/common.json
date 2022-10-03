@@ -1,4 +1,10 @@
 {
+  "sidebar": {
+    "condition": {
+      "and": "E",
+      "or": "O"
+    }
+  },
   "profileButton": {
     "label": "Profilo",
     "signIn": "Entra",

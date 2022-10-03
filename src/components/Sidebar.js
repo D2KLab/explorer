@@ -304,6 +304,18 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
             typeof filter.vocabulary !== 'undefined' ? renderSelectedOption : undefined
           }
         />
+        {filter.condition === 'user-defined' && fields[`field_filter_${filter.id}`]?.length > 1 && (
+          <div style={{ maxWidth: 100, marginLeft: '2em' }}>
+            <Select
+              inputId={`cond_filter_${filter.id}`}
+              name={`cond_filter_${filter.id}`}
+              options={conditionOptions}
+              value={conditionOptions.find((o) => o.value === fields[`cond_filter_${filter.id}`])}
+              defaultValue={conditionOptions[0]}
+              onChange={handleInputChange}
+            />
+          </div>
+        )}
       </Field>
     );
   };
@@ -338,6 +350,17 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
   }, [debouncedFields]);
 
   const route = config.routes[type];
+
+  const conditionOptions = [
+    {
+      value: 'or',
+      label: t('common:sidebar.condition.or'),
+    },
+    {
+      value: 'and',
+      label: t('common:sidebar.condition.and'),
+    },
+  ];
 
   return (
     <Container className={className}>
