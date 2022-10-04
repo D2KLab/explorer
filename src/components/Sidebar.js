@@ -293,7 +293,6 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
       <Field key={filter.id}>
         <label htmlFor="field_filter">{t(`project:filters.${filter.id}`, filter.label)}</label>
         <FilterInput
-          isClearable
           inputId={`field_filter_${filter.id}`}
           name={`field_filter_${filter.id}`}
           options={filter.values}
@@ -303,6 +302,18 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
           renderSelectedOption={
             typeof filter.vocabulary !== 'undefined' ? renderSelectedOption : undefined
           }
+          props={{
+            isClearable: true,
+            filterOption: (option, rawInput) => {
+              const inputValue = rawInput.toLocaleLowerCase();
+              const { label } = option;
+              const { altLabel } = option.data;
+              return (
+                label.toLocaleString().toLocaleLowerCase().includes(inputValue) ||
+                altLabel?.toLocaleString().toLocaleLowerCase().includes(inputValue)
+              );
+            },
+          }}
         />
         {filter.condition === 'user-defined' && fields[`field_filter_${filter.id}`]?.length > 1 && (
           <div style={{ maxWidth: 100, marginLeft: '2em' }}>

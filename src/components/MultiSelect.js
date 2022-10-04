@@ -54,7 +54,8 @@ function MultiSelect({
   value,
   onChange,
   renderSelectedOption = defaultRenderSelectedOption,
-  ...props
+  props,
+  ...containerProps
 }) {
   const triggerOnChange = (values) => {
     if (typeof onChange === 'function') {
@@ -83,7 +84,7 @@ function MultiSelect({
   const values = getValues();
 
   return (
-    <Container className={className} {...props}>
+    <Container className={className} {...containerProps}>
       <Select
         isClearable={false}
         isMulti={false}
@@ -94,6 +95,7 @@ function MultiSelect({
         onChange={onSelectChange}
         value={values[values.length - 1]}
         placeholder={placeholder}
+        {...props}
       />
       <ul className="selected-options">
         {values.length > 0 &&

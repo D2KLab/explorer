@@ -49,9 +49,11 @@ export const getFilters = async (query, { language }) => {
         filterValues = resQuery['@graph'].map((row) => {
           const value = row['@id']['@value'] || row['@id'];
           const label = row.label ? row.label['@value'] || row.label : value;
+          const altLabel = row.altLabel ? row.altLabel['@value'] || row.altLabel : null;
           return {
             label,
             value,
+            altLabel,
           };
         });
 
