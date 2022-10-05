@@ -293,7 +293,9 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
       <Field key={filter.id}>
         <label htmlFor="field_filter">{t(`project:filters.${filter.id}`, filter.label)}</label>
         <FilterInput
+          id={`field_filter_${filter.id}`}
           inputId={`field_filter_${filter.id}`}
+          instanceId={`field_filter_${filter.id}`}
           name={`field_filter_${filter.id}`}
           options={filter.values}
           value={value}
@@ -318,7 +320,9 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
         {filter.condition === 'user-defined' && fields[`field_filter_${filter.id}`]?.length > 1 && (
           <div style={{ maxWidth: 100, marginLeft: '2em' }}>
             <Select
+              id={`cond_filter_${filter.id}`}
               inputId={`cond_filter_${filter.id}`}
+              instanceId={`cond_filter_${filter.id}`}
               name={`cond_filter_${filter.id}`}
               options={conditionOptions}
               value={conditionOptions.find((o) => o.value === fields[`cond_filter_${filter.id}`])}
@@ -412,13 +416,15 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
                   t('search:fields.graph')}
               </label>
               <Select
-                isClearable
+                id="graph"
                 inputId="graph"
+                instanceId="graph"
                 name="graph"
                 options={graphOptions}
                 value={graphOptions.find((o) => o.value === fields.graph)}
                 onChange={handleInputChange}
                 placeholder={t('search:labels.select')}
+                isClearable
               />
             </Field>
           )}

@@ -86,10 +86,12 @@ function MultiSelect({
   return (
     <Container className={className} {...containerProps}>
       <Select
+        id={inputId}
+        inputId={inputId}
+        instanceId={inputId}
         isClearable={false}
         isMulti={false}
         controlShouldRenderValue={false}
-        inputId={inputId}
         name={name}
         options={options}
         onChange={onSelectChange}
