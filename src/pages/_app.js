@@ -9,28 +9,12 @@ import Cookies from 'js-cookie';
 import NProgress, { NProgressStyle } from '@components/NProgress';
 import ConsentPopup from '@components/ConsentPopup';
 import RRWebRecorder from '@components/RRWebRecorder';
+import GoogleAnalytics from '@components/GoogleAnalytics';
 import { appWithTranslation } from 'next-i18next';
 import theme from '~/theme';
 import config from '~/config';
 
-const handleRouteChange = (url) => {
-  if (typeof window?.gtag !== 'undefined' && typeof config.analytics?.id !== 'undefined') {
-    window.gtag('config', config.analytics.id, {
-      page_path: url,
-    });
-  }
-};
 class MyApp extends App {
-  componentDidMount() {
-    const { router } = this.props;
-    router.events.on('routeChangeComplete', handleRouteChange);
-  }
-
-  componentWillUnmount() {
-    const { router } = this.props;
-    router.events.off('routeChangeComplete', handleRouteChange);
-  }
-
   render() {
     const { Component, pageProps } = this.props;
     const { session } = pageProps;
@@ -50,6 +34,7 @@ class MyApp extends App {
           <div />
         )}
         {config.plugins?.consent?.show && Cookies.get('consent') === '1' && <RRWebRecorder />}
+        <GoogleAnalytics />
         <SessionProvider session={session} site={process.env.SITE} refetchInterval={5 * 60}>
           <Component {...pageProps} />
         </SessionProvider>
