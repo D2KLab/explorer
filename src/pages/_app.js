@@ -14,33 +14,30 @@ import { appWithTranslation } from 'next-i18next';
 import theme from '~/theme';
 import config from '~/config';
 
-class MyApp extends App {
-  render() {
-    const { Component, pageProps } = this.props;
-    const { session } = pageProps;
+function MyApp({ Component, pageProps }) {
+  const { session } = pageProps;
 
-    return (
-      <ThemeProvider theme={theme}>
-        <Reset />
-        <Head>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-        </Head>
-        <NProgressStyle />
-        <NProgress />
-        {config.plugins?.consent?.show && typeof Cookies.get('consent') === 'undefined' ? (
-          <ConsentPopup />
-        ) : (
-          <div />
-        )}
-        {config.plugins?.consent?.show && Cookies.get('consent') === '1' && <RRWebRecorder />}
-        <GoogleAnalytics />
-        <SessionProvider session={session} site={process.env.SITE} refetchInterval={5 * 60}>
-          <Component {...pageProps} />
-        </SessionProvider>
-      </ThemeProvider>
-    );
-  }
+  return (
+    <ThemeProvider theme={theme}>
+      <Reset />
+      <Head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      <NProgressStyle />
+      <NProgress />
+      {config.plugins?.consent?.show && typeof Cookies.get('consent') === 'undefined' ? (
+        <ConsentPopup />
+      ) : (
+        <div />
+      )}
+      {config.plugins?.consent?.show && Cookies.get('consent') === '1' && <RRWebRecorder />}
+      <GoogleAnalytics />
+      <SessionProvider session={session} site={process.env.SITE} refetchInterval={5 * 60}>
+        <Component {...pageProps} />
+      </SessionProvider>
+    </ThemeProvider>
+  );
 }
 
 export default appWithTranslation(withRouter(MyApp));
