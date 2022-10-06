@@ -7,13 +7,13 @@ import { useRouter } from 'next/router';
 
 let timeout;
 
-const start = () => {
+export const start = () => {
   if (typeof window !== 'undefined') {
     timeout = setTimeout(NProgressRoot.start, 100);
   }
 };
 
-const done = () => {
+export const done = () => {
   clearTimeout(timeout);
   if (typeof window !== 'undefined') {
     NProgressRoot.done();
