@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, Fragment } from 'react';
+import { useContext, useState, useEffect, useRef, Fragment } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
@@ -28,6 +28,7 @@ import ScrollDetector from '@components/ScrollDetector';
 import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import useDebounce from '@helpers/useDebounce';
 import useOnScreen from '@helpers/useOnScreen';
+import AppContext from '@helpers/context';
 import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
 import { search, getFilters } from '@pages/api/search';
 import breakpoints, { sizes } from '@styles/breakpoints';
@@ -173,7 +174,7 @@ function BrowsePage({ initialData, similarityEntity }) {
   const [isPageLoading, setIsPageLoading] = useState(false);
   const currentPage = parseInt(query.page, 10) || 1;
   const mapRef = useRef(null);
-  const { setSearchData, setSearchQuery } = useContext(AppContext);
+  const { setSearchData, setSearchQuery, setSearchPath } = useContext(AppContext);
 
   // Save the initial query to prevent re-rendering the map
   // (reloading the iframe) every time the search query changes.
@@ -425,8 +426,9 @@ function BrowsePage({ initialData, similarityEntity }) {
         >
           <a
             onClick={() => {
-              setSearchData(data[0]);
+              setSearchPath(query.type);
               setSearchQuery(query);
+              setSearchData(data[0]);
             }}
           >
             <Media
