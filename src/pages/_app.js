@@ -5,12 +5,13 @@ import { ThemeProvider } from 'styled-components';
 import { Reset } from 'styled-reset';
 import Head from 'next/head';
 import Cookies from 'js-cookie';
+import { appWithTranslation } from 'next-i18next';
 
 import NProgress, { NProgressStyle } from '@components/NProgress';
 import ConsentPopup from '@components/ConsentPopup';
 import RRWebRecorder from '@components/RRWebRecorder';
 import GoogleAnalytics from '@components/GoogleAnalytics';
-import { appWithTranslation } from 'next-i18next';
+import { AppProvider } from '@helpers/context';
 import theme from '~/theme';
 import config from '~/config';
 
@@ -34,7 +35,9 @@ function MyApp({ Component, pageProps }) {
       {config.plugins?.consent?.show && Cookies.get('consent') === '1' && <RRWebRecorder />}
       <GoogleAnalytics />
       <SessionProvider session={session} site={process.env.SITE} refetchInterval={5 * 60}>
-        <Component {...pageProps} />
+        <AppProvider>
+          <Component {...pageProps} />
+        </AppProvider>
       </SessionProvider>
     </ThemeProvider>
   );

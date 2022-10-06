@@ -173,6 +173,7 @@ function BrowsePage({ initialData, similarityEntity }) {
   const [isPageLoading, setIsPageLoading] = useState(false);
   const currentPage = parseInt(query.page, 10) || 1;
   const mapRef = useRef(null);
+  const { setSearchData, setSearchQuery } = useContext(AppContext);
 
   // Save the initial query to prevent re-rendering the map
   // (reloading the iframe) every time the search query changes.
@@ -422,7 +423,12 @@ function BrowsePage({ initialData, similarityEntity }) {
           as={`/${query.type}/${encodeURI(uriToId(result['@id'], { base: route.uriBase }))}`}
           passHref
         >
-          <a>
+          <a
+            onClick={() => {
+              setSearchData(data[0]);
+              setSearchQuery(query);
+            }}
+          >
             <Media
               title={label}
               subtitle={subtitle}
