@@ -128,6 +128,7 @@ function MetadataList({ metadata, query, route }) {
     if (Array.isArray(route.details.excludedMetadata)) {
       return !route.details.excludedMetadata.includes(metaName);
     }
+    return true;
   });
 
   return (
