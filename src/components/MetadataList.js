@@ -82,6 +82,8 @@ function generateValue(currentRouteName, currentRoute, metadata, metaName, metaI
       <>
         <a
           href={url}
+          target="_blank"
+          rel="noopener noreferrer"
           style={isPredicted ? { color: theme.colors.prediction, fontStyle: 'italic' } : {}}
         >
           {printableValue}
