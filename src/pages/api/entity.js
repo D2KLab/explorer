@@ -14,11 +14,16 @@ const getEntityQuery = (route, query) => {
   const jsonQuery = route.details && route.details.query ? route.details.query : route.query;
   const searchQuery = JSON.parse(JSON.stringify(getQueryObject(jsonQuery)));
   searchQuery.$filter = searchQuery.$filter || [];
-  searchQuery.$filter.push(
-    `?id = <${idToUri(query.id, {
-      base: route.uriBase,
-    })}>`
-  );
+  if (!searchQuery.$values) {
+    searchQuery.$values = {};
+  }
+  if (!searchQuery.$values['?id']) {
+    searchQuery.$values['?id'] = [
+      idToUri(query.id, {
+        base: route.uriBase,
+      }),
+    ];
+  }
   return searchQuery;
 };
 
