@@ -9,6 +9,9 @@ module.exports = {
     styledComponents: true,
   },
   i18n,
+  images: {
+    domains: config.imagesDomains,
+  },
   rewrites: async () => [
     ...Object.entries(config.routes).flatMap(([routeName, route]) => {
       const rewrites = [
