@@ -65,10 +65,6 @@ const Logo = styled.img`
   max-height: 100px;
   max-width: 100%;
   margin: 1em;
-
-  &:not(:last-child) {
-    margin-right: 2em;
-  }
 `;
 
 function Footer({ className }) {
