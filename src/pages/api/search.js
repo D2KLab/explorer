@@ -220,11 +220,16 @@ export const search = async (query) => {
 
     // Sort by
     let orderByVariable = 'id';
+    let orderByDirection = 'ASC';
     if (query.sort) {
-      const sortFilter = (route.filters || []).find((filter) => filter.id === query.sort);
+      const [sortVariable, sortDirection] = query.sort.split('|');
+      const sortFilter = (route.filters || []).find((filter) => filter.id === sortVariable);
       if (sortFilter && typeof sortFilter.whereFunc === 'function') {
         extraWhere.push(`OPTIONAL { ${sortFilter.whereFunc().join(' . ')} }`);
-        orderByVariable = query.sort;
+        orderByVariable = sortVariable;
+        if (['ASC', 'DESC'].includes(sortDirection)) {
+          orderByDirection = sortDirection;
+        }
       }
     }
 
@@ -259,7 +264,7 @@ export const search = async (query) => {
       $limit: itemsPerPage,
     };
     if (orderByVariable) {
-      mainSearchQuery.$orderby = `?${orderByVariable}`;
+      mainSearchQuery.$orderby = `${orderByDirection}(?${orderByVariable})`;
     }
     mainSearchQuery.$where.push(whereCondition);
 
