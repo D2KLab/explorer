@@ -149,7 +149,13 @@ function ProfileButton({ className }) {
     <>
       <StyledMenuButton state={menu}>
         {session?.user?.image ? (
-          <StyledUserIcon src={session.user.image} title={session.user.name} alt="" />
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={session.user.image}
+            title={session.user.name}
+            alt=""
+            style={{ width: '1.6em', margin: '0 0.2em' }}
+          />
         ) : (
           <StyledUserIcon />
         )}
