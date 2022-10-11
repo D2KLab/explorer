@@ -43,6 +43,8 @@ const Credits = styled.div`
       text-decoration: underline;
     }
   }
+
+  ${({ theme }) => theme?.components?.Footer?.Credits};
 `;
 
 const LogoContainer = styled.div`
