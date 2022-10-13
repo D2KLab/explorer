@@ -25,6 +25,7 @@ import SpatioTemporalMaps from '@components/SpatioTemporalMaps';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import PageTitle from '@components/PageTitle';
 import ScrollDetector from '@components/ScrollDetector';
+import { start, done } from '@components/NProgress';
 import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import useDebounce from '@helpers/useDebounce';
 import useOnScreen from '@helpers/useOnScreen';
@@ -165,7 +166,9 @@ const ResultPage = styled.h3`
   margin-bottom: 1rem;
 `;
 
-function BrowsePage({ initialData, similarityEntity }) {
+const PAGE_SIZE = 20;
+
+function BrowsePage({ initialData, filters, similarityEntity }) {
   const router = useRouter();
   const { req, query, pathname } = router;
   const { t, i18n } = useTranslation(['common', 'search', 'project']);
@@ -190,25 +193,30 @@ function BrowsePage({ initialData, similarityEntity }) {
   // If `null` is returned, the request of that page won't start.
   const getKey = (pageIndex, previousPageData) => {
     if (previousPageData && !previousPageData.results.length) return null; // reached the end
-    const q = { ...query, page: initialPage + pageIndex };
+    const q = { ...query, page: pageIndex + initialPage };
     return `${absoluteUrl(req)}/api/search?${queryString.stringify(q)}`; // SWR key
   };
 
-  const PAGE_SIZE = 20;
-  const {
-    data = [initialData],
-    error,
-    size,
-    setSize,
-  } = useSWRInfinite(getKey, fetcher, {
-    persistSize: true,
+  useEffect(() => {
+    if (isPageLoading) start();
+    else done();
+  }, [isPageLoading]);
+
+  const { data, error, size, setSize } = useSWRInfinite(getKey, fetcher, {
+    fallbackData: [initialData],
+    onSuccess: () => {
+      setIsPageLoading(false);
+    },
+    onError: () => {
+      setIsPageLoading(false);
+    },
   });
+
   const isLoadingInitialData = !data && !error;
   const isLoadingMore = isLoadingInitialData || (data && typeof data[size - 1] === 'undefined');
   const isReachingEnd = data && data[data.length - 1]?.results.length < PAGE_SIZE;
   const isEmpty = data?.[0]?.results.length === 0;
 
-  const { filters } = initialData;
   let totalPages = 0;
   let totalResults = 0;
   let debugSparqlQuery = null;
@@ -255,12 +263,16 @@ function BrowsePage({ initialData, similarityEntity }) {
     const newQuery = {
       type: query.type,
       ...fields,
+      page: '1',
     };
 
+    if (Object.entries(newQuery).toString() === Object.entries(query).toString()) {
+      // Prevent querying if query is the same
+      return;
+    }
+
     // Reset page index
-    setSize(1);
     setInitialPage(1);
-    delete newQuery.page;
 
     setIsPageLoading(true);
     Router.push(
@@ -269,9 +281,7 @@ function BrowsePage({ initialData, similarityEntity }) {
         query: newQuery,
       },
       undefined,
-      {
-        shallow: isMapSearch,
-      }
+      { shallow: isMapSearch }
     );
   };
 
@@ -343,6 +353,7 @@ function BrowsePage({ initialData, similarityEntity }) {
     setInitialPage(1);
     delete newQuery.page;
 
+    setIsPageLoading(true);
     return Router.replace(
       {
         pathname,
@@ -364,8 +375,7 @@ function BrowsePage({ initialData, similarityEntity }) {
 
   const loadMore = () => {
     if (isLoadingMore || currentPage + 1 > totalPages) return;
-
-    setSize(size + 1);
+    setSize((size) => size + 1);
   };
 
   const $loadMoreButton = useRef(null);
@@ -374,20 +384,6 @@ function BrowsePage({ initialData, similarityEntity }) {
   useEffect(() => {
     if (isOnScreen) loadMore();
   }, [isOnScreen]);
-
-  useEffect(() => {
-    const onDoneLoading = () => {
-      setIsPageLoading(false);
-    };
-
-    router.events.on('routeChangeComplete', onDoneLoading);
-    router.events.on('routeChangeError', onDoneLoading);
-
-    return () => {
-      router.events.off('routeChangeComplete', onDoneLoading);
-      router.events.off('routeChangeError', onDoneLoading);
-    };
-  }, []);
 
   const route = config.routes[query.type];
 
@@ -423,7 +419,7 @@ function BrowsePage({ initialData, similarityEntity }) {
     value: similarity,
   }));
 
-  const renderResults = (results) =>
+  const renderResults = (results, pageNumber) =>
     results.map((result) => {
       const mainImage = getEntityMainImage(result, { route });
       const label = getEntityMainLabel(result, { route, language: i18n.language });
@@ -442,8 +438,13 @@ function BrowsePage({ initialData, similarityEntity }) {
         >
           <a
             onClick={() => {
+              // Make sure the page number is correct if it hasn't been updated yet
+              onScrollToPage(pageNumber);
+              setSearchQuery({
+                ...query,
+                page: pageNumber,
+              });
               setSearchPath(query.type);
-              setSearchQuery(query);
               setSearchData(data[0]);
             }}
           >
@@ -460,13 +461,13 @@ function BrowsePage({ initialData, similarityEntity }) {
     });
 
   const onScrollToPage = (pageIndex) => {
-    if (initialPage + pageIndex !== query.page) {
+    if (pageIndex !== query.page) {
       Router.replace(
         {
           pathname,
           query: {
             ...query,
-            page: initialPage + pageIndex,
+            page: pageIndex,
           },
         },
         undefined,
@@ -568,29 +569,27 @@ function BrowsePage({ initialData, similarityEntity }) {
               </Option>
             )}
           </OptionsBar>
-          {isEmpty ? (
+          {isEmpty && !isPageLoading ? (
             renderEmptyResults()
           ) : isMapVisible ? (
             <SpatioTemporalMaps mapRef={mapRef} query={mapInitialQuery} />
           ) : (
             <>
-              {data.map((page, i) => {
-                const pageIndex = i;
+              {data?.map((page, i) => {
+                const pageNumber = initialPage + i;
                 return (
-                  <Fragment key={pageIndex}>
+                  <Fragment key={pageNumber}>
                     {page.results.length > 0 && (
                       <ResultPage>
-                        {initialPage + pageIndex > 1 && (
-                          <>{t('search:labels.page', { page: initialPage + pageIndex })}</>
-                        )}
+                        {pageNumber > 1 && <>{t('search:labels.page', { page: pageNumber })}</>}
                       </ResultPage>
                     )}
                     <ScrollDetector
-                      onAppears={() => onScrollToPage(pageIndex)}
+                      onAppears={() => onScrollToPage(pageNumber)}
                       rootMargin="0px 0px -50% 0px"
                     />
-                    <Results loading={isPageLoading || isLoadingInitialData ? 1 : 0}>
-                      {renderResults(page.results)}
+                    <Results loading={isPageLoading ? 1 : 0}>
+                      {renderResults(page.results, pageNumber)}
                     </Results>
                   </Fragment>
                 );
@@ -620,8 +619,7 @@ function BrowsePage({ initialData, similarityEntity }) {
                       breakLabel="..."
                       breakClassName="break"
                       pageCount={totalPages}
-                      initialPage={initialPage - 1}
-                      forcePage={currentPage > 1 ? currentPage - 1 : undefined}
+                      forcePage={currentPage - 1}
                       marginPagesDisplayed={2}
                       pageRangeDisplayed={5}
                       onPageChange={onPageChange}
@@ -697,8 +695,8 @@ export async function getServerSideProps({ req, query, locale }) {
         results: searchData.results,
         totalResults: searchData.totalResults,
         debugSparqlQuery: searchData.debugSparqlQuery,
-        filters,
       },
+      filters,
       similarityEntity: (similarityEntity && similarityEntity.result) || null,
     },
   };
