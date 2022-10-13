@@ -1,5 +1,5 @@
+import dynamic from 'next/dynamic';
 import { SessionProvider } from 'next-auth/react';
-import App from 'next/app';
 import { withRouter } from 'next/router';
 import { ThemeProvider } from 'styled-components';
 import { Reset } from 'styled-reset';
@@ -7,13 +7,20 @@ import Head from 'next/head';
 import Cookies from 'js-cookie';
 import { appWithTranslation } from 'next-i18next';
 
-import NProgress, { NProgressStyle } from '@components/NProgress';
+import { NProgressStyle } from '@components/NProgress';
 import ConsentPopup from '@components/ConsentPopup';
 import RRWebRecorder from '@components/RRWebRecorder';
 import GoogleAnalytics from '@components/GoogleAnalytics';
 import { AppProvider } from '@helpers/context';
 import theme from '~/theme';
 import config from '~/config';
+
+const NProgress = dynamic(
+  () => {
+    return import('@components/NProgress');
+  },
+  { ssr: false }
+);
 
 function MyApp({ Component, pageProps }) {
   const { session } = pageProps;
