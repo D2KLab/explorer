@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import config from '~/config';
 
 const handleRouteChange = (url) => {
   if (typeof window?.gtag !== 'undefined' && typeof config.analytics?.id !== 'undefined') {
