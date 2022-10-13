@@ -199,10 +199,18 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
         fieldValue = target.value;
       }
     }
-    setFields((prevFields) => ({
-      ...prevFields,
-      [fieldName]: fieldValue,
-    }));
+
+    setFields((prevFields) => {
+      // If field has multiple values but not enough for condition, remove condition
+      if (Array.isArray(fieldValue) && fieldValue.length < 2) {
+        const filterId = fieldName.substr('field_'.length);
+        delete prevFields[`cond_${filterId}`];
+      }
+      return {
+        ...prevFields,
+        [fieldName]: fieldValue,
+      };
+    });
   };
 
   const handleSwitchChange = (checked, event, id) => {
