@@ -403,16 +403,6 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
               <Input name="q" type="text" value={fields.q} onChange={handleInputChange} />
             </label>
           </Field>
-          {/* <Field>
-            <label htmlFor="field_languages">{t('search:fields.languages')}</label>
-            <MultiSelect
-              inputId="field_languages"
-              name="field_languages"
-              options={languages}
-              value={languages.find(o => o.value === fields.field_languages)}
-              onChange={this.handleInputChange}
-            />
-          </Field> */}
           {filters.filter((filter) => !filter.isOption).map(renderFilter)}
           {route.filterByGraph && (
             <Field>
