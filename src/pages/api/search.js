@@ -1,4 +1,4 @@
-import asyncPool from 'tiny-async-pool';
+import { mapLimit } from 'async';
 
 import { withRequestValidation } from '@helpers/api';
 import SparqlClient from '@helpers/sparql';
@@ -7,14 +7,6 @@ import { removeEmptyObjects, getQueryObject, idToUri } from '@helpers/utils';
 import { getEntity } from '@pages/api/entity';
 import { searchImage } from '@pages/api/image-search';
 import config from '~/config';
-
-const asyncPoolAll = async (...args) => {
-  const results = [];
-  for await (const result of asyncPool(...args)) {
-    results.push(result);
-  }
-  return results;
-};
 
 export const getFilters = async (query, { language }) => {
   const route = config.routes[query.type];
@@ -289,9 +281,11 @@ export const search = async (query) => {
 
     // Loop through each entity and get the details
     const maxConcurrentRequests = 3;
-    results.push(
-      ...(
-        await asyncPoolAll(maxConcurrentRequests, entities, async (entity) => {
+    await new Promise((resolve, reject) => {
+      mapLimit(
+        entities,
+        maxConcurrentRequests,
+        async (entity) => {
           const searchDetailsQuery = JSON.parse(JSON.stringify(getQueryObject(route.query)));
           searchDetailsQuery.$where = searchDetailsQuery.$where || [];
           searchDetailsQuery.$filter = searchDetailsQuery.$filter || [];
@@ -313,9 +307,17 @@ export const search = async (query) => {
           }
 
           return details;
-        })
-      ).flat()
-    );
+        },
+        (err, res) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          results.push(...res.flat());
+          resolve();
+        }
+      );
+    });
 
     for (let i = 0; i < results.length; i += 1) {
       await fillWithVocabularies(results[i]);
