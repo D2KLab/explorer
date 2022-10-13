@@ -122,7 +122,9 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
   );
 
   // Generate initial fields
-  const initialFields = {};
+  const initialFields = {
+    q: '', // Set `q` to an empty string to let React know that this is a controlled input (https://reactjs.org/docs/forms.html#controlled-components)
+  };
 
   // Page
   if (typeof query.page !== 'undefined') {
@@ -232,15 +234,9 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
   };
 
   const clearSearch = () => {
-    const clearedFields = { ...fields };
-    Object.keys(clearedFields).forEach((f) => {
-      if (typeof clearedFields[f] === 'string') {
-        clearedFields[f] = '';
-      } else {
-        delete clearedFields[f];
-      }
+    setFields({
+      q: '',
     });
-    setFields(clearedFields);
   };
 
   const renderSelectedOption = (item) => (
