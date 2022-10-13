@@ -295,36 +295,36 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
 
     return (
       <Field key={filter.id}>
-        <label htmlFor="field_filter">{t(`project:filters.${filter.id}`, filter.label)}</label>
-        <FilterInput
-          id={`field_filter_${filter.id}`}
-          inputId={`field_filter_${filter.id}`}
-          instanceId={`field_filter_${filter.id}`}
-          name={`field_filter_${filter.id}`}
-          options={filter.values}
-          value={value}
-          placeholder={t('search:labels.select')}
-          onChange={handleInputChange}
-          renderSelectedOption={
-            typeof filter.vocabulary !== 'undefined' ? renderSelectedOption : undefined
-          }
-          props={{
-            isClearable: true,
-            filterOption: (option, rawInput) => {
-              const inputValue = rawInput.toLocaleLowerCase();
-              const { label } = option;
-              const { altLabel } = option.data;
-              return (
-                label.toLocaleString().toLocaleLowerCase().includes(inputValue) ||
-                altLabel?.toLocaleString().toLocaleLowerCase().includes(inputValue)
-              );
-            },
-          }}
-        />
+        <label>
+          {t(`project:filters.${filter.id}`, filter.label)}
+          <FilterInput
+            inputId={`field_filter_${filter.id}`}
+            instanceId={`field_filter_${filter.id}`}
+            name={`field_filter_${filter.id}`}
+            options={filter.values}
+            value={value}
+            placeholder={t('search:labels.select')}
+            onChange={handleInputChange}
+            renderSelectedOption={
+              typeof filter.vocabulary !== 'undefined' ? renderSelectedOption : undefined
+            }
+            props={{
+              isClearable: true,
+              filterOption: (option, rawInput) => {
+                const inputValue = rawInput.toLocaleLowerCase();
+                const { label } = option;
+                const { altLabel } = option.data;
+                return (
+                  label.toLocaleString().toLocaleLowerCase().includes(inputValue) ||
+                  altLabel?.toLocaleString().toLocaleLowerCase().includes(inputValue)
+                );
+              },
+            }}
+          />
+        </label>
         {filter.condition === 'user-defined' && fields[`field_filter_${filter.id}`]?.length > 1 && (
           <div style={{ maxWidth: 100, marginLeft: '2em' }}>
             <Select
-              id={`cond_filter_${filter.id}`}
               inputId={`cond_filter_${filter.id}`}
               instanceId={`cond_filter_${filter.id}`}
               name={`cond_filter_${filter.id}`}
@@ -355,7 +355,6 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
         activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
         height={16}
         width={36}
-        id={`field_filter_${filter.id}`}
       />
     </Option>
   );
@@ -399,8 +398,10 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
 
         <Fields>
           <Field>
-            <label htmlFor="q">{t('search:fields.q')}</label>
-            <Input id="q" name="q" type="text" value={fields.q} onChange={handleInputChange} />
+            <label>
+              {t('search:fields.q')}
+              <Input name="q" type="text" value={fields.q} onChange={handleInputChange} />
+            </label>
           </Field>
           {/* <Field>
             <label htmlFor="field_languages">{t('search:fields.languages')}</label>
@@ -415,27 +416,28 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
           {filters.filter((filter) => !filter.isOption).map(renderFilter)}
           {route.filterByGraph && (
             <Field>
-              <label htmlFor="graph">
+              <label>
                 {(config.search.graphFieldLabel && config.search.graphFieldLabel[i18n.language]) ||
                   t('search:fields.graph')}
+                <Select
+                  inputId="graph"
+                  instanceId="graph"
+                  name="graph"
+                  options={graphOptions}
+                  value={graphOptions.find((o) => o.value === fields.graph)}
+                  onChange={handleInputChange}
+                  placeholder={t('search:labels.select')}
+                  isClearable
+                />
               </label>
-              <Select
-                id="graph"
-                inputId="graph"
-                instanceId="graph"
-                name="graph"
-                options={graphOptions}
-                value={graphOptions.find((o) => o.value === fields.graph)}
-                onChange={handleInputChange}
-                placeholder={t('search:labels.select')}
-                isClearable
-              />
             </Field>
           )}
           {filters.some((filter) => filter.isOption) ? (
             <Field>
-              <label>{t('search:fields.options')}</label>
-              {filters.filter((filter) => filter.isOption).map(renderOption)}
+              <label>
+                {t('search:fields.options')}
+                {filters.filter((filter) => filter.isOption).map(renderOption)}
+              </label>
             </Field>
           ) : null}
         </Fields>
