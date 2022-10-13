@@ -14,7 +14,7 @@ export async function getVocabularyItems(vocabularyId, options = { language: 'en
   }
 
   // Call the endpoint with the search query
-  const searchQuery = getQueryObject(vocabulary.query, { language: options.language });
+  const searchQuery = getQueryObject(vocabulary.query, options);
   const resSearch = await SparqlClient.query(searchQuery, {
     endpoint: config.api.endpoint,
     debug: config.debug,
@@ -36,13 +36,13 @@ export async function getVocabularyItems(vocabularyId, options = { language: 'en
  * 3. Finally it replaces the original key with additional values (eg. label)
  * Final item: `{ foo: { "@id": "http://bar", "label": "Bar" } }`
  */
-export async function fillWithVocabularies(item) {
+export async function fillWithVocabularies(item, options) {
   const keys = Object.keys(item);
   for (let i = 0; i < keys.length; i += 1) {
     const key = keys[i];
     if (key in config.vocabularies) {
       if (typeof vocabulariesCache[key] === 'undefined') {
-        vocabulariesCache[key] = await getVocabularyItems(key);
+        vocabulariesCache[key] = await getVocabularyItems(key, options);
       }
       const vocabularies = vocabulariesCache[key];
       const itemVocabs = Array.isArray(item[key])

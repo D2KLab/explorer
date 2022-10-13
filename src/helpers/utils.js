@@ -86,7 +86,7 @@ export function removeEmptyObjects(obj) {
   return obj;
 }
 
-export function getQueryObject(query, options = { language: 'en' }) {
+export function getQueryObject(query, options = { language: 'en', params: {} }) {
   if (typeof query === 'function') {
     return { ...query(options) };
   }

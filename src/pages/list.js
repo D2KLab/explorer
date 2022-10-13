@@ -165,7 +165,7 @@ export async function getServerSideProps({ query, req, locale }) {
   }
 
   if (route.query) {
-    const listQuery = getQueryObject(route.query, { language: req?.language });
+    const listQuery = getQueryObject(route.query, { language: req?.language, params: query });
 
     if (config.debug) {
       debugSparqlQuery = await SparqlClient.getSparqlQuery(listQuery);

@@ -23,11 +23,11 @@ export const getFilters = async (query, { language }) => {
 
     let filterQuery = null;
     if (filter.query) {
-      filterQuery = getQueryObject(filter.query, { language });
+      filterQuery = getQueryObject(filter.query, { language, params: query });
     } else if (filter.vocabulary) {
       const vocabulary = config.vocabularies[filter.vocabulary];
       if (vocabulary) {
-        filterQuery = getQueryObject(vocabulary.query, { language });
+        filterQuery = getQueryObject(vocabulary.query, { language, params: query });
       }
     }
 
@@ -286,7 +286,9 @@ export const search = async (query) => {
         entities,
         maxConcurrentRequests,
         async (entity) => {
-          const searchDetailsQuery = JSON.parse(JSON.stringify(getQueryObject(route.query)));
+          const searchDetailsQuery = JSON.parse(
+            JSON.stringify(getQueryObject(route.query, { params: query }))
+          );
           searchDetailsQuery.$where = searchDetailsQuery.$where || [];
           searchDetailsQuery.$filter = searchDetailsQuery.$filter || [];
           searchDetailsQuery.$values = searchDetailsQuery.$values || {};
@@ -320,7 +322,7 @@ export const search = async (query) => {
     });
 
     for (let i = 0; i < results.length; i += 1) {
-      await fillWithVocabularies(results[i]);
+      await fillWithVocabularies(results[i], { params: query });
     }
 
     // Compute the total number of pages (used for pagination)

@@ -747,7 +747,9 @@ export async function getServerSideProps({ req, res, query, locale }) {
 
     // Video segments
     if (config?.plugins?.videoSegments) {
-      const videoSegmentsQuery = getQueryObject(config.plugins.videoSegments.query);
+      const videoSegmentsQuery = getQueryObject(config.plugins.videoSegments.query, {
+        params: query,
+      });
       videoSegmentsQuery.$filter = videoSegmentsQuery.$filter || [];
       videoSegmentsQuery.$filter.push(`?video = <${result['@id']}>`);
 

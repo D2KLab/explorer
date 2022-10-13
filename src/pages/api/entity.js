@@ -12,7 +12,7 @@ const getEntityQuery = (route, query) => {
     return null;
   }
   const jsonQuery = route.details && route.details.query ? route.details.query : route.query;
-  const searchQuery = JSON.parse(JSON.stringify(getQueryObject(jsonQuery)));
+  const searchQuery = JSON.parse(JSON.stringify(getQueryObject(jsonQuery, { params: query })));
   searchQuery.$filter = searchQuery.$filter || [];
   if (!searchQuery.$values) {
     searchQuery.$values = {};
@@ -46,7 +46,7 @@ export const getEntity = async (query) => {
 
   const result = queryRes && queryRes['@graph'][0] && removeEmptyObjects(queryRes['@graph'][0]);
   if (result) {
-    await fillWithVocabularies(result);
+    await fillWithVocabularies(result, { params: query });
   }
 
   return result;

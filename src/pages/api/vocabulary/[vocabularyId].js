@@ -16,7 +16,7 @@ export default withRequestValidation({
     return;
   }
 
-  const results = await getVocabularyItems(vocabularyId);
+  const results = await getVocabularyItems(vocabularyId, { params: query });
 
   res.status(200).json(results);
 });

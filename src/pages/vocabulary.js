@@ -415,7 +415,7 @@ export async function getServerSideProps({ query, locale }) {
   const featured = [];
 
   if (route) {
-    const mainQuery = getQueryObject(route.query, { language: locale });
+    const mainQuery = getQueryObject(route.query, { language: locale, params: query });
 
     if (config.debug) {
       debugSparqlQuery.results = await SparqlClient.getSparqlQuery(mainQuery);
@@ -433,7 +433,10 @@ export async function getServerSideProps({ query, locale }) {
 
     // Execute the query
     if (route.featured) {
-      const featuredQuery = getQueryObject(route.featured.query, { language: locale });
+      const featuredQuery = getQueryObject(route.featured.query, {
+        language: locale,
+        params: query,
+      });
 
       if (config.debug) {
         debugSparqlQuery.featured = await SparqlClient.getSparqlQuery(featuredQuery);
