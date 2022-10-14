@@ -14,7 +14,7 @@ export default withRequestValidation({
       per_page: 5,
       approximate: true,
     },
-    req.headers['Accept-Language']
+    req.headers['accept-language']
   );
 
   res.status(200).json(results);
