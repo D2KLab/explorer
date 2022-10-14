@@ -22,7 +22,7 @@ import Button from '@components/Button';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import breakpoints from '@styles/breakpoints';
 import SparqlClient from '@helpers/sparql';
-import { getQueryObject } from '@helpers/utils';
+import { getQueryObject, removeEmptyObjects } from '@helpers/utils';
 import config from '~/config';
 
 const Hero = styled.div`
@@ -428,7 +428,7 @@ export async function getServerSideProps({ query, locale }) {
       params: config.api.params,
     });
     if (res) {
-      results.push(...res['@graph']);
+      results.push(...removeEmptyObjects(res['@graph']));
     }
 
     // Execute the query
@@ -447,7 +447,7 @@ export async function getServerSideProps({ query, locale }) {
         debug: config.debug,
       });
       if (resFeatured) {
-        featured.push(...resFeatured['@graph']);
+        featured.push(...removeEmptyObjects(resFeatured['@graph']));
       }
     }
   }
