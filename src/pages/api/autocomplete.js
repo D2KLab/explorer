@@ -7,12 +7,15 @@ export default withRequestValidation({
 })(async (req, res) => {
   const { q } = req.body;
 
-  const results = await search({
-    type: config.search.route,
-    q,
-    per_page: 5,
-    approximate: true,
-  });
+  const results = await search(
+    {
+      type: config.search.route,
+      q,
+      per_page: 5,
+      approximate: true,
+    },
+    req.headers['Accept-Language']
+  );
 
   res.status(200).json(results);
 });

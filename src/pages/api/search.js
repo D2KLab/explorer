@@ -78,7 +78,7 @@ const conditions = {
   or: ' || ',
 };
 
-export const search = async (query) => {
+export const search = async (query, language) => {
   const results = [];
   let debugSparqlQuery = null;
   let totalResults = 0;
@@ -195,10 +195,13 @@ export const search = async (query) => {
             .map((id) => idToUri(id, { base: route.uriBase }))
         );
       } else if (query.similarity_entity) {
-        const similarityEntity = await getEntity({
-          id: query.similarity_entity,
-          type: query.type,
-        });
+        const similarityEntity = await getEntity(
+          {
+            id: query.similarity_entity,
+            type: query.type,
+          },
+          language
+        );
 
         if (similarityEntity) {
           const data = await searchImage(similarityEntity.representation[0]?.image);
@@ -384,6 +387,6 @@ export default withRequestValidation({
     return;
   }
 
-  const data = await search(query);
+  const data = await search(query, req.headers['accept-language']);
   res.status(200).json(data);
 });

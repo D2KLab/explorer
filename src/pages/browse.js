@@ -666,7 +666,7 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
 
 export async function getServerSideProps({ req, query, locale }) {
   const filters = await getFilters(query, { language: locale });
-  const searchData = await search(query);
+  const searchData = await search(query, locale);
 
   let similarityEntity;
   if (query.similarity_entity) {
@@ -677,12 +677,10 @@ export async function getServerSideProps({ req, query, locale }) {
           type: query.type,
         })}`,
         {
-          headers:
-            req && req.headers
-              ? {
-                  cookie: req.headers.cookie,
-                }
-              : undefined,
+          headers: {
+            ...req.headers,
+            'accept-language': locale,
+          },
         }
       )
     ).json();

@@ -7,12 +7,14 @@ import config from '~/config';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 
-const getEntityQuery = (route, query) => {
+const getEntityQuery = (route, language, query) => {
   if (!route) {
     return null;
   }
   const jsonQuery = route.details && route.details.query ? route.details.query : route.query;
-  const searchQuery = JSON.parse(JSON.stringify(getQueryObject(jsonQuery, { params: query })));
+  const searchQuery = JSON.parse(
+    JSON.stringify(getQueryObject(jsonQuery, { language, params: query }))
+  );
   searchQuery.$filter = searchQuery.$filter || [];
   if (!searchQuery.$values) {
     searchQuery.$values = {};
@@ -27,13 +29,13 @@ const getEntityQuery = (route, query) => {
   return searchQuery;
 };
 
-export const getEntity = async (query) => {
+export const getEntity = async (query, language) => {
   const route = config.routes[query.type];
   if (!route) {
     return null;
   }
 
-  const searchQuery = await getEntityQuery(route, query);
+  const searchQuery = await getEntityQuery(route, language, query);
   if (!searchQuery) {
     return null;
   }
@@ -63,7 +65,7 @@ export default withRequestValidation({
     return;
   }
 
-  const entity = await getEntity(query);
+  const entity = await getEntity(query, req.headers['accept-language']);
 
   const returnValue = {
     result: entity,
@@ -71,7 +73,7 @@ export default withRequestValidation({
   };
 
   if (config.debug) {
-    const searchQuery = await getEntityQuery(route, query);
+    const searchQuery = await getEntityQuery(route, req.headers['accept-language'], query);
     returnValue.debugSparqlQuery = await SparqlClient.getSparqlQuery(searchQuery);
   }
 

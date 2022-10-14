@@ -248,12 +248,10 @@ export async function getServerSideProps(ctx) {
             type: item.type,
           })}`,
           {
-            headers:
-              req && req.headers
-                ? {
-                    cookie: req.headers.cookie,
-                  }
-                : undefined,
+            headers: {
+              ...req.headers,
+              'accept-language': locale,
+            },
           }
         )
       ).json();
