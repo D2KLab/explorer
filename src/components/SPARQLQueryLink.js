@@ -5,7 +5,11 @@ function SPARQLQueryLink({ query, children }) {
     <a
       target="_blank"
       rel="noopener noreferrer"
-      href={`${config.api.endpoint}?qtxt=${encodeURIComponent(query)}&format=text%2Fhtml`}
+      href={
+        typeof config.api.queryLink === 'function'
+          ? config.api.queryLink(query)
+          : `${config.api.endpoint}?qtxt=${encodeURIComponent(query)}&format=text%2Fhtml`
+      }
     >
       {children}
     </a>
