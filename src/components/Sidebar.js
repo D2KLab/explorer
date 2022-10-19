@@ -104,6 +104,61 @@ const Option = styled.div`
   ${({ theme }) => theme?.components?.Sidebar?.Option};
 `;
 
+const ConditionFilter = styled.div`
+  position: relative;
+  height: 100%;
+  border-left: 2px solid #8256d0;
+  display: flex;
+  align-items: center;
+  color: #8256d0;
+
+  &::before,
+  &::after {
+    position: absolute;
+    content: '';
+    display: block;
+    left: -12px;
+    width: 12px;
+    height: 2px;
+    background-color: #8256d0;
+  }
+
+  &::before {
+    top: 0;
+  }
+
+  &::after {
+    bottom: 0;
+  }
+
+  div {
+    width: 32px;
+    height: 32px;
+    margin-left: -16px;
+    background-color: ${({ theme }) =>
+      theme?.components?.Sidebar?.Container?.backgroundColor || '#d9d9d9'};
+  }
+
+  svg {
+    transform: rotate(90deg);
+  }
+
+  span {
+    user-select: none;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-size: 0.8rem;
+  }
+`;
+
+ConditionFilter.Container = styled.div`
+  position: absolute;
+  top: 46px;
+  right: 0;
+  height: calc(100% - 46px);
+  cursor: pointer;
+`;
+
 function Sidebar({ className, onSearch, submitOnChange = false, type, filters, query }) {
   const theme = useTheme();
   const { t, i18n } = useTranslation(['project', 'search']);
@@ -293,48 +348,73 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
         }) || null;
     }
 
+    const hasCondition =
+      filter.condition === 'user-defined' && fields[`field_filter_${filter.id}`]?.length > 1;
+    const isConditionSet = fields[`cond_filter_${filter.id}`];
+
     return (
       <Field key={filter.id}>
         <label>
           {t(`project:filters.${filter.id}`, filter.label)}
-          <FilterInput
-            inputId={`field_filter_${filter.id}`}
-            instanceId={`field_filter_${filter.id}`}
-            name={`field_filter_${filter.id}`}
-            options={filter.values}
-            value={value}
-            placeholder={t('search:labels.select')}
-            onChange={handleInputChange}
-            renderSelectedOption={
-              typeof filter.vocabulary !== 'undefined' ? renderSelectedOption : undefined
-            }
-            props={{
-              isClearable: true,
-              filterOption: (option, rawInput) => {
-                const inputValue = rawInput.toLocaleLowerCase();
-                const { label } = option;
-                const { altLabel } = option.data;
-                return (
-                  label.toLocaleString().toLocaleLowerCase().includes(inputValue) ||
-                  altLabel?.toLocaleString().toLocaleLowerCase().includes(inputValue)
-                );
-              },
-            }}
-          />
-        </label>
-        {filter.condition === 'user-defined' && fields[`field_filter_${filter.id}`]?.length > 1 && (
-          <div style={{ maxWidth: 100, marginLeft: '2em' }}>
-            <Select
-              inputId={`cond_filter_${filter.id}`}
-              instanceId={`cond_filter_${filter.id}`}
-              name={`cond_filter_${filter.id}`}
-              options={conditionOptions}
-              value={conditionOptions.find((o) => o.value === fields[`cond_filter_${filter.id}`])}
-              defaultValue={conditionOptions[0]}
+          <div style={{ position: 'relative' }}>
+            <FilterInput
+              inputId={`field_filter_${filter.id}`}
+              instanceId={`field_filter_${filter.id}`}
+              name={`field_filter_${filter.id}`}
+              options={filter.values}
+              value={value}
+              placeholder={t('search:labels.select')}
               onChange={handleInputChange}
+              renderSelectedOption={
+                typeof filter.vocabulary !== 'undefined' ? renderSelectedOption : undefined
+              }
+              selectedOptionsStyle={{
+                paddingRight: hasCondition ? 48 : 0,
+              }}
+              props={{
+                isClearable: true,
+                filterOption: (option, rawInput) => {
+                  const inputValue = rawInput.toLocaleLowerCase();
+                  const { label } = option;
+                  const { altLabel } = option.data;
+                  return (
+                    label.toLocaleString().toLocaleLowerCase().includes(inputValue) ||
+                    altLabel?.toLocaleString().toLocaleLowerCase().includes(inputValue)
+                  );
+                },
+              }}
             />
+            {hasCondition && (
+              <a
+                onClick={(ev) => {
+                  ev.preventDefault();
+                  handleInputChange(isConditionSet ? undefined : 'and', {
+                    name: `cond_filter_${filter.id}`,
+                  });
+                }}
+              >
+                <ConditionFilter.Container>
+                  <ConditionFilter>
+                    <div>
+                      <svg
+                        viewBox="0 0 16 16"
+                        focusable="false"
+                        role="img"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        style={{ opacity: isConditionSet ? 1 : 0.5 }}
+                      >
+                        <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z"></path>
+                        <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6H9z"></path>
+                      </svg>
+                    </div>
+                    <span style={{ opacity: isConditionSet ? 1 : 0.5 }}>combined</span>
+                  </ConditionFilter>
+                </ConditionFilter.Container>
+              </a>
+            )}
           </div>
-        )}
+        </label>
       </Field>
     );
   };
@@ -368,17 +448,6 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
   }, [debouncedFields]);
 
   const route = config.routes[type];
-
-  const conditionOptions = [
-    {
-      value: 'or',
-      label: t('common:sidebar.condition.or'),
-    },
-    {
-      value: 'and',
-      label: t('common:sidebar.condition.and'),
-    },
-  ];
 
   return (
     <Container className={className}>

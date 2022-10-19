@@ -54,6 +54,7 @@ function MultiSelect({
   value,
   onChange,
   renderSelectedOption = defaultRenderSelectedOption,
+  selectedOptionsStyle,
   props,
   ...containerProps
 }) {
@@ -99,7 +100,7 @@ function MultiSelect({
         placeholder={placeholder}
         {...props}
       />
-      <ul className="selected-options">
+      <ul style={selectedOptionsStyle}>
         {values.length > 0 &&
           values.map((item) => (
             <li key={item.value}>
