@@ -40,8 +40,14 @@ export const getFilters = async (query, { language }) => {
       if (resQuery) {
         filterValues = resQuery['@graph'].map((row) => {
           const value = row['@id']['@value'] || row['@id'];
-          const label = row.label ? row.label['@value'] || row.label : value;
-          const altLabel = row.altLabel ? row.altLabel['@value'] || row.altLabel : null;
+          const label = []
+            .concat(row.label ? row.label['@value'] || row.label : value)
+            .filter((x) => x)
+            .join(', ');
+          const altLabel = []
+            .concat(row.altLabel ? row.altLabel['@value'] || row.altLabel : null)
+            .filter((x) => x)
+            .join(', ');
           return {
             label,
             value,
