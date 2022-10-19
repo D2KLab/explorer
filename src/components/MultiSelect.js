@@ -43,6 +43,10 @@ const Container = styled.div`
   }
 `;
 
+const Label = styled.span`
+  flex: 1;
+`;
+
 const defaultRenderSelectedOption = (item) => item.label;
 
 function MultiSelect({
@@ -105,7 +109,7 @@ function MultiSelect({
           values.map((item) => (
             <li key={item.value}>
               <CrossButton onClick={() => removeItem(item)} />
-              <span>{renderSelectedOption(item)}</span>
+              <Label>{renderSelectedOption(item)}</Label>
             </li>
           ))}
       </ul>
