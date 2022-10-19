@@ -408,7 +408,9 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
                         <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6H9z"></path>
                       </svg>
                     </div>
-                    <span style={{ opacity: isConditionSet ? 1 : 0.5 }}>combined</span>
+                    <span style={{ opacity: isConditionSet ? 1 : 0.5 }}>
+                      {t('common:sidebar.combined')}
+                    </span>
                   </ConditionFilter>
                 </ConditionFilter.Container>
               </a>

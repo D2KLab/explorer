@@ -1,9 +1,6 @@
 {
   "sidebar": {
-    "condition": {
-      "and": "Y",
-      "or": "O"
-    }
+    "combined": "combinados"
   },
   "profileButton": {
     "label": "Perfil",
