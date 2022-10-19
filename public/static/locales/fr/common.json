@@ -123,12 +123,12 @@
   },
   "collection": {
     "noDescription": "Aucune description pour cette collection.",
-    "items": "{{count}} élément dans la collection",
-    "items_plural": "{{count}} éléments dans la collection"
+    "items_one": "{{count}} élément dans la collection",
+    "items_other": "{{count}} éléments dans la collection"
   },
   "listing": {
-    "items": "{{count}} élément dans la liste",
-    "items_plural": "{{count}} éléments dans la liste"
+    "items_one": "{{count}} élément dans la liste",
+    "items_other": "{{count}} éléments dans la liste"
   },
   "footer": {
     "contact": "Contactez-nous :"

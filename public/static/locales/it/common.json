@@ -123,12 +123,12 @@
   },
   "collection": {
     "noDescription": "Non è presente alcuna descrizione per questa collezione",
-    "items": "{{count}} item nella collezione",
-    "items_plural": "{{count}} item nella collezione"
+    "items_one": "{{count}} item nella collezione",
+    "items_other": "{{count}} item nella collezione"
   },
   "listing": {
-    "items": "{{count}} item nella lista",
-    "items_plural": " {{count}} item nella lista"
+    "items_one": "{{count}} item nella lista",
+    "items_other": " {{count}} item nella lista"
   },
   "footer": {
     "contact": "Contattaci:"
