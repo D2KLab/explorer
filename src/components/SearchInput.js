@@ -3,6 +3,7 @@ import Router from 'next/router';
 import Link from 'next/link';
 import styled from 'styled-components';
 import Autosuggest from 'react-autosuggest';
+import queryString from 'query-string';
 
 import Spinner from '@components/Spinner';
 import { uriToId, generateMediaUrl } from '@helpers/utils';
@@ -109,7 +110,7 @@ function SearchInput({ className, placeholder, ariaLabel = 'Search input', ...pr
     setIsLoading(true);
 
     const response = await (
-      await fetch('/api/autocomplete', {
+      await fetch(`/api/autocomplete?${queryString.stringify({ hl: i18n.language })}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

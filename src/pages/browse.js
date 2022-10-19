@@ -675,12 +675,10 @@ export async function getServerSideProps({ req, query, locale }) {
         `${absoluteUrl(req)}/api/entity?${queryString.stringify({
           id: query.similarity_entity,
           type: query.type,
+          hl: locale,
         })}`,
         {
-          headers: {
-            ...req.headers,
-            'accept-language': locale,
-          },
+          headers: req.headers,
         }
       )
     ).json();

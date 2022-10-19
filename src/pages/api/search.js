@@ -290,7 +290,7 @@ export const search = async (query, language) => {
         maxConcurrentRequests,
         async (entity) => {
           const searchDetailsQuery = JSON.parse(
-            JSON.stringify(getQueryObject(route.query, { params: query }))
+            JSON.stringify(getQueryObject(route.query, { language, params: query }))
           );
           searchDetailsQuery.$where = searchDetailsQuery.$where || [];
           searchDetailsQuery.$filter = searchDetailsQuery.$filter || [];
@@ -387,6 +387,6 @@ export default withRequestValidation({
     return;
   }
 
-  const data = await search(query, req.headers['accept-language']);
+  const data = await search(query, query.hl || req.headers['accept-language']);
   res.status(200).json(data);
 });

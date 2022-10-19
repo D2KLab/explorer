@@ -37,7 +37,7 @@ const Results = styled.div`
 `;
 
 function ListsPage({ isOwner, list, shareLink, error }) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
 
   const renderListItems = () => (
     <Element marginY={24}>
@@ -98,7 +98,10 @@ function ListsPage({ isOwner, list, shareLink, error }) {
           <h2>{t('list.operations')}</h2>
         </Element>
         <Element marginBottom={12} display="flex">
-          <Link href={`/api/lists/${list._id}/download`} passHref>
+          <Link
+            href={`/api/lists/${list._id}/download?hl=${encodeURIComponent(i18n.language)}`}
+            passHref
+          >
             <Button primary target="_blank">
               {t('common:buttons.download')}
             </Button>
@@ -250,7 +253,7 @@ export async function getServerSideProps(ctx) {
           {
             headers: {
               ...req.headers,
-              'accept-language': locale,
+              'accept-language': ctx.locale,
             },
           }
         )

@@ -6,6 +6,7 @@ export default withRequestValidation({
   allowedMethods: ['POST'],
 })(async (req, res) => {
   const { q } = req.body;
+  const { query } = req;
 
   const results = await search(
     {
@@ -14,7 +15,7 @@ export default withRequestValidation({
       per_page: 5,
       approximate: true,
     },
-    req.headers['accept-language']
+    query.hl || req.headers['accept-language']
   );
 
   res.status(200).json(results);

@@ -65,7 +65,7 @@ export default withRequestValidation({
     return;
   }
 
-  const entity = await getEntity(query, req.headers['accept-language']);
+  const entity = await getEntity(query, query.hl || req.headers['accept-language']);
 
   const returnValue = {
     result: entity,
@@ -73,7 +73,11 @@ export default withRequestValidation({
   };
 
   if (config.debug) {
-    const searchQuery = await getEntityQuery(route, req.headers['accept-language'], query);
+    const searchQuery = await getEntityQuery(
+      route,
+      query.hl || req.headers['accept-language'],
+      query
+    );
     returnValue.debugSparqlQuery = await SparqlClient.getSparqlQuery(searchQuery);
   }
 

@@ -90,12 +90,10 @@ export default withRequestValidation({
           `${absoluteUrl(req)}/api/entity?${queryString.stringify({
             id: uriToId(item.uri, { base: route.uriBase }),
             type: item.type,
+            hl: req.query.hl,
           })}`,
           {
-            headers: {
-              ...req.headers,
-              'accept-language': locale,
-            },
+            headers: req.headers,
           }
         )
       ).json();
