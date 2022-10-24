@@ -8,7 +8,8 @@
     "toggleMap": "Mapa"
   },
   "labels": {
-    "searchResults": "{{totalResults}} resultados de la búsqueda",
+    "searchResults_one": "{{count}} resultado de la búsqueda",
+    "searchResults_other": "{{count}} resultados de la búsqueda",
     "sortBy": "Ordenar por",
     "similarity": "Semejanza",
     "select": "Seleccionar...",

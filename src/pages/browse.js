@@ -504,7 +504,7 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
           <StyledTitle>
             {isPageLoading
               ? t('search:labels.loading')
-              : t('search:labels.searchResults', { totalResults })}
+              : t('search:labels.searchResults', { count: totalResults })}
           </StyledTitle>
           {similarityEntity && (
             <Element marginBottom={24}>
