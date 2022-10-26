@@ -31,6 +31,10 @@ const Container = styled.div`
   ${({ theme }) => theme?.components?.Sidebar?.Container};
 `;
 
+const StyledInput = styled(Input)`
+  ${({ theme }) => theme?.components?.Sidebar?.StyledInput};
+`;
+
 const StyledSwitch = styled(Switch)`
   margin-left: 5px;
 
@@ -382,6 +386,8 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
                     altLabel?.toLocaleString().toLocaleLowerCase().includes(inputValue)
                   );
                 },
+                theme: theme?.sidebar?.selectTheme,
+                styles: theme?.sidebar?.selectStyles,
               }}
             />
             {hasCondition && (
@@ -471,7 +477,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
           <Field>
             <label>
               {t('search:fields.q')}
-              <Input name="q" type="text" value={fields.q} onChange={handleInputChange} />
+              <StyledInput name="q" type="text" value={fields.q} onChange={handleInputChange} />
             </label>
           </Field>
           {filters.filter((filter) => !filter.isOption).map(renderFilter)}
@@ -489,6 +495,8 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
                   onChange={handleInputChange}
                   placeholder={t('search:labels.select')}
                   isClearable
+                  theme={theme?.sidebar?.selectTheme}
+                  styles={theme?.sidebar?.selectStyles}
                 />
               </label>
             </Field>
