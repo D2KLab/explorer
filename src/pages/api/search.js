@@ -136,13 +136,18 @@ export const search = async (query, language) => {
               values.forEach((value, i) => {
                 const filterRet = filter.filterFunc(value, i);
                 extraWhere.push(`{
-                  ${filter.whereFunc(i).join(' . ')}
+                  ${[]
+                    .concat(filter.whereFunc(value, i))
+                    .filter((x) => x)
+                    .join(' . ')}
                   ${filterRet ? `FILTER(${filterRet})` : ''}
                 }`);
               });
             } else if (filterCondition === 'or') {
               if (typeof filter.whereFunc === 'function') {
-                extraWhere.push(...filter.whereFunc(0));
+                values.forEach((value, i) => {
+                  extraWhere.push(...[].concat(filter.whereFunc(value, 0)).filter((x) => x));
+                });
               }
 
               if (typeof filter.filterFunc === 'function') {
@@ -226,7 +231,12 @@ export const search = async (query, language) => {
       const [sortVariable, sortDirection] = query.sort.split('|');
       const sortFilter = (route.filters || []).find((filter) => filter.id === sortVariable);
       if (sortFilter && typeof sortFilter.whereFunc === 'function') {
-        extraWhere.push(`OPTIONAL { ${sortFilter.whereFunc().join(' . ')} }`);
+        extraWhere.push(
+          `OPTIONAL { ${[]
+            .concat(sortFilter.whereFunc())
+            .filter((x) => x)
+            .join(' . ')} }`
+        );
         orderByVariable = sortVariable;
         if (['ASC', 'DESC'].includes(sortDirection)) {
           orderByDirection = sortDirection;

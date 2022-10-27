@@ -31,7 +31,7 @@ export default createGlobalStyle`
   }
 
   a {
-    color: ${theme.colors.primary};
+    color: ${theme.colors.link || theme.colors.primary};
   }
 
   a:hover {

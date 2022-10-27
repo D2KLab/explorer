@@ -7,6 +7,7 @@ import MultiSelect from '@components/MultiSelect';
 import breakpoints from '@styles/breakpoints';
 import Button from '@components/Button';
 import Input from '@components/Input';
+import ToggleSwitch from '@components/ToggleSwitch';
 import useDebounce from '@helpers/useDebounce';
 import useDidMountEffect from '@helpers/useDidMountEffect';
 import { useTranslation } from 'next-i18next';
@@ -83,7 +84,7 @@ const Fields = styled.div`
 const Field = styled.div`
   margin-bottom: 24px;
 
-  label {
+  > label {
     color: ${({ theme }) => theme.colors.secondary};
     display: block;
     margin-bottom: 8px;
@@ -328,10 +329,9 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
 
   const renderFilter = (filter) => {
     const field = fields[`field_filter_${filter.id}`];
-    const FilterInput = filter.isMulti ? MultiSelect : Select;
 
     let value = null;
-    if (filter.isMulti) {
+    if (filter.isMulti || filter.isToggle) {
       value = field || null;
     } else {
       value =
@@ -352,6 +352,27 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
         }) || null;
     }
 
+    if (filter.isToggle) {
+      const valueIndex = filter.options.findIndex((option) => option.value === value);
+      return (
+        <Field key={filter.id}>
+          {t(`project:filters.${filter.id}`, filter.label)}
+          <div style={{ position: 'relative' }}>
+            <ToggleSwitch
+              name={`field_filter_${filter.id}`}
+              options={filter.options}
+              defaultOption={
+                filter.options[valueIndex > -1 ? valueIndex : filter.defaultOption ?? 0]
+              }
+              onChange={handleInputChange}
+            />
+          </div>
+        </Field>
+      );
+    }
+
+    const SelectInput = filter.isMulti ? MultiSelect : Select;
+
     const hasCondition =
       filter.condition === 'user-defined' && fields[`field_filter_${filter.id}`]?.length > 1;
     const isConditionSet = fields[`cond_filter_${filter.id}`];
@@ -361,7 +382,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
         <label>
           {t(`project:filters.${filter.id}`, filter.label)}
           <div style={{ position: 'relative' }}>
-            <FilterInput
+            <SelectInput
               inputId={`field_filter_${filter.id}`}
               instanceId={`field_filter_${filter.id}`}
               name={`field_filter_${filter.id}`}
