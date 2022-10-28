@@ -176,6 +176,7 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
   const [currentPage, setCurrentPage] = useState(parseInt(query.page, 10) || 1);
   const mapRef = useRef(null);
   const { setSearchData, setSearchQuery, setSearchPath } = useContext(AppContext);
+  const [isPageLoading, setIsPageLoading] = useState(false);
 
   // Save the initial query to prevent re-rendering the map
   // (reloading the iframe) every time the search query changes.
@@ -219,6 +220,23 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
       window?.removeEventListener('resize', debouncedHandleResize);
     };
   });
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setIsPageLoading(true);
+    };
+    const handleRouteDone = () => {
+      setIsPageLoading(false);
+    };
+    router.events.on('routeChangeStart', handleRouteChange);
+    router.events.on('routeChangeComplete', handleRouteDone);
+    router.events.on('routeChangeError', handleRouteDone);
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+      router.events.off('routeChangeComplete', handleRouteDone);
+      router.events.off('routeChangeError', handleRouteDone);
+    };
+  }, []);
 
   const onSearch = (fields) => {
     const isMapSearch = isMapVisible; // && mapRef.current?.src?.startsWith(window.location.origin);
@@ -455,7 +473,7 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
         </Element>
         <Content>
           <StyledTitle>
-            {isLoadingMore
+            {isLoadingMore || isPageLoading
               ? t('search:labels.loading')
               : t('search:labels.searchResults', { count: totalResults })}
           </StyledTitle>
@@ -541,7 +559,7 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
                       onAppears={() => onScrollToPage(pageNumber)}
                       rootMargin="0px 0px -50% 0px"
                     />
-                    <Results loading={isLoadingMore ? 1 : 0}>
+                    <Results loading={isLoadingMore || isPageLoading ? 1 : 0}>
                       {renderResults(page.results, pageNumber)}
                     </Results>
                   </Fragment>
