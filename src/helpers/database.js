@@ -93,7 +93,8 @@ export const createUserList = async (user, list) => {
     created_at: new Date(),
     updated_at: new Date(),
   });
-  return res.ops[0];
+  const insertedList = await getListById(res.insertedId);
+  return insertedList;
 };
 
 export const removeUserList = async (user, list) => {
