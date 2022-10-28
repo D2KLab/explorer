@@ -237,7 +237,7 @@ export const search = async (query, language) => {
             .filter((x) => x)
             .join(' . ')} }`
         );
-        orderByVariable = sortVariable;
+        orderByVariable = sortFilter.isSortable?.variable || sortVariable;
         if (['ASC', 'DESC'].includes(sortDirection)) {
           orderByDirection = sortDirection;
         }
