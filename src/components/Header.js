@@ -106,7 +106,7 @@ const NavLink = styled.a`
   text-transform: uppercase;
   display: flex;
   align-items: center;
-  line-height: 54px;
+  text-align: center;
 
   ${({ theme }) => theme?.components?.Header?.NavLink};
 `;
