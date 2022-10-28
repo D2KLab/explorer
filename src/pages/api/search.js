@@ -358,16 +358,8 @@ export const search = async (query, language) => {
       },
       $where: `
         SELECT (COUNT(DISTINCT ?id) AS ?count) WHERE {
-          {
-            SELECT DISTINCT ?id WHERE {
-              ${baseWhere.join('.')}
-              ${baseWhere.length > 1 ? '.' : ''}
-              {
-                ${textSearchWhere.join('.')}
-                ${textSearchWhere.length > 1 ? '.' : ''}
-              }
-            }
-          }
+          ${textSearchWhere.join('.')}
+          ${textSearchWhere.length > 1 ? '.' : ''}
           ${paginationWhereCondition}
         }
         ${query.approximate ? 'LIMIT 1000' : ''}
