@@ -82,11 +82,10 @@ const Fields = styled.div`
 `;
 
 const Field = styled.div`
-  margin-bottom: 24px;
-
   > label {
     color: ${({ theme }) => theme.colors.secondary};
     display: block;
+    margin-top: 24px;
     margin-bottom: 8px;
   }
 
@@ -370,16 +369,18 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
       const valueIndex = filter.options.findIndex((option) => option.value === value);
       return (
         <Field key={filter.id}>
-          {t(`project:filters.${filter.id}`, filter.label)}
-          <div style={{ position: 'relative' }}>
-            <ToggleSwitch
-              name={`field_filter_${filter.id}`}
-              options={filter.options}
-              defaultOption={
-                filter.options[valueIndex > -1 ? valueIndex : filter.defaultOption ?? 0]
-              }
-              onChange={handleInputChange}
-            />
+          <div style={{ marginTop: filter.hideLabel ? 0 : 24 }}>
+            {!filter.hideLabel && t(`project:filters.${filter.id}`, filter.label)}
+            <div style={{ position: 'relative' }}>
+              <ToggleSwitch
+                name={`field_filter_${filter.id}`}
+                options={filter.options}
+                defaultOption={
+                  filter.options[valueIndex > -1 ? valueIndex : filter.defaultOption ?? 0]
+                }
+                onChange={handleInputChange}
+              />
+            </div>
           </div>
         </Field>
       );
