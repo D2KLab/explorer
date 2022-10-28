@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, createRef } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const Switch = styled.div`
   position: relative;
@@ -23,6 +23,12 @@ const SwitchSelection = styled.span`
   position: absolute;
   top: 0;
   background: ${({ theme }) => theme.colors.primary};
+  ${({ active }) =>
+    active
+      ? css`
+          transition: left 150ms ease-out, width 150ms ease-out;
+        `
+      : ''};
 `;
 
 const SwitchItem = styled.div`
@@ -59,35 +65,33 @@ const ConcealedRadio = ({ value, selected }) => (
 );
 
 function ToggleSwitch({ name, options, defaultOption, onChange }) {
-  const [selected, setSelected] = useState(defaultOption?.value);
-  const [left, setLeft] = useState(0);
-  const [width, setWidth] = useState(0);
+  const [selected, setSelected] = useState();
+  const [left, setLeft] = useState();
+  const [width, setWidth] = useState(-1);
 
   const handleChange = (val, event) => {
-    const { offsetLeft, offsetWidth } = event.target;
-    setLeft(offsetLeft);
-    setWidth(offsetWidth);
     setSelected(val);
     if (typeof onChange === 'function') {
       onChange(val, { name, event });
     }
   };
 
-  const lineRefs = useRef([]);
-  lineRefs.current = options.map((_, i) => lineRefs.current[i] ?? createRef());
+  useEffect(() => {
+    setSelected(defaultOption?.value);
+  }, [defaultOption]);
 
   useEffect(() => {
-    const defaultEl =
-      lineRefs.current[options.findIndex((option) => option.value === defaultOption?.value)]
-        ?.current;
+    const el = lineRefs.current[options.findIndex((option) => option.value === selected)]?.current;
 
-    if (defaultEl) {
-      const { offsetLeft, offsetWidth } = defaultEl;
+    if (el) {
+      const { offsetLeft, offsetWidth } = el;
       setLeft(offsetLeft);
       setWidth(offsetWidth);
-      setSelected(defaultOption?.value);
     }
-  }, []);
+  }, [selected]);
+
+  const lineRefs = useRef([]);
+  lineRefs.current = options.map((_, i) => lineRefs.current[i] ?? createRef());
 
   return (
     <Switch>
@@ -100,7 +104,7 @@ function ToggleSwitch({ name, options, defaultOption, onChange }) {
           </SwitchItem>
         );
       })}
-      <SwitchSelection style={{ left, width }} />
+      <SwitchSelection style={{ left, width }} active={width > -1} />
     </Switch>
   );
 }
