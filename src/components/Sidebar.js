@@ -393,26 +393,26 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
 
     return (
       <Field key={filter.id}>
-        <label>
-          {t(`project:filters.${filter.id}`, filter.label)}
-          <div style={{ position: 'relative' }}>
-            <SelectInput
-              inputId={`field_filter_${filter.id}`}
-              instanceId={`field_filter_${filter.id}`}
-              name={`field_filter_${filter.id}`}
-              options={filter.values}
-              value={value}
-              placeholder={t('search:labels.select')}
-              onChange={handleInputChange}
-              renderSelectedOption={
-                typeof filter.vocabulary !== 'undefined' ? renderSelectedOption : undefined
-              }
-              selectedOptionsStyle={{
-                paddingRight: hasCondition ? 48 : 0,
-              }}
-              props={{
-                isClearable: true,
-                filterOption: (option, rawInput) => {
+        <label style={filter.hideLabel && { marginTop: 0 }}>
+          {!filter.hideLabel && t(`project:filters.${filter.id}`, filter.label)}
+          {filter.values.length > 0 && (
+            <div style={{ position: 'relative' }}>
+              <SelectInput
+                inputId={`field_filter_${filter.id}`}
+                instanceId={`field_filter_${filter.id}`}
+                name={`field_filter_${filter.id}`}
+                options={filter.values}
+                value={value}
+                placeholder={t(`project:filters.${filter.placeholder}`, t('search:labels.select'))}
+                onChange={handleInputChange}
+                renderSelectedOption={
+                  typeof filter.vocabulary !== 'undefined' ? renderSelectedOption : undefined
+                }
+                selectedOptionsStyle={{
+                  paddingRight: hasCondition ? 48 : 0,
+                }}
+                isClearable
+                filterOption={(option, rawInput) => {
                   const inputValue = rawInput.toLocaleLowerCase();
                   const { label } = option;
                   const { altLabel } = option.data;
@@ -420,43 +420,43 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
                     label.toLocaleString().toLocaleLowerCase().includes(inputValue) ||
                     altLabel?.toLocaleString().toLocaleLowerCase().includes(inputValue)
                   );
-                },
-                theme: theme?.sidebar?.selectTheme,
-                styles: theme?.sidebar?.selectStyles,
-              }}
-            />
-            {hasCondition && (
-              <a
-                onClick={(ev) => {
-                  ev.preventDefault();
-                  handleInputChange(isConditionSet ? undefined : 'and', {
-                    name: `cond_filter_${filter.id}`,
-                  });
                 }}
-              >
-                <ConditionFilter.Container>
-                  <ConditionFilter>
-                    <div>
-                      <svg
-                        viewBox="0 0 16 16"
-                        focusable="false"
-                        role="img"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
-                        style={{ opacity: isConditionSet ? 1 : 0.5 }}
-                      >
-                        <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z"></path>
-                        <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6H9z"></path>
-                      </svg>
-                    </div>
-                    <span style={{ opacity: isConditionSet ? 1 : 0.5 }}>
-                      {t('common:sidebar.combined')}
-                    </span>
-                  </ConditionFilter>
-                </ConditionFilter.Container>
-              </a>
-            )}
-          </div>
+                theme={theme?.sidebar?.selectTheme}
+                styles={theme?.sidebar?.selectStyles}
+              />
+              {hasCondition && (
+                <a
+                  onClick={(ev) => {
+                    ev.preventDefault();
+                    handleInputChange(isConditionSet ? undefined : 'and', {
+                      name: `cond_filter_${filter.id}`,
+                    });
+                  }}
+                >
+                  <ConditionFilter.Container>
+                    <ConditionFilter>
+                      <div>
+                        <svg
+                          viewBox="0 0 16 16"
+                          focusable="false"
+                          role="img"
+                          fill="currentColor"
+                          xmlns="http://www.w3.org/2000/svg"
+                          style={{ opacity: isConditionSet ? 1 : 0.5 }}
+                        >
+                          <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z"></path>
+                          <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6H9z"></path>
+                        </svg>
+                      </div>
+                      <span style={{ opacity: isConditionSet ? 1 : 0.5 }}>
+                        {t('common:sidebar.combined')}
+                      </span>
+                    </ConditionFilter>
+                  </ConditionFilter.Container>
+                </a>
+              )}
+            </div>
+          )}
         </label>
       </Field>
     );
