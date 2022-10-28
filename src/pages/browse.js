@@ -262,6 +262,7 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
     const newQuery = {
       type: query.type,
       ...fields,
+      sort: query.sort,
     };
 
     Router.push(
