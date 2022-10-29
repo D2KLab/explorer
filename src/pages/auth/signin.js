@@ -1,4 +1,7 @@
+import styled from 'styled-components';
 import { getProviders, getCsrfToken } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -9,11 +12,10 @@ import Element from '@components/Element';
 import PageTitle from '@components/PageTitle';
 import Title from '@components/Title';
 import { ProviderButton } from '@components/ProviderButton';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-function SignInPage({ providers, csrfToken }) {
+function SignInPage({ providers, error: errorType, csrfToken }) {
   const { t } = useTranslation('common');
+
   return (
     <Layout>
       <PageTitle title={t('common:profileButton.signIn')} />
@@ -29,6 +31,11 @@ function SignInPage({ providers, csrfToken }) {
           <Title>{t('common:profileButton.signIn')}</Title>
           <Content>
             <Element display="flex" flexDirection="column">
+              {errorType && (
+                <div>
+                  <p>{t(`common:errors.signin.${errorType}`, t('common:errors.signin.default'))}</p>
+                </div>
+              )}
               {providers &&
                 Object.values(providers).map((provider) => (
                   <Element key={provider.name} marginY={12}>

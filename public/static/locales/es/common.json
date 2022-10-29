@@ -103,7 +103,20 @@
     "listNotFound": "Lista no encontrada",
     "resultNotFound": "Resultado no encontrado",
     "routeNotFound": "Ruta no encontrada",
-    "pageNotFound": "Página no encontrada"
+    "pageNotFound": "Página no encontrada",
+    "signin": {
+      "Signin": "Intenta iniciar sesión con una cuenta diferente.",
+      "OAuthSignin": "Intenta iniciar sesión con una cuenta diferente.",
+      "OAuthCallback": "Intenta iniciar sesión con una cuenta diferente.",
+      "OAuthCreateAccount": "Intenta iniciar sesión con una cuenta diferente.",
+      "EmailCreateAccount": "Intenta iniciar sesión con una cuenta diferente.",
+      "Callback": "Intenta iniciar sesión con otra cuenta.",
+      "OAuthAccountNotLinked": "Para confirmar tu identidad, inicia sesión con la misma cuenta que usaste originalmente.",
+      "EmailSignin": "No se pudo enviar el correo electrónico.",
+      "CredentialsSignin": "Error al iniciar sesión. Verifica que los detalles proporcionados sean correctos.",
+      "SessionRequired": "Inicia sesión para acceder a esta página.",
+      "default": "No se puede iniciar sesión"
+    }
   },
   "home": {
     "title": "Inicio sesión",

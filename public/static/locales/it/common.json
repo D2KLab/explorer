@@ -103,7 +103,20 @@
     "listNotFound": "Lista non trovata",
     "resultNotFound": "Risutlato non trovato",
     "routeNotFound": "Percorso non trovato",
-    "pageNotFound": "Pagina nn trovata"
+    "pageNotFound": "Pagina nn trovata",
+    "signin": {
+      "Signin": "Prova ad accedere con un altro account.",
+      "OAuthSignin": "Prova ad accedere con un altro account.",
+      "OAuthCallback": "Prova ad accedere con un altro account.",
+      "OAuthCreateAccount": "Prova ad accedere con un altro account.",
+      "EmailCreateAccount": "Prova ad accedere con un altro account.",
+      "Callback": "Prova ad accedere con un altro account.",
+      "OAuthAccountNotLinked": "Per confermare la tua identità, accedi con lo stesso account che hai utilizzato in origine.",
+      "EmailSignin": "Impossibile inviare l'e-mail.",
+      "CredentialsSignin": "Accesso non riuscito. Verifica che i dettagli che hai fornito siano corretti.",
+      "SessionRequired": "Accedi per accedere a questa pagina.",
+      "default": "Impossibile accedere."
+    }
   },
   "home": {
     "title": "Home",
