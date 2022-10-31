@@ -499,6 +499,20 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
 
   const route = config.routes[type];
 
+  const buttonsBarButtons = (
+    <>
+      <ClearButton
+        onClick={clearSearch}
+        disabled={Object.values(fields).filter((x) => x).length === 0}
+      >
+        {t('search:buttons.clear')}
+      </ClearButton>
+      <FilterButton type="submit" onClick={doSearch}>
+        {t('search:buttons.filter')}
+      </FilterButton>
+    </>
+  );
+
   return (
     <Container className={className}>
       <form
@@ -508,13 +522,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
           return false;
         }}
       >
-        <ButtonsBar>
-          <ClearButton onClick={clearSearch}>{t('search:buttons.clear')}</ClearButton>
-          <FilterButton type="submit" onClick={doSearch}>
-            {t('search:buttons.filter')}
-          </FilterButton>
-        </ButtonsBar>
-
+        <ButtonsBar>{buttonsBarButtons}</ButtonsBar>
         <Fields>
           {filters
             .filter((filter) => !filter.isOption && filter.isBeforeTextSearch)
@@ -563,12 +571,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
           ) : null}
         </Fields>
 
-        <MobileButtonsBar>
-          <ClearButton onClick={clearSearch}>{t('search:buttons.clear')}</ClearButton>
-          <FilterButton type="submit" onClick={doSearch}>
-            {t('search:buttons.filter')}
-          </FilterButton>
-        </MobileButtonsBar>
+        <MobileButtonsBar>{buttonsBarButtons}</MobileButtonsBar>
       </form>
     </Container>
   );
