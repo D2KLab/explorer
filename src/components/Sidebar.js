@@ -381,7 +381,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
     if (filter.isToggle) {
       const valueIndex = filter.options.findIndex((option) => option.value === value);
       return (
-        <Field key={filter.id}>
+        <Field key={filter.id} style={filter.style}>
           <div style={{ marginTop: filter.hideLabel ? 0 : 24 }}>
             {!filter.hideLabel && t(`project:filters.${filter.id}`, filter.label)}
             <div style={{ position: 'relative' }}>
@@ -406,7 +406,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
     const isConditionSet = fields[`cond_filter_${filter.id}`];
 
     return (
-      <Field key={filter.id}>
+      <Field key={filter.id} style={filter.style}>
         <label style={filter.hideLabel && { marginTop: 0 }}>
           {!filter.hideLabel && t(`project:filters.${filter.id}`, filter.label)}
           {filter.values.length > 0 && (
