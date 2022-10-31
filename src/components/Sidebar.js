@@ -172,7 +172,6 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
   const { t, i18n } = useTranslation(['project', 'search']);
   const [fields, setFields] = useState({});
   const [textValue, setTextValue] = useState('');
-
   const [languages] = useState(
     Object.entries(config.search.languages).map(([langKey, langLabel]) => ({
       label: langLabel,
@@ -185,8 +184,29 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
       label: graphObj.label,
     }))
   );
-
   const isFirstRender = useRef(true);
+
+  const debouncedTextValue = useDebounce(textValue, 1000);
+  useEffect(() => {
+    if (fields.q !== debouncedTextValue) {
+      setFields((prev) => ({
+        ...prev,
+        q: debouncedTextValue,
+      }));
+    }
+  }, [debouncedTextValue]);
+
+  // The [fields] useEffect has to be defined before the [query] useEffect
+  // because the [query] one will affect the fields, which might result in
+  // a race condition where the [fields] useEffect will be called twice and
+  // thus causing rapid refreshes of the data.
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    doSearch();
+  }, [fields]);
 
   useEffect(() => {
     // Generate initial fields
@@ -283,24 +303,6 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
       };
     });
   };
-
-  const debouncedTextValue = useDebounce(textValue, 1000);
-  useEffect(() => {
-    if (fields.q !== debouncedTextValue) {
-      setFields((prev) => ({
-        ...prev,
-        q: debouncedTextValue,
-      }));
-    }
-  }, [debouncedTextValue]);
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    doSearch();
-  }, [fields]);
 
   const handleSwitchChange = (checked, event, id) => {
     setFields((prevFields) => ({
