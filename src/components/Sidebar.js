@@ -21,11 +21,8 @@ const Container = styled.div`
   padding: 16px 32px;
   width: 100%;
 
-  ${breakpoints.mobile`
-    width: 350px;
-  `}
-
   ${breakpoints.weirdMedium`
+    width: 350px;
     min-height: calc(
       100vh - ${({ theme }) =>
         `${theme.header.height} - ${theme.header.borderBottomWidth} - ${theme.footer.minHeight}`}
