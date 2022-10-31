@@ -539,7 +539,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
               {t('project:filters.q', t('search:fields.q'))}
               <StyledInput
                 name="q"
-                type="text"
+                type="search"
                 value={textValue}
                 onChange={(e) => setTextValue(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleInputChange(e)}
