@@ -328,6 +328,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
   };
 
   const clearSearch = () => {
+    setTextValue('');
     setFields({
       q: '',
     });
