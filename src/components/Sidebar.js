@@ -19,9 +19,13 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 16px 32px;
+  width: 100%;
+
+  ${breakpoints.mobile`
+    width: 350px;
+  `}
 
   ${breakpoints.weirdMedium`
-    flex: 0 1 350px;
     min-height: calc(
       100vh - ${({ theme }) =>
         `${theme.header.height} - ${theme.header.borderBottomWidth} - ${theme.footer.minHeight}`}
