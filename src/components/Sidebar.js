@@ -198,6 +198,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
   // a race condition where the [fields] useEffect will be called twice and
   // thus causing rapid refreshes of the data.
   useEffect(() => {
+    setTextValue(fields.q);
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
