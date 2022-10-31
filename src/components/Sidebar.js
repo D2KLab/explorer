@@ -520,7 +520,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
             .map(renderFilter)}
           <Field>
             <label>
-              {t('search:fields.q')}
+              {t('project:filters.q', t('search:fields.q'))}
               <StyledInput
                 name="q"
                 type="text"
