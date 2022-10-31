@@ -515,6 +515,9 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
         </ButtonsBar>
 
         <Fields>
+          {filters
+            .filter((filter) => !filter.isOption && filter.isBeforeTextSearch)
+            .map(renderFilter)}
           <Field>
             <label>
               {t('search:fields.q')}
@@ -526,7 +529,9 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
               />
             </label>
           </Field>
-          {filters.filter((filter) => !filter.isOption).map(renderFilter)}
+          {filters
+            .filter((filter) => !filter.isOption && !filter.isBeforeTextSearch)
+            .map(renderFilter)}
           {route.filterByGraph && (
             <Field>
               <label>
