@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import styled, { useTheme } from 'styled-components';
 import Switch from 'react-switch';
+import { useTranslation } from 'next-i18next';
 
 import Select from '@components/Select';
 import MultiSelect from '@components/MultiSelect';
@@ -8,7 +9,7 @@ import breakpoints from '@styles/breakpoints';
 import Button from '@components/Button';
 import Input from '@components/Input';
 import ToggleSwitch from '@components/ToggleSwitch';
-import { useTranslation } from 'next-i18next';
+import useDebounce from '@helpers/useDebounce';
 import config from '~/config';
 
 const getValue = (opts, val) => opts.find((o) => o.value === val);
@@ -165,6 +166,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
   const theme = useTheme();
   const { t, i18n } = useTranslation(['project', 'search']);
   const [fields, setFields] = useState({});
+  const [textValue, setTextValue] = useState('');
 
   const [languages] = useState(
     Object.entries(config.search.languages).map(([langKey, langLabel]) => ({
@@ -189,6 +191,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
 
     // Text search
     if (typeof query.q !== 'undefined') {
+      setTextValue(query.q);
       initialFields.q = query.q;
     }
 
@@ -275,6 +278,14 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
       };
     });
   };
+
+  const debouncedTextValue = useDebounce(textValue, 1000);
+  useEffect(() => {
+    setFields((prev) => ({
+      ...prev,
+      q: debouncedTextValue,
+    }));
+  }, [debouncedTextValue]);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -503,7 +514,12 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
           <Field>
             <label>
               {t('search:fields.q')}
-              <StyledInput name="q" type="text" value={fields.q} onChange={handleInputChange} />
+              <StyledInput
+                name="q"
+                type="text"
+                value={textValue}
+                onChange={(e) => setTextValue(e.target.value)}
+              />
             </label>
           </Field>
           {filters.filter((filter) => !filter.isOption).map(renderFilter)}
