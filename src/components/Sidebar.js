@@ -50,7 +50,8 @@ const ButtonsBar = styled.div`
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 24px;
-
+  row-gap: 24px;
+  column-gap: 24px;
   ${({ theme }) => theme?.components?.Sidebar?.ButtonsBar};
 `;
 
@@ -65,7 +66,7 @@ const MobileButtonsBar = styled(ButtonsBar)`
 const ClearButton = styled(Button)`
   background-color: #a6a6a6;
   color: #000;
-  flex: 0 1 120px;
+  flex: 1 1 120px;
   justify-content: center;
 
   ${({ theme }) => theme?.components?.Sidebar?.ClearButton};
@@ -74,7 +75,7 @@ const ClearButton = styled(Button)`
 const FilterButton = styled(Button)`
   background-color: ${({ theme }) => theme.colors.primary};
   color: #fff;
-  flex: 0 1 120px;
+  flex: 1 1 120px;
   justify-content: center;
 
   ${({ theme }) => theme?.components?.Sidebar?.FilterButton};
@@ -503,15 +504,19 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
 
   const buttonsBarButtons = (
     <>
-      <ClearButton
-        onClick={clearSearch}
-        disabled={Object.values(fields).filter((x) => x).length === 0}
-      >
-        {t('search:buttons.clear')}
-      </ClearButton>
-      <FilterButton type="submit" onClick={doSearch}>
-        {t('search:buttons.filter')}
-      </FilterButton>
+      {!route.hideClearButton && (
+        <ClearButton
+          onClick={clearSearch}
+          disabled={Object.values(fields).filter((x) => x).length === 0}
+        >
+          {t('search:buttons.clear')}
+        </ClearButton>
+      )}
+      {!route.hideFilterButton && (
+        <FilterButton type="submit" onClick={doSearch}>
+          {t('search:buttons.filter')}
+        </FilterButton>
+      )}
     </>
   );
 
