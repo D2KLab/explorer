@@ -537,6 +537,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
                 type="text"
                 value={textValue}
                 onChange={(e) => setTextValue(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleInputChange(e)}
               />
             </label>
           </Field>
