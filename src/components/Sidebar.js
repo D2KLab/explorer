@@ -285,10 +285,12 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
 
   const debouncedTextValue = useDebounce(textValue, 1000);
   useEffect(() => {
-    setFields((prev) => ({
-      ...prev,
-      q: debouncedTextValue,
-    }));
+    if (fields.q !== debouncedTextValue) {
+      setFields((prev) => ({
+        ...prev,
+        q: debouncedTextValue,
+      }));
+    }
   }, [debouncedTextValue]);
 
   useEffect(() => {
