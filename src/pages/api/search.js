@@ -19,7 +19,7 @@ export const getFilters = async (query, { language }) => {
   // Fetch filters
   for (let i = 0; i < route.filters.length; i += 1) {
     const filter = route.filters[i];
-    let filterValues = [];
+    let filterValues = Array.isArray(filter.values) ? filter.values : [];
 
     let filterQuery = null;
     if (filter.query) {
@@ -38,22 +38,24 @@ export const getFilters = async (query, { language }) => {
         params: config.api.params,
       });
       if (resQuery) {
-        filterValues = resQuery['@graph'].map((row) => {
-          const value = row['@id']['@value'] || row['@id'];
-          const label = []
-            .concat(row.label ? row.label['@value'] || row.label : value)
-            .filter((x) => x)
-            .join(', ');
-          const altLabel = []
-            .concat(row.altLabel ? row.altLabel['@value'] || row.altLabel : null)
-            .filter((x) => x)
-            .join(', ');
-          return {
-            label,
-            value,
-            altLabel,
-          };
-        });
+        filterValues.push(
+          ...resQuery['@graph'].map((row) => {
+            const value = row['@id']['@value'] || row['@id'];
+            const label = []
+              .concat(row.label ? row.label['@value'] || row.label : value)
+              .filter((x) => x)
+              .join(', ');
+            const altLabel = []
+              .concat(row.altLabel ? row.altLabel['@value'] || row.altLabel : null)
+              .filter((x) => x)
+              .join(', ');
+            return {
+              label,
+              value,
+              altLabel,
+            };
+          })
+        );
 
         // Sort values by label
         filterValues.sort(

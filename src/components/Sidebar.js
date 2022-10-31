@@ -383,7 +383,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
     }
 
     if (filter.isToggle) {
-      const valueIndex = filter.options.findIndex((option) => option.value === value);
+      const valueIndex = filter.values.findIndex((option) => option.value === value);
       return (
         <Field key={filter.id} style={filter.style}>
           <div style={{ marginTop: filter.hideLabel ? 0 : 24 }}>
@@ -391,9 +391,9 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
             <div style={{ position: 'relative' }}>
               <ToggleSwitch
                 name={`field_filter_${filter.id}`}
-                options={filter.options}
+                options={filter.values}
                 defaultOption={
-                  filter.options[valueIndex > -1 ? valueIndex : filter.defaultOption ?? 0]
+                  filter.values[valueIndex > -1 ? valueIndex : filter.defaultOption ?? 0]
                 }
                 onChange={handleInputChange}
               />
