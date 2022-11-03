@@ -139,13 +139,23 @@ const getExtraFromFilters = (query, filters) => {
           });
         } else if (filterCondition === 'or') {
           if (typeof filter.whereFunc === 'function') {
+            const unionWhere = [];
             values.forEach((value, i) => {
-              extraWhere.push(...[].concat(filter.whereFunc(value, 0)).filter((x) => x));
+              unionWhere.push(`{
+                ${[]
+                  .concat(filter.whereFunc(value, i))
+                  .filter((x) => x)
+                  .join(' .')}
+              }`);
+              if (i < values.length - 1) {
+                unionWhere.push('UNION');
+              }
             });
+            extraWhere.push(unionWhere.join('\n'));
           }
 
           if (typeof filter.filterFunc === 'function') {
-            const filterRet = values.map((value) => filter.filterFunc(value, 0));
+            const filterRet = values.map((value, i) => filter.filterFunc(value, i));
             if (Array.isArray(filterRet)) {
               extraFilter.push(`(${filterRet.join(' || ')})`);
             } else {
