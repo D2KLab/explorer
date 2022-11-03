@@ -9,23 +9,36 @@ export default withRequestValidation({
 
   // Check if imaginary is configured
   const imaginaryEndpoint = process.env.IMAGINARY_URL;
-  if (typeof imaginaryEndpoint !== 'undefined') {
-    const urlParts = [];
-    if (typeof url !== 'undefined') {
-      urlParts.push(`url=${encodeURIComponent(url)}`);
-    }
-    if (typeof width !== 'undefined') {
-      urlParts.push(`width=${encodeURIComponent(width)}`);
-    }
-    if (typeof height !== 'undefined') {
-      urlParts.push(`height=${encodeURIComponent(height)}`);
-    }
-    const type =
-      typeof width !== 'undefined' && typeof height !== 'undefined' ? 'enlarge' : 'resize';
-    requestUrl = `${imaginaryEndpoint}/${type}${
-      urlParts.length > 0 ? `?${urlParts.join('&')}` : ''
-    }`;
+  if (typeof imaginaryEndpoint === 'undefined') {
+    return url;
   }
+
+  const sizeParams = {};
+  if (typeof width !== 'undefined') {
+    sizeParams.width = width;
+  }
+  if (typeof height !== 'undefined') {
+    sizeParams.height = height;
+  }
+
+  const type = typeof width !== 'undefined' && typeof height !== 'undefined' ? 'enlarge' : 'resize';
+
+  const operations = [
+    {
+      operation: type,
+      params: sizeParams,
+    },
+    {
+      operation: 'convert',
+      params: {
+        type: 'webp',
+      },
+    },
+  ];
+
+  requestUrl = `${imaginaryEndpoint}/pipeline?url=${encodeURIComponent(
+    url
+  )}&operations=${encodeURIComponent(JSON.stringify(operations))}`;
 
   // Fetch and return image
   const fetchRes = await fetch(requestUrl);
