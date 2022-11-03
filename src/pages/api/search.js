@@ -86,6 +86,80 @@ const conditions = {
   or: ' || ',
 };
 
+const getExtraFromFilters = (query, filters) => {
+  const extraWhere = [];
+  const extraFilter = [];
+
+  // Props filter
+  for (let i = 0; i < filters.length; i += 1) {
+    const filter = filters[i];
+    if (filter.id) {
+      let val = filter.defaultValue;
+      if (query[`field_filter_${filter.id}`]) {
+        if (filter.isOption) {
+          // Since options are checkboxes, get either 1 for true or 0 for false
+          val = parseInt(query[`field_filter_${filter.id}`], 10) === 1;
+          // Unset the value so we don't trigger whereFunc/filterFunc
+          if (val === false) {
+            val = undefined;
+          }
+        } else if (filter.isMulti) {
+          // Make sure that the value is an array when isMulti is set
+          val = !Array.isArray(query[`field_filter_${filter.id}`])
+            ? [query[`field_filter_${filter.id}`]]
+            : query[`field_filter_${filter.id}`];
+        } else {
+          val = query[`field_filter_${filter.id}`];
+        }
+      }
+
+      if (typeof val !== 'undefined') {
+        let filterCondition =
+          filter.condition === 'user-defined'
+            ? query[`cond_filter_${filter.id}`]
+            : filter.condition;
+        if (!Object.keys(conditions).includes(filterCondition)) {
+          filterCondition = 'or';
+        }
+
+        const values = [].concat(val).filter((x) => x);
+
+        if (filterCondition === 'and') {
+          // AND condition is a little bit more complicated to handle
+          // We have to combine whereFunc and the content of filterFunc together
+          values.forEach((value, i) => {
+            const filterRet = filter.filterFunc(value, i);
+            extraWhere.push(`{
+              ${[]
+                .concat(filter.whereFunc(value, i))
+                .filter((x) => x)
+                .join(' . ')}
+              ${filterRet ? `FILTER(${filterRet})` : ''}
+            }`);
+          });
+        } else if (filterCondition === 'or') {
+          if (typeof filter.whereFunc === 'function') {
+            values.forEach((value, i) => {
+              extraWhere.push(...[].concat(filter.whereFunc(value, 0)).filter((x) => x));
+            });
+          }
+
+          if (typeof filter.filterFunc === 'function') {
+            const filterRet = values.map((value) => filter.filterFunc(value, 0));
+            if (Array.isArray(filterRet)) {
+              extraFilter.push(`(${filterRet.join(' || ')})`);
+            } else {
+              extraFilter.push(filterRet);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return { extraWhere, extraFilter };
+};
+
 export const search = async (query, language) => {
   const results = [];
   let debugSparqlQuery = null;
@@ -94,77 +168,8 @@ export const search = async (query, language) => {
   const route = config.routes[query.type];
   if (route) {
     const baseWhere = route.baseWhere || [];
-    const extraWhere = [];
-    const extraFilter = [];
-
-    if (Array.isArray(route.filters)) {
-      // Props filter
-      for (let i = 0; i < route.filters.length; i += 1) {
-        const filter = route.filters[i];
-        if (filter.id) {
-          let val = filter.defaultValue;
-          if (query[`field_filter_${filter.id}`]) {
-            if (filter.isOption) {
-              // Since options are checkboxes, get either 1 for true or 0 for false
-              val = parseInt(query[`field_filter_${filter.id}`], 10) === 1;
-              // Unset the value so we don't trigger whereFunc/filterFunc
-              if (val === false) {
-                val = undefined;
-              }
-            } else if (filter.isMulti) {
-              // Make sure that the value is an array when isMulti is set
-              val = !Array.isArray(query[`field_filter_${filter.id}`])
-                ? [query[`field_filter_${filter.id}`]]
-                : query[`field_filter_${filter.id}`];
-            } else {
-              val = query[`field_filter_${filter.id}`];
-            }
-          }
-
-          if (typeof val !== 'undefined') {
-            let filterCondition =
-              filter.condition === 'user-defined'
-                ? query[`cond_filter_${filter.id}`]
-                : filter.condition;
-            if (!Object.keys(conditions).includes(filterCondition)) {
-              filterCondition = 'or';
-            }
-
-            const values = [].concat(val).filter((x) => x);
-
-            if (filterCondition === 'and') {
-              // AND condition is a little bit more complicated to handle
-              // We have to combine whereFunc and the content of filterFunc together
-              values.forEach((value, i) => {
-                const filterRet = filter.filterFunc(value, i);
-                extraWhere.push(`{
-                  ${[]
-                    .concat(filter.whereFunc(value, i))
-                    .filter((x) => x)
-                    .join(' . ')}
-                  ${filterRet ? `FILTER(${filterRet})` : ''}
-                }`);
-              });
-            } else if (filterCondition === 'or') {
-              if (typeof filter.whereFunc === 'function') {
-                values.forEach((value, i) => {
-                  extraWhere.push(...[].concat(filter.whereFunc(value, 0)).filter((x) => x));
-                });
-              }
-
-              if (typeof filter.filterFunc === 'function') {
-                const filterRet = values.map((value) => filter.filterFunc(value, 0));
-                if (Array.isArray(filterRet)) {
-                  extraFilter.push(`(${filterRet.join(' || ')})`);
-                } else {
-                  extraFilter.push(filterRet);
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+    const filters = route.filters || [];
+    const { extraWhere, extraFilter } = getExtraFromFilters(query, filters);
 
     // Text search
     const textSearchWhere = [];
@@ -231,7 +236,7 @@ export const search = async (query, language) => {
     let orderByDirection = 'ASC';
     if (query.sort) {
       const [sortVariable, sortDirection] = query.sort.split('|');
-      const sortFilter = (route.filters || []).find((filter) => filter.id === sortVariable);
+      const sortFilter = filters.find((filter) => filter.id === sortVariable);
       if (sortFilter && typeof sortFilter.whereFunc === 'function') {
         extraWhere.push(
           `OPTIONAL { ${[]
