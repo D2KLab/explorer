@@ -9,7 +9,7 @@ import { useTranslation } from 'next-i18next';
  */
 
 export const StyledBurger = styled.button`
-  position: absolute;
+  position: ${({ open }) => (open ? 'fixed' : 'absolute')};
   top: 0;
   left: 0;
   flex-direction: column;

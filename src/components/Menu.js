@@ -51,6 +51,12 @@ export const StyledMenu = styled.nav`
   }
 `;
 
+const Items = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-top: 2rem;
+`;
+
 const StyledLanguageSwitch = styled(LanguageSwitch)`
   align-self: flex-end;
   font-weight: 700;
@@ -65,13 +71,15 @@ function Menu({ className, open, ...props }) {
   return (
     <StyledMenu className={className} open={open} aria-hidden={!isHidden} {...props}>
       <StyledLanguageSwitch />
-      {Object.keys(config.routes).flatMap((routeName) => (
-        <Link key={routeName} href={`/${routeName}`} passHref>
-          <a tabIndex={tabIndex}>
-            {t(`routes.${routeName}`, routeName.substr(0, 1).toUpperCase() + routeName.substr(1))}
-          </a>
-        </Link>
-      ))}
+      <Items>
+        {Object.keys(config.routes).flatMap((routeName) => (
+          <Link key={routeName} href={`/${routeName}`} passHref>
+            <a tabIndex={tabIndex}>
+              {t(`routes.${routeName}`, routeName.substr(0, 1).toUpperCase() + routeName.substr(1))}
+            </a>
+          </Link>
+        ))}
+      </Items>
     </StyledMenu>
   );
 }
