@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
-import { getProviders, getCsrfToken, signout } from 'next-auth/react';
+import { getProviders, getCsrfToken, signOut } from 'next-auth/react';
 import NextLink from 'next/link';
 import Router from 'next/router';
 import { ShareAlt as ShareIcon } from '@styled-icons/boxicons-solid/ShareAlt';
@@ -145,7 +145,7 @@ function ProfilePage({ session, providers, csrfToken, accounts, lists, baseUrl, 
     await fetch(`/api/profile`, {
       method: 'DELETE',
     });
-    signout();
+    signOut();
   };
 
   const unlinkAccount = async (account) => {
