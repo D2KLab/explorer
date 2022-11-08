@@ -234,7 +234,6 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
   const downloadMenu = useMenuState();
   const similarityMenu = useMenuState();
   const virtualLoomMenu = useMenuState();
-  const [isItemSaved, setIsItemSaved] = useState(inList);
   const [lightboxIsOpen, setLightboxIsOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
@@ -401,8 +400,8 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
       </Element>
     );
 
-  const onItemSaveChange = (status) => {
-    setIsItemSaved(status);
+  const onItemSaveChange = () => {
+    router.replace(router.asPath);
   };
 
   const showLightbox = (index) => {
@@ -466,7 +465,7 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
                     <SaveButton
                       type={query.type}
                       item={result}
-                      saved={isItemSaved}
+                      saved={inList}
                       onChange={onItemSaveChange}
                     />
                   )}
@@ -531,7 +530,7 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
                   <SaveButton
                     type={query.type}
                     item={result}
-                    saved={isItemSaved}
+                    saved={inList}
                     onChange={onItemSaveChange}
                   />
                 )}

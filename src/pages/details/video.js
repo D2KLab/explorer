@@ -311,7 +311,6 @@ function VideoDetailsPage({
   const { t, i18n } = useTranslation(['common', 'project']);
   const { data: session } = useSession();
   const { query } = useRouter();
-  const [isItemSaved, setIsItemSaved] = useState(inList);
   const [faceRectangles, setFaceRectangles] = useState([]);
   const tab = useTabState();
   const $videoPlayer = useRef(null);
@@ -350,8 +349,8 @@ function VideoDetailsPage({
 
   const label = getEntityMainLabel(result, { route, language: i18n.language });
 
-  const onItemSaveChange = (status) => {
-    setIsItemSaved(status);
+  const onItemSaveChange = () => {
+    router.replace(router.asPath);
   };
 
   const seekVideoTo = (seconds) => {
@@ -533,12 +532,7 @@ function VideoDetailsPage({
         </small>
       )}
       {session && (
-        <SaveButton
-          type={query.type}
-          item={result}
-          saved={isItemSaved}
-          onChange={onItemSaveChange}
-        />
+        <SaveButton type={query.type} item={result} saved={inList} onChange={onItemSaveChange} />
       )}
     </Element>
   );

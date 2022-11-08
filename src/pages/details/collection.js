@@ -72,9 +72,7 @@ const Description = styled.div`
 function CollectionDetailsPage({ result, inList, debugSparqlQuery }) {
   const { t, i18n } = useTranslation(['common', 'project']);
   const { data: session } = useSession();
-
   const { query } = useRouter();
-  const [isItemSaved, setIsItemSaved] = useState(inList);
 
   if (!result) {
     return <DefaultErrorPage statusCode={404} title={t('common:errors.resultNotFound')} />;
@@ -99,8 +97,8 @@ function CollectionDetailsPage({ result, inList, debugSparqlQuery }) {
         (x) => x && (typeof x !== 'object' || x.constructor !== Object || Object.keys(x).length > 0)
       );
 
-  const onItemSaveChange = (status) => {
-    setIsItemSaved(status);
+  const onItemSaveChange = () => {
+    router.replace(router.asPath);
   };
 
   return (
@@ -144,7 +142,7 @@ function CollectionDetailsPage({ result, inList, debugSparqlQuery }) {
                   <SaveButton
                     type={query.type}
                     item={result}
-                    saved={isItemSaved}
+                    saved={inList}
                     onChange={onItemSaveChange}
                   />
                 )}
