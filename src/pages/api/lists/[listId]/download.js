@@ -100,9 +100,14 @@ export default withRequestValidation({
 
       if (entity && entity.result) {
         const { result } = entity;
-        const resultFolder = `${result.label.replace(/\//, '-')}-${uriToId(result['@id'], {
-          base: route.uriBase,
-        })}`;
+        const resultFolder = [
+          result.label?.replace(/\//, '-'),
+          uriToId(result['@id'], {
+            base: route.uriBase,
+          }),
+        ]
+          .filter((x) => x)
+          .join('-');
 
         results.push(result);
 
