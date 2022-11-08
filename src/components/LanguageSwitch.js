@@ -76,6 +76,7 @@ function LanguageSwitch({ className }) {
             key={langKey}
             onClick={() => {
               menu.hide();
+              document.cookie = `NEXT_LOCALE=${langKey}; max-age=31536000; path=/`;
               router.push(router.asPath, undefined, { locale: langKey });
             }}
           >
