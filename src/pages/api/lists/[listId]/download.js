@@ -100,7 +100,7 @@ export default withRequestValidation({
 
       if (entity && entity.result) {
         const { result } = entity;
-        const resultFolder = [
+        const resultBaseName = [
           result.label?.replace(/\//, '-'),
           uriToId(result['@id'], {
             base: route.uriBase,
@@ -117,7 +117,11 @@ export default withRequestValidation({
             const imageBuffer = await downloadImageAsBuffer(result.representation[j].image);
             if (imageBuffer) {
               zip.addFile(
-                path.join(listFolder, resultFolder, path.basename(result.representation[j].image)),
+                path.join(
+                  listFolder,
+                  resultBaseName,
+                  path.basename(result.representation[j].image)
+                ),
                 imageBuffer
               );
             }
@@ -130,7 +134,7 @@ export default withRequestValidation({
             const imageBuffer = await downloadImageAsBuffer(result.image[j]);
             if (imageBuffer) {
               zip.addFile(
-                path.join(listFolder, resultFolder, path.basename(result.image[j])),
+                path.join(listFolder, resultBaseName, path.basename(result.image[j])),
                 imageBuffer
               );
             }
@@ -143,14 +147,14 @@ export default withRequestValidation({
         flatResults.push(flatResult);
         const csv = json2csv.parse(flatResult, { header: true, fields: Object.keys(flatResult) });
         zip.addFile(
-          path.join(listFolder, resultFolder, `${result.identifier}.csv`),
+          path.join(listFolder, resultBaseName, `${resultBaseName}.csv`),
           Buffer.alloc(csv.length, csv)
         );
 
         // Add JSON metadata to the Zip
         const content = JSON.stringify(result, null, 2);
         zip.addFile(
-          path.join(listFolder, resultFolder, `${result.identifier}.json`),
+          path.join(listFolder, resultBaseName, `${resultBaseName}.json`),
           Buffer.alloc(content.length, content)
         );
       }
