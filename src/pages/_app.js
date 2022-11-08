@@ -11,7 +11,6 @@ import { NProgressStyle } from '@components/NProgress';
 import ConsentPopup from '@components/ConsentPopup';
 import RRWebRecorder from '@components/RRWebRecorder';
 import GoogleAnalytics from '@components/GoogleAnalytics';
-import { AppProvider } from '@helpers/context';
 import theme from '~/theme';
 import config from '~/config';
 
@@ -42,9 +41,7 @@ function MyApp({ Component, pageProps }) {
       {config.plugins?.consent?.show && Cookies.get('consent') === '1' && <RRWebRecorder />}
       <GoogleAnalytics />
       <SessionProvider session={session} site={process.env.SITE} refetchInterval={5 * 60}>
-        <AppProvider>
-          <Component {...pageProps} />
-        </AppProvider>
+        <Component {...pageProps} />
       </SessionProvider>
     </ThemeProvider>
   );

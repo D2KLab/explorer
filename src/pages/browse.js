@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, useRef, Fragment } from 'react';
+import { useState, useEffect, useRef, Fragment } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
@@ -28,7 +28,6 @@ import ScrollDetector from '@components/ScrollDetector';
 import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import useDebounce from '@helpers/useDebounce';
 import useOnScreen from '@helpers/useOnScreen';
-import AppContext from '@helpers/context';
 import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
 import { search, getFilters } from '@pages/api/search';
 import breakpoints, { sizes } from '@styles/breakpoints';
@@ -175,7 +174,6 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [currentPage, setCurrentPage] = useState(parseInt(query.page, 10) || 1);
   const mapRef = useRef(null);
-  const { setSearchData, setSearchQuery, setSearchPath } = useContext(AppContext);
   const [isPageLoading, setIsPageLoading] = useState(false);
 
   // Save the initial query to prevent re-rendering the map
@@ -418,12 +416,6 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
             onClick={() => {
               // Make sure the page number is correct if it hasn't been updated yet
               onScrollToPage(pageNumber);
-              setSearchQuery({
-                ...query,
-                page: pageNumber,
-              });
-              setSearchPath(query.type);
-              setSearchData(data[0]);
             }}
           >
             <Media
