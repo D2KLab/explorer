@@ -90,6 +90,14 @@ function SaveButton({ item, type, saved, onChange }) {
   const [listFormVisible, setListFormVisible] = useState(false);
   const dialog = useDialogState();
 
+  const triggerOnChange = () => {
+    if (typeof onChange === 'function') {
+      onChange(
+        lists.some((list) => list.items.some((it) => it.uri === item['@id'] && it.type === type))
+      );
+    }
+  };
+
   const loadLists = async () => {
     setLoading(true);
 
@@ -103,13 +111,7 @@ function SaveButton({ item, type, saved, onChange }) {
       setListFormVisible(loadedLists.length === 0);
     }
 
-    if (typeof onChange === 'function') {
-      onChange(
-        loadedLists.some((list) =>
-          list.items.some((it) => it.uri === item['@id'] && it.type === type)
-        )
-      );
-    }
+    return loadedLists;
   };
 
   const addToList = async (list) => {
@@ -121,6 +123,7 @@ function SaveButton({ item, type, saved, onChange }) {
       }),
     });
     await loadLists();
+    triggerOnChange();
   };
 
   const removeFromList = async (list) => {
@@ -132,6 +135,7 @@ function SaveButton({ item, type, saved, onChange }) {
       }),
     });
     await loadLists();
+    triggerOnChange();
   };
 
   const createListWithItem = async () => {
