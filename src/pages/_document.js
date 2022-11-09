@@ -40,7 +40,9 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Lato:300,400,700,800&display=optional"
           />
-          {/* Global site tag (gtag.js) - Google Analytics */}
+          {Array.isArray(config?.head?.styles) &&
+            config.head.styles.map((style) => <link key={style} rel="stylesheet" href={style} />)}
+          ¨{/* Global site tag (gtag.js) - Google Analytics */}
           {typeof config.analytics?.id !== 'undefined' && (
             <>
               <script
