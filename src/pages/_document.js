@@ -42,7 +42,7 @@ export default class MyDocument extends Document {
           />
           {Array.isArray(config?.head?.styles) &&
             config.head.styles.map((style) => <link key={style} rel="stylesheet" href={style} />)}
-          ¨{/* Global site tag (gtag.js) - Google Analytics */}
+          {/* Global site tag (gtag.js) - Google Analytics */}
           {typeof config.analytics?.id !== 'undefined' && (
             <>
               <script
