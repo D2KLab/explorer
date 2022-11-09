@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import queryString from 'query-string';
+import { useTranslation, Trans } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { unstable_getServerSession } from 'next-auth';
 
+import { authOptions } from '@pages/api/auth/[...nextauth]';
 import Header from '@components/Header';
 import Footer from '@components/Footer';
 import Layout from '@components/Layout';
@@ -18,11 +22,7 @@ import { Navbar, NavItem } from '@components/Navbar';
 import { absoluteUrl, uriToId, generateMediaUrl, slugify } from '@helpers/utils';
 import { getSessionUser, getListById } from '@helpers/database';
 import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
-import { useTranslation, Trans } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import config from '~/config';
-import { authOptions } from '@pages/api/auth/[...nextauth]';
-import { unstable_getServerSession } from 'next-auth';
 
 const StyledMedia = styled(Media)`
   margin-left: var(--card-margin);
