@@ -230,7 +230,7 @@ function VocabularyPage({ results, featured, debugSparqlQuery }) {
     const filter = (withRoute.filters || []).find((f) => f.id && f.id === withConfig.filter);
     if (filter) {
       const val = filter.isMulti ? [item['@id']] : item['@id'];
-      withQuery[`field_filter_${filter.id}`] = val;
+      withQuery[`filter_${filter.id}`] = val;
     } else {
       withQuery[withConfig.filter] = item.label;
     }

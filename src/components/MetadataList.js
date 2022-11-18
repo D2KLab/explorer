@@ -31,7 +31,7 @@ function generateValue(currentRouteName, currentRoute, metadata, metaName, metaI
     if (route) {
       url = `/${routeName}/${encodeURI(uriToId(metaId, { base: route.uriBase }))}`;
     } else if (filter) {
-      url = `/${currentRouteName}?field_filter_${metaName}=${encodeURIComponent(metaId)}`;
+      url = `/${currentRouteName}?filter_${metaName}=${encodeURIComponent(metaId)}`;
       if (filter.hasSkosmosDefinition) {
         skosmosUri = metaId;
       }

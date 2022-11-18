@@ -224,11 +224,11 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
     }
 
     // Languages
-    if (initialFields.field_languages) {
-      initialFields.field_languages = Array.isArray(initialFields.field_languages)
-        ? initialFields.field_languages
-        : [initialFields.field_languages];
-      initialFields.field_languages = initialFields.field_languages
+    if (initialFields.languages) {
+      initialFields.languages = Array.isArray(initialFields.languages)
+        ? initialFields.languages
+        : [initialFields.languages];
+      initialFields.languages = initialFields.languages
         .map((val) => getValue(languages, val))
         .filter((v) => v);
     }
@@ -237,16 +237,16 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
     filters.forEach((filter) => {
       if (typeof filter.defaultValue !== 'undefined' && filter.defaultValue !== null) {
         if (typeof filter.defaultValue === 'boolean') {
-          initialFields[`field_filter_${filter.id}`] = filter.defaultValue ? 1 : 0;
+          initialFields[`filter_${filter.id}`] = filter.defaultValue ? 1 : 0;
         } else {
-          initialFields[`field_filter_${filter.id}`] = filter.defaultValue;
+          initialFields[`filter_${filter.id}`] = filter.defaultValue;
         }
       }
     });
 
     // Props Filters
     Object.keys(query).forEach((key) => {
-      const filter = filters.find((f) => key === `field_filter_${f.id}`);
+      const filter = filters.find((f) => key === `filter_${f.id}`);
       if (filter) {
         if (filter.isMulti) {
           initialFields[key] = Array.isArray(query[key]) ? query[key] : [query[key]];
@@ -292,8 +292,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
     setFields((prevFields) => {
       // If field has multiple values but not enough for condition, remove condition
       if (Array.isArray(fieldValue) && fieldValue.length < 2) {
-        const filterId = fieldName.substr('field_'.length);
-        delete prevFields[`cond_${filterId}`];
+        delete prevFields[`cond_${fieldName}`];
       }
       return {
         ...prevFields,
@@ -358,7 +357,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
   );
 
   const renderFilter = (filter) => {
-    const field = fields[`field_filter_${filter.id}`];
+    const field = fields[`filter_${filter.id}`];
 
     let value = null;
     if (filter.isMulti || filter.isToggle) {
@@ -390,7 +389,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
             {!filter.hideLabel && t(`project:filters.${filter.id}`, filter.label)}
             <div style={{ position: 'relative' }}>
               <ToggleSwitch
-                name={`field_filter_${filter.id}`}
+                name={`filter_${filter.id}`}
                 options={filter.values}
                 defaultOption={
                   filter.values[valueIndex > -1 ? valueIndex : filter.defaultOption ?? 0]
@@ -406,7 +405,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
     const SelectInput = filter.isMulti ? MultiSelect : Select;
 
     const hasCondition =
-      filter.condition === 'user-defined' && fields[`field_filter_${filter.id}`]?.length > 1;
+      filter.condition === 'user-defined' && fields[`filter_${filter.id}`]?.length > 1;
     const isConditionSet = fields[`cond_filter_${filter.id}`];
 
     return (
@@ -416,9 +415,9 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
           {filter.values.length > 0 && (
             <div style={{ position: 'relative' }}>
               <SelectInput
-                inputId={`field_filter_${filter.id}`}
-                instanceId={`field_filter_${filter.id}`}
-                name={`field_filter_${filter.id}`}
+                inputId={`filter_${filter.id}`}
+                instanceId={`filter_${filter.id}`}
+                name={`filter_${filter.id}`}
                 options={filter.values}
                 value={value}
                 placeholder={t(`project:filters.${filter.placeholder}`, t('search:labels.select'))}
@@ -485,7 +484,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
       <span>{t(`project:filters.${filter.id}`, filter.label)}</span>
       <StyledSwitch
         onChange={handleSwitchChange}
-        checked={!!fields[`field_filter_${filter.id}`]}
+        checked={!!fields[`filter_${filter.id}`]}
         onColor={theme.colors.light}
         offHandleColor="#f0f0f0"
         onHandleColor={theme.colors.primary}

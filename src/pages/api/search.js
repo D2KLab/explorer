@@ -95,21 +95,21 @@ const getExtraFromFilters = (query, filters) => {
     const filter = filters[i];
     if (filter.id) {
       let val = filter.defaultValue;
-      if (query[`field_filter_${filter.id}`]) {
+      if (query[`filter_${filter.id}`]) {
         if (filter.isOption) {
           // Since options are checkboxes, get either 1 for true or 0 for false
-          val = parseInt(query[`field_filter_${filter.id}`], 10) === 1;
+          val = parseInt(query[`filter_${filter.id}`], 10) === 1;
           // Unset the value so we don't trigger whereFunc/filterFunc
           if (val === false) {
             val = undefined;
           }
         } else if (filter.isMulti) {
           // Make sure that the value is an array when isMulti is set
-          val = !Array.isArray(query[`field_filter_${filter.id}`])
-            ? [query[`field_filter_${filter.id}`]]
-            : query[`field_filter_${filter.id}`];
+          val = !Array.isArray(query[`filter_${filter.id}`])
+            ? [query[`filter_${filter.id}`]]
+            : query[`filter_${filter.id}`];
         } else {
-          val = query[`field_filter_${filter.id}`];
+          val = query[`filter_${filter.id}`];
         }
       }
 
@@ -202,14 +202,14 @@ export const search = async (query, language) => {
     }
 
     // Languages
-    if (query.field_languages) {
+    if (query.languages) {
       const labelProp =
         typeof route.labelProp === 'string'
           ? route.labelProp
           : 'http://www.w3.org/2000/01/rdf-schema#label';
       extraWhere.push(`?id <${labelProp}> ?label`);
       extraFilter.push(
-        query.field_languages.map((lang) => `LANGMATCHES(LANG(?label), "${lang}")`).join(' || ')
+        query.languages.map((lang) => `LANGMATCHES(LANG(?label), "${lang}")`).join(' || ')
       );
     }
 
