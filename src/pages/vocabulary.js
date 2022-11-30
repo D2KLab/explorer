@@ -292,19 +292,19 @@ function VocabularyPage({ results, featured, debugSparqlQuery }) {
 
   const renderedResults = results.map(renderResult);
 
+  const vocabularyLabel = t(
+    `project:routes.${query.type}`,
+    query.type.substr(0, 1).toUpperCase() + query.type.substr(1)
+  );
+
   return (
     <Layout>
-      <PageTitle title={`${t('common:vocabulary.title')} ${query.type}`} />
+      <PageTitle title={vocabularyLabel} />
       <Header />
       <Body>
         <Hero image={`/images/pages/${query.type}.jpg`}>
           <VocabularyTitle>
-            <h1>
-              {t(
-                `project:routes.${query.type}`,
-                query.type.substr(0, 1).toUpperCase() + query.type.substr(1)
-              )}
-            </h1>
+            <h1>{vocabularyLabel}</h1>
             {config.plugins.skosmos && route.skosmos && route.skosmos.uri && (
               <a
                 href={`${config.plugins.skosmos.baseUrl}${encodeURIComponent(route.skosmos.uri)}`}
