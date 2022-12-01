@@ -371,7 +371,7 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
     params.append('type', 'object');
     params.append('similarity_type', similarity);
     params.append('similarity_entity', uriToId(result['@id'], { base: route.uriBase }));
-    router.push(`/browse?${params.toString()}`);
+    router.push(`/${config.search.route}?${params.toString()}`);
   };
 
   const customRenderThumb = (children) =>

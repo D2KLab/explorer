@@ -3,9 +3,9 @@ import { search } from '@pages/api/search';
 import config from '~/config';
 
 export default withRequestValidation({
-  allowedMethods: ['POST'],
+  allowedMethods: ['GET'],
 })(async (req, res) => {
-  const { q } = req.body;
+  const { q } = req.query;
   const { query } = req;
 
   const results = await search(

@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import Router from 'next/router';
 import { Button as ReakitButton } from 'ariakit';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
-
-import SearchInput from '@components/SearchInput';
 import { useTranslation } from 'next-i18next';
 
-const Form = styled.div`
+import SearchInput from '@components/SearchInput';
+import config from '~/config';
+
+const Form = styled.form`
   display: flex;
   border-bottom: 1px solid #dcdcdc;
   padding-bottom: 0.25em;
@@ -36,16 +36,10 @@ const SearchIcon = styled(SearchAlt2)`
   height: 24px;
 `;
 
-const handleSubmit = (event) => {
-  const searchInput = event.target.elements.q;
-  Router.pushRoute('search', { q: searchInput.value });
-  event.preventDefault();
-};
-
-function SearchBox({ className, placeholder = 'Search', onSubmit = handleSubmit }) {
+function SearchBox({ className, placeholder = 'Search' }) {
   const { t } = useTranslation('common');
   return (
-    <Form className={className} action="/browse" method="POST" onSubmit={onSubmit}>
+    <Form className={className} action={`/${config.search.route}`} method="GET">
       <SearchButton aria-label={t('buttons.search')} type="submit">
         <SearchIcon />
       </SearchButton>

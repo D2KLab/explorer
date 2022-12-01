@@ -304,7 +304,7 @@ function HomePage() {
             'semantic_uris',
             semanticUris.map((uri) => uriToId(uri, { base: route.uriBase }))
           );
-          router.push(`/browse?${params.toString()}`);
+          router.push(`/${config.search.route}?${params.toString()}`);
         }
       };
       xhr.onreadystatechange = () => {
@@ -360,7 +360,7 @@ function HomePage() {
             {config.home.hero.showLogo && <Logo />}
           </HeroTop>
           <HeroMiddle>
-            <SearchForm method="GET" action="/browse">
+            <SearchForm method="GET" action={`/${config.search.route}`}>
               <input type="hidden" name="type" value={config.search.route} />
               {config.search.allowTextSearch ? (
                 <>

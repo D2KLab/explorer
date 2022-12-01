@@ -110,15 +110,12 @@ function SearchInput({ className, placeholder, ariaLabel = 'Search input', ...pr
     setIsLoading(true);
 
     const response = await (
-      await fetch(`/api/autocomplete?${queryString.stringify({ hl: i18n.language })}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      await fetch(
+        `/api/autocomplete?${new URLSearchParams({
+          hl: i18n.language,
           q: value,
-        }),
-      })
+        })}`
+      )
     ).json();
 
     setIsLoading(false);
@@ -189,6 +186,11 @@ function SearchInput({ className, placeholder, ariaLabel = 'Search input', ...pr
     if (route) {
       Router.push({
         pathname: `/${routeName}/${encodeURI(uriToId(suggestion['@id'], { base: route.uriBase }))}`,
+        query: {
+          q: inputValue,
+          sapi: '/api/autocomplete',
+          spath: `/${routeName}`,
+        },
       });
     } else {
       console.warn('Route not found:', routeName, 'for suggestion type:', suggestion['@type']);
