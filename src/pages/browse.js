@@ -260,14 +260,14 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
     }
 
     const newQuery = {
-      type: query.type,
       ...fields,
       sort: query.sort,
     };
+    delete newQuery.type;
 
     Router.push(
       {
-        pathname,
+        pathname: query.type,
         query: newQuery,
       },
       undefined,
@@ -276,13 +276,18 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
   };
 
   const loadPage = (pageNumber) => {
+    const newQuery = {
+      ...query,
+      page: pageNumber,
+    };
+    delete newQuery.type;
+
+    // Reset page index
     setSize(1);
+
     return Router.push({
-      pathname,
-      query: {
-        ...query,
-        page: pageNumber,
-      },
+      pathname: query.type,
+      query: newQuery,
     });
   };
 
@@ -308,12 +313,13 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
       sort: value,
       page: 1,
     };
+    delete newQuery.type;
 
     // Reset page index
     setSize(1);
 
     return Router.push({
-      pathname,
+      pathname: query.type,
       query: newQuery,
     });
   };
