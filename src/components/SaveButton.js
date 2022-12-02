@@ -18,7 +18,7 @@ const StyledHeartIcon = styled(HeartIcon)`
 `;
 
 const StyledHeartSolidIcon = styled(HeartSolidIcon)`
-  color: red;
+  color: #e80020;
   height: 16px;
 `;
 
@@ -56,7 +56,7 @@ const StyledDialogDisclosure = styled(DialogDisclosure)`
     font-weight: 700;
 
     ${StyledHeartIcon} {
-      color: #dc143c;
+      color: #e80020;
     }
   }
 `;
@@ -71,7 +71,6 @@ const StyledList = styled.ul`
 
 const StyledItem = styled.li`
   padding: 16px 0;
-  cursor: pointer;
   border-style: solid;
   border-color: #e1e4e8;
   border-bottom-width: 1px;
@@ -87,6 +86,11 @@ const StyledItem = styled.li`
     border-color: #ccc;
     font-weight: 700;
   }
+`;
+
+const StyledItemContent = styled.div`
+  flex: 1;
+  cursor: pointer;
 `;
 
 function SaveButton({ item, type, saved, hideLabel, onChange, ...props }) {
@@ -265,13 +269,12 @@ function SaveButton({ item, type, saved, hideLabel, onChange, ...props }) {
               );
               return (
                 <StyledItem key={list._id}>
-                  <Element
-                    flex="1"
+                  <StyledItemContent
                     onClick={() => (isItemInList ? removeFromList(list) : addToList(list))}
                   >
                     {isItemInList ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
                     <StyledLabel>{list.name}</StyledLabel>
-                  </Element>
+                  </StyledItemContent>
                   <Element marginLeft="auto">
                     <Link href={`/lists/${slugify(list.name)}-${list._id}`} passHref>
                       <Button primary>{t('common:profile.lists.open')}</Button>
