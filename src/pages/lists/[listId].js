@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import queryString from 'query-string';
+import DefaultErrorPage from 'next/error';
 import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { unstable_getServerSession } from 'next-auth';
@@ -36,8 +37,12 @@ const Results = styled.div`
   margin-bottom: 24px;
 `;
 
-function ListsPage({ isOwner, list, shareLink, error }) {
+function ListsPage({ isOwner, list, shareLink }) {
   const { t, i18n } = useTranslation('common');
+
+  if (!list) {
+    return <DefaultErrorPage statusCode={404} title={t('common:errors.listNotFound')} />;
+  }
 
   const renderListItems = () => (
     <Element marginY={24}>
@@ -215,14 +220,14 @@ export async function getServerSideProps(ctx) {
   const session = await unstable_getServerSession(req, res, authOptions);
   const list = await getListById(query.listId.split('-').pop());
 
+  const props = {
+    ...(await serverSideTranslations(ctx.locale, ['common', 'project', 'search'])),
+  };
+
   if (!list) {
     // List not found
     res.statusCode = 404;
-    return {
-      props: {
-        error: 'List not found',
-      },
-    };
+    return { props };
   }
 
   // Get current user
@@ -234,7 +239,7 @@ export async function getServerSideProps(ctx) {
     res.setHeader('location', '/auth/signin');
     res.statusCode = 302;
     res.end();
-    return { props: {} };
+    return { props };
   }
 
   // Get details (title, image, ...) for each item in the list
@@ -276,13 +281,11 @@ export async function getServerSideProps(ctx) {
     }
   }
 
+  props.list = JSON.parse(JSON.stringify(list)); // serialize the list;
+  props.shareLink = `${absoluteUrl(req)}/lists/${slugify(list.name)}-${list._id}`;
+
   return {
-    props: {
-      ...(await serverSideTranslations(ctx.locale, ['common', 'project', 'search'])),
-      list: JSON.parse(JSON.stringify(list)), // serialize the list
-      isOwner,
-      shareLink: `${absoluteUrl(req)}/lists/${slugify(list.name)}-${list._id}`,
-    },
+    props,
   };
 }
 

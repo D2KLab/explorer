@@ -25,7 +25,7 @@ function NotFoundPage({ title = '404 - Uh oh!', text, children }) {
       <Body>
         <Container>
           <h1>{title}</h1>
-          <p>{text || t('errors.pageNotFound')}</p>
+          <p>{text || t('common:errors.pageNotFound')}</p>
         </Container>
         {children}
       </Body>
