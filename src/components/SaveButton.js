@@ -3,11 +3,24 @@ import styled from 'styled-components';
 import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import { Heart as HeartIcon } from '@styled-icons/boxicons-regular/Heart';
 import { Heart as HeartSolidIcon } from '@styled-icons/boxicons-solid/Heart';
+import { signIn, useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
 
 import Button from '@components/Button';
 import Input from '@components/Input';
 import Element from '@components/Element';
-import { useTranslation } from 'next-i18next';
+import { slugify } from '@helpers/utils';
+
+const StyledHeartIcon = styled(HeartIcon)`
+  color: #222;
+  height: 16px;
+`;
+
+const StyledHeartSolidIcon = styled(HeartSolidIcon)`
+  color: red;
+  height: 16px;
+`;
 
 const StyledDialog = styled(Dialog)`
   z-index: 2000;
@@ -41,17 +54,11 @@ const StyledDialogDisclosure = styled(DialogDisclosure)`
 
   &:hover {
     font-weight: 700;
+
+    ${StyledHeartIcon} {
+      color: #dc143c;
+    }
   }
-`;
-
-const StyledHeartIcon = styled(HeartIcon)`
-  color: #222;
-  height: 16px;
-`;
-
-const StyledHeartSolidIcon = styled(HeartSolidIcon)`
-  color: red;
-  height: 16px;
 `;
 
 const StyledLabel = styled.span`
@@ -90,6 +97,7 @@ function SaveButton({ item, type, saved, hideLabel, onChange }) {
   const [listFormVisible, setListFormVisible] = useState(false);
   const dialog = useDialogState();
   const isFirstRender = useRef(true);
+  const { data: session } = useSession();
 
   const triggerOnChange = () => {
     if (typeof onChange === 'function') {
@@ -167,9 +175,17 @@ function SaveButton({ item, type, saved, hideLabel, onChange }) {
     await loadLists();
   };
 
-  const onClick = useCallback((event) => {
-    loadLists(event);
-  }, []);
+  const onClick = useCallback(
+    (event) => {
+      if (!session) {
+        signIn();
+        event.preventDefault();
+        return;
+      }
+      loadLists(event);
+    },
+    [session]
+  );
 
   return (
     <div>
@@ -248,12 +264,19 @@ function SaveButton({ item, type, saved, hideLabel, onChange }) {
                 (it) => it.uri === item['@id'] && it.type === type
               );
               return (
-                <StyledItem
-                  key={list._id}
-                  onClick={() => (isItemInList ? removeFromList(list) : addToList(list))}
-                >
-                  {isItemInList ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
-                  <StyledLabel>{list.name}</StyledLabel>
+                <StyledItem key={list._id}>
+                  <Element
+                    flex="1"
+                    onClick={() => (isItemInList ? removeFromList(list) : addToList(list))}
+                  >
+                    {isItemInList ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
+                    <StyledLabel>{list.name}</StyledLabel>
+                  </Element>
+                  <Element marginLeft="auto">
+                    <Link href={`/lists/${slugify(list.name)}-${list._id}`} passHref>
+                      <Button primary>{t('common:profile.lists.open')}</Button>
+                    </Link>
+                  </Element>
                 </StyledItem>
               );
             })}
