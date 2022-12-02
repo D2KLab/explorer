@@ -301,11 +301,8 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
     });
   };
 
-  const handleSwitchChange = (checked, event, id) => {
-    setFields((prevFields) => ({
-      ...prevFields,
-      [id]: checked ? 1 : 0,
-    }));
+  const handleSwitchChange = (checked, event) => {
+    handleInputChange(checked, { name: event.target.nextElementSibling.name });
   };
 
   const doSearch = () => {
@@ -483,6 +480,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
     <Option key={filter.id}>
       <span>{t(`project:filters.${filter.id}`, filter.label)}</span>
       <StyledSwitch
+        name={`filter_${filter.id}`}
         onChange={handleSwitchChange}
         checked={!!fields[`filter_${filter.id}`]}
         onColor={theme.colors.light}
