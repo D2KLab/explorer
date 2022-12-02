@@ -430,7 +430,9 @@ export default withRequestValidation({
 
   const route = config.routes[query.type];
   if (!route) {
-    res.status(404).json({ error: { message: 'Route not found' }, results: [] });
+    res
+      .status(404)
+      .json({ error: { message: 'Route not found' }, results: [], totalResults: 0, favorites: [] });
     return;
   }
 
