@@ -168,6 +168,28 @@ const ResultPage = styled.h3`
   margin-bottom: 1rem;
 `;
 
+const SaveButtonContainer = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 8px 0.25em;
+  margin: 8px;
+  background-color: #e7e7e7;
+  border-radius: 16px;
+
+  opacity: ${({ saved }) => (saved ? 1 : 0)};
+`;
+
+const Result = styled.div`
+  position: relative;
+
+  &:hover {
+    ${SaveButtonContainer} {
+      opacity: 1;
+    }
+  }
+`;
+
 const PAGE_SIZE = 20;
 
 function BrowsePage({ initialData, filters, similarityEntity }) {
@@ -179,6 +201,7 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
   const [currentPage, setCurrentPage] = useState(parseInt(query.page, 10) || 1);
   const mapRef = useRef(null);
   const [isPageLoading, setIsPageLoading] = useState(false);
+  const [favorites, setFavorites] = useState([]);
 
   // Save the initial query to prevent re-rendering the map
   // (reloading the iframe) every time the search query changes.
@@ -210,6 +233,16 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
     totalResults = data[0].totalResults;
     debugSparqlQuery = data[0].debugSparqlQuery;
   }
+
+  useEffect(() => {
+    setFavorites(
+      data.reduce((acc, cur) => {
+        acc.push(...cur.favorites);
+        return acc;
+      }, [])
+    );
+  }, [data]);
+
   totalPages = Math.ceil(totalResults / PAGE_SIZE);
 
   const debouncedHandleResize = useDebounce(() => {
@@ -410,31 +443,46 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
       const mainImage = getEntityMainImage(result, { route });
       const label = getEntityMainLabel(result, { route, language: i18n.language });
       const subtitle = typeof route.subtitleFunc === 'function' ? route.subtitleFunc(result) : null;
+      const isSaved = favorites.includes(result['@id']);
 
       return (
-        <PaginatedLink
-          key={result['@id']}
-          id={result['@id']}
-          type={query.type}
-          page={pageNumber}
-          searchApi="/api/search"
-          passHref
-        >
-          <a
-            onClick={() => {
-              // Make sure the page number is correct if it hasn't been updated yet
-              onScrollToPage(pageNumber);
-            }}
+        <Result key={result['@id']}>
+          <PaginatedLink
+            id={result['@id']}
+            type={query.type}
+            page={pageNumber}
+            searchApi="/api/search"
+            passHref
           >
-            <Media
-              title={label}
-              subtitle={subtitle}
-              thumbnail={generateMediaUrl(mainImage, 300)}
-              direction="column"
-              graphUri={result['@graph']}
+            <a
+              onClick={() => {
+                // Make sure the page number is correct if it hasn't been updated yet
+                onScrollToPage(pageNumber);
+              }}
+            >
+              <Media
+                title={label}
+                subtitle={subtitle}
+                thumbnail={generateMediaUrl(mainImage, 300)}
+                direction="column"
+                graphUri={result['@graph']}
+              />
+            </a>
+          </PaginatedLink>
+          <SaveButtonContainer saved={isSaved}>
+            <SaveButton
+              type={query.type}
+              item={result}
+              saved={isSaved}
+              hideLabel
+              onChange={(saved) =>
+                setFavorites((prev) =>
+                  saved ? [...prev, result['@id']] : prev.filter((item) => item !== result['@id'])
+                )
+              }
             />
-          </a>
-        </PaginatedLink>
+          </SaveButtonContainer>
+        </Result>
       );
     });
 
