@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import { Heart as HeartIcon } from '@styled-icons/boxicons-regular/Heart';
@@ -89,6 +89,7 @@ function SaveButton({ item, type, saved, onChange }) {
   const [newListName, setNewListName] = useState('');
   const [listFormVisible, setListFormVisible] = useState(false);
   const dialog = useDialogState();
+  const isFirstRender = useRef(true);
 
   const triggerOnChange = () => {
     if (typeof onChange === 'function') {
@@ -97,6 +98,14 @@ function SaveButton({ item, type, saved, onChange }) {
       );
     }
   };
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    triggerOnChange();
+  }, [lists]);
 
   const loadLists = async () => {
     setLoading(true);
@@ -123,7 +132,6 @@ function SaveButton({ item, type, saved, onChange }) {
       }),
     });
     await loadLists();
-    triggerOnChange();
   };
 
   const removeFromList = async (list) => {
@@ -135,7 +143,6 @@ function SaveButton({ item, type, saved, onChange }) {
       }),
     });
     await loadLists();
-    triggerOnChange();
   };
 
   const createListWithItem = async () => {
