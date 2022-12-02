@@ -145,5 +145,11 @@
   "similarity": {
     "visual": "Immagini visivamente simili",
     "semantic": "Oggetti con caratteristiche simili"
+  },
+  "pagination": {
+    "back": "Torna ai risultati della ricerca",
+    "previous": "Risultato precedente",
+    "next": "Risultato successivo",
+    "loading": "Caricamento in corso…"
   }
 }

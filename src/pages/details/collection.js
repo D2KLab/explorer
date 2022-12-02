@@ -1,10 +1,11 @@
-import { useState } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
 import queryString from 'query-string';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -19,11 +20,15 @@ import SaveButton from '@components/SaveButton';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import GraphLink from '@components/GraphLink';
 import MetadataList from '@components/MetadataList';
+import Pagination from '@components/Pagination';
 import breakpoints from '@styles/breakpoints';
 import { uriToId, absoluteUrl, generateMediaUrl } from '@helpers/utils';
-import { findRouteByRDFType, generatePermalink, getEntityMainLabel } from '@helpers/explorer';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import {
+  findRouteByRDFType,
+  generatePermalink,
+  getEntityMainLabel,
+  getSearchData,
+} from '@helpers/explorer';
 import config from '~/config';
 
 const Columns = styled.div`
@@ -69,7 +74,7 @@ const Description = styled.div`
   white-space: pre-line;
 `;
 
-function CollectionDetailsPage({ result, inList, debugSparqlQuery }) {
+function CollectionDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
   const { t, i18n } = useTranslation(['common', 'project']);
   const { data: session } = useSession();
   const { query } = useRouter();
@@ -106,6 +111,7 @@ function CollectionDetailsPage({ result, inList, debugSparqlQuery }) {
       <PageTitle title={`${label}`} />
       <Header />
       <Body>
+        <Pagination searchData={searchData} result={result} />
         <Columns>
           <Primary>
             <Element marginBottom={24}>
@@ -246,7 +252,9 @@ function CollectionDetailsPage({ result, inList, debugSparqlQuery }) {
   );
 }
 
-export async function getServerSideProps({ req, res, query, locale }) {
+export async function getServerSideProps(context) {
+  const { req, res, query, locale } = context;
+
   const {
     result = null,
     inList,
@@ -264,11 +272,14 @@ export async function getServerSideProps({ req, res, query, locale }) {
     res.statusCode = 404;
   }
 
+  const searchData = await getSearchData(context);
+
   return {
     props: {
       ...(await serverSideTranslations(locale, ['common', 'project', 'search'])),
       result,
       inList,
+      searchData,
       debugSparqlQuery,
     },
   };

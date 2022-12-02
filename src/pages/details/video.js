@@ -7,6 +7,8 @@ import queryString from 'query-string';
 import { useSession } from 'next-auth/react';
 import { useTabState, Tab, TabList, TabPanel } from 'ariakit';
 import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -22,12 +24,11 @@ import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import GraphLink from '@components/GraphLink';
 import MetadataList from '@components/MetadataList';
 import SaveButton from '@components/SaveButton';
+import Pagination from '@components/Pagination';
 import breakpoints from '@styles/breakpoints';
 import { absoluteUrl, getQueryObject, uriToId } from '@helpers/utils';
 import SparqlClient from '@helpers/sparql';
-import { generatePermalink, getEntityMainLabel } from '@helpers/explorer';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { generatePermalink, getEntityMainLabel, getSearchData } from '@helpers/explorer';
 import config from '~/config';
 
 const Columns = styled.div`
@@ -300,6 +301,7 @@ function debounce(fn, ms) {
 function VideoDetailsPage({
   result,
   inList,
+  searchData,
   mediaUrl,
   debugSparqlQuery,
   videoSegments,
@@ -564,6 +566,7 @@ function VideoDetailsPage({
       <PageTitle title={`${label}`} />
       <Header />
       <Body>
+        <Pagination searchData={searchData} result={result} />
         <MobileContainer style={{ padding: 24 }}>
           <Title>{label}</Title>
           {renderPermalink()}
@@ -703,7 +706,9 @@ function VideoDetailsPage({
   );
 }
 
-export async function getServerSideProps({ req, res, query, locale }) {
+export async function getServerSideProps(context) {
+  const { req, res, query, locale } = context;
+
   const {
     result = null,
     inList,
@@ -844,11 +849,14 @@ export async function getServerSideProps({ req, res, query, locale }) {
     res.statusCode = 404;
   }
 
+  const searchData = await getSearchData(context);
+
   return {
     props: {
       ...(await serverSideTranslations(locale, ['common', 'project', 'search'])),
       result,
       inList,
+      searchData,
       mediaUrl,
       videoSegments,
       debugSparqlQuery,

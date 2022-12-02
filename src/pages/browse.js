@@ -8,6 +8,8 @@ import useSWRInfinite from 'swr/infinite';
 import { Grid as GridIcon } from '@styled-icons/boxicons-solid/Grid';
 import { MapLocationDot } from '@styled-icons/fa-solid/MapLocationDot';
 import ReactPaginate from 'react-paginate';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -21,6 +23,7 @@ import Element from '@components/Element';
 import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
 import Select from '@components/Select';
+import PaginatedLink from '@components/PaginatedLink';
 import SpatioTemporalMaps from '@components/SpatioTemporalMaps';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import PageTitle from '@components/PageTitle';
@@ -31,8 +34,6 @@ import useOnScreen from '@helpers/useOnScreen';
 import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
 import { search, getFilters } from '@pages/api/search';
 import breakpoints, { sizes } from '@styles/breakpoints';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import config from '~/config';
 import mainTheme from '~/theme';
 
@@ -408,14 +409,12 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
       const subtitle = typeof route.subtitleFunc === 'function' ? route.subtitleFunc(result) : null;
 
       return (
-        <Link
+        <PaginatedLink
           key={result['@id']}
-          href={`/details/${route.details.view}?id=${encodeURIComponent(
-            uriToId(result['@id'], {
-              base: route.uriBase,
-            })
-          )}&type=${query.type}`}
-          as={`/${query.type}/${encodeURI(uriToId(result['@id'], { base: route.uriBase }))}`}
+          id={result['@id']}
+          type={query.type}
+          page={pageNumber}
+          searchApi="/api/search"
           passHref
         >
           <a
@@ -432,7 +431,7 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
               graphUri={result['@graph']}
             />
           </a>
-        </Link>
+        </PaginatedLink>
       );
     });
 

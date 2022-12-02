@@ -26,9 +26,10 @@ import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import GraphLink from '@components/GraphLink';
 import MetadataList from '@components/MetadataList';
 import SaveButton from '@components/SaveButton';
+import Pagination from '@components/Pagination';
 import breakpoints from '@styles/breakpoints';
 import { absoluteUrl, generateMediaUrl, uriToId } from '@helpers/utils';
-import { generatePermalink, getEntityMainLabel } from '@helpers/explorer';
+import { generatePermalink, getEntityMainLabel, getSearchData } from '@helpers/explorer';
 import { useTranslation } from 'next-i18next';
 import config from '~/config';
 
@@ -223,7 +224,7 @@ const Description = styled.div`
   white-space: pre-line;
 `;
 
-function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
+function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
   const { t, i18n } = useTranslation(['common', 'project']);
   const router = useRouter();
   const { query } = router;
@@ -414,6 +415,7 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
       <PageTitle title={`${pageTitle}`} />
       <Header />
       <Body>
+        <Pagination searchData={searchData} result={result} />
         <Columns>
           {images.length > 0 && (
             <Primary>
@@ -628,7 +630,9 @@ function GalleryDetailsPage({ result, inList, debugSparqlQuery }) {
   );
 }
 
-export async function getServerSideProps({ req, res, query, locale }) {
+export async function getServerSideProps(context) {
+  const { req, res, query, locale } = context;
+
   const {
     result = null,
     inList = false,
@@ -642,6 +646,8 @@ export async function getServerSideProps({ req, res, query, locale }) {
     })
   ).json();
 
+  const searchData = await getSearchData(context);
+
   if (!result && res) {
     res.statusCode = 404;
   }
@@ -651,6 +657,7 @@ export async function getServerSideProps({ req, res, query, locale }) {
       ...(await serverSideTranslations(locale, ['common', 'project', 'search'])),
       result,
       inList,
+      searchData,
       debugSparqlQuery,
     },
   };

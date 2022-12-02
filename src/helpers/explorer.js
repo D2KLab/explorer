@@ -1,3 +1,4 @@
+import { absoluteUrl } from '@helpers/utils';
 import config from '~/config';
 
 /*
@@ -84,4 +85,29 @@ export const generatePermalink = (uri) => {
     return config.api.permalinkUrl(uri);
   }
   return uri;
+};
+
+export const getSearchData = async ({ req, query, locale }) => {
+  if (!query.sapi) {
+    return null;
+  }
+
+  const searchParams = new URLSearchParams(query);
+  searchParams.set('type', searchParams.get('stype'));
+  searchParams.set('id', searchParams.get('sid'));
+  searchParams.delete('sid');
+  searchParams.delete('stype');
+  searchParams.delete('sapi');
+  searchParams.delete('spath');
+
+  const searchData = await (
+    await fetch(`${absoluteUrl(req)}${query.sapi}?${searchParams}`, {
+      headers: {
+        ...req.headers,
+        'accept-language': locale,
+      },
+    })
+  ).json();
+
+  return searchData;
 };

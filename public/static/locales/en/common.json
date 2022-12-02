@@ -145,5 +145,11 @@
   "similarity": {
     "visual": "Visually similar images",
     "semantic": "Objects with similar properties"
+  },
+  "pagination": {
+    "back": "Back to search results",
+    "previous": "Previous result",
+    "next": "Next result",
+    "loading": "Loading…"
   }
 }
