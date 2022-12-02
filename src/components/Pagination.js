@@ -183,9 +183,11 @@ function Pagination({ searchData, result, pageSize = 20, ...props }) {
             <a>{t('common:pagination.back')}</a>
           </Link>
         </Element>
-        <Element>
-          {currentIndex} / {totalResults}
-        </Element>
+        {totalResults > 0 && (
+          <Element>
+            {currentIndex} / {totalResults}
+          </Element>
+        )}
       </Element>
       {totalResults > 0 && (
         <Element display="flex" alignItems="center" justifyContent="flex-end" paddingRight={48}>
