@@ -10,6 +10,7 @@ export const connectToDatabase = async () => {
 };
 
 export const getListById = async (listId) => {
+  if (!ObjectId.isValid(listId)) return null;
   const db = await connectToDatabase();
   return db.collection('lists').findOne({ _id: new ObjectId(listId) });
 };
