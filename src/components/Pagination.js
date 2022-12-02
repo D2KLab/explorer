@@ -177,7 +177,7 @@ function Pagination({ searchData, result, pageSize = 20, ...props }) {
           {renderPrevious()}
         </Element>
       )}
-      <Element display="flex" alignItems="center" flexDirection="column">
+      <Element display="flex" alignItems="center" flexDirection="column" margin="0 auto">
         <Element alignSelf="center">
           <Link href={`${query.spath}?${getLinkParams(searchParams)}`} passHref>
             <a>{t('common:pagination.back')}</a>
