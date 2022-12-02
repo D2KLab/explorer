@@ -1,5 +1,8 @@
+import { unstable_getServerSession } from 'next-auth';
+
 import { withRequestValidation } from '@helpers/api';
 import { search } from '@pages/api/search';
+import { authOptions } from '@pages/api/auth/[...nextauth]';
 import config from '~/config';
 
 export default withRequestValidation({
@@ -8,6 +11,8 @@ export default withRequestValidation({
   const { q } = req.query;
   const { query } = req;
 
+  const session = await unstable_getServerSession(req, res, authOptions);
+
   const results = await search(
     {
       type: config.search.route,
@@ -15,6 +20,7 @@ export default withRequestValidation({
       per_page: 5,
       approximate: true,
     },
+    session,
     query.hl || req.headers['accept-language']
   );
 

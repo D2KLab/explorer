@@ -1,4 +1,5 @@
 import { mapLimit } from 'async';
+import { unstable_getServerSession } from 'next-auth';
 
 import { withRequestValidation } from '@helpers/api';
 import SparqlClient from '@helpers/sparql';
@@ -6,6 +7,8 @@ import { fillWithVocabularies } from '@helpers/vocabulary';
 import { removeEmptyObjects, getQueryObject, idToUri } from '@helpers/utils';
 import { getEntity } from '@pages/api/entity';
 import { searchImage } from '@pages/api/image-search';
+import { authOptions } from '@pages/api/auth/[...nextauth]';
+import { getSessionUser, getUserLists } from '@helpers/database';
 import config from '~/config';
 
 export const getFilters = async (query, { language }) => {
@@ -170,7 +173,7 @@ const getExtraFromFilters = (query, filters) => {
   return { extraWhere, extraFilter };
 };
 
-export const search = async (query, language) => {
+export const search = async (query, session, language) => {
   const results = [];
   let debugSparqlQuery = null;
   let totalResults = 0;
@@ -394,9 +397,28 @@ export const search = async (query, language) => {
     }
   }
 
+  const favorites = [];
+  if (session) {
+    const user = await getSessionUser(session);
+    if (user) {
+      // Check if this item is in a user list and flag it accordingly.
+      const loadedLists = await getUserLists(user);
+      favorites.push(
+        ...results
+          .filter((result) =>
+            loadedLists.some((list) =>
+              list.items.some((it) => it.uri === result['@id'] && it.type === query.type)
+            )
+          )
+          .map((result) => result['@id'])
+      );
+    }
+  }
+
   return {
     results,
     totalResults,
+    favorites,
     debugSparqlQuery,
   };
 };
@@ -412,6 +434,8 @@ export default withRequestValidation({
     return;
   }
 
-  const data = await search(query, query.hl || req.headers['accept-language']);
+  const session = await unstable_getServerSession(req, res, authOptions);
+
+  const data = await search(query, session, query.hl || req.headers['accept-language']);
   res.status(200).json(data);
 });

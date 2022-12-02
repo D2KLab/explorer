@@ -10,6 +10,7 @@ import { MapLocationDot } from '@styled-icons/fa-solid/MapLocationDot';
 import ReactPaginate from 'react-paginate';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { unstable_getServerSession } from 'next-auth';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -28,11 +29,13 @@ import SpatioTemporalMaps from '@components/SpatioTemporalMaps';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import PageTitle from '@components/PageTitle';
 import ScrollDetector from '@components/ScrollDetector';
+import SaveButton from '@components/SaveButton';
 import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
 import useDebounce from '@helpers/useDebounce';
 import useOnScreen from '@helpers/useOnScreen';
 import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
 import { search, getFilters } from '@pages/api/search';
+import { authOptions } from '@pages/api/auth/[...nextauth]';
 import breakpoints, { sizes } from '@styles/breakpoints';
 import config from '~/config';
 import mainTheme from '~/theme';
@@ -635,9 +638,10 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
   );
 }
 
-export async function getServerSideProps({ req, query, locale }) {
+export async function getServerSideProps({ req, res, query, locale }) {
   const filters = await getFilters(query, { language: locale });
-  const searchData = await search(query, locale);
+  const session = await unstable_getServerSession(req, res, authOptions);
+  const searchData = await search(query, session, locale);
 
   let similarityEntity;
   if (query.similarity_entity) {
@@ -661,6 +665,7 @@ export async function getServerSideProps({ req, query, locale }) {
       initialData: {
         results: searchData.results,
         totalResults: searchData.totalResults,
+        favorites: searchData.favorites,
         debugSparqlQuery: searchData.debugSparqlQuery,
       },
       filters,
