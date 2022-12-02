@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
 import ReactPlayer from 'react-player';
 import queryString from 'query-string';
-import { useSession } from 'next-auth/react';
 import { useTabState, Tab, TabList, TabPanel } from 'ariakit';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
@@ -311,7 +310,6 @@ function VideoDetailsPage({
   subtitles,
 }) {
   const { t, i18n } = useTranslation(['common', 'project']);
-  const { data: session } = useSession();
   const { query } = useRouter();
   const [faceRectangles, setFaceRectangles] = useState([]);
   const tab = useTabState();
@@ -533,9 +531,7 @@ function VideoDetailsPage({
           )
         </small>
       )}
-      {session && (
-        <SaveButton type={query.type} item={result} saved={inList} onChange={onItemSaveChange} />
-      )}
+      <SaveButton type={query.type} item={result} saved={inList} onChange={onItemSaveChange} />
     </Element>
   );
 

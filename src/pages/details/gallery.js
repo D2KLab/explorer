@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import queryString from 'query-string';
 import { useMenuState, Menu, MenuItem, MenuButton, MenuButtonArrow } from 'ariakit';
@@ -228,7 +227,6 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
   const { t, i18n } = useTranslation(['common', 'project']);
   const router = useRouter();
   const { query } = router;
-  const { data: session } = useSession();
   const route = config.routes[query.type];
   const [isLoadingSimilar, setIsLoadingSimilar] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -463,14 +461,12 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
                       )
                     </small>
                   )}
-                  {session && (
-                    <SaveButton
-                      type={query.type}
-                      item={result}
-                      saved={inList}
-                      onChange={onItemSaveChange}
-                    />
-                  )}
+                  <SaveButton
+                    type={query.type}
+                    item={result}
+                    saved={inList}
+                    onChange={onItemSaveChange}
+                  />
                 </Element>
               </MobileContainer>
               <Carousel
@@ -528,14 +524,12 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
                     )
                   </small>
                 )}
-                {session && (
-                  <SaveButton
-                    type={query.type}
-                    item={result}
-                    saved={inList}
-                    onChange={onItemSaveChange}
-                  />
-                )}
+                <SaveButton
+                  type={query.type}
+                  item={result}
+                  saved={inList}
+                  onChange={onItemSaveChange}
+                />
               </Element>
             </DesktopContainer>
             <Element marginBottom={12} display="flex">

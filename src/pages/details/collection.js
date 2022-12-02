@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
 import queryString from 'query-string';
-import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
@@ -76,7 +75,6 @@ const Description = styled.div`
 
 function CollectionDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
   const { t, i18n } = useTranslation(['common', 'project']);
-  const { data: session } = useSession();
   const { query } = useRouter();
 
   if (!result) {
@@ -144,14 +142,12 @@ function CollectionDetailsPage({ result, inList, searchData, debugSparqlQuery })
                     )
                   </small>
                 )}
-                {session && (
-                  <SaveButton
-                    type={query.type}
-                    item={result}
-                    saved={inList}
-                    onChange={onItemSaveChange}
-                  />
-                )}
+                <SaveButton
+                  type={query.type}
+                  item={result}
+                  saved={inList}
+                  onChange={onItemSaveChange}
+                />
               </Element>
             </Element>
             <Element marginBottom={12} display="flex">
