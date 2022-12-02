@@ -89,7 +89,7 @@ const StyledItem = styled.li`
   }
 `;
 
-function SaveButton({ item, type, saved, hideLabel, onChange }) {
+function SaveButton({ item, type, saved, hideLabel, onChange, ...props }) {
   const { t } = useTranslation('common');
   const [loading, setLoading] = useState(false);
   const [lists, setLists] = useState([]);
@@ -189,7 +189,7 @@ function SaveButton({ item, type, saved, hideLabel, onChange }) {
 
   return (
     <div>
-      <StyledDialogDisclosure onClick={onClick} state={dialog}>
+      <StyledDialogDisclosure {...props} onClick={onClick} state={dialog}>
         {saved ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
         {!hideLabel && (
           <StyledLabel>{saved ? t('saveButton.saved') : t('saveButton.save')}</StyledLabel>
