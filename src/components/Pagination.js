@@ -6,6 +6,7 @@ import { useTranslation } from 'next-i18next';
 import Element from '@components/Element';
 import Spinner from '@components/Spinner';
 import { start, done } from '@components/NProgress';
+import PaginatedLink from '@components/PaginatedLink';
 import { uriToId } from '@helpers/utils';
 import config from '~/config';
 
@@ -65,13 +66,9 @@ function Pagination({ searchData, result, pageSize = 20, ...props }) {
     params.delete('id');
     params.delete('type');
     return (
-      <Link
-        href={`/${searchParams.get('stype')}/${encodeURI(
-          uriToId(id, { base: route.uriBase })
-        )}?${params}`}
-      >
+      <PaginatedLink key={id} id={id} type={query.type} searchApi={params.get('sapi')} passHref>
         <a>{children}</a>
-      </Link>
+      </PaginatedLink>
     );
   };
 

@@ -18,8 +18,8 @@ const PaginatedLink = ({ id, type, page, searchApi, children, ...props }) => {
   }
   if (searchParams.get('type') !== null) {
     searchParams.set('stype', searchParams.get('type'));
-  } else if (type) {
-    searchParams.set('stype', type);
+  } else {
+    searchParams.set('stype', router.query.type);
   }
   searchParams.delete('id');
   searchParams.delete('type');
