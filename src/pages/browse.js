@@ -168,11 +168,11 @@ const ResultPage = styled.h3`
   margin-bottom: 1rem;
 `;
 
-const SaveButtonContainer = styled.div`
+const StyledSaveButton = styled(SaveButton)`
   position: absolute;
   top: 0;
   right: 0;
-  padding: 8px 0.25em;
+  padding: 8px;
   margin: 8px;
   background-color: #e7e7e7;
   border-radius: 16px;
@@ -184,7 +184,7 @@ const Result = styled.div`
   position: relative;
 
   &:hover {
-    ${SaveButtonContainer} {
+    ${StyledSaveButton} {
       opacity: 1;
     }
   }
@@ -469,19 +469,17 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
               />
             </a>
           </PaginatedLink>
-          <SaveButtonContainer saved={isSaved}>
-            <SaveButton
-              type={query.type}
-              item={result}
-              saved={isSaved}
-              hideLabel
-              onChange={(saved) =>
-                setFavorites((prev) =>
-                  saved ? [...prev, result['@id']] : prev.filter((item) => item !== result['@id'])
-                )
-              }
-            />
-          </SaveButtonContainer>
+          <StyledSaveButton
+            type={query.type}
+            item={result}
+            saved={isSaved}
+            hideLabel
+            onChange={(saved) =>
+              setFavorites((prev) =>
+                saved ? [...prev, result['@id']] : prev.filter((item) => item !== result['@id'])
+              )
+            }
+          />
         </Result>
       );
     });
