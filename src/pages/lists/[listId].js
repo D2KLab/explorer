@@ -280,6 +280,7 @@ export async function getServerSideProps(ctx) {
 
   props.list = JSON.parse(JSON.stringify(list)); // serialize the list;
   props.shareLink = `${absoluteUrl(req)}/lists/${slugify(list.name)}-${list._id}`;
+  props.isOwner = isOwner;
 
   return {
     props,
