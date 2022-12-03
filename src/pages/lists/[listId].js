@@ -202,11 +202,8 @@ function ListsPage({ isOwner, list, shareLink }) {
           </>
         )) || (
           <>
-            <PageTitle title={error.message} />
+            <PageTitle title={t('common:errors.listNotFound')} />
             <Title>{t('common:errors.listNotFound')}</Title>
-            <Content>
-              <p>{error.message}</p>
-            </Content>
           </>
         )}
       </Body>
