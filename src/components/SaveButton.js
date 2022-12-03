@@ -192,7 +192,7 @@ function SaveButton({ item, type, saved, hideLabel, onChange, ...props }) {
   );
 
   return (
-    <div>
+    <>
       <StyledDialogDisclosure {...props} onClick={onClick} state={dialog}>
         {saved ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
         {!hideLabel && (
@@ -286,7 +286,7 @@ function SaveButton({ item, type, saved, hideLabel, onChange, ...props }) {
           </StyledList>
         )}
       </StyledDialog>
-    </div>
+    </>
   );
 }
 
