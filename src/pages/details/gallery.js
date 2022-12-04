@@ -373,8 +373,9 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
     router.push(`/${config.search.route}?${params.toString()}`);
   };
 
-  const customRenderThumb = (children) =>
-    Carousel.defaultProps.renderThumbs(children).concat(
+  const customRenderThumb = (children) => {
+    if (!config.plugins?.virtualLoom?.url) return;
+    return Carousel.defaultProps.renderThumbs(children).concat(
       <Element key="virtual-loom">
         <MenuButton state={virtualLoomMenu}>
           <img src="/images/virtual-loom-button.png" alt="Virtual Loom" />
@@ -398,6 +399,7 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
         </StyledMenu>
       </Element>
     );
+  };
 
   const onItemSaveChange = () => {
     router.replace(router.asPath);
