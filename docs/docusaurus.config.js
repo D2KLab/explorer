@@ -60,7 +60,7 @@ const config = {
           src: 'img/logo.svg',
         },
         items: [
-          { to: 'intro', label: 'Docs', position: 'left' },
+          { to: '/', label: 'Docs', position: 'left' },
           { to: 'api/config', label: 'API', position: 'left' },
           { to: 'showcase', label: 'Showcase', position: 'left' },
           { href: 'https://github.com/D2KLab/explorer', label: 'GitHub', position: 'right' },
@@ -74,7 +74,7 @@ const config = {
             items: [
               {
                 label: 'Introduction',
-                to: 'intro',
+                to: '/',
               },
               {
                 label: 'Installation',
