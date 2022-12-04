@@ -35,7 +35,7 @@
     "labels": {
       "listName": "Nom de la liste"
     },
-    "createButton": "Créer une nouvelle liste",
+    "createButton": "Ajouter à une nouvelle liste",
     "loading": "Chargement...",
     "save": "Ajouter",
     "saved": "Ajouté"

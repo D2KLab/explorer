@@ -35,7 +35,7 @@
     "labels": {
       "listName": "Nome dell'elenco"
     },
-    "createButton": "Crea una nuova lista",
+    "createButton": "Aggiungi a una nuova lista",
     "loading": "Caricamento...",
     "save": "Salva",
     "saved": "Salvato"
