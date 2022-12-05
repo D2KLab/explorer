@@ -52,7 +52,7 @@ export default Hello;
 
 Once you save the file, the development server will automatically reload the changes. Now open [http://localhost:3000/hello](http://localhost:3000/hello) and you will see the new page you just created.
 
-Each page doesn't come with any styling. You will need to import the `Layout` component from `@components/Layout` and use `@components/Header` and `@components/Footer'` if you want the navbar and/or footer to appear. You can use [styled-components](https://styled-components.com/) to style your components.
+Each page doesn't come with any styling. You will need to import the `Layout` component from `@components/Layout` and use `@components/Header` and `@components/Footer` if you want the navbar and/or footer to appear. You can use [styled-components](https://styled-components.com/) to style your components.
 
 ## Routing {#routing}
 
