@@ -7,8 +7,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'D2KLab Explorer',
-  url: 'https://explorer.tools.eurecom.fr',
-  baseUrl: '/docs',
+  url: 'https://d2klab.github.io',
+  baseUrl: '/explorer',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
