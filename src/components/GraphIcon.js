@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-import config from '~/config';
+import { useGraphs } from '@helpers/useGraphs';
 
 /**
  * Displays a graph icon, given a graph URI. The icon has to be set in config.js.
@@ -18,7 +18,8 @@ const StyledImage = styled.img`
 `;
 
 function GraphIcon({ className, size = 24, uri, style }) {
-  const graph = config.graphs[uri];
+  const graphs = useGraphs();
+  const graph = graphs[uri];
   if (!graph || !graph.icon) {
     return null;
   }

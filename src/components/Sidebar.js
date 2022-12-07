@@ -10,6 +10,7 @@ import Button from '@components/Button';
 import Input from '@components/Input';
 import ToggleSwitch from '@components/ToggleSwitch';
 import useDebounce from '@helpers/useDebounce';
+import { useGraphs } from '@helpers/useGraphs';
 import config from '~/config';
 
 const getValue = (opts, val) => opts.find((o) => o.value === val);
@@ -166,6 +167,7 @@ ConditionFilter.Container = styled.div`
 
 function Sidebar({ className, onSearch, submitOnChange = false, type, filters, query }) {
   const theme = useTheme();
+  const graphs = useGraphs();
   const { t, i18n } = useTranslation(['project', 'search']);
   const [fields, setFields] = useState({});
   const [textValue, setTextValue] = useState('');
@@ -175,12 +177,17 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
       value: langKey,
     }))
   );
-  const [graphOptions] = useState(
-    Object.entries(config.graphs).map(([graphURI, graphObj]) => ({
-      value: graphURI,
-      label: graphObj.label,
-    }))
-  );
+  const [graphOptions, setGraphOptions] = useState([]);
+
+  useEffect(() => {
+    setGraphOptions(
+      Object.entries(graphs).map(([graphURI, graphObj]) => ({
+        value: graphURI,
+        label: graphObj.label,
+      }))
+    );
+  }, [graphs]);
+
   const isFirstRender = useRef(true);
 
   const debouncedTextValue = useDebounce(textValue, 1000);

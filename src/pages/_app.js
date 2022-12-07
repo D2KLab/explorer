@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { SessionProvider } from 'next-auth/react';
 import { withRouter } from 'next/router';
@@ -13,6 +14,7 @@ import RRWebRecorder from '@components/RRWebRecorder';
 import GoogleAnalytics from '@components/GoogleAnalytics';
 import theme from '~/theme';
 import config from '~/config';
+import { GraphProvider } from '@helpers/useGraphs';
 
 const NProgress = dynamic(
   () => {
@@ -23,6 +25,14 @@ const NProgress = dynamic(
 
 function MyApp({ Component, pageProps }) {
   const { session } = pageProps;
+  const [graphs, setGraphs] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      const results = await (await fetch('/api/graphs')).json();
+      setGraphs(results);
+    })();
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -40,9 +50,11 @@ function MyApp({ Component, pageProps }) {
       )}
       {config.plugins?.consent?.show && Cookies.get('consent') === '1' && <RRWebRecorder />}
       <GoogleAnalytics />
-      <SessionProvider session={session} site={process.env.SITE} refetchInterval={5 * 60}>
-        <Component {...pageProps} />
-      </SessionProvider>
+      <GraphProvider value={[graphs, setGraphs]}>
+        <SessionProvider session={session} site={process.env.SITE} refetchInterval={5 * 60}>
+          <Component {...pageProps} />
+        </SessionProvider>
+      </GraphProvider>
     </ThemeProvider>
   );
 }

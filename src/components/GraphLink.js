@@ -1,6 +1,5 @@
 import GraphIcon from '@components/GraphIcon';
-
-import config from '~/config';
+import { useGraphs } from '@helpers/useGraphs';
 
 /**
  * Displays a graph link, given a graph URI. The url has to be set in config.js.
@@ -15,7 +14,8 @@ function GraphLink({
   icon,
   label,
 }) {
-  const graph = config.graphs[uri];
+  const graphs = useGraphs();
+  const graph = graphs[uri];
   if (!graph) return null;
   return (
     <a
