@@ -521,6 +521,30 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
           />
         </Element>
         <Content>
+          <Debug>
+            <Metadata label="HTTP Parameters">
+              <pre>{JSON.stringify(query, null, 2)}</pre>
+            </Metadata>
+            <Metadata label="Results">
+              <pre>
+                {Array.isArray(data) &&
+                  JSON.stringify(
+                    data.reduce((prev, curr) => {
+                      prev.push(...curr.results);
+                      return prev;
+                    }, []),
+                    null,
+                    2
+                  )}
+              </pre>
+            </Metadata>
+            <Metadata label="SPARQL Query">
+              <SPARQLQueryLink query={debugSparqlQuery}>
+                {t('common:buttons.editQuery')}
+              </SPARQLQueryLink>
+              <pre>{debugSparqlQuery}</pre>
+            </Metadata>
+          </Debug>
           <StyledTitle>
             {isLoadingMore || isPageLoading
               ? t('search:labels.loading')
@@ -653,30 +677,6 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
               )}
             </>
           )}
-          <Debug>
-            <Metadata label="HTTP Parameters">
-              <pre>{JSON.stringify(query, null, 2)}</pre>
-            </Metadata>
-            <Metadata label="Results">
-              <pre>
-                {Array.isArray(data) &&
-                  JSON.stringify(
-                    data.reduce((prev, curr) => {
-                      prev.push(...curr.results);
-                      return prev;
-                    }, []),
-                    null,
-                    2
-                  )}
-              </pre>
-            </Metadata>
-            <Metadata label="SPARQL Query">
-              <SPARQLQueryLink query={debugSparqlQuery}>
-                {t('common:buttons.editQuery')}
-              </SPARQLQueryLink>
-              <pre>{debugSparqlQuery}</pre>
-            </Metadata>
-          </Debug>
         </Content>
       </Body>
       <Footer />
