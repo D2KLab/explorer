@@ -117,7 +117,7 @@ Configuration of the hero section on the homepage.
 
 * Type: `boolean`
 
-Set to `true` to display the headline on the homepage hero section. See [home.json](translations/home) to change the headline text.
+Set to `true` to display the headline on the homepage hero section. See [home.json](translations#home) to change the headline text.
 
 ```js title="config.js"
 module.exports = {
@@ -603,7 +603,7 @@ If set to `true`, allows the user to select more than one value.
 
 * Type: `boolean`
 
-If set to `true`, changes the input type to a checkbox, and expects `values` to be defined (see the [#route-filters-values](values) property).
+If set to `true`, changes the input type to a checkbox, and expects `values` to be defined (see the [values](#route-filters-values) property).
 
 ##### `values` {#route-filters-values}
 

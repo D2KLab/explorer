@@ -4,7 +4,7 @@ Translation files should be placed inside the `public/static/locales/{LANG}` fol
 
 Translations rely on the framework [i18next](https://www.i18next.com/) and use the same syntax.
 
-## `home.json`
+## `home.json` {#home}
 
 Contains translation keys for the homepage.
 
@@ -20,7 +20,7 @@ Contains translation keys for the homepage.
 }
 ```
 
-## `project.json`
+## `project.json` {#project}
 
 Contains translation keys for the project.
 
@@ -56,30 +56,30 @@ Contains translation keys for the project.
 
 </details>
 
-### `site`
+### `site` {#project-site}
 
 * `description` - Description of the website, used for `<meta name="description">`.
 
-### `search`
+### `search` {#project-search}
 
 Label of the Search button.
 
-### `footer`
+### `footer` {#project-footer}
 
 * `text` - Text to display in the footer. HTML is supported for this field.
 
-### `metadata`
+### `metadata` {#project-metadata}
 
 Properties in the details page will look for the corresponding key (based on the name of the property in the query) to display their labels.
 
-### `routes`
+### `routes` {#project-routes}
 
 Label to use for routes in the configuration file, based on the key of the route.
 
-### `routes-descriptions`
+### `routes-descriptions` {#project-routes-descriptions}
 
 Description to use for routes in the configuration file, based on the key of the route.
 
-### `filters`
+### `filters` {#project-filters}
 
-Filters in the sidebar will look for the corresponding key (based on the [id](/config#route-filters-id) field of the filter) to display their labels.
+Filters in the sidebar will look for the corresponding key (based on the [id](/api/config#route-filters-id) field of the filter) to display their labels.
