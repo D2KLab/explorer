@@ -89,11 +89,11 @@ function generateValue(currentRouteName, currentRoute, metadata, metaName, metaI
           {printableValue}
         </a>
         {predictionElement}
-        {skosmosUri && config.plugins.skosmos && (
+        {skosmosUri && config.plugins?.skosmos && (
           <small>
             {metaName} (
             <a
-              href={`${config.plugins.skosmos.baseUrl}${meta['@id']}`}
+              href={`${config.plugins?.skosmos.baseUrl}${meta['@id']}`}
               target="_blank"
               rel="noopener noreferrer"
             >

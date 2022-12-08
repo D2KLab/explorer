@@ -581,7 +581,7 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
                 />
               </Option>
             )}
-            {config.plugins.virtualLoom && (
+            {config.plugins?.virtualLoom && (
               <Option>
                 <Button primary onClick={toggleMap} title={t('search:buttons.toggleMap')}>
                   {isMapVisible ? <GridIcon height="20" /> : <MapLocationDot height="20" />}

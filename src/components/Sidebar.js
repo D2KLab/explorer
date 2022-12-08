@@ -343,12 +343,12 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
   const renderSelectedOption = (item) => (
     <>
       {item.label}{' '}
-      {config.plugins.skosmos && (
+      {config.plugins?.skosmos && (
         <small>
           {' '}
           (
           <a
-            href={`${config.plugins.skosmos.baseUrl}${item.value}`}
+            href={`${config.plugins?.skosmos.baseUrl}${item.value}`}
             target="_blank"
             rel="noopener noreferrer"
           >

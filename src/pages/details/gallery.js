@@ -312,7 +312,7 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
     const params = [];
     params.push(`lang=${encodeURIComponent(data.language)}`);
     params.push(`data=${encodeURIComponent(JSON.stringify(data))}`);
-    const url = `${config.plugins.virtualLoom.url}?${params.join('&')}`;
+    const url = `${config.plugins?.virtualLoom?.url}?${params.join('&')}`;
     return url;
   };
 

@@ -305,9 +305,9 @@ function VocabularyPage({ results, featured, debugSparqlQuery }) {
         <Hero image={`/images/pages/${query.type}.jpg`}>
           <VocabularyTitle>
             <h1>{vocabularyLabel}</h1>
-            {config.plugins.skosmos && route.skosmos && route.skosmos.uri && (
+            {config.plugins?.skosmos && route.skosmos && route.skosmos.uri && (
               <a
-                href={`${config.plugins.skosmos.baseUrl}${encodeURIComponent(route.skosmos.uri)}`}
+                href={`${config.plugins?.skosmos?.baseUrl}${encodeURIComponent(route.skosmos.uri)}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -355,9 +355,9 @@ function VocabularyPage({ results, featured, debugSparqlQuery }) {
                           {item.label} ({item.count || 0})
                         </h2>
                       </ItemTitle>
-                      {config.plugins.skosmos && (
+                      {config.plugins?.skosmos && (
                         <a
-                          href={`${config.plugins.skosmos.baseUrl}${encodeURIComponent(
+                          href={`${config.plugins?.skosmos?.baseUrl}${encodeURIComponent(
                             item['@id']
                           )}`}
                           target="_blank"

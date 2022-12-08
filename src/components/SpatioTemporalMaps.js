@@ -22,7 +22,7 @@ function SpatioTemporalMaps({ mapRef, query }) {
     <div>
       <iframe
         title="Spatio Temporal Maps"
-        src={`${config.plugins.spatioTemporalMaps.url}?${queryString.stringify(params)}`}
+        src={`${config.plugins?.spatioTemporalMaps.url}?${queryString.stringify(params)}`}
         width="100%"
         height="600"
         ref={mapRef}

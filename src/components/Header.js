@@ -158,10 +158,10 @@ function Header({ className }) {
                 </Link>
               </NavItem>
             ))}
-          {config.plugins.skosmos && config.plugins.skosmos.thesaurusUrl && (
+          {config.plugins?.skosmos && config.plugins?.skosmos?.thesaurusUrl && (
             <NavItem>
               <NavLink
-                href={config.plugins.skosmos.thesaurusUrl}
+                href={config.plugins?.skosmos?.thesaurusUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
