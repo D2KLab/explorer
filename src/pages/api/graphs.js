@@ -3,9 +3,9 @@ import { withRequestValidation } from '@helpers/api';
 import { getQueryObject, removeEmptyObjects } from '@helpers/utils';
 import config from '~/config';
 
-const getGraphs = async () => {
+const getGraphs = async (language) => {
   if (typeof config.graphs === 'function') {
-    const graphsQuery = getQueryObject(config.graphs());
+    const graphsQuery = getQueryObject(config.graphs(), { language });
     const resGraphs = await SparqlClient.query(graphsQuery, {
       endpoint: config.api.endpoint,
       debug: config.debug,
@@ -33,6 +33,7 @@ const getGraphs = async () => {
 export default withRequestValidation({
   allowedMethods: ['GET'],
 })(async (req, res) => {
-  const graphs = await getGraphs();
+  const { query } = req;
+  const graphs = await getGraphs(query.hl || req.headers['accept-language']);
   res.status(200).json(graphs);
 });
