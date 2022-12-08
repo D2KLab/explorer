@@ -1,0 +1,19 @@
+.chip {
+  display: inline-block;
+  padding: var(--ifm-breadcrumb-padding-vertical) var(--ifm-breadcrumb-padding-horizontal);
+  margin-bottom: var(--ifm-leading);
+  border-radius: 1em;
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-1000);
+
+  border: 0.1rem solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--ifm-code-border-radius);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem;
+  vertical-align: middle;
+  padding: var(--ifm-code-padding-vertical) var(--ifm-code-padding-horizontal);
+}
+
+.chip p {
+  margin: 0;
+}

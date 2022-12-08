@@ -1,0 +1,4 @@
+.indent {
+  margin: var(--ifm-toc-padding-vertical) var(--ifm-toc-padding-horizontal);
+  padding: var(--ifm-toc-padding-vertical) var(--ifm-toc-padding-horizontal);
+}
