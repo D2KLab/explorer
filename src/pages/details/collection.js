@@ -155,7 +155,7 @@ function CollectionDetailsPage({ result, inList, searchData, debugSparqlQuery })
             </Element>
             <p>{result.description || t('common:collection.noDescription')}</p>
             <Element marginBottom={24}>
-              <MetadataList metadata={result} query={query} route={route} />
+              <MetadataList metadata={result} type={query.type} />
             </Element>
             <h2>{t('common:collection.items', { count: result.items.length })}</h2>
             <Results>

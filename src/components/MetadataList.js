@@ -120,8 +120,11 @@ function generateValue(currentRouteName, currentRoute, metadata, metaName, metaI
   return renderValue();
 }
 
-function MetadataList({ metadata, query, route }) {
+function MetadataList({ metadata, type }) {
   const { t } = useTranslation('project');
+
+  const route = config.routes[type];
+  if (!route) return;
 
   const displayedMetadata = Object.entries(metadata).filter(([metaName]) => {
     if (['@id', '@type', '@graph', 'label', 'representation'].includes(metaName)) return false;
@@ -144,7 +147,7 @@ function MetadataList({ metadata, query, route }) {
             ]
           */
           meta.forEach((subMeta, i) => {
-            const value = generateValue(query.type, route, metadata, metaName, i, subMeta);
+            const value = generateValue(type, route, metadata, metaName, i, subMeta);
             if (value) {
               values.push(value);
             }
@@ -154,7 +157,7 @@ function MetadataList({ metadata, query, route }) {
           values.push(<span>{metaId['@value']}</span>);
         } else {
           // Example: { '@id': 'http://data.silknow.org/collection/4051dfc9-1267-3530-bac8-40011f2e3daa', '@type': 'E78_Collection', label: 'Textiles and Fashion Collection' }
-          const value = generateValue(query.type, route, metadata, metaName, index, meta);
+          const value = generateValue(type, route, metadata, metaName, index, meta);
           if (value) {
             values.push(value);
           }

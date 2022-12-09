@@ -538,7 +538,7 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
               <GraphLink uri={result['@graph']} icon label />
             </Element>
             <Element marginBottom={24}>
-              <MetadataList metadata={result} query={query} route={route} />
+              <MetadataList metadata={result} type={query.type} />
             </Element>
             <Element marginBottom={24}>
               <MenuButton state={downloadMenu} as={Button} primary>

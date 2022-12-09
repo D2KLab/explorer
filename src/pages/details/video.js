@@ -659,7 +659,7 @@ function VideoDetailsPage({
           </Primary>
           <Secondary>
             <Element marginBottom={24}>
-              <MetadataList metadata={result} query={query} route={route} />
+              <MetadataList metadata={result} type={query.type} />
             </Element>
             <Element marginBottom={24}>
               <h2>Related</h2>
