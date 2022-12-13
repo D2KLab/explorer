@@ -46,13 +46,13 @@ function ListShare({ list, dialogState, children, shareUrl, facebookAppId }) {
     <>
       {(children && children) || (
         <DialogDisclosure state={shareDialog} as={Button} primary>
-          {t('listShare.title')}
+          {t('common:listShare.title')}
         </DialogDisclosure>
       )}
       <StyledDialog
         state={shareDialog}
         modal
-        aria-label={t('listShare.title')}
+        aria-label={t('common:listShare.title')}
         backdrop
         backdropProps={{
           style: {
@@ -67,7 +67,7 @@ function ListShare({ list, dialogState, children, shareUrl, facebookAppId }) {
         }}
       >
         <Element marginBottom={24}>
-          <h2>{t('listShare.title')}</h2>
+          <h2>{t('common:listShare.title')}</h2>
         </Element>
         <Element marginBottom={24}>
           <FacebookShareButton url={shareUrl} quote={title} style={buttonStyle}>
@@ -112,7 +112,7 @@ function ListShare({ list, dialogState, children, shareUrl, facebookAppId }) {
               shareDialog.hide();
             }}
           >
-            {t('buttons.close')}
+            {t('common:buttons.close')}
           </Button>
         </Element>
       </StyledDialog>

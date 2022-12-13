@@ -196,13 +196,15 @@ function SaveButton({ item, type, saved, hideLabel, onChange, ...props }) {
       <StyledDialogDisclosure {...props} onClick={onClick} state={dialog}>
         {saved ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
         {!hideLabel && (
-          <StyledLabel>{saved ? t('saveButton.saved') : t('saveButton.save')}</StyledLabel>
+          <StyledLabel>
+            {saved ? t('common:saveButton.saved') : t('common:saveButton.save')}
+          </StyledLabel>
         )}
       </StyledDialogDisclosure>
       <StyledDialog
         state={dialog}
         modal
-        aria-label={t('saveButton.title')}
+        aria-label={t('common:saveButton.title')}
         backdrop
         backdropProps={{
           style: {
@@ -216,7 +218,7 @@ function SaveButton({ item, type, saved, hideLabel, onChange, ...props }) {
           },
         }}
       >
-        <h2>{t('saveButton.title')}</h2>
+        <h2>{t('common:saveButton.title')}</h2>
         <Element marginY={12}>
           {listFormVisible ? (
             <form
@@ -227,7 +229,7 @@ function SaveButton({ item, type, saved, hideLabel, onChange, ...props }) {
             >
               <Input
                 type="text"
-                placeholder={t('saveButton.labels.listName')}
+                placeholder={t('common:saveButton.labels.listName')}
                 value={newListName}
                 onChange={(e) => setNewListName(e.target.value)}
                 autoFocus
@@ -246,21 +248,21 @@ function SaveButton({ item, type, saved, hideLabel, onChange, ...props }) {
                     setListFormVisible(false);
                   }}
                 >
-                  {t('buttons.cancel')}
+                  {t('common:buttons.cancel')}
                 </Button>
                 <Button type="button" primary onClick={createListWithItem}>
-                  {saved ? t('saveButton.saved') : t('saveButton.save')}
+                  {saved ? t('common:saveButton.saved') : t('common:saveButton.save')}
                 </Button>
               </Element>
             </form>
           ) : (
             <Button type="button" primary onClick={() => setListFormVisible(true)}>
-              {t('saveButton.createButton')}
+              {t('common:saveButton.createButton')}
             </Button>
           )}
         </Element>
         {loading ? (
-          <p>{t('saveButton.loading')}</p>
+          <p>{t('common:saveButton.loading')}</p>
         ) : (
           <StyledList>
             {lists.map((list) => {

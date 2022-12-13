@@ -69,7 +69,7 @@ function ListSettings({ list }) {
       <StyledDialog
         state={settingsDialog}
         modal
-        aria-label={t('listSettings.title')}
+        aria-label={t('common:listSettings.title')}
         backdrop
         backdropProps={{
           style: {
@@ -84,7 +84,7 @@ function ListSettings({ list }) {
         }}
       >
         <Element marginBottom={24}>
-          <h2>{t('listSettings.title')}</h2>
+          <h2>{t('common:listSettings.title')}</h2>
         </Element>
         <form
           onSubmit={async (e) => {
@@ -95,11 +95,11 @@ function ListSettings({ list }) {
         >
           <Element display="flex" alignItems="center" marginBottom={24}>
             <label>
-              <Element paddingRight={12}>{t('listSettings.labels.name')}</Element>
+              <Element paddingRight={12}>{t('common:listSettings.labels.name')}</Element>
               <Input
                 name="list_name"
                 type="text"
-                placeholder={t('listSettings.labels.name')}
+                placeholder={t('common:listSettings.labels.name')}
                 value={listName}
                 onChange={(e) => setListName(e.target.value)}
               />
@@ -107,7 +107,7 @@ function ListSettings({ list }) {
           </Element>
           <Element display="flex" alignItems="center" marginBottom={24}>
             <label>
-              <Element paddingRight={12}>{t('listSettings.labels.public')}</Element>
+              <Element paddingRight={12}>{t('common:listSettings.labels.public')}</Element>
               <Switch
                 onChange={(checked) => setListPublic(checked)}
                 checked={listPublic}
@@ -132,10 +132,10 @@ function ListSettings({ list }) {
                 settingsDialog.hide();
               }}
             >
-              {t('buttons.cancel')}
+              {t('common:buttons.cancel')}
             </Button>
             <Button type="submit" primary loading={isUpdating}>
-              {t('buttons.save')}
+              {t('common:buttons.save')}
             </Button>
           </Element>
         </form>

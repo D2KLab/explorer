@@ -40,7 +40,7 @@ function SearchBox({ className, placeholder = 'Search' }) {
   const { t } = useTranslation('common');
   return (
     <Form className={className} action={`/${config.search.route}`} method="GET">
-      <SearchButton aria-label={t('buttons.search')} type="submit">
+      <SearchButton aria-label={t('common:buttons.search')} type="submit">
         <SearchIcon />
       </SearchButton>
       <StyledSearchInput type="search" name="q" placeholder={placeholder} />

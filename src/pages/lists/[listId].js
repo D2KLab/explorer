@@ -46,7 +46,7 @@ function ListsPage({ isOwner, list, shareLink }) {
 
   const renderListItems = () => (
     <Element marginY={24}>
-      <h2>{t('list.items')}</h2>
+      <h2>{t('common:list.items')}</h2>
       <Element marginY={12}>
         {list.items.length > 0 ? (
           <Results>
@@ -86,7 +86,7 @@ function ListsPage({ isOwner, list, shareLink }) {
             })}
           </Results>
         ) : (
-          <p>{t('list.empty')}</p>
+          <p>{t('common:list.empty')}</p>
         )}
       </Element>
     </Element>
@@ -100,7 +100,7 @@ function ListsPage({ isOwner, list, shareLink }) {
     return (
       <Element marginY={24}>
         <Element marginBottom={12}>
-          <h2>{t('list.operations')}</h2>
+          <h2>{t('common:list.operations')}</h2>
         </Element>
         <Element marginBottom={12} display="flex">
           <Link
@@ -174,8 +174,8 @@ function ListsPage({ isOwner, list, shareLink }) {
                       components={[<strong key="0" />]}
                       values={{
                         status: list.is_public
-                          ? t('list.privacy.status.public')
-                          : t('list.privacy.status.private'),
+                          ? t('common:list.privacy.status.public')
+                          : t('common:list.privacy.status.private'),
                       }}
                     />
                   </p>

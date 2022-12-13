@@ -60,7 +60,7 @@ function Burger({ className, open, setOpen, ...props }) {
   return (
     <StyledBurger
       className={className}
-      aria-label={t('burger.label')}
+      aria-label={t('common:burger.label')}
       aria-expanded={isExpanded}
       open={open}
       onClick={() => setOpen(!open)}

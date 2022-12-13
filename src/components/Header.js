@@ -172,7 +172,7 @@ function Header({ className }) {
         </NavList>
       </NavContainer>
       <SearchContainer>
-        <SearchBox placeholder={t('search')} />
+        <SearchBox placeholder={t('project:search')} />
       </SearchContainer>
       <StyledLanguageSwitch />
       <StyledProfileButton />

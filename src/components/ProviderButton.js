@@ -36,7 +36,11 @@ export function ProviderButton({ provider, ...props }) {
   const { t } = useTranslation('common');
   const Container = providersButtons[provider.name] || Button;
 
-  return <Container {...props}>{t('providerButton.label', { provider: provider.name })}</Container>;
+  return (
+    <Container {...props}>
+      {t('common:providerButton.label', { provider: provider.name })}
+    </Container>
+  );
 }
 
 export default ProviderButton;

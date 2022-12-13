@@ -75,7 +75,10 @@ function Menu({ className, open, ...props }) {
         {Object.keys(config.routes).flatMap((routeName) => (
           <Link key={routeName} href={`/${routeName}`} passHref>
             <a tabIndex={tabIndex}>
-              {t(`routes.${routeName}`, routeName.substr(0, 1).toUpperCase() + routeName.substr(1))}
+              {t(
+                `project:routes.${routeName}`,
+                routeName.substr(0, 1).toUpperCase() + routeName.substr(1)
+              )}
             </a>
           </Link>
         ))}

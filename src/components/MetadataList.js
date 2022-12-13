@@ -169,7 +169,7 @@ function MetadataList({ metadata, type }) {
         }
 
         return (
-          <Metadata key={metaName} label={t(`metadata.${metaName.replace(/__/, '')}`)}>
+          <Metadata key={metaName} label={t(`project:metadata.${metaName.replace(/__/, '')}`)}>
             {values.map((value, i) => (
               <div key={i}>{value}</div>
             ))}

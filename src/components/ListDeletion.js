@@ -33,13 +33,13 @@ function ListDeletion({ list, dialogState, children }) {
     <>
       {(children && children) || (
         <DialogDisclosure state={deleteListDialog} as={Button} primary loading={isDeleting}>
-          {t('listDeletion.title')}
+          {t('common:listDeletion.title')}
         </DialogDisclosure>
       )}
       <StyledDialog
         state={deleteListDialog}
         modal
-        aria-label={t('listDeletion.title')}
+        aria-label={t('common:listDeletion.title')}
         backdrop
         backdropProps={{
           style: {
@@ -53,7 +53,7 @@ function ListDeletion({ list, dialogState, children }) {
           },
         }}
       >
-        <h2>{t('listDeletion.title')}</h2>
+        <h2>{t('common:listDeletion.title')}</h2>
         <p>
           <Trans
             i18nKey="common:listDeletion.confirmText"
@@ -69,10 +69,10 @@ function ListDeletion({ list, dialogState, children }) {
               deleteListDialog.hide();
             }}
           >
-            {t('buttons.cancel')}
+            {t('common:buttons.cancel')}
           </Button>
           <Button type="button" primary loading={isDeleting} onClick={deleteList}>
-            {t('listDeletion.deleteButton')}
+            {t('common:listDeletion.deleteButton')}
           </Button>
         </Element>
       </StyledDialog>
