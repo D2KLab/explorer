@@ -1045,6 +1045,30 @@ module.exports = {
 
 </details>
 
+### `analytics` {#analytics}
+
+* Type: `object`
+
+Configuration for Analytics.
+
+<Indent>
+
+#### `id` {#analytics-id}
+
+* Type: `string`
+
+Analytics Property ID. It should look like: "UA-XXXXXX-X" or "G-XXXXXXX". More informations can be found on Google's [support page](https://support.google.com/analytics/answer/9539598?hl=en).
+
+```js title="config.js"
+module.exports = {
+  analytics: {
+    id: 'G-XXXXXXX',
+  },
+};
+```
+
+</Indent>
+
 ## QueryObject {#QueryObject}
 
 A plain JSON or JSON-LD object used by [sparql-transformer](https://github.com/D2KLab/sparql-transformer) for querying.
