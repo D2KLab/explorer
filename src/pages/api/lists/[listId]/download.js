@@ -101,7 +101,11 @@ export default withRequestValidation({
       if (entity && entity.result) {
         const { result } = entity;
         const resultBaseName = [
-          result.label?.replace(/\//, '-'),
+          []
+            .concat(result.label)
+            .filter((x) => x)
+            .join(', ')
+            .replace(/\//, '-'),
           uriToId(result['@id'], {
             base: route.uriBase,
           }),
