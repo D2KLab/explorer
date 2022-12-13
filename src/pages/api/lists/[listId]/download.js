@@ -115,33 +115,18 @@ export default withRequestValidation({
 
         results.push(result);
 
-        // Add representations to the Zip
-        if (result.representation) {
-          for (let j = 0; j < result.representation.length; j += 1) {
-            const imageBuffer = await downloadImageAsBuffer(result.representation[j].image);
-            if (imageBuffer) {
-              zip.addFile(
-                path.join(
-                  listFolder,
-                  resultBaseName,
-                  path.basename(result.representation[j].image)
-                ),
-                imageBuffer
-              );
-            }
-          }
-        }
-
         // Add images to the Zip
-        if (result.image) {
-          for (let j = 0; j < result.image.length; j += 1) {
-            const imageBuffer = await downloadImageAsBuffer(result.image[j]);
-            if (imageBuffer) {
-              zip.addFile(
-                path.join(listFolder, resultBaseName, path.basename(result.image[j])),
-                imageBuffer
-              );
-            }
+        const imagesToDownload = []
+          .concat(result.representation, result.image)
+          .filter((x) => x)
+          .map((x) => x.image || x);
+        for (let j = 0; j < imagesToDownload.length; j += 1) {
+          const imageBuffer = await downloadImageAsBuffer(imagesToDownload[j]);
+          if (imageBuffer) {
+            zip.addFile(
+              path.join(listFolder, resultBaseName, path.basename(imagesToDownload[j])),
+              imageBuffer
+            );
           }
         }
 
