@@ -1,0 +1,27 @@
+{
+  "buttons": {
+    "clear": "LEEREN",
+    "filter": "FILTERN",
+    "loadMore": "Mehr laden",
+    "paginatePrevious": "Vorherige",
+    "paginateNext": "Nächste",
+    "toggleMap": "Karte umschalten"
+  },
+  "labels": {
+    "searchResults_one": "{{count}} Suchergebnisse",
+    "searchResults_other": "{{count}} Suchergebnisse",
+    "sortBy": "Suche nach",
+    "similarity": "Ähnlichkeiten",
+    "select": "Auswählen...",
+    "browse": "Entdecke {{type}}",
+    "noResults": "Keine Ergebnisse für diese Suche",
+    "page": "Seite {{page}}",
+    "loading": "Laden..."
+  },
+  "fields": {
+    "graph": "Graph",
+    "q": "Textsuche",
+    "languages": "Sprache",
+    "options": "Optionen"
+  }
+}

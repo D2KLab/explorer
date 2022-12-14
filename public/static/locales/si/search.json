@@ -1,0 +1,27 @@
+{
+  "buttons": {
+    "clear": "POČISTI",
+    "filter": "FILTER",
+    "loadMore": "Naloži več",
+    "paginatePrevious": "Prejšnji",
+    "paginateNext": "Naslednji",
+    "toggleMap": "Preklopni zemljevid"
+  },
+  "labels": {
+    "searchResults_one": "{{count}} rezultat iskanja",
+    "searchResults_other": "{{count}} rezultatov iskanja",
+    "sortBy": "Razvrsti po",
+    "similarity": "Podobnost",
+    "select": "Izberi...",
+    "browse": "Brskanje po {{type}}",
+    "noResults": "Vaše iskanje se ni ujemalo z nobenim dokumentom",
+    "page": "Stran {{page}}",
+    "loading": "Nalaganje..."
+  },
+  "fields": {
+    "graph": "Graf",
+    "q": "Besedilno iskanje",
+    "languages": "Jeziki",
+    "options": "Možnosti"
+  }
+}

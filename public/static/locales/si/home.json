@@ -1,0 +1,9 @@
+{
+  "hero": {
+    "headline": "Demo"
+  },
+  "search": {
+    "placeholder": "Iskanje držav znotraj DBpedia ..."
+  },
+  "browseBy": "ali brskajte po"
+}

@@ -1,0 +1,156 @@
+{
+  "sidebar": {
+    "combined": "kombiniert"
+  },
+  "profileButton": {
+    "label": "Profil",
+    "signIn": "Anmelden",
+    "signOut": "Abmelden",
+    "signedAs": "Anmelden als <0>{{name}}</0>",
+    "yourProfile": "Dein Profil"
+  },
+  "burger": {
+    "label": "Menu"
+  },
+  "listDeletion": {
+    "title": "Liste löschen",
+    "deleteButton": "Liste löschen",
+    "confirmText": "Möchsten Sie wirklich die Liste \"<0>{{name}}</0>\" löschen? Diese Aktion ist unwiderruflich!"
+  },
+  "listSettings": {
+    "title": "Einstellung der Liste",
+    "labels": {
+      "name": "Name",
+      "public": "Öffentlich?"
+    }
+  },
+  "listShare": {
+    "title": "Teilen der Liste"
+  },
+  "providerButton": {
+    "label": "Anmelden mit {{provider}}"
+  },
+  "saveButton": {
+    "title": "Zu einer Liste speichern",
+    "labels": {
+      "listName": "Name der Liste"
+    },
+    "createButton": "Erstelle eine neue Liste",
+    "loading": "Laden...",
+    "save": "Speichern",
+    "saved": "Gespeichert"
+  },
+  "buttons": {
+    "save": "Speichern",
+    "close": "Schließen",
+    "cancel": "Abbrechen",
+    "search": "Suchen",
+    "searchByText": "Suche nach Text",
+    "searchByImage": "Suche nach Bild",
+    "download": "Runterladen",
+    "virtualLoom": {
+      "download": "Virtual Loom",
+      "web": "Web",
+      "desktop": "Desktop"
+    },
+    "downloadJSON": "Linked Data JSON",
+    "downloadSelectedImage": "Ausgewählte Bilder runterladen",
+    "editQuery": "Anfrage bearbeiten",
+    "permalink": "permalink",
+    "original": "Originale Ansicht",
+    "similar": "Ähnliche Ansicht"
+  },
+  "list": {
+    "items": "Elemente in der Liste",
+    "empty": "Diese Liste ist leer!",
+    "operations": "Ausführung",
+    "created": "Erstellt am: <0>{{date}}</0>",
+    "updated": "Letzte Änderung: <0>{{date}}</0>",
+    "privacy": {
+      "text": "Diese Liste ist <0>{{status}}</strong>.",
+      "status": {
+        "public": "öffentliche",
+        "private": "privat"
+      }
+    },
+    "shareLink": "Öffentliche Verknüpfung: <0>{{link}}</0>"
+  },
+  "profile": {
+    "title": "Profil",
+    "lists": {
+      "title": "Meine Liste",
+      "count": "{{count}} Elemente",
+      "lastEdit": "Letzte Änderung am <0>{{date}}</0>",
+      "open": "Offen"
+    },
+    "deleteAccount": {
+      "title": "Account löschen",
+      "text": "Sie wollen ihr Konto wirklich <0>permanent löschen</0> ? <1>Diese Aktion ist unwiderruflich!</1>",
+      "consequences": "Durch das Löschen des Kontos wird es auch entfernt:",
+      "lists": "Alle von den Nutzern erstellten Listen",
+      "sessions": "Alle verbundenen sozialen Konten und Sitzungen",
+      "cancel": "Kontolöschung abbrechen",
+      "confirm": "Ja, Account löschen"
+    },
+    "connectedAccounts": {
+      "title": "Verbundene Konten",
+      "unlink": "Verbindung treffen",
+      "new": "Mit anderem Konto verbinden"
+    }
+  },
+  "errors": {
+    "generic": "Fehler aufgetreten",
+    "listNotFound": "Liste nicht gefunden",
+    "resultNotFound": "Ergebnis nicht gefunden",
+    "routeNotFound": "Pfad nicht gefunden",
+    "pageNotFound": "Seite nicht gefunden",
+    "signin": {
+      "Signin": "Versuchen Sie es mit einem anderen Konto.",
+      "OAuthSignin": "Versuchen Sie es mit einem anderen Konto.",
+      "OAuthCallback": "Versuchen Sie es mit einem anderen Konto.",
+      "OAuthCreateAccount": "Versuchen Sie es mit einem anderen Konto.",
+      "EmailCreateAccount": "Versuchen Sie es mit einem anderen Konto.",
+      "Callback": "Versuchen Sie es mit einem anderen Konto.",
+      "OAuthAccountNotLinked": "Um ihre Identität zu bestätigen, melden Sie sich mit dem ursprünglichen Konto an.",
+      "EmailSignin": "E-Mail konnte nicht gesendet werden.",
+      "CredentialsSignin": "Anmeldung fehlgeschlagen. Prüfen Sie die Korrektheit ihrer Daten.",
+      "SessionRequired": "Melden Sie sich an um Zugang zu dieser Seite zu erhalten.",
+      "default": "Anmeldung nicht möglich."
+    }
+  },
+  "home": {
+    "title": "Home",
+    "searchByImage": {
+      "dropTitle": "Datei hier ablegen ...",
+      "dropText": "Ziehen und legen Sie Dateien hier ab oder klicken Sie auf ausgewählte Dateien",
+      "uploading": "Bild wird hochgeladen...",
+      "processing": "Bild wird bearbeitet"
+    }
+  },
+  "vocabulary": {
+    "title": "Vokabeln: {{vocabulary}}",
+    "explore": "Durchsuchen"
+  },
+  "collection": {
+    "noDescription": "Keine Beschreibung für diese Sammlung.",
+    "items_one": "{{count}} Element in der Sammlung",
+    "items_other": "{{count}} Elemente in der Sammlung"
+  },
+  "listing": {
+    "items_one": "{{count}} Element in der Sammlung",
+    "items_other": "{{count}} Elemente in der Sammlung"
+  },
+  "footer": {
+    "contact": "Kontaktiere uns:"
+  },
+  "similarity": {
+    "visual": "Optisch ähnliche Bilder",
+    "semantic": "Objekte mit ähnlichen Eigenschaften"
+  },
+  "pagination": {
+    "back": "Zurück zu den Suchergebnissen",
+    "previous": "Vorherige Ergebnisse",
+    "next": "Nächste Ergebnisse",
+    "loading": "Laden…"
+  }
+}

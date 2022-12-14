@@ -1,0 +1,155 @@
+{
+  "sidebar": {
+    "combined": "kombinirano"
+  },
+  "profileButton": {
+    "label": "Profil",
+    "signIn": "Prijava",
+    "signOut": "Odjava",
+    "signedAs": "Prijavljen kot <0>{{name}}</0>",
+    "yourProfile": "Tvoj profil"
+  },
+  "burger": {
+    "label": "Meni"
+  },
+  "listDeletion": {
+    "title": "Izbriši seznam",
+    "deleteButton": "Izbriši seznam",
+    "confirmText": "Ali ste prepričani, da želite izbrisati seznam \"<0>{{name}}</0>\"? Tega dejanja ni mogoče razveljaviti!"
+  },
+  "listSettings": {
+    "title": "Nastavitve seznamov",
+    "labels": {
+      "name": "Ime",
+      "public": "Javno?"
+    }
+  },
+  "listShare": {
+    "title": "Deli seznam"
+  },
+  "providerButton": {
+    "label": "Prijavi se z {{provider}}"
+  },
+  "saveButton": {
+    "title": "Shrani v seznam",
+    "labels": {
+      "listName": "Ime seznama"
+    },
+    "createButton": "Ustvari nov seznam",
+    "loading": "Nalaganje...",
+    "save": "Shrani",
+    "saved": "Shranjeno"
+  },
+  "buttons": {
+    "save": "Shrani",
+    "close": "Zapri",
+    "cancel": "Prekliči",
+    "search": "Išči",
+    "searchByText": "Besedilno iskanje",
+    "searchByImage": "Slikovno iskanje",
+    "download": "Prenesi",
+    "virtualLoom": {
+      "download": "Virtualne statve",
+      "web": "Splet",
+      "desktop": "Namizje"
+    },
+    "downloadJSON": "Povezani podatki JSON",
+    "downloadSelectedImage": "Prenesi izbrano sliko",
+    "editQuery": "Uredi poizvedbo",
+    "permalink": "stalna povezava",
+    "original": "oglej si izvirnik",
+    "similar": "Oglej si podobno"
+  },
+  "list": {
+    "items": "Elementi v seznamu",
+    "empty": "Ta seznam je prazen!",
+    "operations": "Operacije",
+    "created": "Ustvarjeno: <0>{{date}}</0>",
+    "updated": "Zadnja posodobitev: <0>{{date}}</0>",
+    "privacy": {
+      "text": "Ta seznam je <0>{{status}}</strong>.",
+      "status": {
+        "public": "javen",
+        "private": "zaseben"
+      }
+    },
+    "shareLink": "Javna povezava: <0>{{link}}</0>"
+  },
+  "profile": {
+    "title": "Profil",
+    "lists": {
+      "title": "Moji seznami",
+      "count": "{{count}} elementov",
+      "lastEdit": "zadnje urejanje <0>{{date}}</0>",
+      "open": "Odpri"
+    },
+    "deleteAccount": {
+      "title": "Izbriši račun",
+      "text": "Ali ste prepričani, da želite <0>trajno izbrisati</0> vaš račun? <1>Tega dejanja ni mogoče razveljaviti!</1>",
+      "consequences": "Če izbrišete ta račun, boste odstranili tudi:",
+      "lists": "Vse sezname, ki jih je ustvaril uporabnik",
+      "sessions": "Vse povezane družabne račune in seje",
+      "cancel": "Prekliči izbris računa",
+      "confirm": "Da, izbriši moj račun"
+    },
+    "connectedAccounts": {
+      "title": "Povezani računi",
+      "unlink": "Odklopite povezavo",
+      "new": "Povežite drug račun"
+    }
+  },
+  "errors": {
+    "generic": "Prišlo je do napake",
+    "listNotFound": "Seznam ni najden",
+    "resultNotFound": "Rezultat ni najden",
+    "routeNotFound": "Pot ni najdena",
+    "pageNotFound": "Stran ni najdena",
+    "signin": {
+      "Signin": "Poskusite se prijaviti z drugim računom.",
+      "OAuthSignin": "Poskusite se prijaviti z drugim računom.",
+      "OAuthCallback": "Poskusite se prijaviti z drugim računom.",
+      "OAuthCreateAccount": "Poskusite se prijaviti z drugim računom.",
+      "EmailCreateAccount": "Poskusite se prijaviti z drugim računom.",
+      "Callback": "Poskusite se prijaviti z drugim računom..",
+      "OAuthAccountNotLinked": "Če želite potrditi svojo identiteto, se prijavite z istim računom, ki ste ga uporabili na začetku.",
+      "EmailSignin": "Elektronskega sporočila ni bilo mogoče poslati.",
+      "CredentialsSignin": "Prijava ni uspela. Preverite, ali so podatki, ki ste jih navedli, pravilni.",
+      "SessionRequired": "Za dostop do te strani se prijavite.",
+      "default": "Ni se mogoče prijaviti."
+    }
+  },
+  "home": {
+    "title": "Domov",
+    "searchByImage": {
+      "dropTitle": "Datoteke oddajte tukaj ...",
+      "dropText": "Povlecite in spustite nekaj datotek sem ali kliknite za izbiro datotek.",
+      "uploading": "Nalaganje slike...",
+      "processing": "Obdelava slike"
+    }
+  },
+  "vocabulary": {
+    "explore": "Raziskujte"
+  },
+  "collection": {
+    "noDescription": "Za to zbirko ni opisa.",
+    "items_one": "{{count}} element v zbirki",
+    "items_other": "{{count}} elementov v zbirki"
+  },
+  "listing": {
+    "items_one": "{{count}} element v seznamu",
+    "items_other": "{{count}} elementov v seznamu"
+  },
+  "footer": {
+    "contact": "Stopite v stik z nami:"
+  },
+  "similarity": {
+    "visual": "Vizualno podobne slike",
+    "semantic": "Objekti s podobnimi lastnostmi"
+  },
+  "pagination": {
+    "back": "Nazaj na rezultate iskanja",
+    "previous": "Prejšnji rezultat",
+    "next": "Naslednji rezultat",
+    "loading": "Nalaganje…"
+  }
+}

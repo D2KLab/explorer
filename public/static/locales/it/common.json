@@ -147,9 +147,9 @@
     "semantic": "Oggetti con caratteristiche simili"
   },
   "pagination": {
-    "back": "Torna ai risultati della ricerca",
+    "back": "Torna ai risultati di ricerca",
     "previous": "Risultato precedente",
     "next": "Risultato successivo",
-    "loading": "Caricamento in corso…"
+    "loading": "Caricamento…"
   }
 }
