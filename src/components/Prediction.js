@@ -58,6 +58,7 @@ function Prediction({ prediction }) {
     <>
       <StyledDialog state={dialog} modal aria-label="">
         <PredictionDetails>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={generateMediaUrl(used, 200, 200)} alt="" />
           <p
             dangerouslySetInnerHTML={{
@@ -79,6 +80,7 @@ function Prediction({ prediction }) {
       />
       <StyledTooltip state={tooltipPrediction}>
         {kind === 'http://data.silknow.org/actor/luh-image-analysis/' && (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             style={{ verticalAlign: 'middle', marginRight: '0.5rem' }}
             src={generateMediaUrl(used, 80, 80)}
@@ -90,6 +92,7 @@ function Prediction({ prediction }) {
         })}
       </StyledTooltip>{' '}
       {kind === 'http://data.silknow.org/actor/luh-image-analysis/' && (
+        // eslint-disable-next-line @next/next/no-img-element
         <img style={{ verticalAlign: 'middle' }} src={generateMediaUrl(used, 16, 16)} alt="" />
       )}
     </>

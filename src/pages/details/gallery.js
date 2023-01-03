@@ -378,6 +378,7 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
     return Carousel.defaultProps.renderThumbs(children).concat(
       <Element key="virtual-loom">
         <MenuButton state={virtualLoomMenu}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/virtual-loom-button.png" alt="Virtual Loom" />
         </MenuButton>
         <StyledMenu
@@ -483,6 +484,7 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
                     onClick={() => showLightbox(i, image.label)}
                     aria-hidden="true"
                   >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={generateMediaUrl(image.url, 1024)} alt={image.label} />
                     {image.description && <p className="legend">{image.description}</p>}
                     {image.label && (
