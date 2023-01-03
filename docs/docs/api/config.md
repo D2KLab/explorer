@@ -97,6 +97,20 @@ module.exports = {
 
 </Indent>
 
+### `imagesDomains` {#head}
+
+* Type: `string[]`
+
+List of allowed hostnames for external images.
+
+See [Next.js documentation](https://nextjs.org/docs/api-reference/next/image#domains) for more informations.
+
+```js title="config.js"
+module.exports = {
+  imagesDomains: ['upload.wikimedia.org'],
+};
+```
+
 ### `home` {#home}
 
 * Type: `object`
