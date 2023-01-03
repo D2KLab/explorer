@@ -128,7 +128,7 @@ function Header({ className }) {
   const { t } = useTranslation('project');
   return (
     <Container className={className}>
-      <Link href="/" passHref>
+      <Link href="/">
         <LogoContainer>
           {config.metadata.logo ? (
             <Logo
