@@ -44,7 +44,7 @@ const StyledProfileButton = styled(ProfileButton)`
   ${({ theme }) => theme?.components?.Header?.StyledProfileButton};
 `;
 
-const LogoContainer = styled.a`
+const LogoContainer = styled.span`
   text-decoration: none;
   margin-right: 0;
   margin-left: 5em;
@@ -148,7 +148,7 @@ function Header({ className }) {
             .filter((routeName) => config.routes[routeName].showInNavbar !== false)
             .flatMap((routeName) => (
               <NavItem key={routeName}>
-                <Link href={`/${routeName}`} passHref>
+                <Link href={`/${routeName}`} passHref legacyBehavior>
                   <NavLink>
                     {t(
                       `routes.${routeName}`,

@@ -272,17 +272,13 @@ function VocabularyPage({ results, featured, debugSparqlQuery }) {
               <Arrow as={isActive ? ChevronDown : ChevronRight} />
               {result.label} ({totalCount})
             </a>
-            <Link href={getUseWithLink(useWith[0], result)} passHref>
-              <a>
-                <SearchIcon />
-              </a>
+            <Link href={getUseWithLink(useWith[0], result)}>
+              <SearchIcon />
             </Link>
           </DropdownItem>
         )) || (
-          <Link href={getUseWithLink(useWith[0], result)} passHref>
-            <a>
-              {result.label} ({totalCount})
-            </a>
+          <Link href={getUseWithLink(useWith[0], result)}>
+            {result.label} ({totalCount})
           </Link>
         )}
         {isActive && <Items>{items.map(renderResult)}</Items>}
@@ -331,7 +327,12 @@ function VocabularyPage({ results, featured, debugSparqlQuery }) {
                   }
 
                   return (
-                    <Link key={withConfig.route} href={getUseWithLink(withConfig, item)} passHref>
+                    <Link
+                      key={withConfig.route}
+                      href={getUseWithLink(withConfig, item)}
+                      passHref
+                      legacyBehavior
+                    >
                       <Button primary>
                         <Trans
                           i18nKey="common:vocabulary.explore"

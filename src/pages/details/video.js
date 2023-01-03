@@ -680,16 +680,13 @@ function VideoDetailsPage({
                           })
                         )}&type=${query.type}`}
                         as={`/${query.type}/${encodeURI(uriToId(link, { base: route.uriBase }))}`}
-                        passHref
                       >
-                        <a>
-                          <StyledMedia
-                            title={infos.title}
-                            subtitle=""
-                            thumbnail={route.imageFunc({ mediaLocator: infos.image })}
-                            direction="row"
-                          />
-                        </a>
+                        <StyledMedia
+                          title={infos.title}
+                          subtitle=""
+                          thumbnail={route.imageFunc({ mediaLocator: infos.image })}
+                          direction="row"
+                        />
                       </Link>
                     );
                   })) || (

@@ -452,22 +452,18 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
             type={query.type}
             page={pageNumber}
             searchApi="/api/search"
-            passHref
+            onClick={() => {
+              // Make sure the page number is correct if it hasn't been updated yet
+              onScrollToPage(pageNumber);
+            }}
           >
-            <a
-              onClick={() => {
-                // Make sure the page number is correct if it hasn't been updated yet
-                onScrollToPage(pageNumber);
-              }}
-            >
-              <Media
-                title={label}
-                subtitle={subtitle}
-                thumbnail={generateMediaUrl(mainImage, 300)}
-                direction="column"
-                graphUri={result['@graph']}
-              />
-            </a>
+            <Media
+              title={label}
+              subtitle={subtitle}
+              thumbnail={generateMediaUrl(mainImage, 300)}
+              direction="column"
+              graphUri={result['@graph']}
+            />
           </PaginatedLink>
           <StyledSaveButton
             type={query.type}
@@ -561,20 +557,14 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
                 as={`/${query.type}/${encodeURI(
                   uriToId(similarityEntity['@id'], { base: route.uriBase })
                 )}`}
-                passHref
               >
-                <a>
-                  <Media
-                    title={getEntityMainLabel(similarityEntity, { route, language: i18n.language })}
-                    thumbnail={generateMediaUrl(
-                      getEntityMainImage(similarityEntity, { route }),
-                      300
-                    )}
-                    direction="row"
-                    width={50}
-                    height={50}
-                  />
-                </a>
+                <Media
+                  title={getEntityMainLabel(similarityEntity, { route, language: i18n.language })}
+                  thumbnail={generateMediaUrl(getEntityMainImage(similarityEntity, { route }), 300)}
+                  direction="row"
+                  width={50}
+                  height={50}
+                />
               </Link>
             </Element>
           )}

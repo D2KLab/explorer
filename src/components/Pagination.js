@@ -66,8 +66,8 @@ function Pagination({ searchData, result, pageSize = 20, ...props }) {
     params.delete('id');
     params.delete('type');
     return (
-      <PaginatedLink key={id} id={id} type={query.type} searchApi={params.get('sapi')} passHref>
-        <a>{children}</a>
+      <PaginatedLink key={id} id={id} type={query.type} searchApi={params.get('sapi')}>
+        {children}
       </PaginatedLink>
     );
   };
@@ -75,52 +75,51 @@ function Pagination({ searchData, result, pageSize = 20, ...props }) {
   const renderBrowseLink = (params, idFunc, children) => {
     const linkParams = getLinkParams(params);
     return (
-      <Link href={`${query.spath}?${linkParams}`} passHref>
-        <a
-          onClick={(e) => {
-            e.preventDefault();
-            if (isLoadingResults) return;
+      <Link
+        href={`${query.spath}?${linkParams}`}
+        onClick={(e) => {
+          e.preventDefault();
+          if (isLoadingResults) return;
 
-            const linkParams = getLinkParams(params);
+          const linkParams = getLinkParams(params);
 
-            setIsLoadingResults(true);
+          setIsLoadingResults(true);
 
-            (async () => {
-              let newData;
-              start();
-              try {
-                newData = await (await fetch(`${query.sapi}?${linkParams}`)).json();
-              } finally {
-                done();
+          (async () => {
+            let newData;
+            start();
+            try {
+              newData = await (await fetch(`${query.sapi}?${linkParams}`)).json();
+            } finally {
+              done();
+            }
+
+            setIsLoadingResults(false);
+
+            const { results } = newData;
+            const id = await idFunc(results);
+
+            const entries = {};
+            for (const [key, value] of params) {
+              if (entries[key]) {
+                entries[key] = [].concat(entries[key], value);
+              } else {
+                entries[key] = value;
               }
+            }
 
-              setIsLoadingResults(false);
-
-              const { results } = newData;
-              const id = await idFunc(results);
-
-              const entries = {};
-              for (const [key, value] of params) {
-                if (entries[key]) {
-                  entries[key] = [].concat(entries[key], value);
-                } else {
-                  entries[key] = value;
-                }
-              }
-
-              const routeParams = new URLSearchParams(params);
-              routeParams.delete('id');
-              routeParams.delete('type');
-              router.push(
-                `/${searchParams.get('stype')}/${encodeURI(
-                  uriToId(id, { base: route.uriBase })
-                )}?${routeParams}`
-              );
-            })();
-          }}
-        >
-          {children}
-        </a>
+            const routeParams = new URLSearchParams(params);
+            routeParams.delete('id');
+            routeParams.delete('type');
+            router.push(
+              `/${searchParams.get('stype')}/${encodeURI(
+                uriToId(id, { base: route.uriBase })
+              )}?${routeParams}`
+            );
+          })();
+        }}
+      >
+        {children}
       </Link>
     );
   };
@@ -179,8 +178,8 @@ function Pagination({ searchData, result, pageSize = 20, ...props }) {
       )}
       <Element display="flex" alignItems="center" flexDirection="column" margin="0 auto">
         <Element alignSelf="center">
-          <Link href={`${query.spath}?${getLinkParams(searchParams)}`} passHref>
-            <a>{t('common:pagination.back')}</a>
+          <Link href={`${query.spath}?${getLinkParams(searchParams)}`}>
+            {t('common:pagination.back')}
           </Link>
         </Element>
         {totalResults > 0 && (

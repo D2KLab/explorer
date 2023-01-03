@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import { getProviders, getCsrfToken, signOut } from 'next-auth/react';
-import NextLink from 'next/link';
+import Link from 'next/link';
 import Router from 'next/router';
 import { ShareAlt as ShareIcon } from '@styled-icons/boxicons-solid/ShareAlt';
 import { TrashAlt as TrashIcon } from '@styled-icons/boxicons-solid/TrashAlt';
@@ -291,11 +291,12 @@ function ProfilePage({ session, providers, csrfToken, accounts, lists, baseUrl, 
                     <ListItem key={list._id}>
                       <Element>
                         <ListItemTitle>
-                          <NextLink href={`/lists/${slugify(list.name)}-${list._id}`} passHref>
-                            <a style={{ color: 'inherit', textDecoration: 'inherit' }}>
-                              <h3>{list.name}</h3>
-                            </a>
-                          </NextLink>
+                          <Link
+                            href={`/lists/${slugify(list.name)}-${list._id}`}
+                            style={{ color: 'inherit', textDecoration: 'inherit' }}
+                          >
+                            <h3>{list.name}</h3>
+                          </Link>
                           <ListSettings list={list} />
                         </ListItemTitle>
                         <ListItemSubtitle>
@@ -336,9 +337,13 @@ function ProfilePage({ session, providers, csrfToken, accounts, lists, baseUrl, 
                           </ListDeletion>
                         </ListItemButton>
                         <ListItemButton>
-                          <NextLink href={`/lists/${slugify(list.name)}-${list._id}`} passHref>
+                          <Link
+                            href={`/lists/${slugify(list.name)}-${list._id}`}
+                            passHref
+                            legacyBehavior
+                          >
                             <Button primary>{t('common:profile.lists.open')}</Button>
-                          </NextLink>
+                          </Link>
                         </ListItemButton>
                       </Element>
                     </ListItem>

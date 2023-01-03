@@ -155,9 +155,7 @@ function SearchInput({ className, placeholder, ariaLabel = 'Search input', ...pr
         <SuggestionContent>
           <SuggestionName>
             <Link href={`/${config.search.route}?q=${encodeURIComponent(inputValue)}`}>
-              <a>
-                <em>{t('search:labels.searchResults', { count: totalResults })}</em>
-              </a>
+              <em>{t('search:labels.searchResults', { count: totalResults })}</em>
             </Link>
           </SuggestionName>
         </SuggestionContent>

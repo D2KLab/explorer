@@ -278,7 +278,7 @@ function SaveButton({ item, type, saved, hideLabel, onChange, ...props }) {
                     <StyledLabel>{list.name}</StyledLabel>
                   </StyledItemContent>
                   <Element marginLeft="auto">
-                    <Link href={`/lists/${slugify(list.name)}-${list._id}`} passHref>
+                    <Link href={`/lists/${slugify(list.name)}-${list._id}`} passHref legacyBehavior>
                       <Button primary>{t('common:profile.lists.open')}</Button>
                     </Link>
                   </Element>

@@ -19,8 +19,8 @@ import PageTitle from '@components/PageTitle';
 const MyComponent = () => {
   return (
     // highlight-start
-    <PaginatedLink id="http://dbpedia.org/resource/France" type="countries" searchApi="/api/search" passHref>
-      <a>My link</a>
+    <PaginatedLink id="http://dbpedia.org/resource/France" type="countries" searchApi="/api/search">
+      My link
     </PaginatedLink>
     // highlight-end
   );

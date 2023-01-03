@@ -202,9 +202,8 @@ function CollectionDetailsPage({ result, inList, searchData, debugSparqlQuery })
                           base: itemRoute.uriBase,
                         })
                       )}`}
-                      passHref
                     >
-                      <a>{element}</a>
+                      {element}
                     </Link>
                   );
                 }

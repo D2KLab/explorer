@@ -67,20 +67,16 @@ function ListsPage({ isOwner, list, shareLink }) {
                     })
                   )}&type=${item.route}`}
                   as={`/${item.route}/${encodeURI(uriToId(item.id, { base: route.uriBase }))}`}
-                  passHref
+                  style={{ color: 'inherit', textDecoration: 'inherit' }}
                 >
-                  <a style={{ color: 'inherit', textDecoration: 'inherit' }}>
-                    <StyledMedia
-                      title={item.title}
-                      subtitle={item.subtitle}
-                      thumbnail={generateMediaUrl(item.image, 300)}
-                      direction="column"
-                      link={`/${item.route}/${encodeURI(
-                        uriToId(item.id, { base: route.uriBase })
-                      )}`}
-                      uri={item.graph}
-                    />
-                  </a>
+                  <StyledMedia
+                    title={item.title}
+                    subtitle={item.subtitle}
+                    thumbnail={generateMediaUrl(item.image, 300)}
+                    direction="column"
+                    link={`/${item.route}/${encodeURI(uriToId(item.id, { base: route.uriBase }))}`}
+                    uri={item.graph}
+                  />
                 </Link>
               );
             })}
@@ -106,6 +102,7 @@ function ListsPage({ isOwner, list, shareLink }) {
           <Link
             href={`/api/lists/${list._id}/download?hl=${encodeURIComponent(i18n.language)}`}
             passHref
+            legacyBehavior
           >
             <Button primary target="_blank">
               {t('common:buttons.download')}

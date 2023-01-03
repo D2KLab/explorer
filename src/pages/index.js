@@ -435,7 +435,7 @@ function HomePage() {
               {Object.keys(config.routes)
                 .filter((routeName) => config.routes[routeName].showInHome !== false)
                 .flatMap((routeName) => (
-                  <Link key={routeName} href={`/${routeName}`} passHref>
+                  <Link key={routeName} href={`/${routeName}`} passHref legacyBehavior>
                     <BigButton
                       background={config.routes[routeName].backgroundColor || '#c6c6c6'}
                       color={config.routes[routeName].textColor || '#000000'}

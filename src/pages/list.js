@@ -123,11 +123,9 @@ function ListDetailsPage({ items, debugSparqlQuery }) {
               <ul>
                 {filteredItems.map((item) => (
                   <Item key={item['@id']}>
-                    <Link href={getUseWithLink(useWith[0], item)} passHref>
-                      <a>
-                        <GraphIcon uri={item['@id']} style={{ marginRight: '1em' }} />
-                        <span>{item.label}</span>
-                      </a>
+                    <Link href={getUseWithLink(useWith[0], item)}>
+                      <GraphIcon uri={item['@id']} style={{ marginRight: '1em' }} />
+                      <span>{item.label}</span>
                     </Link>
                   </Item>
                 ))}
