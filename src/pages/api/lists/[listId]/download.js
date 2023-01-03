@@ -3,9 +3,12 @@ import AdmZip from 'adm-zip';
 import { Duplex } from 'stream';
 import queryString from 'query-string';
 import json2csv from 'json2csv';
+import json2md from 'json2md';
+import { i18n } from 'next-i18next';
 
 import { getListById, getSessionUser } from '@helpers/database';
 import { absoluteUrl, uriToId, slugify } from '@helpers/utils';
+import { findRouteByRDFType, getEntityMainLabel } from '@helpers/explorer';
 import { withRequestValidation } from '@helpers/api';
 import { default as cfg } from '~/config';
 import { unstable_getServerSession } from 'next-auth';
@@ -42,9 +45,85 @@ const flattenObject = (obj) => {
   return flattenKeys;
 };
 
+function generateMarkdownValue(
+  currentRouteName,
+  currentRoute,
+  metadata,
+  metaName,
+  metaIndex,
+  meta,
+  req
+) {
+  // Ignore empty meta objects
+  if (typeof meta === 'object' && Object.keys(meta).length === 0) {
+    return undefined;
+  }
+
+  let url = null;
+  let printableValue = '<unk>';
+
+  if (typeof meta === 'object') {
+    const [routeName, route] = findRouteByRDFType(meta['@type']);
+    const filter =
+      currentRoute &&
+      Array.isArray(currentRoute.filters) &&
+      currentRoute.filters.find((f) => f.id === metaName);
+
+    const metaId = meta['@id'];
+    if (route) {
+      url = `${absoluteUrl(req)}/${routeName}/${encodeURI(
+        uriToId(metaId, { base: route.uriBase })
+      )}`;
+    } else if (filter) {
+      url = `${absoluteUrl(req)}/${currentRouteName}?filter_${metaName}=${encodeURIComponent(
+        metaId
+      )}`;
+    }
+
+    if (Array.isArray(meta.label)) {
+      printableValue = meta.label.join(', ');
+    } else if (typeof meta.label === 'object') {
+      // If $langTag is set to 'show' in sparql-transformer
+      printableValue = meta.label['@value'];
+    } else if (typeof meta.label === 'string') {
+      // Example: {"@id":"http://data.silknow.org/collection/ec0f9a6f-7b69-31c4-80a6-c0a9cde663a5","@type":"http://erlangen-crm.org/current/E78_Collection","label":"European Sculpture and Decorative Arts"}
+      printableValue = meta.label;
+    } else {
+      printableValue = metaId;
+      url = null;
+    }
+  } else {
+    printableValue = meta;
+    if (['http://', 'https://'].some((protocol) => meta.startsWith(protocol))) {
+      url = meta;
+    }
+  }
+
+  if (currentRoute.metadata && typeof currentRoute.metadata[metaName] === 'function') {
+    printableValue = currentRoute.metadata[metaName](printableValue, metaIndex, metadata);
+  }
+
+  if (!url && !printableValue) {
+    return undefined;
+  }
+
+  if (!url) {
+    return printableValue;
+  }
+
+  return json2md({
+    link: {
+      title: printableValue,
+      source: url,
+    },
+  });
+}
+
 export default withRequestValidation({
   allowedMethods: ['GET'],
 })(async (req, res) => {
+  i18n?.init({ lng: req.query.hl });
+
   const list = await getListById(req.query.listId);
 
   if (!list) {
@@ -80,6 +159,11 @@ export default withRequestValidation({
   const results = [];
   const flatResults = [];
   const flatResultsKeys = new Set();
+  const markdownResults = [
+    {
+      h1: list.name,
+    },
+  ];
 
   for (let i = 0; i < list.items.length; i += 1) {
     const item = list.items[i];
@@ -100,12 +184,9 @@ export default withRequestValidation({
 
       if (entity && entity.result) {
         const { result } = entity;
+        const resultLabel = getEntityMainLabel(result, { route, language: req.query.hl });
         const resultBaseName = [
-          []
-            .concat(result.label)
-            .filter((x) => x)
-            .join(', ')
-            .replace(/\//, '-'),
+          resultLabel?.replace(/\//, '-'),
           uriToId(result['@id'], {
             base: route.uriBase,
           }),
@@ -141,11 +222,40 @@ export default withRequestValidation({
         );
 
         // Add JSON metadata to the Zip
-        const content = JSON.stringify(result, null, 2);
+        const jsonContent = JSON.stringify(result, null, 2);
         zip.addFile(
           path.join(listFolder, resultBaseName, `${resultBaseName}.json`),
-          Buffer.alloc(content.length, content)
+          Buffer.alloc(jsonContent.length, jsonContent)
         );
+
+        // Construct the markdown results for this entity
+        const markdownItem = [];
+        markdownItem.push({ h2: resultLabel || '<no label>' });
+        markdownItem.push({ h3: 'Metadata' });
+        const markdownFlatResult = flattenObject(result);
+        const markdownFlatResultKeys = new Set();
+        Object.keys(markdownFlatResult).forEach((key) => markdownFlatResultKeys.add(key));
+        markdownItem.push({
+          table: { headers: ['Property', 'Value'], rows: Object.entries(markdownFlatResult) },
+        });
+        if (imagesToDownload.length > 0) {
+          markdownItem.push({ h3: 'Images' });
+          imagesToDownload.forEach((image) => {
+            markdownItem.push({
+              img: [{ source: image }],
+            });
+          });
+        }
+
+        // Add Markdown metadata to the Zip
+        const markdownItemText = json2md(markdownItem);
+        zip.addFile(
+          path.join(listFolder, resultBaseName, `${resultBaseName}.md`),
+          Buffer.alloc(markdownItemText.length, markdownItemText)
+        );
+
+        // Push the markdown item to the list of all markdown results
+        markdownResults.push(...markdownItem);
       }
     }
   }
@@ -163,6 +273,13 @@ export default withRequestValidation({
     header: true,
   });
   zip.addFile(path.join(listFolder, 'items.csv'), Buffer.alloc(csvResults.length, csvResults));
+
+  // Add all items to a single Markdown file
+  const markdownResultsText = json2md(markdownResults);
+  zip.addFile(
+    path.join(listFolder, 'README.md'),
+    Buffer.alloc(markdownResultsText.length, markdownResultsText)
+  );
 
   const willSendthis = zip.toBuffer();
   res.writeHead(200, {
