@@ -2,12 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
-import ReactPlayer from 'react-player';
 import queryString from 'query-string';
 import { useTabState, Tab, TabList, TabPanel } from 'ariakit';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import dynamic from 'next/dynamic';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -29,6 +29,8 @@ import { absoluteUrl, getQueryObject, uriToId } from '@helpers/utils';
 import SparqlClient from '@helpers/sparql';
 import { generatePermalink, getEntityMainLabel, getSearchData } from '@helpers/explorer';
 import config from '~/config';
+
+const VideoPlayer = dynamic(() => import('@components/VideoPlayer'), { ssr: false });
 
 const Columns = styled.div`
   display: flex;
@@ -210,6 +212,7 @@ const StyledTabPanel = styled(TabPanel)`
 `;
 
 const PlayerWrapper = styled.div`
+  background-color: #e3e3e3;
   position: relative;
   flex: 1;
 
@@ -354,7 +357,7 @@ function VideoDetailsPage({
   };
 
   const seekVideoTo = (seconds) => {
-    console.log('seekVideoTo', seconds);
+    if (!$videoPlayer.current) return;
     if (typeof seconds === 'number') {
       $videoPlayer.current.seekTo(seconds, 'seconds');
       if (!isInViewport($videoPlayer.current.wrapper)) {
@@ -570,8 +573,8 @@ function VideoDetailsPage({
         {mediaUrl && (
           <VideoWrapper>
             <PlayerWrapper>
-              <ReactPlayer
-                ref={$videoPlayer}
+              <VideoPlayer
+                playerRef={$videoPlayer}
                 url={mediaUrl}
                 onStart={onVideoStart}
                 onProgress={onVideoProgress}
@@ -586,8 +589,8 @@ function VideoDetailsPage({
                 }}
               />
               <FaceOverlay
-                width={$videoPlayer?.current?.getInternalPlayer()?.offsetWidth}
-                height={$videoPlayer?.current?.getInternalPlayer()?.offsetHeight}
+                width={$videoPlayer.current?.offsetWidth}
+                height={$videoPlayer.current?.offsetHeight}
               >
                 {faceRectangles.map(
                   (rect) =>
