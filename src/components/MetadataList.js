@@ -50,9 +50,9 @@ function generateValue(currentRouteName, currentRoute, metadata, metaName, metaI
       url = null;
     }
   } else {
-    printableValue = meta;
-    if (['http://', 'https://'].some((protocol) => meta.startsWith(protocol))) {
-      url = meta;
+    printableValue = meta.toString();
+    if (['http://', 'https://'].some((protocol) => printableValue.startsWith(protocol))) {
+      url = printableValue;
     }
   }
 
