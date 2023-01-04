@@ -139,14 +139,14 @@ export default withRequestValidation({
         const csv = json2csv.parse(flatResult, { header: true, fields: Object.keys(flatResult) });
         zip.addFile(
           path.join(listFolder, resultBaseName, `${resultBaseName}.csv`),
-          Buffer.alloc(csv.length, csv)
+          Buffer.from(csv, 'utf8')
         );
 
         // Add JSON metadata to the Zip
         const jsonContent = JSON.stringify(result, null, 2);
         zip.addFile(
           path.join(listFolder, resultBaseName, `${resultBaseName}.json`),
-          Buffer.alloc(jsonContent.length, jsonContent)
+          Buffer.from(jsonContent, 'utf8')
         );
 
         // Construct the markdown results for this entity
@@ -172,7 +172,7 @@ export default withRequestValidation({
         const markdownItemText = json2md(markdownItem);
         zip.addFile(
           path.join(listFolder, resultBaseName, `${resultBaseName}.md`),
-          Buffer.alloc(markdownItemText.length, markdownItemText)
+          Buffer.from(markdownItemText, 'utf8')
         );
 
         // Push the markdown item to the list of all markdown results
@@ -183,24 +183,18 @@ export default withRequestValidation({
 
   // Add all items to a single JSON file
   const contentResults = JSON.stringify(results, null, 2);
-  zip.addFile(
-    path.join(listFolder, 'items.json'),
-    Buffer.alloc(contentResults.length, contentResults)
-  );
+  zip.addFile(path.join(listFolder, 'items.json'), Buffer.from(contentResults, 'utf8'));
 
   // Add all items to a single CSV file
   const csvResults = json2csv.parse(flatResults, {
     fields: Array.from(flatResultsKeys),
     header: true,
   });
-  zip.addFile(path.join(listFolder, 'items.csv'), Buffer.alloc(csvResults.length, csvResults));
+  zip.addFile(path.join(listFolder, 'items.csv'), Buffer.from(csvResults, 'utf8'));
 
   // Add all items to a single Markdown file
   const markdownResultsText = json2md(markdownResults);
-  zip.addFile(
-    path.join(listFolder, 'README.md'),
-    Buffer.alloc(markdownResultsText.length, markdownResultsText)
-  );
+  zip.addFile(path.join(listFolder, 'README.md'), Buffer.from(markdownResultsText, 'utf8'));
 
   const willSendthis = zip.toBuffer();
   res.writeHead(200, {
