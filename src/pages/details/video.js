@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
-import queryString from 'query-string';
 import { useTabState, Tab, TabList, TabPanel } from 'ariakit';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
@@ -25,9 +24,10 @@ import MetadataList from '@components/MetadataList';
 import SaveButton from '@components/SaveButton';
 import Pagination from '@components/Pagination';
 import breakpoints from '@styles/breakpoints';
-import { absoluteUrl, getQueryObject, uriToId } from '@helpers/utils';
+import { getQueryObject, uriToId } from '@helpers/utils';
 import SparqlClient from '@helpers/sparql';
 import { generatePermalink, getEntityMainLabel, getSearchData } from '@helpers/explorer';
+import { getEntity, getEntityDebugQuery, isEntityInList } from '@pages/api/entity';
 import config from '~/config';
 
 const VideoPlayer = dynamic(() => import('@components/VideoPlayer'), { ssr: false });
@@ -313,7 +313,8 @@ function VideoDetailsPage({
   subtitles,
 }) {
   const { t, i18n } = useTranslation(['common', 'project']);
-  const { query } = useRouter();
+  const router = useRouter();
+  const { query } = router;
   const [faceRectangles, setFaceRectangles] = useState([]);
   const tab = useTabState();
   const $videoPlayer = useRef(null);
@@ -705,18 +706,9 @@ function VideoDetailsPage({
 export async function getServerSideProps(context) {
   const { req, res, query, locale } = context;
 
-  const {
-    result = null,
-    inList,
-    debugSparqlQuery,
-  } = await (
-    await fetch(`${absoluteUrl(req)}/api/entity?${queryString.stringify(query)}`, {
-      headers: {
-        ...req.headers,
-        'accept-language': locale,
-      },
-    })
-  ).json();
+  const result = await getEntity(query, locale);
+  const inList = await isEntityInList(result?.['@id'], query, req, res);
+  const debugSparqlQuery = await getEntityDebugQuery(query, locale);
 
   let mediaUrl = null;
   const videoSegments = [];

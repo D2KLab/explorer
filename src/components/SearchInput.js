@@ -3,7 +3,6 @@ import Router from 'next/router';
 import Link from 'next/link';
 import styled from 'styled-components';
 import Autosuggest from 'react-autosuggest';
-import queryString from 'query-string';
 
 import Spinner from '@components/Spinner';
 import { uriToId, generateMediaUrl } from '@helpers/utils';

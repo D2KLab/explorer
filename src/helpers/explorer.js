@@ -1,4 +1,3 @@
-import { absoluteUrl } from '@helpers/utils';
 import config from '~/config';
 
 /*
@@ -101,7 +100,7 @@ export const getSearchData = async ({ req, query, locale }) => {
   searchParams.delete('spath');
 
   const searchData = await (
-    await fetch(`${absoluteUrl(req)}${query.sapi}?${searchParams}`, {
+    await fetch(`${process.env.SITE}${query.sapi}?${searchParams}`, {
       headers: {
         ...req.headers,
         'accept-language': locale,

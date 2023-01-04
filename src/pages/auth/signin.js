@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import { getProviders, getCsrfToken } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';

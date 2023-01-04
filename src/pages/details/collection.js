@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import DefaultErrorPage from 'next/error';
-import queryString from 'query-string';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
@@ -21,13 +20,14 @@ import GraphLink from '@components/GraphLink';
 import MetadataList from '@components/MetadataList';
 import Pagination from '@components/Pagination';
 import breakpoints from '@styles/breakpoints';
-import { uriToId, absoluteUrl, generateMediaUrl } from '@helpers/utils';
+import { uriToId, generateMediaUrl } from '@helpers/utils';
 import {
   findRouteByRDFType,
   generatePermalink,
   getEntityMainLabel,
   getSearchData,
 } from '@helpers/explorer';
+import { getEntity, getEntityDebugQuery, isEntityInList } from '@pages/api/entity';
 import config from '~/config';
 
 const Columns = styled.div`
@@ -75,7 +75,8 @@ const Description = styled.div`
 
 function CollectionDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
   const { t, i18n } = useTranslation(['common', 'project']);
-  const { query } = useRouter();
+  const router = useRouter();
+  const { query } = router;
 
   if (!result) {
     return <DefaultErrorPage statusCode={404} title={t('common:errors.resultNotFound')} />;
@@ -250,18 +251,9 @@ function CollectionDetailsPage({ result, inList, searchData, debugSparqlQuery })
 export async function getServerSideProps(context) {
   const { req, res, query, locale } = context;
 
-  const {
-    result = null,
-    inList,
-    debugSparqlQuery,
-  } = await (
-    await fetch(`${absoluteUrl(req)}/api/entity?${queryString.stringify(query)}`, {
-      headers: {
-        ...req.headers,
-        'accept-language': locale,
-      },
-    })
-  ).json();
+  const result = await getEntity(query, locale);
+  const inList = await isEntityInList(result?.['@id'], query, req, res);
+  const debugSparqlQuery = await getEntityDebugQuery(query, locale);
 
   if (!result && res) {
     res.statusCode = 404;

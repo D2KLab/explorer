@@ -20,7 +20,7 @@ import ListDeletion from '@components/ListDeletion';
 import ListShare from '@components/ListShare';
 import { ProviderButton } from '@components/ProviderButton';
 import breakpoints from '@styles/breakpoints';
-import { absoluteUrl, slugify } from '@helpers/utils';
+import { slugify } from '@helpers/utils';
 import { getSessionUser, getUserLists, getUserAccounts } from '@helpers/database';
 import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -362,7 +362,6 @@ function ProfilePage({ session, providers, csrfToken, accounts, lists, baseUrl, 
 export default ProfilePage;
 
 export async function getServerSideProps(ctx) {
-  const { req } = ctx;
   const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions);
   const user = await getSessionUser(session);
 
@@ -389,7 +388,7 @@ export async function getServerSideProps(ctx) {
       csrfToken: await getCsrfToken(ctx),
       accounts: JSON.parse(JSON.stringify(accounts)), // serialize the accounts
       lists: JSON.parse(JSON.stringify(lists)), // serialize the lists
-      baseUrl: absoluteUrl(req),
+      baseUrl: process.env.SITE,
       facebookAppId: process.env.FACEBOOK_ID,
     },
   };

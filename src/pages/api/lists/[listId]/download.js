@@ -1,18 +1,18 @@
 import path from 'path';
 import AdmZip from 'adm-zip';
 import { Duplex } from 'stream';
-import queryString from 'query-string';
 import json2csv from 'json2csv';
 import json2md from 'json2md';
 import { i18n } from 'next-i18next';
 
 import { getListById, getSessionUser } from '@helpers/database';
-import { absoluteUrl, uriToId, slugify } from '@helpers/utils';
-import { findRouteByRDFType, getEntityMainLabel } from '@helpers/explorer';
+import { uriToId, slugify } from '@helpers/utils';
+import { getEntityMainLabel } from '@helpers/explorer';
 import { withRequestValidation } from '@helpers/api';
 import { default as cfg } from '~/config';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
+import { getEntity } from '@pages/api/entity';
 
 const bufferToStream = (buffer) => {
   const stream = new Duplex();
@@ -44,80 +44,6 @@ const flattenObject = (obj) => {
   }
   return flattenKeys;
 };
-
-function generateMarkdownValue(
-  currentRouteName,
-  currentRoute,
-  metadata,
-  metaName,
-  metaIndex,
-  meta,
-  req
-) {
-  // Ignore empty meta objects
-  if (typeof meta === 'object' && Object.keys(meta).length === 0) {
-    return undefined;
-  }
-
-  let url = null;
-  let printableValue = '<unk>';
-
-  if (typeof meta === 'object') {
-    const [routeName, route] = findRouteByRDFType(meta['@type']);
-    const filter =
-      currentRoute &&
-      Array.isArray(currentRoute.filters) &&
-      currentRoute.filters.find((f) => f.id === metaName);
-
-    const metaId = meta['@id'];
-    if (route) {
-      url = `${absoluteUrl(req)}/${routeName}/${encodeURI(
-        uriToId(metaId, { base: route.uriBase })
-      )}`;
-    } else if (filter) {
-      url = `${absoluteUrl(req)}/${currentRouteName}?filter_${metaName}=${encodeURIComponent(
-        metaId
-      )}`;
-    }
-
-    if (Array.isArray(meta.label)) {
-      printableValue = meta.label.join(', ');
-    } else if (typeof meta.label === 'object') {
-      // If $langTag is set to 'show' in sparql-transformer
-      printableValue = meta.label['@value'];
-    } else if (typeof meta.label === 'string') {
-      // Example: {"@id":"http://data.silknow.org/collection/ec0f9a6f-7b69-31c4-80a6-c0a9cde663a5","@type":"http://erlangen-crm.org/current/E78_Collection","label":"European Sculpture and Decorative Arts"}
-      printableValue = meta.label;
-    } else {
-      printableValue = metaId;
-      url = null;
-    }
-  } else {
-    printableValue = meta;
-    if (['http://', 'https://'].some((protocol) => meta.startsWith(protocol))) {
-      url = meta;
-    }
-  }
-
-  if (currentRoute.metadata && typeof currentRoute.metadata[metaName] === 'function') {
-    printableValue = currentRoute.metadata[metaName](printableValue, metaIndex, metadata);
-  }
-
-  if (!url && !printableValue) {
-    return undefined;
-  }
-
-  if (!url) {
-    return printableValue;
-  }
-
-  return json2md({
-    link: {
-      title: printableValue,
-      source: url,
-    },
-  });
-}
 
 export default withRequestValidation({
   allowedMethods: ['GET'],
@@ -169,21 +95,16 @@ export default withRequestValidation({
     const item = list.items[i];
     const route = cfg.routes[item.type];
     if (route) {
-      const entity = await (
-        await fetch(
-          `${absoluteUrl(req)}/api/entity?${queryString.stringify({
-            id: uriToId(item.uri, { base: route.uriBase }),
-            type: item.type,
-            hl: req.query.hl,
-          })}`,
-          {
-            headers: req.headers,
-          }
-        )
-      ).json();
+      const result = await getEntity(
+        {
+          id: uriToId(item.uri, { base: route.uriBase }),
+          type: item.type,
+          hl: req.query.hl,
+        },
+        req.query.hl
+      );
 
-      if (entity && entity.result) {
-        const { result } = entity;
+      if (result) {
         const resultLabel = getEntityMainLabel(result, { route, language: req.query.hl });
         const resultBaseName = [
           resultLabel?.replace(/\//, '-'),

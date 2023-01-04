@@ -70,34 +70,6 @@ import { generateMediaUrl } from '@helpers/utils';
 generateMediaUrl(url, 150, 150);
 ```
 
-### `absoluteUrl`
-
-#### Parameters
-
-* `req = {NextApiRequest}`
-* `localhostAddress = {string | default: "localhost:3000"}`
-
-#### Example with code
-
-```js
-// highlight-start
-import { absoluteUrl } from '@helpers/utils';
-// highlight-end
-
-export async function getServerSideProps({ req, res, query, locale }) {
-  const graphs = await (
-    await fetch(
-      // highlight-start
-      `${absoluteUrl(req)}/api/graphs`,
-      // highlight-end
-      {
-        headers: req.headers,
-      }
-    )
-  ).json();
-}
-```
-
 ### `getQueryObject`
 
 ### Example with code

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import queryString from 'query-string';
 import { useMenuState, Menu, MenuItem, MenuButton, MenuButtonArrow } from 'ariakit';
 import { saveAs } from 'file-saver';
 import Lightbox from 'react-18-image-lightbox';
@@ -10,6 +9,7 @@ import 'react-18-image-lightbox/style.css';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import Cookies from 'js-cookie';
+import { useTranslation } from 'next-i18next';
 
 import NotFoundPage from '@pages/404';
 import Header from '@components/Header';
@@ -27,9 +27,9 @@ import MetadataList from '@components/MetadataList';
 import SaveButton from '@components/SaveButton';
 import Pagination from '@components/Pagination';
 import breakpoints from '@styles/breakpoints';
-import { absoluteUrl, generateMediaUrl, uriToId } from '@helpers/utils';
+import { generateMediaUrl, uriToId } from '@helpers/utils';
 import { generatePermalink, getEntityMainLabel, getSearchData } from '@helpers/explorer';
-import { useTranslation } from 'next-i18next';
+import { getEntity, getEntityDebugQuery, isEntityInList } from '@pages/api/entity';
 import config from '~/config';
 
 const Columns = styled.div`
@@ -631,18 +631,9 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
 export async function getServerSideProps(context) {
   const { req, res, query, locale } = context;
 
-  const {
-    result = null,
-    inList = false,
-    debugSparqlQuery,
-  } = await (
-    await fetch(`${absoluteUrl(req)}/api/entity?${queryString.stringify(query)}`, {
-      headers: {
-        ...req.headers,
-        'accept-language': locale,
-      },
-    })
-  ).json();
+  const result = await getEntity(query, locale);
+  const inList = await isEntityInList(result?.['@id'], query, req, res);
+  const debugSparqlQuery = await getEntityDebugQuery(query, locale);
 
   const searchData = await getSearchData(context);
 

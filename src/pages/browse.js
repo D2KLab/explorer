@@ -30,11 +30,12 @@ import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import PageTitle from '@components/PageTitle';
 import ScrollDetector from '@components/ScrollDetector';
 import SaveButton from '@components/SaveButton';
-import { absoluteUrl, uriToId, generateMediaUrl } from '@helpers/utils';
+import { uriToId, generateMediaUrl } from '@helpers/utils';
 import useDebounce from '@helpers/useDebounce';
 import useOnScreen from '@helpers/useOnScreen';
 import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
 import { search, getFilters } from '@pages/api/search';
+import { getEntity } from '@pages/api/entity';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
 import breakpoints, { sizes } from '@styles/breakpoints';
 import config from '~/config';
@@ -192,9 +193,9 @@ const Result = styled.div`
 
 const PAGE_SIZE = 20;
 
-function BrowsePage({ initialData, filters, similarityEntity }) {
+function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
   const router = useRouter();
-  const { req, query, pathname } = router;
+  const { query, pathname } = router;
   const { t, i18n } = useTranslation(['common', 'search', 'project']);
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(true);
@@ -214,7 +215,7 @@ function BrowsePage({ initialData, filters, similarityEntity }) {
   const getKey = (pageIndex, previousPageData) => {
     if (previousPageData && !previousPageData.results.length) return null; // reached the end
     const q = { ...query, page: (parseInt(query.page, 10) || 1) + pageIndex, hl: i18n.language };
-    return `${absoluteUrl(req)}/api/search?${queryString.stringify(q)}`; // SWR key
+    return `${baseUrl}/api/search?${queryString.stringify(q)}`; // SWR key
   };
 
   const { data, error, size, setSize } = useSWRInfinite(getKey, fetcher, {
@@ -681,18 +682,14 @@ export async function getServerSideProps({ req, res, query, locale }) {
 
   let similarityEntity;
   if (query.similarity_entity) {
-    similarityEntity = await (
-      await fetch(
-        `${absoluteUrl(req)}/api/entity?${queryString.stringify({
-          id: query.similarity_entity,
-          type: query.type,
-          hl: locale,
-        })}`,
-        {
-          headers: req.headers,
-        }
-      )
-    ).json();
+    similarityEntity = await getEntity(
+      {
+        id: query.similarity_entity,
+        type: query.type,
+        hl: locale,
+      },
+      locale
+    );
   }
 
   return {
@@ -704,8 +701,9 @@ export async function getServerSideProps({ req, res, query, locale }) {
         favorites: searchData.favorites,
         debugSparqlQuery: searchData.debugSparqlQuery,
       },
+      baseUrl: process.env.SITE,
       filters,
-      similarityEntity: (similarityEntity && similarityEntity.result) || null,
+      similarityEntity: similarityEntity || null,
     },
   };
 }

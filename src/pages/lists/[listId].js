@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import Link from 'next/link';
-import queryString from 'query-string';
 import DefaultErrorPage from 'next/error';
 import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { unstable_getServerSession } from 'next-auth';
 
 import { authOptions } from '@pages/api/auth/[...nextauth]';
+import { getEntity } from '@pages/api/entity';
 import Header from '@components/Header';
 import Footer from '@components/Footer';
 import Layout from '@components/Layout';
@@ -20,7 +20,7 @@ import PageTitle from '@components/PageTitle';
 import ListSettings from '@components/ListSettings';
 import ListDeletion from '@components/ListDeletion';
 import { Navbar, NavItem } from '@components/Navbar';
-import { absoluteUrl, uriToId, generateMediaUrl, slugify } from '@helpers/utils';
+import { uriToId, generateMediaUrl, slugify } from '@helpers/utils';
 import { getSessionUser, getListById } from '@helpers/database';
 import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
 import config from '~/config';
@@ -243,23 +243,15 @@ export async function getServerSideProps(ctx) {
       Object.entries(config.routes).find(([rName]) => rName === item.type) || [];
 
     if (route) {
-      const entity = await (
-        await fetch(
-          `${absoluteUrl(req)}/api/entity?${queryString.stringify({
-            id: uriToId(item.uri, { base: route.uriBase }),
-            type: item.type,
-          })}`,
-          {
-            headers: {
-              ...req.headers,
-              'accept-language': ctx.locale,
-            },
-          }
-        )
-      ).json();
+      const result = await getEntity(
+        {
+          id: uriToId(item.uri, { base: route.uriBase }),
+          type: item.type,
+        },
+        ctx.locale
+      );
 
-      if (entity && entity.result) {
-        const { result } = entity;
+      if (result) {
         const mainImage = await getEntityMainImage(result, { route });
         const label = getEntityMainLabel(result, { route, language: ctx.locale });
 
@@ -276,7 +268,7 @@ export async function getServerSideProps(ctx) {
   }
 
   props.list = JSON.parse(JSON.stringify(list)); // serialize the list;
-  props.shareLink = `${absoluteUrl(req)}/lists/${slugify(list.name)}-${list._id}`;
+  props.shareLink = `${process.env.SITE}/lists/${slugify(list.name)}-${list._id}`;
   props.isOwner = isOwner;
 
   return {

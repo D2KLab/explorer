@@ -10,7 +10,7 @@ Used to display a pagination for next/previous results. Pagination will appear i
 ## Example with code:
 
 ```jsx
-import { absoluteUrl } from '@helpers/utils';
+import { getEntity } from '@pages/api/entity';
 // highlight-start
 import Pagination from '@components/Pagination';
 // highlight-end
@@ -28,14 +28,7 @@ export async function getServerSideProps(context) {
 
   const id = 'http://dbpedia.org/resource/France';
 
-  const { result = null } = await (
-    await fetch(`${absoluteUrl(req)}/api/entity?id=${id}`, {
-      headers: {
-        ...req.headers,
-        'accept-language': locale,
-      },
-    })
-  ).json();
+  const result = await getEntity({ id }, locale);
 
   if (!result && res) {
     res.statusCode = 404;

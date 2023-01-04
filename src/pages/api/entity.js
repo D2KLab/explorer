@@ -46,12 +46,34 @@ export const getEntity = async (query, language) => {
     params: config.api.params,
   });
 
-  const result = queryRes && queryRes['@graph'][0] && removeEmptyObjects(queryRes['@graph'][0]);
-  if (result) {
-    await fillWithVocabularies(result, { params: query });
+  const entity = queryRes && queryRes['@graph'][0] && removeEmptyObjects(queryRes['@graph'][0]);
+  if (entity) {
+    await fillWithVocabularies(entity, { params: query });
   }
 
-  return result;
+  return entity;
+};
+
+export const isEntityInList = async (entityId, query, req, res) => {
+  if (!entityId || !req) return false;
+
+  const session = await unstable_getServerSession(req, res, authOptions);
+  const user = await getSessionUser(session);
+  if (!user) {
+    return false;
+  }
+
+  // Check if this item is in a user list and flag it accordingly.
+  const loadedLists = await getUserLists(user);
+  return loadedLists.some((list) =>
+    list.items.some((it) => it.uri === entityId && it.type === query.type)
+  );
+};
+
+export const getEntityDebugQuery = async (query, language) => {
+  const route = config.routes[query.type];
+  const searchQuery = await getEntityQuery(route, language, query);
+  return SparqlClient.getSparqlQuery(searchQuery);
 };
 
 export default withRequestValidation({
@@ -65,32 +87,17 @@ export default withRequestValidation({
     return;
   }
 
-  const entity = await getEntity(query, query.hl || req.headers['accept-language']);
+  const language = query.hl || req.headers['accept-language'];
+
+  const entity = await getEntity(query, language);
 
   const returnValue = {
     result: entity,
-    inList: false,
+    inList: await isEntityInList(entity['@id'], query, req),
   };
 
   if (config.debug) {
-    const searchQuery = await getEntityQuery(
-      route,
-      query.hl || req.headers['accept-language'],
-      query
-    );
-    returnValue.debugSparqlQuery = await SparqlClient.getSparqlQuery(searchQuery);
-  }
-
-  if (req) {
-    const session = await unstable_getServerSession(req, res, authOptions);
-    const user = await getSessionUser(session);
-    if (user) {
-      // Check if this item is in a user list and flag it accordingly.
-      const loadedLists = await getUserLists(user);
-      returnValue.inList = loadedLists.some((list) =>
-        list.items.some((it) => it.uri === entity['@id'] && it.type === query.type)
-      );
-    }
+    returnValue.debugSparqlQuery = await getEntityDebugQuery(query, language);
   }
 
   res.status(200).json(returnValue);
