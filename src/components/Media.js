@@ -19,12 +19,6 @@ export const ThumbnailContainer = styled.div`
   position: relative;
 `;
 
-export const Thumbnail = styled(Image)`
-  max-width: 100%;
-  max-height: 100%;
-  height: auto;
-`;
-
 export const GraphIconContainer = styled.div`
   position: absolute;
   bottom: 0;
@@ -89,13 +83,14 @@ function Media({
     <Container className={className} direction={direction} {...props}>
       <ThumbnailContainer width={width} height={height}>
         {config.search?.placeholderImage && placeholderVisible && (
-          <Thumbnail src={config.search.placeholderImage} alt="" layout="fill" />
+          <Image src={config.search.placeholderImage} alt="" fill sizes="100vw, 100vw" />
         )}
         {thumbnail && imageVisible && (
-          <Thumbnail
+          <Image
             src={thumbnail}
             alt=""
-            layout="fill"
+            fill
+            sizes="100vw, 100vw"
             onLoadingComplete={() => {
               setImageVisible(true);
               setPlaceholderVisible(false);
