@@ -86,7 +86,7 @@ export const generatePermalink = (uri) => {
   return uri;
 };
 
-export const getSearchData = async ({ req, query, locale }) => {
+export const getSearchData = async ({ query, locale }) => {
   if (!query.sapi) {
     return null;
   }
@@ -102,7 +102,6 @@ export const getSearchData = async ({ req, query, locale }) => {
   const searchData = await (
     await fetch(`${process.env.SITE}${query.sapi}?${searchParams}`, {
       headers: {
-        ...req.headers,
         'accept-language': locale,
       },
     })
