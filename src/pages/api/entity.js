@@ -47,9 +47,11 @@ export const getEntity = async (query, language) => {
   });
 
   const entity = queryRes && queryRes['@graph'][0] && removeEmptyObjects(queryRes['@graph'][0]);
-  if (entity) {
-    await fillWithVocabularies(entity, { params: query });
+  if (!entity) {
+    return null;
   }
+
+  await fillWithVocabularies(entity, { params: query });
 
   return entity;
 };
