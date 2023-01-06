@@ -15,6 +15,13 @@ const StyledDialog = styled(Dialog)`
   outline: 0;
 `;
 
+/**
+ * A React component that renders a dialog that allows the user to delete a list.
+ * @param {List} list - The list to delete.
+ * @param {DialogState} [dialogState] - The dialog state to use.
+ * @param {React.ReactNode} children - The children to render.
+ * @returns None
+ */
 function ListDeletion({ list, dialogState, children }) {
   const { t } = useTranslation('common');
   const [isDeleting, setIsDeleting] = useState(false);

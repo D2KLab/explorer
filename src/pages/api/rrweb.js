@@ -6,6 +6,11 @@ import { connectToDatabase, getSessionUser } from '@helpers/database';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 
+/**
+ * RRWeb operations.
+ * @param {Request} req - the request object
+ * @param {Response} res - the response object
+ */
 export default withRequestValidation({
   allowedMethods: ['POST'],
 })(async (req, res) => {

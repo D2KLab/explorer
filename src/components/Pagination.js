@@ -29,6 +29,14 @@ const getLinkParams = (params) => {
   return linkParams;
 };
 
+/**
+ * Renders the pagination component.
+ * @param {SearchData} searchData - The search data object.
+ * @param {number} totalResults - The total number of results.
+ * @param {number} pageSize - The number of results per page.
+ * @param {object} props - The props to pass to the component.
+ * @returns The pagination component.
+ */
 function Pagination({ searchData, result, pageSize = 20, ...props }) {
   const { t } = useTranslation();
   const router = useRouter();

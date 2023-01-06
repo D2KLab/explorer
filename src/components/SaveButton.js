@@ -93,6 +93,11 @@ const StyledItemContent = styled.div`
   cursor: pointer;
 `;
 
+/**
+ * A component that renders a save button.
+ * @param {object} props - The props for the component.
+ * @returns A save button.
+ */
 function SaveButton({ item, type, saved, hideLabel, onChange, ...props }) {
   const { t } = useTranslation('common');
   const [loading, setLoading] = useState(false);

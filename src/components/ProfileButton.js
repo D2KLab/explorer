@@ -9,10 +9,6 @@ import Element from '@components/Element';
 import Spinner from '@components/Spinner';
 import { useTranslation, Trans } from 'next-i18next';
 
-/**
- * Profile button.
- */
-
 const StyledMenu = styled(Menu)`
   padding-top: 4px;
   padding-bottom: 4px;
@@ -88,6 +84,11 @@ const StyledUserIcon = styled(User)`
   margin: 0 0.2em;
 `;
 
+/**
+ * A button that renders the profile menu when clicked.
+ * @param {string} [className] - The class name to apply to the button.
+ * @returns A button that renders the profile menu when clicked.
+ */
 function ProfileButton({ className }) {
   const { t } = useTranslation('common');
   const menu = useMenuState();

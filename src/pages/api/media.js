@@ -1,5 +1,9 @@
 import { withRequestValidation } from '@helpers/api';
 
+/**
+ * A function that takes in a URL and returns a response with an optimized version of the image at that URL.
+ * @param {string} url - the URL of the image to return
+ */
 export default withRequestValidation({
   allowedMethods: ['GET'],
 })(async (req, res) => {

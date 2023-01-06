@@ -1,9 +1,10 @@
 import config from '~/config';
 
 /**
- * Debug container. Only visible if `debug` is set to `true` in config.js.
+ * A React component that renders the children only if the config.debug property is true.
+ * @param {React.ReactNode} children - The children to render.
+ * @returns None
  */
-
 function Debug({ children }) {
   return config.debug === true ? <>{children}</> : null;
 }

@@ -20,6 +20,9 @@ export const done = () => {
   }
 };
 
+/**
+ * A component which handles NProgress.
+ */
 function NProgress() {
   const router = useRouter();
 

@@ -3,6 +3,13 @@ import { withRequestValidation } from '@helpers/api';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
 
+/**
+ * Lists operation.
+ * If method is GET, return lists belonging to the current user.
+ * If method is POST, creates a new list for the current user.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ */
 export default withRequestValidation({
   useSession: true,
   allowedMethods: ['GET', 'POST'],

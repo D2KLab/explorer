@@ -4,9 +4,10 @@ import PropTypes from 'prop-types';
 import Select from '@components/Select';
 
 /**
- * Select input with support for multiple items.
+ * A simple SVG icon that displays a cross.
+ * @param {object} props - the props to pass to the SVG component
+ * @returns {JSX.Element} - the SVG component
  */
-
 function CrossIcon(props) {
   return (
     <svg height="20" width="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false" {...props}>
@@ -47,8 +48,19 @@ const Label = styled.span`
   flex: 1;
 `;
 
+// Render the selected option for the dropdown list.
 const defaultRenderSelectedOption = (item) => item.label;
 
+/**
+ * A component that allows the user to select multiple options from a list.
+ * @param {string} className - The class name to apply to the component.
+ * @param {string} inputId - The id of the input element.
+ * @param {string} name - The name of the input element.
+ * @param {string} placeholder - The placeholder text to display in the input element.
+ * @param {string[]} options - The options to display in the dropdown.
+ * @param {string[]} value - The values of the options that are selected.
+ * @param {Function} onChange - A function to call when the user selects or removes an item.
+ */
 function MultiSelect({
   className,
   inputId,

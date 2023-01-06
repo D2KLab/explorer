@@ -165,6 +165,16 @@ ConditionFilter.Container = styled.div`
   cursor: pointer;
 `;
 
+/**
+ * A React component that renders the sidebar for the search page.
+ * @param {string} className - The class name to apply to the sidebar.
+ * @param {Function} onSearch - A function to call when the user submits the search.
+ * @param {boolean} [submitOnChange=false] - Whether or not to submit the search when the user changes the search text.
+ * @param {string} [type] - The type of search to perform.
+ * @param {object[]} [filters] - The list of filters available for the search.
+ * @param {object} [query] - The URL query object.
+ * @returns A React component
+ */
 function Sidebar({ className, onSearch, submitOnChange = false, type, filters, query }) {
   const theme = useTheme();
   const graphs = useGraphs();

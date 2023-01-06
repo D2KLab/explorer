@@ -5,6 +5,12 @@ import { search } from '@pages/api/search';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
 import config from '~/config';
 
+/**
+ * A route that returns a list of search results based on the query string.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns None
+ */
 export default withRequestValidation({
   allowedMethods: ['GET'],
 })(async (req, res) => {

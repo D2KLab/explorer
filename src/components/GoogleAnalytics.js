@@ -2,6 +2,11 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import config from '~/config';
 
+/**
+ * Sends a Google Analytics event to the current page.
+ * @param {string} url - the URL of the page that the event is sent to.
+ * @returns None
+ */
 const handleRouteChange = (url) => {
   if (typeof window?.gtag !== 'undefined' && typeof config.analytics?.id !== 'undefined') {
     window.gtag('config', config.analytics.id, {
@@ -10,6 +15,10 @@ const handleRouteChange = (url) => {
   }
 };
 
+/**
+ * A function that handles the route change event and reports it to Google Analytics.
+ * @returns None
+ */
 function GoogleAnalytics() {
   const router = useRouter();
 

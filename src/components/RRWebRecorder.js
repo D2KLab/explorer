@@ -3,6 +3,10 @@ import { record } from 'rrweb';
 import Cookies from 'js-cookie';
 import { v4 as uuidv4 } from 'uuid';
 
+/**
+ * This function is used to record the user's interactions with the page.
+ * @returns None
+ */
 function RRWebRecorder() {
   useEffect(() => {
     if (typeof Cookies.get('rrweb') === 'undefined') {

@@ -3,18 +3,6 @@ import styled, { css } from 'styled-components';
 import Content from '@components/Content';
 import breakpoints from '@styles/breakpoints';
 
-/**
- * Flex body container.
- *
- * ```
- * <Layout>
- *  <Body>
- *    Your content
- *  </Body>
- * </Layout>
- * ```
- */
-
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -40,6 +28,20 @@ export const Container = styled.div`
       : null};
 `;
 
+/**
+ * A React component that wraps the children in a flex container.
+ * ```jsx
+ * <Layout>
+ *  <Body>
+ *    Your content
+ *  </Body>
+ * </Layout>
+ * ```
+ * @param {string} className - The class name to apply to the container.
+ * @param {boolean} hasSidebar - Whether or not the sidebar is present.
+ * @param {ReactNode} children - The children to render.
+ * @returns A React component that wraps the children in a flex container.
+ */
 function Body({ className, hasSidebar, children }) {
   return (
     <Container className={className} hasSidebar={hasSidebar} role="main">

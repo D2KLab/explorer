@@ -4,6 +4,13 @@ import config from '~/config';
 
 const vocabulariesCache = {};
 
+/**
+ * Gets the vocabulary items for the given vocabulary id.
+ * @param {string} vocabularyId - the id of the vocabulary to get items for.
+ * @param {object} [options={}] - the options object.
+ * @param {string} [options.language='en'] - the language to get items for.
+ * @returns {Promise<Array<VocabularyItem>>} - the vocabulary items for the given id.
+ */
 export async function getVocabularyItems(vocabularyId, options = { language: 'en' }) {
   const results = [];
 
@@ -28,13 +35,16 @@ export async function getVocabularyItems(vocabularyId, options = { language: 'en
   return results;
 }
 
-/*
- * Fill item object with vocabularies labels
+/**
+ * Takes in an item and fills in the vocabularies for the item.
  * For example, if the item has a key `{ foo: { "@id": "http://bar" } }`
  * 1. It checks if the vocabulary "foo" exists in the configuration file
  * 2. Then it calls the API route to get a cached version of the vocabulary
  * 3. Finally it replaces the original key with additional values (eg. label)
  * Final item: `{ foo: { "@id": "http://bar", "label": "Bar" } }`
+ * @param {object} item - the item to fill in the vocabularies for.
+ * @param {object} options - the options to use when getting the vocabularies.
+ * @returns None
  */
 export async function fillWithVocabularies(item, options) {
   const keys = Object.keys(item);

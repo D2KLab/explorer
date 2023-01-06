@@ -3,6 +3,12 @@ import { withRequestValidation } from '@helpers/api';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
 
+/**
+ * Account operations. Takes in an account id.
+ * If method is GET, returns the account with the given id.
+ * If method is DELETE, deletes the account with the given id.
+ * @param {string} id - the ID of the account to get
+ */
 export default withRequestValidation({
   useSession: true,
   allowedMethods: ['GET', 'DELETE'],

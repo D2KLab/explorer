@@ -2,9 +2,16 @@ import GraphIcon from '@components/GraphIcon';
 import { useGraphs } from '@helpers/useGraphs';
 
 /**
- * Displays a graph link, given a graph URI. The url has to be set in config.js.
+ * A React component that renders a link to a graph. The url has to be set in config.js.
+ * @param {string} className - The class name to apply to the link.
+ * @param {object} style - The style to apply to the link.
+ * @param {string} target - The target to apply to the link.
+ * @param {string} rel - The rel to apply to the link.
+ * @param {string} uri - The uri of the graph to link to.
+ * @param {string} icon - The icon to render before the label.
+ * @param {string} label - The label to render after the icon.
+ * @return
  */
-
 function GraphLink({
   className,
   style = {},

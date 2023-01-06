@@ -14,6 +14,11 @@ import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
 import { getEntity } from '@pages/api/entity';
 
+/**
+ * Takes in a buffer and returns a stream that can be used to read the buffer.
+ * @param {Buffer} buffer - the buffer to convert to a stream
+ * @returns {Stream} - the stream that can be used to read the buffer
+ */
 const bufferToStream = (buffer) => {
   const stream = new Duplex();
   stream.push(buffer);
@@ -21,6 +26,11 @@ const bufferToStream = (buffer) => {
   return stream;
 };
 
+/**
+ * Downloads an image from the given URL and returns it as a buffer.
+ * @param {string} imageUrl - the URL of the image to download
+ * @returns {Buffer} - the image as a buffer
+ */
 const downloadImageAsBuffer = async (imageUrl) => {
   const response = await fetch(imageUrl);
   const arrayBuffer = await response.arrayBuffer();
@@ -28,6 +38,11 @@ const downloadImageAsBuffer = async (imageUrl) => {
   return buffer;
 };
 
+/**
+ * Flattens an object into a single level object.
+ * @param {object} obj - the object to flatten
+ * @returns {object} - the flattened object
+ */
 const flattenObject = (obj) => {
   const flattenKeys = {};
   for (const i in obj) {
@@ -45,6 +60,10 @@ const flattenObject = (obj) => {
   return flattenKeys;
 };
 
+/**
+ * Takes in a list and returns a zip file containing the list's items in an exportable format
+ * @param {string} listId - the id of the list to zip up.
+ */
 export default withRequestValidation({
   allowedMethods: ['GET'],
 })(async (req, res) => {

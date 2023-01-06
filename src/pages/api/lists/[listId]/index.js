@@ -10,6 +10,13 @@ import { withRequestValidation } from '@helpers/api';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth';
 
+/**
+ * List operations. Takes in a list id.
+ * If method is GET, returns the list with the given id.
+ * If method is PUT, takes in list properties and updates a list with the given id and properties.
+ * If method is DELETE, deletes the list with the given id.
+ * @param {string} listId - the id of the list to get.
+ */
 export default withRequestValidation({
   allowedMethods: ['GET', 'PUT', 'DELETE'],
 })(async (req, res) => {

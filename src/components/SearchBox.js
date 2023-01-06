@@ -36,6 +36,12 @@ const SearchIcon = styled(SearchAlt2)`
   height: 24px;
 `;
 
+/**
+ * A search box.
+ * @param {string} [className] - The class name to apply to the search box.
+ * @param {string} [placeholder] - The placeholder text to display in the search box.
+ * @returns A search box.
+ */
 function SearchBox({ className, placeholder = 'Search' }) {
   const { t } = useTranslation('common');
   return (

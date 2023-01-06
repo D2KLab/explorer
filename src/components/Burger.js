@@ -53,6 +53,14 @@ export const StyledBurger = styled.button`
   }
 `;
 
+/**
+ * A burger menu component that can be used to toggle the menu.
+ * @param {string} className - The class name to apply to the burger.
+ * @param {boolean} open - Whether or not the menu is open.
+ * @param {Function} setOpen - A function to set the open state of the menu.
+ * @param {object} props - The props to pass to the component.
+ * @returns A burger menu component.
+ */
 function Burger({ className, open, setOpen, ...props }) {
   const { t } = useTranslation('common');
   const isExpanded = !!open;

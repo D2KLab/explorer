@@ -32,6 +32,12 @@ export const providersButtons = {
   Twitter: TwitterButton,
 };
 
+/**
+ * A component that renders a button that will redirect the user to the provider's website for signing in.
+ * @param {Provider} provider - The provider object.
+ * @param {object} props - The props to pass to the button.
+ * @returns A button that will redirect the user to the provider's website.
+ */
 export function ProviderButton({ provider, ...props }) {
   const { t } = useTranslation('common');
   const Container = providersButtons[provider.name] || Button;

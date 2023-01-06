@@ -46,6 +46,11 @@ const PredictionDetails = styled.div`
   `}
 `;
 
+/**
+ * A component that displays the prediction.
+ * @param {Prediction} prediction - the prediction object
+ * @returns A React component.
+ */
 function Prediction({ prediction }) {
   const { t } = useTranslation('project');
   const { score, kind, used, explanation } = prediction;

@@ -11,6 +11,12 @@ import { authOptions } from '@pages/api/auth/[...nextauth]';
 import { getSessionUser, getUserLists } from '@helpers/database';
 import config from '~/config';
 
+/**
+ * Gets the filters for the given route.
+ * @param {string} query.type - the type of route to get filters for.
+ * @param {string} query.language - the language of the filters to get.
+ * @returns {Promise<Filter[]>} - A promise that resolves to an array of filters.
+ */
 export const getFilters = async (query, { language }) => {
   const route = config.routes[query.type];
   if (!route || !Array.isArray(route.filters)) {
@@ -173,6 +179,13 @@ const getExtraFromFilters = (query, filters) => {
   return { extraWhere, extraFilter };
 };
 
+/**
+ * Searches with the given query.
+ * @param {object} query - The query to search with.
+ * @param {object} session - The session ID of the user.
+ * @param {string} language - The language of the user.
+ * @returns {Promise<SearchResult>} A promise that resolves to the search results.
+ */
 export const search = async (query, session, language) => {
   const results = [];
   let debugSparqlQuery = null;

@@ -7,6 +7,13 @@ import config from '~/config';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 
+/**
+ * Takes in a route and returns a query object that can be used to search for entities
+ * @param {Route} route - the route to get the query object for
+ * @param {string} language - the language to use for the query
+ * @param {object} query - the query object to use for the search
+ * @returns {object} - the query object to use for the search
+ */
 const getEntityQuery = (route, language, query) => {
   if (!route) {
     return null;
@@ -29,6 +36,12 @@ const getEntityQuery = (route, language, query) => {
   return searchQuery;
 };
 
+/**
+ * Gets the entity for the given query.
+ * @param {string} query - the query to get the entity for.
+ * @param {string} language - the language to get the entity for.
+ * @returns {Promise<Entity>} - the entity for the given query.
+ */
 export const getEntity = async (query, language) => {
   const route = config.routes[query.type];
   if (!route) {
@@ -56,6 +69,14 @@ export const getEntity = async (query, language) => {
   return entity;
 };
 
+/**
+ * Checks if the entity is in the user's list.
+ * @param {string} entityId - the entity's id
+ * @param {Query} query - the query object
+ * @param {Request} req - the request object
+ * @param {Response} res - the response object
+ * @returns {boolean} - true if the entity is in the user's list, false otherwise
+ */
 export const isEntityInList = async (entityId, query, req, res) => {
   if (!entityId || !req) return false;
 
@@ -72,12 +93,23 @@ export const isEntityInList = async (entityId, query, req, res) => {
   );
 };
 
+/**
+ * Takes in a query object and returns the SPARQL query for that object.
+ * @param {Query} query - the query object
+ * @param {string} language - the language of the query
+ * @returns {string} the SPARQL query for the query object
+ */
 export const getEntityDebugQuery = async (query, language) => {
   const route = config.routes[query.type];
   const searchQuery = await getEntityQuery(route, language, query);
   return SparqlClient.getSparqlQuery(searchQuery);
 };
 
+/**
+ * A route that takes in query parameters and and returns a matching entity.
+ * @param {Request} req - the request object
+ * @param {Response} res - the response object
+ */
 export default withRequestValidation({
   allowedMethods: ['GET'],
 })(async (req, res) => {

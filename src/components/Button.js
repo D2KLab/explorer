@@ -47,6 +47,16 @@ const StyledSpinner = styled(Spinner)`
   margin-right: 0.5rem;
 `;
 
+/**
+ * A styled button component.
+ * @param {boolean} [loading=false] - Whether the button is loading.
+ * @param {boolean} [primary=false] - Whether the button is primary.
+ * @param {boolean} [secondary=false] - Whether the button is secondary.
+ * @param {string} href - The href of the button.
+ * @param {React.ReactNode} children - The children of the button.
+ * @param {React.Ref<any>} ref - The ref of the button.
+ * @returns A styled button component.
+ */
 const Button = forwardRef(({ loading, primary, secondary, href, children, ...props }, ref) => (
   <Container
     {...props}

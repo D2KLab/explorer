@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+/**
+ * A styled input element.
+ * @returns {React.Component} - A styled input element.
+ */
 const Input = styled.input`
   background-color: #f0f0f0;
   border-style: solid;

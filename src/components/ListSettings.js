@@ -35,6 +35,11 @@ const StyledSettingsIcon = styled(SettingsIcon)`
   }
 `;
 
+/**
+ * A component that renders the settings dialog for a list.
+ * @param {List} list - The list to render settings for.
+ * @returns A component that renders the settings dialog for a list.
+ */
 function ListSettings({ list }) {
   const theme = useTheme();
   const { t } = useTranslation('common');

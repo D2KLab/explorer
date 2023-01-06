@@ -25,6 +25,10 @@ const StyledSwitch = styled(Switch)`
   margin-right: 0.5em;
 `;
 
+/**
+ * A React component that renders a consent popup.
+ * @returns A React component that renders a consent popup.
+ */
 function ConsentPopup() {
   const { t } = useTranslation(['common', 'project']);
   const theme = useTheme();

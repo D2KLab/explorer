@@ -1,5 +1,11 @@
 import config from '~/config';
 
+/**
+ * A React component that renders a link to a SPARQL endpoint.
+ * @param {string} query - the SPARQL query to link to
+ * @param {React.ReactNode} children - the children to render
+ * @returns A React component that renders a link to a SPARQL endpoint.
+ */
 function SPARQLQueryLink({ query, children }) {
   return (
     <a

@@ -7,10 +7,6 @@ import Element from '@components/Element';
 import { useTranslation } from 'next-i18next';
 import config from '~/config';
 
-/**
- * Language switcher.
- */
-
 const StyledMenu = styled(Menu)`
   background: #fff;
   color: #000;
@@ -58,6 +54,11 @@ const StyledDownArrow = styled(DownArrow)`
   color: inherit;
 `;
 
+/**
+ * A component that renders a language switch button.
+ * @param {string} className - The class name to apply to the component.
+ * @returns A language switch button.
+ */
 function LanguageSwitch({ className }) {
   const menu = useMenuState();
   const { i18n } = useTranslation();

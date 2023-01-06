@@ -4,6 +4,16 @@ import { useRouter } from 'next/router';
 import { uriToId } from '@helpers/utils';
 import config from '~/config';
 
+/**
+ * A PaginatedLink component that takes in a type and id and creates a link to the
+ * page that the id is on.
+ * @param {string} id - the id of the item that the link is for.
+ * @param {string} type - the type of the item that the link is for.
+ * @param {number} [page] - the page that the link is for.
+ * @param {string} [searchApi] - the search api that the link is for.
+ * @param {React.ReactNode} children - the content of the link.
+ * @param {object} props - the props of
+ */
 const PaginatedLink = ({ id, type, page, searchApi, children, ...props }) => {
   const router = useRouter();
   const route = config.routes[type];

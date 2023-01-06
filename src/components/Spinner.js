@@ -35,6 +35,13 @@ const StyledSpinner = styled.svg`
   }
 `;
 
+/**
+ * A React component that renders a spinning spinner.
+ * @param {number} size - the size of the spinner.
+ * @param {string} color - the color of the spinner.
+ * @param {object} props - the props to pass to the spinner.
+ * @returns A React component that renders a spinning spinner.
+ */
 function Spinner({ size, color, ...props }) {
   return (
     <StyledSpinner size={size} color={color} viewBox="0 0 50 50" {...props}>

@@ -64,6 +64,14 @@ const ConcealedRadio = ({ value, selected }) => (
   <SwitchRadio type="radio" name="switch" checked={selected === value} />
 );
 
+/**
+ * A component that renders a toggle switch.
+ * @param {string} name - the name of the switch.
+ * @param {Array<{label: string, value: string}>} options - the options to render.
+ * @param {string} defaultOption - the default option to select.
+ * @param {(val: string, event: React.ChangeEvent<HTMLInputElement>) => void} onChange - the function to call when the switch is changed.
+ * @returns A React component.
+ */
 function ToggleSwitch({ name, options, defaultOption, onChange }) {
   const [selected, setSelected] = useState();
   const [left, setLeft] = useState();

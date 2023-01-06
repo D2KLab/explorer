@@ -7,9 +7,15 @@ import config from '~/config';
 import theme from '~/theme';
 
 /**
- * Metadata list.
+ * Generates a printable value for the given meta.
+ * @param {string} currentRouteName - the name of the current route.
+ * @param {string} currentRoute - the current route.
+ * @param {object} metadata - the metadata object.
+ * @param {string} metaName - the name of the meta.
+ * @param {number} metaIndex - the index of the meta.
+ * @param {object} meta - the meta object.
+ * @returns A React element.
  */
-
 function generateValue(currentRouteName, currentRoute, metadata, metaName, metaIndex, meta) {
   // Ignore empty meta objects
   if (typeof meta === 'object' && Object.keys(meta).length === 0) {
@@ -120,6 +126,12 @@ function generateValue(currentRouteName, currentRoute, metadata, metaName, metaI
   return renderValue();
 }
 
+/**
+ * A component that renders a list of metadata.
+ * @param {object} metadata - The metadata to render.
+ * @param {string} type - The type of metadata to render.
+ * @returns A React component.
+ */
 function MetadataList({ metadata, type }) {
   const { t } = useTranslation('project');
 

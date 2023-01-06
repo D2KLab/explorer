@@ -5,10 +5,6 @@ import Image from 'next/image';
 import GraphIcon from '@components/GraphIcon';
 import config from '~/config';
 
-/**
- * Media card with title, subtitle, thumbnail, link
- */
-
 export const ThumbnailContainer = styled.div`
   border: 2px solid ${({ theme }) => theme.colors.secondary};
   display: flex;
@@ -65,6 +61,19 @@ export const Container = styled.div`
   }
 `;
 
+/**
+ * A component that renders a media card with a thumbnail.
+ * @param {string} className - The class name to apply to the component.
+ * @param {string} thumbnail - The URL of the thumbnail to render.
+ * @param {string} title - The title of the media object.
+ * @param {string} subtitle - The subtitle of the media object.
+ * @param {string} graphUri - The URI of the graph to render.
+ * @param {number} [width=150] - The width of the thumbnail.
+ * @param {number} [height=150] - The height of the thumbnail.
+ * @param {string} direction - The display direction ('row' or 'column')
+ * @param {object} props - The props to pass to the component.
+ * @returns A component that renders a media card with a thumbnail.
+ */
 function Media({
   className,
   thumbnail,

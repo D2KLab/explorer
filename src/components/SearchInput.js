@@ -92,6 +92,16 @@ function debounce(fn, time) {
   };
 }
 
+/**
+ * A custom input component that uses the react-autosuggest library.
+ * @param {string} className - The class name of the input.
+ * @param {string} placeholder - The placeholder text of the input.
+ * @param {string} ariaLabel - The aria label of the input.
+ * @param {string} value - The value of the input.
+ * @param {Function} [onChange] - The function to call when the input changes.
+ * @param {Function} [onBlur] - The function to call when the input loses focus.
+ * @param {Function} [onFocus] - The function to call when the input gains focus.
+ */
 function SearchInput({ className, placeholder, ariaLabel = 'Search input', ...props }) {
   const [inputValue, setInputValue] = useState('');
   const [totalResults, setTotalResults] = useState(0);

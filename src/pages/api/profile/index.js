@@ -3,6 +3,13 @@ import { withRequestValidation } from '@helpers/api';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]';
 
+/**
+ * Profile operations.
+ * If method is GET, return user profile
+ * If method is DELETE, deletes the user
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ */
 export default withRequestValidation({
   useSession: true,
   allowedMethods: ['GET', 'DELETE'],

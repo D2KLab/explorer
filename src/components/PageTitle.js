@@ -3,6 +3,11 @@ import { useTranslation } from 'next-i18next';
 
 import config from '~/config';
 
+/**
+ * A component that renders the page title.
+ * @param {string} title - the title of the page.
+ * @returns A React component.
+ */
 function PageTitle({ title }) {
   const { t } = useTranslation('project');
   return (

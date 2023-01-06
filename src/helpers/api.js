@@ -2,6 +2,12 @@ import { STATUS_CODES } from 'http';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
 
+/**
+ * A class that represents an HTTP error.
+ * @param {number} code - the HTTP status code of the error.
+ * @param {string} [message] - the message of the error.
+ * @param {object} [extras] - any extra information to be added to the error.
+ */
 export class HTTPError extends Error {
   constructor(code, message, extras) {
     super(message || STATUS_CODES[code]);
@@ -12,6 +18,16 @@ export class HTTPError extends Error {
   }
 }
 
+/**
+ * Validates the request.
+ * @param {NextRequest} req - the request object
+ * @param {NextResponse} res - the response object
+ * @param {object} [options={}] - the options object
+ * @param {boolean} [options.useSession=false] - whether to use session
+ * @param {string[]} [options.allowedMethods] - the allowed methods
+ * @returns None
+ * @throws {HTTPError} - an HTTP error
+ */
 export async function validateRequest(req, res, options = {}) {
   if (options.useSession === true) {
     // Check for a valid session
@@ -26,6 +42,7 @@ export async function validateRequest(req, res, options = {}) {
     }
   }
 
+  // Check if the method is allowed to be used in this context.
   if (typeof options.allowedMethods !== 'undefined') {
     const allowedMethods = Array.isArray(options.allowedMethods)
       ? options.allowedMethods
@@ -36,6 +53,13 @@ export async function validateRequest(req, res, options = {}) {
   }
 }
 
+/**
+ * Takes in a request and response and validates the request.
+ * @param {NextRequest} req - the request object
+ * @param {NextResponse} res - the response object
+ * @param {object} options - the options object
+ * @returns the validated request
+ */
 export function withRequestValidation(options = {}) {
   return function Extend(WrappedFunction) {
     return async (req, res) =>

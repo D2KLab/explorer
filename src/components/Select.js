@@ -32,6 +32,11 @@ const customTheme = (theme) => ({
   },
 });
 
+/**
+ * A custom ReactSelect component that uses the custom theme and styles.
+ * @param {object} props - the props to pass to the Select component.
+ * @returns A ReactSelect component with the custom theme and styles.
+ */
 function Select({ ...props }) {
   return <ReactSelect styles={customStyles} theme={customTheme} {...props} />;
 }

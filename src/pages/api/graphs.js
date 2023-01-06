@@ -3,6 +3,11 @@ import { withRequestValidation } from '@helpers/api';
 import { getQueryObject, removeEmptyObjects } from '@helpers/utils';
 import config from '~/config';
 
+/**
+ * Gets the graphs for the given language.
+ * @param {string} language - the language to get the graphs for.
+ * @returns {Promise<object>} - the graphs for the given language.
+ */
 const getGraphs = async (language) => {
   if (typeof config.graphs === 'function') {
     const graphsQuery = getQueryObject(config.graphs(), { language });
@@ -30,6 +35,11 @@ const getGraphs = async (language) => {
   return {};
 };
 
+/**
+ * A route that returns a list of graphs.
+ * @param {string} [hl] - The language to use for the graphs.
+ * @returns A list of graphs.
+ */
 export default withRequestValidation({
   allowedMethods: ['GET'],
 })(async (req, res) => {

@@ -1,6 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useMemo, useState, useEffect } from 'react';
 
+/**
+ * A hook that returns a debounced version of the given value.
+ * @param {Function} value - the value to debounce
+ * @param {number} delay - the delay in milliseconds
+ * @returns {Function} the debounced value
+ */
 export default function useDebounce(value, delay) {
   if (typeof value === 'function') {
     const [id, setId] = useState(null);

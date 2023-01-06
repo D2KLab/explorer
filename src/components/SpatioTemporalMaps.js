@@ -5,6 +5,12 @@ import Cookies from 'js-cookie';
 import { useTranslation } from 'next-i18next';
 import config from '~/config';
 
+/**
+ * A React hook that returns the params for the Spatio Temporal Maps plugin.
+ * @param {React.Ref<HTMLIFrameElement>} mapRef - The ref of the iframe that the map is rendered in.
+ * @param {Query} query - The query object that is passed to the Spatio Temporal Maps plugin.
+ * @returns The Spatio Temporal Maps HTML element.
+ */
 function SpatioTemporalMaps({ mapRef, query }) {
   const { i18n } = useTranslation();
 

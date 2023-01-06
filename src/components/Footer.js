@@ -4,10 +4,6 @@ import breakpoints from '@styles/breakpoints';
 import { useTranslation } from 'next-i18next';
 import config from '~/config';
 
-/**
- * Footer.
- */
-
 const Container = styled.div`
   background-color: ${({ theme }) => theme.colors.primary};
   color: #fff;
@@ -67,6 +63,11 @@ const Logo = styled.img`
   margin: 1em;
 `;
 
+/**
+ * The footer component.
+ * @param {string} className - The class name to apply to the footer.
+ * @returns The footer component.
+ */
 function Footer({ className }) {
   const { t } = useTranslation(['common', 'project']);
   return (

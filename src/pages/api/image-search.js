@@ -6,14 +6,25 @@ import formidable from 'formidable';
 import { withRequestValidation } from '@helpers/api';
 import util from 'util';
 
+/**
+ * Takes in a stream and pipes it to another stream.
+ * @param {stream.Readable} readable - the readable stream to pipe to the writable stream.
+ * @param {stream.Writable} writable - the writable stream to pipe the readable stream to.
+ * @returns None
+ */
 const streamPipeline = util.promisify(require('stream').pipeline);
 
+// Disable bodyParser for API calls
 export const config = {
   api: {
     bodyParser: false,
   },
 };
 
+/**
+ * Image based search, given an uploaded image.
+ * @param {object} image - the uploaded image to search for.
+ */
 export const searchImage = async (image) => {
   const formData = new FormData();
 

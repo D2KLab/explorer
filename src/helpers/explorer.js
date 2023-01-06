@@ -1,9 +1,9 @@
 import config from '~/config';
 
-/*
- * Find a route from config based on its RDF type.
- * Returns an Array with two elements (`[routeName, route]`), or
- * an empty array (`[]`) if the route was not found.
+/**
+ * Finds the route that matches the given RDF type.
+ * @param {string | string[]} type - the RDF type to find a route for
+ * @returns {string[]} if the route matches, an array with two elements (`[routeName, route]`), or an empty array (`[]`) if the route was not found.the route that matches the given RDF type
  */
 export function findRouteByRDFType(type) {
   const rdfTypes = Array.isArray(type) ? type : [type];
@@ -20,6 +20,13 @@ export function findRouteByRDFType(type) {
   );
 }
 
+/**
+ * Gets the main label for an entity.
+ * @param {Entity} entity - the entity to get the label for.
+ * @param {Route} route - the route to get the label for.
+ * @param {string} language - the language to get the label for.
+ * @returns {string} the main label for the entity.
+ */
 export function getEntityMainLabel(entity, { route, language }) {
   if (typeof route === 'object' && typeof route.labelFunc === 'function') {
     return route.labelFunc(entity);
@@ -62,6 +69,12 @@ export function getEntityMainLabel(entity, { route, language }) {
     .join(', ');
 }
 
+/**
+ * Get the main image for an entity.
+ * @param {object} result - the entity object
+ * @param {object} route - the route object
+ * @returns {string} the main image for the entity
+ */
 export const getEntityMainImage = (result, { route }) => {
   let mainImage = null;
 
@@ -79,6 +92,11 @@ export const getEntityMainImage = (result, { route }) => {
   return mainImage;
 };
 
+/**
+ * Generates a permalink for the given URI.
+ * @param {string} uri - the URI to generate a permalink for.
+ * @returns {string} the permalink for the given URI.
+ */
 export const generatePermalink = (uri) => {
   if (typeof config.api.permalinkUrl === 'function') {
     return config.api.permalinkUrl(uri);
@@ -86,6 +104,12 @@ export const generatePermalink = (uri) => {
   return uri;
 };
 
+/**
+ * Gets the search data for the given query.
+ * @param {object} query - The query object.
+ * @param {string} locale - The locale of the user.
+ * @returns {object} The search data.
+ */
 export const getSearchData = async ({ query, locale }) => {
   if (!query.sapi) {
     return null;

@@ -124,6 +124,11 @@ const SearchContainer = styled.div`
   ${({ theme }) => theme?.components?.Header?.SearchContainer};
 `;
 
+/**
+ * A component that renders the header of the site.
+ * @param {string} className - The class name to apply to the header.
+ * @returns None
+ */
 function Header({ className }) {
   const { t } = useTranslation('project');
   return (

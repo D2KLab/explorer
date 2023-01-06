@@ -7,10 +7,6 @@ import breakpoints from '@styles/breakpoints';
 import { useTranslation } from 'next-i18next';
 import config from '~/config';
 
-/**
- * Side menu in use with a Burger button
- */
-
 export const StyledMenu = styled.nav`
   display: ${({ open }) => (open ? 'flex' : 'none')};
   flex-direction: column;
@@ -63,6 +59,13 @@ const StyledLanguageSwitch = styled(LanguageSwitch)`
   color: #fff;
 `;
 
+/**
+ * A React component that renders the side menu with a burger button.
+ * @param {boolean} open - Whether the menu is open or not.
+ * @param {string} className - The class name to apply to the menu.
+ * @param {object} props - The props to pass to the menu.
+ * @returns A React component that renders the side menu with a burger button.
+ */
 function Menu({ className, open, ...props }) {
   const { t } = useTranslation('project');
   const isHidden = !!open;

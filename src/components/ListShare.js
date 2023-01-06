@@ -34,6 +34,15 @@ const StyledDialog = styled(Dialog)`
   outline: 0;
 `;
 
+/**
+ * A React component that renders a list of buttons that share the list.
+ * @param {List} list - the list to share
+ * @param {DialogState} dialogState - the dialog state to use
+ * @param {React.ReactNode} children - the children to render
+ * @param {string} shareUrl - the url to share
+ * @param {string} facebookAppId - the facebook app id
+ * @returns A React component
+ */
 function ListShare({ list, dialogState, children, shareUrl, facebookAppId }) {
   const { t } = useTranslation('common');
   // eslint-disable-next-line react-hooks/rules-of-hooks

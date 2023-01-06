@@ -2,16 +2,6 @@ import styled from 'styled-components';
 
 import Element from '@components/Element';
 
-/**
- * Metadata with label and value(s).
- *
- * ```
- * <Metadata label="Your label">
- *  Your values
- * </Metadata>
- * ```
- */
-
 const Label = styled.dt`
   height: 0.875rem;
   line-height: 0.875rem;
@@ -30,6 +20,15 @@ const Data = styled.dd`
   font-weight: 500;
 `;
 
+/**
+ * A component that displays metadata with a label and value(s)
+ * @param {string} className - The class name to apply to the element.
+ * @param {string} label - The label to display.
+ * @param {string} labelStyle - The style to apply to the label.
+ * @param {string} valueStyle - The style to apply to the value.
+ * @param {string} children - The value to display.
+ * @returns A component that displays metadata with a label and value(s)
+ */
 function Metadata({ className, label, labelStyle, valueStyle, children }) {
   return (
     <Element as="dl" marginY="1em" className={className}>
