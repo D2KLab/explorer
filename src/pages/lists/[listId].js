@@ -19,7 +19,6 @@ import Title from '@components/Title';
 import PageTitle from '@components/PageTitle';
 import ListSettings from '@components/ListSettings';
 import ListDeletion from '@components/ListDeletion';
-import { Navbar, NavItem } from '@components/Navbar';
 import { uriToId, generateMediaUrl, slugify } from '@helpers/utils';
 import { getSessionUser, getListById } from '@helpers/database';
 import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
@@ -35,6 +34,11 @@ const Results = styled.div`
   grid-template-columns: repeat(auto-fit, 150px);
   grid-gap: 1rem;
   margin-bottom: 24px;
+`;
+
+const Navbar = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 function ListsPage({ isOwner, list, shareLink }) {
@@ -125,10 +129,10 @@ function ListsPage({ isOwner, list, shareLink }) {
             <PageTitle title={list.name} />
             <Content>
               <Navbar>
-                <NavItem>
+                <div>
                   <h1>{list.name}</h1>
-                </NavItem>
-                <NavItem>{isOwner && <ListSettings list={list} />}</NavItem>
+                </div>
+                <div>{isOwner && <ListSettings list={list} />}</div>
               </Navbar>
               <Element>
                 <p>

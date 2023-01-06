@@ -400,7 +400,7 @@ function Sidebar({ className, onSearch, submitOnChange = false, type, filters, q
       return (
         <Field key={filter.id} style={filter.style}>
           <div style={{ marginTop: filter.hideLabel ? 0 : 24 }}>
-            {!filter.hideLabel && t(`project:filters.${filter.id}`, filter.label)}
+            {!filter.hideLabel && <label>t(`project:filters.${filter.id}`, filter.label)</label>}
             <div style={{ position: 'relative' }}>
               <ToggleSwitch
                 name={`filter_${filter.id}`}
