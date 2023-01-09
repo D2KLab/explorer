@@ -1,4 +1,4 @@
-import { search } from '@helpers/search';
+import { dumpEntities } from '@helpers/search';
 import { uriToId } from '@helpers/utils';
 import { eachLimit } from 'async';
 import config from '~/config';
@@ -17,27 +17,23 @@ ${entries
 function SiteMap() {}
 
 export async function getServerSideProps({ res, locale }) {
-  const entries = [];
+  const entries = [
+    `${process.env.SITE}`,
+    `${process.env.SITE}/terms`,
+    `${process.env.SITE}/privacy`,
+  ];
+
   await eachLimit(Object.entries(config.routes), 1, async ([routeName, route]) => {
     const query = { type: routeName };
-    const session = null;
-    const searchData = await search(query, session, locale, {
-      overrideLimit: -1,
-      computeTotalResults: false,
-      fetchFavorites: false,
-      fetchDetails: false,
-    });
+    const searchData = await dumpEntities(query, locale);
 
-    entries.push(`${process.env.SITE}`);
-    entries.push(`${process.env.SITE}/terms`);
-    entries.push(`${process.env.SITE}/privacy`);
-    entries.push(
-      ...searchData.results.map((result) => {
+    searchData
+      .map((result) => {
         return `${process.env.SITE}/${routeName}/${encodeURI(
           uriToId(result['@id'], { base: route.uriBase })
         )}`;
       })
-    );
+      .forEach((entry) => entries.push(entry));
   });
 
   // Generate sitemap for search results entries

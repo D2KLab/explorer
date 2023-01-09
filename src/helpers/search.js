@@ -186,277 +186,309 @@ const getExtraFromFilters = (query, filters) => {
   return { extraWhere, extraFilter };
 };
 
-/**
- * Searches for the given query in the given language.
- * @param {object} query - the query to search for
- * @param {object} session - the session to search in
- * @param {string} language - the language to search in
- * @param {SearchOptions} [options] - the options to use
- * @returns {Promise<SearchResults>}
- */
-export const search = async (
-  query,
-  session,
-  language,
-  { overrideLimit, computeTotalResults = true, fetchFavorites = true, fetchDetails = true }
-) => {
-  const results = [];
-  const favorites = [];
-  let debugSparqlQuery = null;
-  let totalResults = 0;
-
+const generateWhereCondition = async (query, language) => {
   const route = config.routes[query.type];
-  if (route) {
-    const baseWhere = route.baseWhere || [];
-    const filters = route.filters || [];
-    const { extraWhere, extraFilter } = getExtraFromFilters(query, filters);
+  const baseWhere = route.baseWhere || [];
+  const filters = route.filters || [];
+  const { extraWhere, extraFilter } = getExtraFromFilters(query, filters);
 
-    // Text search
-    const textSearchWhere = [];
-    if (query.q) {
-      if (typeof route.textSearchFunc === 'function') {
-        textSearchWhere.push(...route.textSearchFunc(query.q));
+  // Text search
+  const textSearchWhere = [];
+  if (query.q) {
+    if (typeof route.textSearchFunc === 'function') {
+      textSearchWhere.push(...route.textSearchFunc(query.q));
+    } else {
+      if (typeof route.labelProp === 'string') {
+        textSearchWhere.push(`?id <${route.labelProp}> ?_s1texto`);
       } else {
-        if (typeof route.labelProp === 'string') {
-          textSearchWhere.push(`?id <${route.labelProp}> ?_s1texto`);
-        } else {
-          textSearchWhere.push('?id ?_s1textp ?_s1texto');
-        }
-        textSearchWhere.push(`?_s1texto bif:contains '${JSON.stringify(query.q)}'`);
+        textSearchWhere.push('?id ?_s1textp ?_s1texto');
       }
+      textSearchWhere.push(`?_s1texto bif:contains '${JSON.stringify(query.q)}'`);
     }
+  }
 
-    // Graph
-    if (query.graph) {
-      extraFilter.push(`?g = <${query.graph}>`);
-    }
+  // Graph
+  if (query.graph) {
+    extraFilter.push(`?g = <${query.graph}>`);
+  }
 
-    // Languages
-    if (query.languages) {
-      const labelProp =
-        typeof route.labelProp === 'string'
-          ? route.labelProp
-          : 'http://www.w3.org/2000/01/rdf-schema#label';
-      extraWhere.push(`?id <${labelProp}> ?label`);
-      extraFilter.push(
-        query.languages.map((lang) => `LANGMATCHES(LANG(?label), "${lang}")`).join(' || ')
+  // Languages
+  if (query.languages) {
+    const labelProp =
+      typeof route.labelProp === 'string'
+        ? route.labelProp
+        : 'http://www.w3.org/2000/01/rdf-schema#label';
+    extraWhere.push(`?id <${labelProp}> ?label`);
+    extraFilter.push(
+      query.languages.map((lang) => `LANGMATCHES(LANG(?label), "${lang}")`).join(' || ')
+    );
+  }
+
+  // URIs
+  if (query.similarity_type) {
+    const uris = [];
+    if (query[`${query.similarity_type}_uris`]) {
+      uris.push(
+        ...query[`${query.similarity_type}_uris`]
+          .split(',')
+          .map((id) => idToUri(id, { base: route.uriBase }))
       );
-    }
+    } else if (query.similarity_entity) {
+      const similarityEntity = await getEntity(
+        {
+          id: query.similarity_entity,
+          type: query.type,
+        },
+        language
+      );
 
-    // URIs
-    if (query.similarity_type) {
-      const uris = [];
-      if (query[`${query.similarity_type}_uris`]) {
-        uris.push(
-          ...query[`${query.similarity_type}_uris`]
-            .split(',')
-            .map((id) => idToUri(id, { base: route.uriBase }))
-        );
-      } else if (query.similarity_entity) {
-        const similarityEntity = await getEntity(
-          {
-            id: query.similarity_entity,
-            type: query.type,
-          },
-          language
-        );
-
-        if (similarityEntity) {
-          const data = await searchImage(similarityEntity.representation[0]?.image);
-          uris.push(...data[`${query.similarity_type}Uris`]);
-        }
-      }
-      if (uris.length > 0) {
-        extraWhere.push(`VALUES ?id { ${uris.map((uri) => `<${uri}>`).join(' ')} }`);
+      if (similarityEntity) {
+        const data = await searchImage(similarityEntity.representation[0]?.image);
+        uris.push(...data[`${query.similarity_type}Uris`]);
       }
     }
-
-    // Sort by
-    let orderByVariable = 'id';
-    let orderByDirection = 'ASC';
-    if (query.sort) {
-      const [sortVariable, sortDirection] = query.sort.split('|');
-      const sortFilter = filters.find((filter) => filter.id === sortVariable);
-      if (sortFilter && typeof sortFilter.whereFunc === 'function') {
-        extraWhere.push(
-          `OPTIONAL { ${[]
-            .concat(sortFilter.whereFunc())
-            .filter((x) => x)
-            .join(' . ')} }`
-        );
-        orderByVariable = sortFilter.isSortable?.variable || sortVariable;
-        if (['ASC', 'DESC'].includes(sortDirection)) {
-          orderByDirection = sortDirection;
-        }
-      }
+    if (uris.length > 0) {
+      extraWhere.push(`VALUES ?id { ${uris.map((uri) => `<${uri}>`).join(' ')} }`);
     }
+  }
 
-    // Pagination
-    const minPerPage = 5; // minimum number of results per page
-    const maxPerPage = 50; // maximum number of results per page
-    const defaultPerPage = 20; // default number of results per page
-    const itemsPerPage =
-      Math.max(minPerPage, Math.min(maxPerPage, parseInt(query.per_page, 10))) || defaultPerPage;
-    // We cannot use sparql-transformer $limit/$offset/$orderby because the $limit property limits the whole
-    // query results, while we actually need to limit the number of unique ?id results
-    // The subquery is also used to compute the total number of pages for the pagination component
-    const whereCondition = `
-      ${baseWhere.join('.')}
-      ${baseWhere.length > 0 ? '.' : ''}
-      ${extraWhere.join('.')}
-      ${extraWhere.length > 0 ? '.' : ''}
-      ${textSearchWhere.join('.')}
-      ${textSearchWhere.length > 0 ? '.' : ''}
-      ${extraFilter.length > 0 ? `FILTER(${extraFilter.join(' && ')})` : ''}
-    `;
+  const whereCondition = `
+    ${baseWhere.join('.')}
+    ${baseWhere.length > 0 ? '.' : ''}
+    ${extraWhere.join('.')}
+    ${extraWhere.length > 0 ? '.' : ''}
+    ${textSearchWhere.join('.')}
+    ${textSearchWhere.length > 0 ? '.' : ''}
+    ${extraFilter.length > 0 ? `FILTER(${extraFilter.join(' && ')})` : ''}
+  `;
 
-    const mainSearchQuery = {
+  return whereCondition;
+};
+
+export const dumpEntities = async (query, language) => {
+  const entities = [];
+  const whereCondition = await generateWhereCondition(query, language);
+
+  const itemsPerPage = 1e4;
+  let offset = 0;
+
+  while (true) {
+    const dumpQuery = {
       '@graph': [
         {
           '@id': '?id',
           '@graph': '?g',
         },
       ],
-      $where: [],
+      $where: [whereCondition],
       $filter: [],
-      $offset: `${itemsPerPage * ((parseInt(query.page, 10) || 1) - 1)}`,
+      $offset: offset,
+      $limit: itemsPerPage,
     };
 
-    if (typeof overrideLimit !== 'undefined') {
-      if (overrideLimit !== -1) {
-        mainSearchQuery.$limit = overrideLimit;
-      }
-    } else {
-      mainSearchQuery.$limit = itemsPerPage;
-    }
-
-    if (orderByVariable) {
-      mainSearchQuery.$orderby = `${orderByDirection}(?${orderByVariable})`;
-    }
-
-    mainSearchQuery.$where.push(whereCondition);
-
-    // Execute the main search query
-    if (config.debug) {
-      debugSparqlQuery = await SparqlClient.getSparqlQuery(mainSearchQuery);
-    }
-    // Call the endpoint with the main search query
-    const entities = [];
+    // Call the endpoint with the dump query
     try {
-      const resMainSearch = await SparqlClient.query(mainSearchQuery, {
+      const resDump = await SparqlClient.query(dumpQuery, {
         endpoint: config.api.endpoint,
         debug: config.debug,
         params: config.api.params,
       });
-      if (resMainSearch) {
-        entities.push(...resMainSearch['@graph']);
+      if (resDump) {
+        if (resDump['@graph'].length === 0) {
+          break;
+        }
+        entities.push(...resDump['@graph']);
       }
     } catch (e) {
       console.error(e);
     }
 
-    if (!fetchDetails) {
-      // Just push the results without details
-      results.push(...entities);
-    } else {
-      // Loop through each entity and get the details
-      const maxConcurrentRequests = 3;
-      await new Promise((resolve, reject) => {
-        mapLimit(
-          entities,
-          maxConcurrentRequests,
-          async (entity) => {
-            const searchDetailsQuery = JSON.parse(
-              JSON.stringify(getQueryObject(route.query, { language, params: query }))
-            );
-            searchDetailsQuery.$where = searchDetailsQuery.$where || [];
-            searchDetailsQuery.$filter = searchDetailsQuery.$filter || [];
-            searchDetailsQuery.$values = searchDetailsQuery.$values || {};
-            searchDetailsQuery.$values['?id'] = searchDetailsQuery.$values['?id'] || [];
-            searchDetailsQuery.$values['?id'].push(entity['@id']);
+    offset += itemsPerPage;
+  }
 
-            const resSearchDetails = await SparqlClient.query(searchDetailsQuery, {
-              endpoint: config.api.endpoint,
-              debug: config.debug,
-              params: config.api.params,
-            });
+  return entities;
+};
 
-            const details = [];
-            if (resSearchDetails) {
-              // Ignore empty objects
-              const detailsWithoutEmptyObjects = resSearchDetails['@graph'].map(removeEmptyObjects);
-              details.push(...detailsWithoutEmptyObjects);
-            }
+const fetchEntities = async (query, language) => {
+  const entities = [];
+  let debugSparqlQuery = null;
+  let totalResults = 0;
 
-            return details;
-          },
-          (err, res) => {
-            if (err) {
-              reject(err);
-              return;
-            }
-            results.push(...res.flat());
-            resolve();
-          }
-        );
-      });
+  const route = config.routes[query.type];
+  if (!route) {
+    return { totalResults, debugSparqlQuery, entities };
+  }
 
-      for (let i = 0; i < results.length; i += 1) {
-        await fillWithVocabularies(results[i], { params: query });
+  const whereCondition = await generateWhereCondition(query, language);
+
+  // Pagination
+  const minPerPage = 5; // minimum number of results per page
+  const maxPerPage = 50; // maximum number of results per page
+  const defaultPerPage = 20; // default number of results per page
+  const itemsPerPage =
+    Math.max(minPerPage, Math.min(maxPerPage, parseInt(query.per_page, 10))) || defaultPerPage;
+  // We cannot use sparql-transformer $limit/$offset/$orderby because the $limit property limits the whole
+  // query results, while we actually need to limit the number of unique ?id results
+  // The subquery is also used to compute the total number of pages for the pagination component
+  const mainSearchQuery = {
+    '@graph': [
+      {
+        '@id': '?id',
+        '@graph': '?g',
+      },
+    ],
+    $where: [whereCondition],
+    $filter: [],
+    $offset: `${itemsPerPage * ((parseInt(query.page, 10) || 1) - 1)}`,
+    $limit: itemsPerPage,
+  };
+
+  // Sort by
+  let orderByVariable = 'id';
+  let orderByDirection = 'ASC';
+  if (query.sort) {
+    const [sortVariable, sortDirection] = query.sort.split('|');
+    const sortFilter = filters.find((filter) => filter.id === sortVariable);
+    if (sortFilter && typeof sortFilter.whereFunc === 'function') {
+      extraWhere.push(
+        `OPTIONAL { ${[]
+          .concat(sortFilter.whereFunc())
+          .filter((x) => x)
+          .join(' . ')} }`
+      );
+      orderByVariable = sortFilter.isSortable?.variable || sortVariable;
+      if (['ASC', 'DESC'].includes(sortDirection)) {
+        orderByDirection = sortDirection;
       }
     }
+  }
+  if (orderByVariable) {
+    mainSearchQuery.$orderby = `${orderByDirection}(?${orderByVariable})`;
+  }
 
-    if (computeTotalResults) {
-      // Compute the total number of pages (used for pagination)
-      const paginationWhereCondition = `
-        ${baseWhere.join('.')}
-        ${baseWhere.length > 1 ? '.' : ''}
-        ${extraWhere.join('.')}
-        ${extraWhere.length > 1 ? '.' : ''}
-        ${extraFilter.length > 0 ? `FILTER(${extraFilter.join(' && ')})` : ''}
-      `;
-      const paginationQuery = {
-        proto: {
-          id: '?count',
-        },
-        $where: `
-          SELECT (COUNT(DISTINCT ?id) AS ?count) WHERE {
-            ${textSearchWhere.join('.')}
-            ${textSearchWhere.length > 1 ? '.' : ''}
-            ${paginationWhereCondition}
-          }
-          ${query.approximate ? 'LIMIT 1000' : ''}
-        `,
-      };
-      try {
-        const resPagination = await SparqlClient.query(paginationQuery, {
+  // Execute the main search query
+  if (config.debug) {
+    debugSparqlQuery = await SparqlClient.getSparqlQuery(mainSearchQuery);
+  }
+
+  // Call the endpoint with the main search query
+  try {
+    const resMainSearch = await SparqlClient.query(mainSearchQuery, {
+      endpoint: config.api.endpoint,
+      debug: config.debug,
+      params: config.api.params,
+    });
+    if (resMainSearch) {
+      entities.push(...resMainSearch['@graph']);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+
+  // Compute the total number of pages (used for pagination)
+  const paginationQuery = {
+    proto: {
+      id: '?count',
+    },
+    $where: `
+    SELECT (COUNT(DISTINCT ?id) AS ?count) WHERE {
+      ${whereCondition}
+    }
+    ${query.approximate ? 'LIMIT 1000' : ''}
+  `,
+  };
+  try {
+    const resPagination = await SparqlClient.query(paginationQuery, {
+      endpoint: config.api.endpoint,
+      debug: config.debug,
+      params: config.api.params,
+    });
+    totalResults = resPagination && resPagination[0] ? parseInt(resPagination[0].id, 10) : 0;
+  } catch (e) {
+    console.error(e);
+  }
+
+  return {
+    debugSparqlQuery,
+    totalResults,
+    entities,
+  };
+};
+
+/**
+ * Searches for the given query in the given language.
+ * @param {object} query - the query to search for
+ * @param {object} session - the session to search in
+ * @param {string} language - the language to search in
+ * @returns {Promise<SearchResults>}
+ */
+export const search = async (query, session, language) => {
+  const results = [];
+  const favorites = [];
+
+  const { debugSparqlQuery, totalResults, entities } = await fetchEntities(query, language);
+
+  // Loop through each entity and get the details
+  const route = config.routes[query.type];
+  const maxConcurrentRequests = 3;
+  await new Promise((resolve, reject) => {
+    mapLimit(
+      entities,
+      maxConcurrentRequests,
+      async (entity) => {
+        const searchDetailsQuery = JSON.parse(
+          JSON.stringify(getQueryObject(route.query, { language, params: query }))
+        );
+        searchDetailsQuery.$where = searchDetailsQuery.$where || [];
+        searchDetailsQuery.$filter = searchDetailsQuery.$filter || [];
+        searchDetailsQuery.$values = searchDetailsQuery.$values || {};
+        searchDetailsQuery.$values['?id'] = searchDetailsQuery.$values['?id'] || [];
+        searchDetailsQuery.$values['?id'].push(entity['@id']);
+
+        const resSearchDetails = await SparqlClient.query(searchDetailsQuery, {
           endpoint: config.api.endpoint,
           debug: config.debug,
           params: config.api.params,
         });
-        totalResults = resPagination && resPagination[0] ? parseInt(resPagination[0].id, 10) : 0;
-      } catch (e) {
-        console.error(e);
+
+        const details = [];
+        if (resSearchDetails) {
+          // Ignore empty objects
+          const detailsWithoutEmptyObjects = resSearchDetails['@graph'].map(removeEmptyObjects);
+          details.push(...detailsWithoutEmptyObjects);
+        }
+
+        return details;
+      },
+      (err, res) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        results.push(...res.flat());
+        resolve();
       }
-    }
+    );
+  });
+
+  for (let i = 0; i < results.length; i += 1) {
+    await fillWithVocabularies(results[i], { params: query });
   }
 
-  if (fetchFavorites) {
-    if (session) {
-      const user = await getSessionUser(session);
-      if (user) {
-        // Check if this item is in a user list and flag it accordingly.
-        const loadedLists = await getUserLists(user);
-        favorites.push(
-          ...results
-            .filter((result) =>
-              loadedLists.some((list) =>
-                list.items.some((it) => it.uri === result['@id'] && it.type === query.type)
-              )
+  if (session) {
+    const user = await getSessionUser(session);
+    if (user) {
+      // Check if this item is in a user list and flag it accordingly.
+      const loadedLists = await getUserLists(user);
+      favorites.push(
+        ...results
+          .filter((result) =>
+            loadedLists.some((list) =>
+              list.items.some((it) => it.uri === result['@id'] && it.type === query.type)
             )
-            .map((result) => result['@id'])
-        );
-      }
+          )
+          .map((result) => result['@id'])
+      );
     }
   }
 
