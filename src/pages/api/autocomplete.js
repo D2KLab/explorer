@@ -1,7 +1,7 @@
 import { unstable_getServerSession } from 'next-auth';
 
 import { withRequestValidation } from '@helpers/api';
-import { search } from '@pages/api/search';
+import { search } from '@helpers/search';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
 import config from '~/config';
 

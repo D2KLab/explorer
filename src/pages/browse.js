@@ -34,7 +34,7 @@ import { uriToId, generateMediaUrl } from '@helpers/utils';
 import useDebounce from '@helpers/useDebounce';
 import useOnScreen from '@helpers/useOnScreen';
 import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
-import { search, getFilters } from '@pages/api/search';
+import { search, getFilters } from '@helpers/search';
 import { getEntity } from '@pages/api/entity';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
 import breakpoints, { sizes } from '@styles/breakpoints';

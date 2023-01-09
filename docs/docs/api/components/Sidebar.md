@@ -14,7 +14,7 @@ Sidebar.
 ```jsx
 import { useRouter } from 'next/router';
 
-import { getFilters } from '@pages/api/search';
+import { getFilters } from '@helpers/search';
 // highlight-start
 import Sidebar from '@components/Sidebar';
 // highlight-end
