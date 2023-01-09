@@ -187,14 +187,21 @@ const getExtraFromFilters = (query, filters) => {
 };
 
 /**
- * Searches with the given query.
- * @param {object} query - The query to search with.
- * @param {object} session - The session ID of the user.
- * @param {string} language - The language of the user.
- * @returns {Promise<SearchResult>} A promise that resolves to the search results.
+ * Searches for the given query in the given language.
+ * @param {object} query - the query to search for
+ * @param {object} session - the session to search in
+ * @param {string} language - the language to search in
+ * @param {SearchOptions} [options] - the options to use
+ * @returns {Promise<SearchResults>}
  */
-export const search = async (query, session, language) => {
+export const search = async (
+  query,
+  session,
+  language,
+  { overrideLimit, computeTotalResults = true, fetchFavorites = true, fetchDetails = true }
+) => {
   const results = [];
+  const favorites = [];
   let debugSparqlQuery = null;
   let totalResults = 0;
 
@@ -302,6 +309,7 @@ export const search = async (query, session, language) => {
       ${textSearchWhere.length > 0 ? '.' : ''}
       ${extraFilter.length > 0 ? `FILTER(${extraFilter.join(' && ')})` : ''}
     `;
+
     const mainSearchQuery = {
       '@graph': [
         {
@@ -312,11 +320,20 @@ export const search = async (query, session, language) => {
       $where: [],
       $filter: [],
       $offset: `${itemsPerPage * ((parseInt(query.page, 10) || 1) - 1)}`,
-      $limit: itemsPerPage,
     };
+
+    if (typeof overrideLimit !== 'undefined') {
+      if (overrideLimit !== -1) {
+        mainSearchQuery.$limit = overrideLimit;
+      }
+    } else {
+      mainSearchQuery.$limit = itemsPerPage;
+    }
+
     if (orderByVariable) {
       mainSearchQuery.$orderby = `${orderByDirection}(?${orderByVariable})`;
     }
+
     mainSearchQuery.$where.push(whereCondition);
 
     // Execute the main search query
@@ -338,100 +355,108 @@ export const search = async (query, session, language) => {
       console.error(e);
     }
 
-    // Loop through each entity and get the details
-    const maxConcurrentRequests = 3;
-    await new Promise((resolve, reject) => {
-      mapLimit(
-        entities,
-        maxConcurrentRequests,
-        async (entity) => {
-          const searchDetailsQuery = JSON.parse(
-            JSON.stringify(getQueryObject(route.query, { language, params: query }))
-          );
-          searchDetailsQuery.$where = searchDetailsQuery.$where || [];
-          searchDetailsQuery.$filter = searchDetailsQuery.$filter || [];
-          searchDetailsQuery.$values = searchDetailsQuery.$values || {};
-          searchDetailsQuery.$values['?id'] = searchDetailsQuery.$values['?id'] || [];
-          searchDetailsQuery.$values['?id'].push(entity['@id']);
+    if (!fetchDetails) {
+      // Just push the results without details
+      results.push(...entities);
+    } else {
+      // Loop through each entity and get the details
+      const maxConcurrentRequests = 3;
+      await new Promise((resolve, reject) => {
+        mapLimit(
+          entities,
+          maxConcurrentRequests,
+          async (entity) => {
+            const searchDetailsQuery = JSON.parse(
+              JSON.stringify(getQueryObject(route.query, { language, params: query }))
+            );
+            searchDetailsQuery.$where = searchDetailsQuery.$where || [];
+            searchDetailsQuery.$filter = searchDetailsQuery.$filter || [];
+            searchDetailsQuery.$values = searchDetailsQuery.$values || {};
+            searchDetailsQuery.$values['?id'] = searchDetailsQuery.$values['?id'] || [];
+            searchDetailsQuery.$values['?id'].push(entity['@id']);
 
-          const resSearchDetails = await SparqlClient.query(searchDetailsQuery, {
-            endpoint: config.api.endpoint,
-            debug: config.debug,
-            params: config.api.params,
-          });
+            const resSearchDetails = await SparqlClient.query(searchDetailsQuery, {
+              endpoint: config.api.endpoint,
+              debug: config.debug,
+              params: config.api.params,
+            });
 
-          const details = [];
-          if (resSearchDetails) {
-            // Ignore empty objects
-            const detailsWithoutEmptyObjects = resSearchDetails['@graph'].map(removeEmptyObjects);
-            details.push(...detailsWithoutEmptyObjects);
+            const details = [];
+            if (resSearchDetails) {
+              // Ignore empty objects
+              const detailsWithoutEmptyObjects = resSearchDetails['@graph'].map(removeEmptyObjects);
+              details.push(...detailsWithoutEmptyObjects);
+            }
+
+            return details;
+          },
+          (err, res) => {
+            if (err) {
+              reject(err);
+              return;
+            }
+            results.push(...res.flat());
+            resolve();
           }
+        );
+      });
 
-          return details;
-        },
-        (err, res) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          results.push(...res.flat());
-          resolve();
-        }
-      );
-    });
-
-    for (let i = 0; i < results.length; i += 1) {
-      await fillWithVocabularies(results[i], { params: query });
+      for (let i = 0; i < results.length; i += 1) {
+        await fillWithVocabularies(results[i], { params: query });
+      }
     }
 
-    // Compute the total number of pages (used for pagination)
-    const paginationWhereCondition = `
-      ${baseWhere.join('.')}
-      ${baseWhere.length > 1 ? '.' : ''}
-      ${extraWhere.join('.')}
-      ${extraWhere.length > 1 ? '.' : ''}
-      ${extraFilter.length > 0 ? `FILTER(${extraFilter.join(' && ')})` : ''}
-    `;
-    const paginationQuery = {
-      proto: {
-        id: '?count',
-      },
-      $where: `
-        SELECT (COUNT(DISTINCT ?id) AS ?count) WHERE {
-          ${textSearchWhere.join('.')}
-          ${textSearchWhere.length > 1 ? '.' : ''}
-          ${paginationWhereCondition}
-        }
-        ${query.approximate ? 'LIMIT 1000' : ''}
-      `,
-    };
-    try {
-      const resPagination = await SparqlClient.query(paginationQuery, {
-        endpoint: config.api.endpoint,
-        debug: config.debug,
-        params: config.api.params,
-      });
-      totalResults = resPagination && resPagination[0] ? parseInt(resPagination[0].id, 10) : 0;
-    } catch (e) {
-      console.error(e);
+    if (computeTotalResults) {
+      // Compute the total number of pages (used for pagination)
+      const paginationWhereCondition = `
+        ${baseWhere.join('.')}
+        ${baseWhere.length > 1 ? '.' : ''}
+        ${extraWhere.join('.')}
+        ${extraWhere.length > 1 ? '.' : ''}
+        ${extraFilter.length > 0 ? `FILTER(${extraFilter.join(' && ')})` : ''}
+      `;
+      const paginationQuery = {
+        proto: {
+          id: '?count',
+        },
+        $where: `
+          SELECT (COUNT(DISTINCT ?id) AS ?count) WHERE {
+            ${textSearchWhere.join('.')}
+            ${textSearchWhere.length > 1 ? '.' : ''}
+            ${paginationWhereCondition}
+          }
+          ${query.approximate ? 'LIMIT 1000' : ''}
+        `,
+      };
+      try {
+        const resPagination = await SparqlClient.query(paginationQuery, {
+          endpoint: config.api.endpoint,
+          debug: config.debug,
+          params: config.api.params,
+        });
+        totalResults = resPagination && resPagination[0] ? parseInt(resPagination[0].id, 10) : 0;
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 
-  const favorites = [];
-  if (session) {
-    const user = await getSessionUser(session);
-    if (user) {
-      // Check if this item is in a user list and flag it accordingly.
-      const loadedLists = await getUserLists(user);
-      favorites.push(
-        ...results
-          .filter((result) =>
-            loadedLists.some((list) =>
-              list.items.some((it) => it.uri === result['@id'] && it.type === query.type)
+  if (fetchFavorites) {
+    if (session) {
+      const user = await getSessionUser(session);
+      if (user) {
+        // Check if this item is in a user list and flag it accordingly.
+        const loadedLists = await getUserLists(user);
+        favorites.push(
+          ...results
+            .filter((result) =>
+              loadedLists.some((list) =>
+                list.items.some((it) => it.uri === result['@id'] && it.type === query.type)
+              )
             )
-          )
-          .map((result) => result['@id'])
-      );
+            .map((result) => result['@id'])
+        );
+      }
     }
   }
 
