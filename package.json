@@ -34,7 +34,7 @@
     "file-saver": "^2.0.5",
     "form-data": "^4.0.0",
     "formidable": "^2.1.1",
-    "i18next": "^22.4.8",
+    "i18next": "^22.4.9",
     "intersection-observer": "^0.12.2",
     "js-cookie": "^3.0.1",
     "json2csv": "^5.0.7",
@@ -42,8 +42,8 @@
     "leaflet-gesture-handling": "^1.2.2",
     "mongodb": "^4.13.0",
     "next": "^13.1.1",
-    "next-auth": "^4.18.7",
-    "next-i18next": "^13.0.2",
+    "next-auth": "^4.18.8",
+    "next-i18next": "^13.0.3",
     "next-share": "^0.19.0",
     "nprogress": "^0.2.0",
     "query-string": "^8.1.0",
@@ -52,7 +52,7 @@
     "react-autosuggest": "^10.1.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
-    "react-i18next": "^12.1.1",
+    "react-i18next": "^12.1.4",
     "react-leaflet": "^4.2.0",
     "react-paginate": "^8.1.4",
     "react-player": "^2.11.0",
@@ -66,7 +66,7 @@
     "rrweb-player": "^0.7.14",
     "sparql-transformer": "^2.9.0",
     "styled-components": "^5.3.6",
-    "styled-reset": "^4.4.4",
+    "styled-reset": "^4.4.5",
     "styled-system": "^5.1.5",
     "swr": "^2.0.0",
     "uuid": "^9.0.0"
@@ -77,7 +77,7 @@
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.3",
-    "prettier": "^2.8.1",
+    "prettier": "^2.8.2",
     "pretty-quick": "^3.1.3"
   }
 }
