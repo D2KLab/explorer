@@ -1,3 +1,5 @@
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
 import Header from '@components/Header';
 import Layout from '@components/Layout';
 import Body from '@components/Body';
@@ -17,6 +19,14 @@ function TermsOfServicePage() {
       </Body>
     </Layout>
   );
+}
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common', 'project', 'search'])),
+    },
+  };
 }
 
 export default TermsOfServicePage;

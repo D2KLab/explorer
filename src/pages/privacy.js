@@ -1,3 +1,5 @@
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
 import Layout from '@components/Layout';
 import Header from '@components/Header';
 import Body from '@components/Body';
@@ -17,6 +19,14 @@ function PrivacyPolicyPage() {
       </Body>
     </Layout>
   );
+}
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common', 'project', 'search'])),
+    },
+  };
 }
 
 export default PrivacyPolicyPage;
