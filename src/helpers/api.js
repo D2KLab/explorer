@@ -1,5 +1,5 @@
 import { STATUS_CODES } from 'http';
-import { unstable_getServerSession } from 'next-auth';
+import { getToken } from 'next-auth/jwt';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
 
 /**
@@ -28,16 +28,11 @@ export class HTTPError extends Error {
  * @returns None
  * @throws {HTTPError} - an HTTP error
  */
-export async function validateRequest(req, res, options = {}) {
+export async function validateRequest(req, options = {}) {
   if (options.useSession === true) {
     // Check for a valid session
-    let session = null;
-    try {
-      session = await unstable_getServerSession(req, res, authOptions);
-    } catch (e) {
-      // NextAuth.getSession currently throws an error if baseUrl cookie is not defined
-    }
-    if (!session) {
+    let sessionToken = await getToken({ req });
+    if (!sessionToken) {
       throw new HTTPError(403, 'Session not found');
     }
   }
@@ -63,7 +58,7 @@ export async function validateRequest(req, res, options = {}) {
 export function withRequestValidation(options = {}) {
   return function Extend(WrappedFunction) {
     return async (req, res) =>
-      validateRequest(req, res, options)
+      validateRequest(req, options)
         .then(() => WrappedFunction(req, res))
         .catch((err) => {
           const statusCode = err.statusCode || 500;

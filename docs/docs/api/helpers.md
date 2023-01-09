@@ -110,7 +110,6 @@ Check if a request is valid based on passed options.
 #### Parameters
 
 * `req`
-* `res`
 * `options`
   * `useSession` (`boolean`): Checks if the user is authenticated, otherwise throw an HTTPError 403.
   * `allowedMethods` (`string[]`): Checks if the HTTP method is allowed.
