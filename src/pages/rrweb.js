@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import Router, { useRouter } from 'next/router';
 import rrwebPlayer from 'rrweb-player';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import 'rrweb-player/dist/style.css';
 
 import StickyBox from '@components/StickyBox';
@@ -13,7 +14,6 @@ import PageTitle from '@components/PageTitle';
 import Button from '@components/Button';
 import { getCaptures, getCaptureEvents } from '@helpers/database';
 import breakpoints from '@styles/breakpoints';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Container = styled.div`
   display: flex;

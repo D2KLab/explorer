@@ -20,10 +20,10 @@ import {
   TwitterIcon,
   WhatsappIcon,
 } from 'next-share';
+import { useTranslation } from 'next-i18next';
 
 import Element from '@components/Element';
 import Button from '@components/Button';
-import { useTranslation } from 'next-i18next';
 
 const StyledDialog = styled(Dialog)`
   background-color: #fff;

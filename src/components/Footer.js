@@ -1,7 +1,7 @@
 import styled from 'styled-components';
+import { useTranslation } from 'next-i18next';
 
 import breakpoints from '@styles/breakpoints';
-import { useTranslation } from 'next-i18next';
 import config from '~/config';
 
 const Container = styled.div`

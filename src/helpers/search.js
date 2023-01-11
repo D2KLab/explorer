@@ -1,8 +1,9 @@
 import os from 'os';
 import fs from 'fs';
 import path from 'path';
-import FormData from 'form-data';
 import util from 'util';
+
+import FormData from 'form-data';
 import { mapLimit } from 'async';
 
 import { getSessionUser, getUserLists } from '@helpers/database';

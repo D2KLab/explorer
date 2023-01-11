@@ -1,3 +1,5 @@
+import { unstable_getServerSession } from 'next-auth';
+
 import {
   getListById,
   getSessionUser,
@@ -8,7 +10,6 @@ import {
 } from '@helpers/database';
 import { withRequestValidation } from '@helpers/api';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
-import { unstable_getServerSession } from 'next-auth';
 
 /**
  * List operations. Takes in a list id.

@@ -4,11 +4,11 @@ import Router from 'next/router';
 import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import { Edit as SettingsIcon } from '@styled-icons/boxicons-regular/Edit';
 import Switch from 'react-switch';
+import { useTranslation } from 'next-i18next';
 
 import Element from '@components/Element';
 import Input from '@components/Input';
 import Button from '@components/Button';
-import { useTranslation } from 'next-i18next';
 
 const StyledDialog = styled(Dialog)`
   background-color: #fff;

@@ -1,5 +1,7 @@
 import { STATUS_CODES } from 'http';
+
 import { getToken } from 'next-auth/jwt';
+
 import { authOptions } from '@pages/api/auth/[...nextauth]';
 
 /**

@@ -1,8 +1,9 @@
+import { useTranslation } from 'next-i18next';
+
 import Metadata from '@components/Metadata';
 import Prediction from '@components/Prediction';
 import { uriToId } from '@helpers/utils';
 import { findRouteByRDFType } from '@helpers/explorer';
-import { useTranslation } from 'next-i18next';
 import config from '~/config';
 import theme from '~/theme';
 

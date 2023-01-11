@@ -1,5 +1,5 @@
 {
-  "extends": ["next", "prettier", "plugin:prettier/recommended"],
+  "extends": ["next", "prettier", "plugin:import/recommended", "plugin:prettier/recommended"],
   "settings": {
     "import/resolver": {
       "babel-module": {
@@ -30,8 +30,12 @@
     "no-param-reassign": 0,
     "lines-between-class-members": 0,
     "global-require": 0,
-    "import/prefer-default-export": 0,
-    "import/no-extraneous-dependencies": 0,
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always"
+      }
+    ],
     "import/no-named-as-default-member": 0,
     "jsx-a11y/label-has-associated-control": [
       2,

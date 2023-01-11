@@ -6,6 +6,9 @@ import Link from 'next/link';
 import Router from 'next/router';
 import { ShareAlt as ShareIcon } from '@styled-icons/boxicons-solid/ShareAlt';
 import { TrashAlt as TrashIcon } from '@styled-icons/boxicons-solid/TrashAlt';
+import { useTranslation, Trans } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { unstable_getServerSession } from 'next-auth';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
@@ -22,10 +25,7 @@ import { ProviderButton } from '@components/ProviderButton';
 import breakpoints from '@styles/breakpoints';
 import { slugify } from '@helpers/utils';
 import { getSessionUser, getUserLists, getUserAccounts } from '@helpers/database';
-import { useTranslation, Trans } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
-import { unstable_getServerSession } from 'next-auth';
 import ImageWithFallback from '@components/ImageWithFallback';
 
 const StyledDialogDisclosure = styled(DialogDisclosure)`

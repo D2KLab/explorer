@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 import 'intersection-observer';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import Header from '@components/Header';
 import Footer from '@components/Footer';
 import Layout from '@components/Layout';
 import Body from '@components/Body';
 import PageTitle from '@components/PageTitle';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Container = styled.div`
   padding: 5em 0;

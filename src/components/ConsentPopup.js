@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react';
 import { useDialogState, Dialog } from 'ariakit';
 import Cookies from 'js-cookie';
 import Switch from 'react-switch';
+import { useTranslation } from 'next-i18next';
 
 import Element from '@components/Element';
 import Button from '@components/Button';
-import { useTranslation } from 'next-i18next';
 
 const StyledDialog = styled(Dialog)`
   max-width: 960px;

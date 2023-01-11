@@ -1,10 +1,11 @@
 import { ObjectId } from 'mongodb';
 import cookie from 'cookie';
+import { unstable_getServerSession } from 'next-auth';
+
+import { authOptions } from './auth/[...nextauth]';
 
 import { withRequestValidation } from '@helpers/api';
 import { connectToDatabase, getSessionUser } from '@helpers/database';
-import { unstable_getServerSession } from 'next-auth';
-import { authOptions } from './auth/[...nextauth]';
 
 /**
  * RRWeb operations.

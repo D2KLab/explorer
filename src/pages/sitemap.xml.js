@@ -1,6 +1,7 @@
+import { eachLimit } from 'async';
+
 import { dumpEntities } from '@helpers/search';
 import { uriToId } from '@helpers/utils';
-import { eachLimit } from 'async';
 import config from '~/config';
 
 function generateSiteMap(entries) {

@@ -1,9 +1,9 @@
 import { createGlobalStyle } from 'styled-components';
 import { default as NProgressRoot } from 'nprogress';
-
-import theme from '~/theme';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+
+import theme from '~/theme';
 
 let timeout;
 

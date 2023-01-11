@@ -4,10 +4,10 @@ import { DownArrow } from '@styled-icons/boxicons-solid/DownArrow';
 import { User } from '@styled-icons/boxicons-solid/User';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Router from 'next/router';
+import { useTranslation, Trans } from 'next-i18next';
 
 import Element from '@components/Element';
 import Spinner from '@components/Spinner';
-import { useTranslation, Trans } from 'next-i18next';
 
 const StyledMenu = styled(Menu)`
   padding-top: 4px;

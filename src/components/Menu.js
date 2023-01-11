@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'next-i18next';
 
 import LanguageSwitch from '@components/LanguageSwitch';
 import breakpoints from '@styles/breakpoints';
-import { useTranslation } from 'next-i18next';
 import config from '~/config';
 
 export const StyledMenu = styled.nav`

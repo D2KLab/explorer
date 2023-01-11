@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'next-i18next';
 
 import breakpoints from '@styles/breakpoints';
-import { useTranslation } from 'next-i18next';
 
 /**
  * Burger menu.
