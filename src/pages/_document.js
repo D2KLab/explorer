@@ -40,6 +40,8 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Lato:300,400,700,800&display=optional"
           />
+          {Array.isArray(config?.head?.preload) &&
+            config.head.preload.map((preload, i) => <link {...preload} key={i} rel="preload" />)}
           {Array.isArray(config?.head?.styles) &&
             config.head.styles.map((style) => <link key={style} rel="stylesheet" href={style} />)}
           {/* Global site tag (gtag.js) - Google Analytics */}

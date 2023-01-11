@@ -95,6 +95,27 @@ module.exports = {
 };
 ```
 
+#### `preload` {#head-preload}
+
+* Type: `object[]`
+
+List of resources to preload. Can be used to preload fonts and prevent flash of unstyled content. Accepts any attributes from the [`<link>` tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types/preload).
+
+```js title="config.js"
+module.exports = {
+  head: {
+    preload: [
+      {
+        href: '/fonts/MyFont.woff2',
+        as: 'font',
+        type: 'font/woff2',
+        crossOrigin: 'anonymous',
+      },
+    ],
+  },
+};
+```
+
 </Indent>
 
 ### `imagesDomains` {#head}
