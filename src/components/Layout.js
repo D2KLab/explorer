@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
 
-import GlobalStyle from '@styles/global';
 import Burger from '@components/Burger';
 import Menu from '@components/Menu';
 
@@ -47,7 +46,6 @@ function Layout({ children }) {
 
   return (
     <>
-      <GlobalStyle />
       {children}
       <div ref={node}>
         <Burger open={open} setOpen={setOpen} />

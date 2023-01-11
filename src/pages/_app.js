@@ -12,9 +12,10 @@ import { NProgressStyle } from '@components/NProgress';
 import ConsentPopup from '@components/ConsentPopup';
 import RRWebRecorder from '@components/RRWebRecorder';
 import GoogleAnalytics from '@components/GoogleAnalytics';
+import GlobalStyle from '@styles/global';
+import { GraphProvider } from '@helpers/useGraphs';
 import theme from '~/theme';
 import config from '~/config';
-import { GraphProvider } from '@helpers/useGraphs';
 
 const NProgress = dynamic(
   () => {
@@ -41,6 +42,10 @@ function MyApp({ Component, pageProps }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
+      <style jsx global>{`
+        ${theme.globalStyle}
+      `}</style>
+      <GlobalStyle />
       <NProgressStyle />
       <NProgress />
       {config.plugins?.consent?.show && typeof Cookies.get('consent') === 'undefined' ? (
