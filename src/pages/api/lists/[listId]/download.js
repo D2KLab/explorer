@@ -189,7 +189,7 @@ export default withRequestValidation({
         }
 
         // Add Markdown metadata to the Zip
-        const markdownItemText = json2md(markdownItem);
+        const markdownItemText = json2md(JSON.parse(JSON.stringify(markdownItem)));
         zip.addFile(
           path.join(listFolder, resultBaseName, `${resultBaseName}.md`),
           Buffer.from(markdownItemText, 'utf8')
