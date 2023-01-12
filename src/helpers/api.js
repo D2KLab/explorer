@@ -2,8 +2,6 @@ import { STATUS_CODES } from 'http';
 
 import { getToken } from 'next-auth/jwt';
 
-import { authOptions } from '@pages/api/auth/[...nextauth]';
-
 /**
  * A class that represents an HTTP error.
  * @param {number} code - the HTTP status code of the error.
@@ -23,7 +21,6 @@ export class HTTPError extends Error {
 /**
  * Validates the request.
  * @param {NextRequest} req - the request object
- * @param {NextResponse} res - the response object
  * @param {object} [options={}] - the options object
  * @param {boolean} [options.useSession=false] - whether to use session
  * @param {string[]} [options.allowedMethods] - the allowed methods
@@ -33,7 +30,7 @@ export class HTTPError extends Error {
 export async function validateRequest(req, options = {}) {
   if (options.useSession === true) {
     // Check for a valid session
-    let sessionToken = await getToken({ req });
+    let sessionToken = await getToken({ req, raw: true });
     if (!sessionToken) {
       throw new HTTPError(403, 'Session not found');
     }
