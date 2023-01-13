@@ -142,11 +142,11 @@ function ListsPage({ isOwner, list, shareLink }) {
                       <time
                         key="0"
                         dateTime={new Date(list.created_at).toISOString()}
-                        title={new Date(list.created_at).toString()}
+                        title={new Date(list.created_at).toISOString()}
                       />,
                     ]}
                     values={{
-                      date: new Date(list.created_at).toLocaleDateString(),
+                      date: new Date(list.created_at).toLocaleDateString(i18n.language),
                     }}
                   />
                 </p>
@@ -157,11 +157,11 @@ function ListsPage({ isOwner, list, shareLink }) {
                       <time
                         key="0"
                         dateTime={new Date(list.updated_at).toISOString()}
-                        title={new Date(list.updated_at).toString()}
+                        title={new Date(list.updated_at).toISOString()}
                       />,
                     ]}
                     values={{
-                      date: new Date(list.updated_at).toLocaleDateString(),
+                      date: new Date(list.updated_at).toLocaleDateString(i18n.language),
                     }}
                   />
                 </p>
