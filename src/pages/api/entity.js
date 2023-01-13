@@ -3,10 +3,10 @@ import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 
 import { withRequestValidation } from '@helpers/api';
-import { idToUri, removeEmptyObjects, getQueryObject } from '@helpers/utils';
-import { fillWithVocabularies } from '@helpers/vocabulary';
 import { getSessionUser, getUserLists } from '@helpers/database';
 import SparqlClient from '@helpers/sparql';
+import { idToUri, removeEmptyObjects, getQueryObject } from '@helpers/utils';
+import { fillWithVocabularies } from '@helpers/vocabulary';
 import config from '~/config';
 
 /**

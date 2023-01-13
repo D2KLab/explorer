@@ -1,13 +1,13 @@
-import { useState, useCallback } from 'react';
-import Router from 'next/router';
-import Link from 'next/link';
-import styled from 'styled-components';
-import Autosuggest from 'react-autosuggest';
 import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
+import Router from 'next/router';
+import { useState, useCallback } from 'react';
+import Autosuggest from 'react-autosuggest';
+import styled from 'styled-components';
 
 import Spinner from '@components/Spinner';
-import { uriToId, generateMediaUrl } from '@helpers/utils';
 import { findRouteByRDFType, getEntityMainLabel } from '@helpers/explorer';
+import { uriToId, generateMediaUrl } from '@helpers/utils';
 import config from '~/config';
 
 const SuggestionContent = styled.span`

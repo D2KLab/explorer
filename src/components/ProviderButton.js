@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
+import styled from 'styled-components';
 
 import Button from '@components/Button';
 

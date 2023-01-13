@@ -1,15 +1,15 @@
-import os from 'os';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import util from 'util';
 
-import FormData from 'form-data';
 import { mapLimit } from 'async';
+import FormData from 'form-data';
 
 import { getSessionUser, getUserLists } from '@helpers/database';
-import { fillWithVocabularies } from '@helpers/vocabulary';
-import { removeEmptyObjects, getQueryObject, idToUri } from '@helpers/utils';
 import SparqlClient from '@helpers/sparql';
+import { removeEmptyObjects, getQueryObject, idToUri } from '@helpers/utils';
+import { fillWithVocabularies } from '@helpers/vocabulary';
 import { getEntity } from '@pages/api/entity';
 import config from '~/config';
 

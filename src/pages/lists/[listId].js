@@ -1,27 +1,27 @@
-import styled from 'styled-components';
-import Link from 'next/link';
-import DefaultErrorPage from 'next/error';
+import { unstable_getServerSession } from 'next-auth';
 import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { unstable_getServerSession } from 'next-auth';
+import DefaultErrorPage from 'next/error';
+import Link from 'next/link';
+import styled from 'styled-components';
 
-import { authOptions } from '@pages/api/auth/[...nextauth]';
-import { getEntity } from '@pages/api/entity';
-import Header from '@components/Header';
-import Footer from '@components/Footer';
-import Layout from '@components/Layout';
 import Body from '@components/Body';
-import Content from '@components/Content';
 import Button from '@components/Button';
-import Media from '@components/Media';
+import Content from '@components/Content';
 import Element from '@components/Element';
-import Title from '@components/Title';
-import PageTitle from '@components/PageTitle';
-import ListSettings from '@components/ListSettings';
+import Footer from '@components/Footer';
+import Header from '@components/Header';
+import Layout from '@components/Layout';
 import ListDeletion from '@components/ListDeletion';
-import { uriToId, generateMediaUrl, slugify } from '@helpers/utils';
+import ListSettings from '@components/ListSettings';
+import Media from '@components/Media';
+import PageTitle from '@components/PageTitle';
+import Title from '@components/Title';
 import { getSessionUser, getListById } from '@helpers/database';
 import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
+import { uriToId, generateMediaUrl, slugify } from '@helpers/utils';
+import { authOptions } from '@pages/api/auth/[...nextauth]';
+import { getEntity } from '@pages/api/entity';
 import config from '~/config';
 
 const StyledMedia = styled(Media)`

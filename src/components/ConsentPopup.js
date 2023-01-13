@@ -1,12 +1,12 @@
-import styled, { useTheme } from 'styled-components';
-import { useState, useEffect } from 'react';
 import { useDialogState, Dialog } from 'ariakit';
 import Cookies from 'js-cookie';
-import Switch from 'react-switch';
 import { useTranslation } from 'next-i18next';
+import { useState, useEffect } from 'react';
+import Switch from 'react-switch';
+import styled, { useTheme } from 'styled-components';
 
-import Element from '@components/Element';
 import Button from '@components/Button';
+import Element from '@components/Element';
 
 const StyledDialog = styled(Dialog)`
   max-width: 960px;

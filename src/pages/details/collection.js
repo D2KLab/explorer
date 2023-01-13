@@ -1,33 +1,33 @@
-import styled from 'styled-components';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import DefaultErrorPage from 'next/error';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import DefaultErrorPage from 'next/error';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import styled from 'styled-components';
 
-import Header from '@components/Header';
-import Footer from '@components/Footer';
-import Layout from '@components/Layout';
 import Body from '@components/Body';
-import Media from '@components/Media';
-import Element from '@components/Element';
-import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
+import Element from '@components/Element';
+import Footer from '@components/Footer';
+import GraphLink from '@components/GraphLink';
+import Header from '@components/Header';
+import Layout from '@components/Layout';
+import Media from '@components/Media';
+import Metadata from '@components/Metadata';
+import MetadataList from '@components/MetadataList';
 import PageTitle from '@components/PageTitle';
+import Pagination from '@components/Pagination';
 import SaveButton from '@components/SaveButton';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
-import GraphLink from '@components/GraphLink';
-import MetadataList from '@components/MetadataList';
-import Pagination from '@components/Pagination';
-import breakpoints from '@styles/breakpoints';
-import { uriToId, generateMediaUrl } from '@helpers/utils';
 import {
   findRouteByRDFType,
   generatePermalink,
   getEntityMainLabel,
   getSearchData,
 } from '@helpers/explorer';
+import { uriToId, generateMediaUrl } from '@helpers/utils';
 import { getEntity, getEntityDebugQuery, isEntityInList } from '@pages/api/entity';
+import breakpoints from '@styles/breakpoints';
 import config from '~/config';
 
 const Columns = styled.div`

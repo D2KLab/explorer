@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
-import queryString from 'query-string';
 import Cookies from 'js-cookie';
 import { useTranslation } from 'next-i18next';
+import queryString from 'query-string';
+import { useMemo } from 'react';
 
 import config from '~/config';
 

@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import styled from 'styled-components';
-import Router from 'next/router';
 import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import { useTranslation, Trans } from 'next-i18next';
+import Router from 'next/router';
+import { useState } from 'react';
+import styled from 'styled-components';
 
-import Element from '@components/Element';
 import Button from '@components/Button';
+import Element from '@components/Element';
 
 const StyledDialog = styled(Dialog)`
   background-color: #fff;

@@ -1,24 +1,24 @@
-import { useCallback, useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
-import styled from 'styled-components';
-import { Button as ReakitButton, useDialogState, Dialog, DialogDisclosure } from 'ariakit';
-import { useDropzone } from 'react-dropzone';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
 import { Camera } from '@styled-icons/boxicons-solid/Camera';
+import { Button as ReakitButton, useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useCallback, useState, useRef, useEffect } from 'react';
+import { useDropzone } from 'react-dropzone';
+import styled from 'styled-components';
 
-import Element from '@components/Element';
-import Layout from '@components/Layout';
-import Header from '@components/Header';
-import Footer from '@components/Footer';
 import Body from '@components/Body';
-import SearchInput from '@components/SearchInput';
+import Element from '@components/Element';
+import Footer from '@components/Footer';
+import Header from '@components/Header';
+import Layout from '@components/Layout';
 import PageTitle from '@components/PageTitle';
+import SearchInput from '@components/SearchInput';
 import Spinner from '@components/Spinner';
-import breakpoints from '@styles/breakpoints';
 import { uriToId } from '@helpers/utils';
+import breakpoints from '@styles/breakpoints';
 import config from '~/config';
 
 const Hero = styled.div`

@@ -1,17 +1,17 @@
-import { useRef, useState, useEffect } from 'react';
-import styled, { css } from 'styled-components';
-import Router, { useRouter } from 'next/router';
-import rrwebPlayer from 'rrweb-player';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Router, { useRouter } from 'next/router';
+import { useRef, useState, useEffect } from 'react';
+import rrwebPlayer from 'rrweb-player';
+import styled, { css } from 'styled-components';
 import 'rrweb-player/dist/style.css';
 
-import StickyBox from '@components/StickyBox';
-import Layout from '@components/Layout';
-import Header from '@components/Header';
 import Body from '@components/Body';
-import Content from '@components/Content';
-import PageTitle from '@components/PageTitle';
 import Button from '@components/Button';
+import Content from '@components/Content';
+import Header from '@components/Header';
+import Layout from '@components/Layout';
+import PageTitle from '@components/PageTitle';
+import StickyBox from '@components/StickyBox';
 import { getCaptures, getCaptureEvents } from '@helpers/database';
 import breakpoints from '@styles/breakpoints';
 

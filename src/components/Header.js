@@ -1,12 +1,12 @@
-import Link from 'next/link';
-import styled from 'styled-components';
 import { WindowOpen } from '@styled-icons/boxicons-regular/WindowOpen';
 import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
+import styled from 'styled-components';
 
-import breakpoints from '@styles/breakpoints';
-import SearchBox from '@components/SearchBox';
 import LanguageSwitch from '@components/LanguageSwitch';
 import ProfileButton from '@components/ProfileButton';
+import SearchBox from '@components/SearchBox';
+import breakpoints from '@styles/breakpoints';
 import config from '~/config';
 
 /**

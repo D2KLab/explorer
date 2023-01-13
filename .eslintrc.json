@@ -33,7 +33,11 @@
     "import/order": [
       "error",
       {
-        "newlines-between": "always"
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
       }
     ],
     "import/no-named-as-default-member": 0,

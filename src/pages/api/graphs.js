@@ -1,5 +1,5 @@
-import SparqlClient from '@helpers/sparql';
 import { withRequestValidation } from '@helpers/api';
+import SparqlClient from '@helpers/sparql';
 import { getQueryObject, removeEmptyObjects } from '@helpers/utils';
 import config from '~/config';
 

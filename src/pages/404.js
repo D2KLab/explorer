@@ -1,12 +1,12 @@
-import styled from 'styled-components';
-import 'intersection-observer';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import styled from 'styled-components';
+import 'intersection-observer';
 
-import Header from '@components/Header';
-import Footer from '@components/Footer';
-import Layout from '@components/Layout';
 import Body from '@components/Body';
+import Footer from '@components/Footer';
+import Header from '@components/Header';
+import Layout from '@components/Layout';
 import PageTitle from '@components/PageTitle';
 
 const Container = styled.div`

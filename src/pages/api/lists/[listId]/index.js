@@ -1,5 +1,6 @@
 import { unstable_getServerSession } from 'next-auth';
 
+import { withRequestValidation } from '@helpers/api';
 import {
   getListById,
   getSessionUser,
@@ -8,7 +9,6 @@ import {
   removeUserList,
   updateList,
 } from '@helpers/database';
-import { withRequestValidation } from '@helpers/api';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
 
 /**

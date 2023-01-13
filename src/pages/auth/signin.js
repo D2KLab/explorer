@@ -2,15 +2,15 @@ import { getProviders, getCsrfToken } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-import Header from '@components/Header';
-import Footer from '@components/Footer';
-import Layout from '@components/Layout';
 import Body from '@components/Body';
 import Content from '@components/Content';
 import Element from '@components/Element';
+import Footer from '@components/Footer';
+import Header from '@components/Header';
+import Layout from '@components/Layout';
 import PageTitle from '@components/PageTitle';
-import Title from '@components/Title';
 import { ProviderButton } from '@components/ProviderButton';
+import Title from '@components/Title';
 
 function SignInPage({ providers, error: errorType, csrfToken }) {
   const { t } = useTranslation('common');

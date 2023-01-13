@@ -1,7 +1,7 @@
-import styled from 'styled-components';
+import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
-import { useTranslation } from 'next-i18next';
+import styled from 'styled-components';
 
 import LanguageSwitch from '@components/LanguageSwitch';
 import breakpoints from '@styles/breakpoints';

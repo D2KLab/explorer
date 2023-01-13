@@ -1,7 +1,7 @@
 import { unstable_getServerSession } from 'next-auth';
 
-import { getSessionUser, getUserLists, createUserList } from '@helpers/database';
 import { withRequestValidation } from '@helpers/api';
+import { getSessionUser, getUserLists, createUserList } from '@helpers/database';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
 
 /**

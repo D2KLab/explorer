@@ -1,14 +1,14 @@
-import styled, { useTheme } from 'styled-components';
-import { useEffect, useState } from 'react';
-import Router from 'next/router';
-import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import { Edit as SettingsIcon } from '@styled-icons/boxicons-regular/Edit';
-import Switch from 'react-switch';
+import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import { useTranslation } from 'next-i18next';
+import Router from 'next/router';
+import { useEffect, useState } from 'react';
+import Switch from 'react-switch';
+import styled, { useTheme } from 'styled-components';
 
+import Button from '@components/Button';
 import Element from '@components/Element';
 import Input from '@components/Input';
-import Button from '@components/Button';
 
 const StyledDialog = styled(Dialog)`
   background-color: #fff;

@@ -1,16 +1,16 @@
-import { useEffect, useState, useRef } from 'react';
-import styled, { useTheme } from 'styled-components';
-import Switch from 'react-switch';
 import { useTranslation } from 'next-i18next';
+import { useEffect, useState, useRef } from 'react';
+import Switch from 'react-switch';
+import styled, { useTheme } from 'styled-components';
 
-import Select from '@components/Select';
-import MultiSelect from '@components/MultiSelect';
-import breakpoints from '@styles/breakpoints';
 import Button from '@components/Button';
 import Input from '@components/Input';
+import MultiSelect from '@components/MultiSelect';
+import Select from '@components/Select';
 import ToggleSwitch from '@components/ToggleSwitch';
 import useDebounce from '@helpers/useDebounce';
 import { useGraphs } from '@helpers/useGraphs';
+import breakpoints from '@styles/breakpoints';
 import config from '~/config';
 
 const getValue = (opts, val) => opts.find((o) => o.value === val);

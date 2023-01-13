@@ -1,10 +1,10 @@
-import styled from 'styled-components';
-import { useDialogState, Dialog, Tooltip, TooltipAnchor, useTooltipState } from 'ariakit';
 import { CircleQuestion } from '@styled-icons/fa-solid/CircleQuestion';
+import { useDialogState, Dialog, Tooltip, TooltipAnchor, useTooltipState } from 'ariakit';
 import { useTranslation } from 'next-i18next';
+import styled from 'styled-components';
 
-import breakpoints from '@styles/breakpoints';
 import { generateMediaUrl, linkify } from '@helpers/utils';
+import breakpoints from '@styles/breakpoints';
 import theme from '~/theme';
 
 const StyledTooltip = styled(Tooltip)`

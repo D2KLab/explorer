@@ -1,21 +1,21 @@
-import { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
+import Cookies from 'js-cookie';
 import { SessionProvider } from 'next-auth/react';
+import { appWithTranslation } from 'next-i18next';
+import dynamic from 'next/dynamic';
+import Head from 'next/head';
 import { withRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { Reset } from 'styled-reset';
-import Head from 'next/head';
-import Cookies from 'js-cookie';
-import { appWithTranslation } from 'next-i18next';
 
-import { NProgressStyle } from '@components/NProgress';
 import ConsentPopup from '@components/ConsentPopup';
-import RRWebRecorder from '@components/RRWebRecorder';
 import GoogleAnalytics from '@components/GoogleAnalytics';
-import GlobalStyle from '@styles/global';
+import { NProgressStyle } from '@components/NProgress';
+import RRWebRecorder from '@components/RRWebRecorder';
 import { GraphProvider } from '@helpers/useGraphs';
-import theme from '~/theme';
+import GlobalStyle from '@styles/global';
 import config from '~/config';
+import theme from '~/theme';
 
 const NProgress = dynamic(
   () => {

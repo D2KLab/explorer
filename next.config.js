@@ -1,5 +1,5 @@
-const { i18n } = require('./next-i18next.config');
 const config = require('./config');
+const { i18n } = require('./next-i18next.config');
 
 module.exports = {
   eslint: {

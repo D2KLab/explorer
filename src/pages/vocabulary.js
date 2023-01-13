@@ -1,28 +1,28 @@
-import { useState } from 'react';
-import styled, { css } from 'styled-components';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
-import 'intersection-observer';
-import { ChevronRight } from '@styled-icons/boxicons-regular/ChevronRight';
 import { ChevronDown } from '@styled-icons/boxicons-regular/ChevronDown';
+import { ChevronRight } from '@styled-icons/boxicons-regular/ChevronRight';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
 import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import styled, { css } from 'styled-components';
+import 'intersection-observer';
 
-import StickyBox from '@components/StickyBox';
-import Header from '@components/Header';
-import Footer from '@components/Footer';
-import Layout from '@components/Layout';
 import Body from '@components/Body';
-import Content from '@components/Content';
-import Metadata from '@components/Metadata';
-import Debug from '@components/Debug';
-import PageTitle from '@components/PageTitle';
 import Button from '@components/Button';
+import Content from '@components/Content';
+import Debug from '@components/Debug';
+import Footer from '@components/Footer';
+import Header from '@components/Header';
+import Layout from '@components/Layout';
+import Metadata from '@components/Metadata';
+import PageTitle from '@components/PageTitle';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
-import breakpoints from '@styles/breakpoints';
+import StickyBox from '@components/StickyBox';
 import SparqlClient from '@helpers/sparql';
 import { getQueryObject, removeEmptyObjects } from '@helpers/utils';
+import breakpoints from '@styles/breakpoints';
 import config from '~/config';
 
 const Hero = styled.div`

@@ -2,8 +2,8 @@ import { unstable_getServerSession } from 'next-auth';
 
 import { authOptions } from '../auth/[...nextauth]';
 
-import { getSessionUser, deleteUser } from '@helpers/database';
 import { withRequestValidation } from '@helpers/api';
+import { getSessionUser, deleteUser } from '@helpers/database';
 
 /**
  * Profile operations.

@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-import { Button as ReakitButton } from 'ariakit';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
+import { Button as ReakitButton } from 'ariakit';
 import { useTranslation } from 'next-i18next';
+import styled from 'styled-components';
 
 import SearchInput from '@components/SearchInput';
 import config from '~/config';

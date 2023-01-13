@@ -1,24 +1,24 @@
-import { useState } from 'react';
-import styled from 'styled-components';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import styled from 'styled-components';
 
-import Header from '@components/Header';
-import Footer from '@components/Footer';
-import Layout from '@components/Layout';
 import Body from '@components/Body';
-import Input from '@components/Input';
-import Element from '@components/Element';
-import PageTitle from '@components/PageTitle';
-import GraphIcon from '@components/GraphIcon';
-import Metadata from '@components/Metadata';
 import Debug from '@components/Debug';
+import Element from '@components/Element';
+import Footer from '@components/Footer';
+import GraphIcon from '@components/GraphIcon';
+import Header from '@components/Header';
+import Input from '@components/Input';
+import Layout from '@components/Layout';
+import Metadata from '@components/Metadata';
+import PageTitle from '@components/PageTitle';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
-import breakpoints from '@styles/breakpoints';
 import SparqlClient from '@helpers/sparql';
 import { getQueryObject } from '@helpers/utils';
+import breakpoints from '@styles/breakpoints';
 import config from '~/config';
 
 const Columns = styled.div`

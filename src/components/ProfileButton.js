@@ -1,10 +1,10 @@
-import styled from 'styled-components';
-import { useMenuState, Menu, MenuItem, MenuButton } from 'ariakit';
 import { DownArrow } from '@styled-icons/boxicons-solid/DownArrow';
 import { User } from '@styled-icons/boxicons-solid/User';
+import { useMenuState, Menu, MenuItem, MenuButton } from 'ariakit';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import Router from 'next/router';
 import { useTranslation, Trans } from 'next-i18next';
+import Router from 'next/router';
+import styled from 'styled-components';
 
 import Element from '@components/Element';
 import Spinner from '@components/Spinner';

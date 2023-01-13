@@ -1,6 +1,6 @@
+import Cookies from 'js-cookie';
 import { useEffect } from 'react';
 import { record } from 'rrweb';
-import Cookies from 'js-cookie';
 import { v4 as uuidv4 } from 'uuid';
 
 /**

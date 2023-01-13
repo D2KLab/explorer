@@ -1,9 +1,9 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-import Layout from '@components/Layout';
-import Header from '@components/Header';
 import Body from '@components/Body';
 import Content from '@components/Content';
+import Header from '@components/Header';
+import Layout from '@components/Layout';
 import PageTitle from '@components/PageTitle';
 
 function PrivacyPolicyPage() {

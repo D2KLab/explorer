@@ -1,6 +1,6 @@
+import Image from 'next/image';
 import { useState } from 'react';
 import styled from 'styled-components';
-import Image from 'next/image';
 
 import GraphIcon from '@components/GraphIcon';
 import config from '~/config';

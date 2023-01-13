@@ -1,8 +1,8 @@
-import NextAuth from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
-import FacebookProvider from 'next-auth/providers/facebook';
-import TwitterProvider from 'next-auth/providers/twitter';
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
+import NextAuth from 'next-auth';
+import FacebookProvider from 'next-auth/providers/facebook';
+import GoogleProvider from 'next-auth/providers/google';
+import TwitterProvider from 'next-auth/providers/twitter';
 
 import clientPromise from '@helpers/mongodb';
 

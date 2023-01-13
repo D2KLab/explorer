@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
+import { useTranslation } from 'next-i18next';
 import {
   EmailShareButton,
   FacebookShareButton,
@@ -20,10 +20,10 @@ import {
   TwitterIcon,
   WhatsappIcon,
 } from 'next-share';
-import { useTranslation } from 'next-i18next';
+import styled from 'styled-components';
 
-import Element from '@components/Element';
 import Button from '@components/Button';
+import Element from '@components/Element';
 
 const StyledDialog = styled(Dialog)`
   background-color: #fff;

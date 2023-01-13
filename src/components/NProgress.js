@@ -1,7 +1,7 @@
-import { createGlobalStyle } from 'styled-components';
+import { useRouter } from 'next/router';
 import { default as NProgressRoot } from 'nprogress';
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { createGlobalStyle } from 'styled-components';
 
 import theme from '~/theme';
 

@@ -1,6 +1,6 @@
+import { Button as ReakitButton } from 'ariakit';
 import { forwardRef } from 'react';
 import styled from 'styled-components';
-import { Button as ReakitButton } from 'ariakit';
 
 import Spinner from '@components/Spinner';
 
