@@ -39,7 +39,7 @@ function ListDeletion({ list, dialogState, children }) {
   return (
     <>
       {(children && children) || (
-        <DialogDisclosure state={deleteListDialog} as={Button} primary loading={isDeleting}>
+        <DialogDisclosure state={deleteListDialog} as={Button} danger loading={isDeleting}>
           {t('common:listDeletion.title')}
         </DialogDisclosure>
       )}
@@ -78,7 +78,7 @@ function ListDeletion({ list, dialogState, children }) {
           >
             {t('common:buttons.cancel')}
           </Button>
-          <Button type="button" primary loading={isDeleting} onClick={deleteList}>
+          <Button type="button" danger loading={isDeleting} onClick={deleteList}>
             {t('common:listDeletion.deleteButton')}
           </Button>
         </Element>
