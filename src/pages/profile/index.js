@@ -20,7 +20,7 @@ import ImageWithFallback from '@components/ImageWithFallback';
 import Layout from '@components/Layout';
 import ListDeletion from '@components/ListDeletion';
 import ListSettings from '@components/ListSettings';
-import ListShare from '@components/ListShare';
+import ListSocials from '@components/ListSocials';
 import PageTitle from '@components/PageTitle';
 import { ProviderButton } from '@components/ProviderButton';
 import { getSessionUser, getUserLists, getUserAccounts } from '@helpers/database';
@@ -114,7 +114,7 @@ const ListItemButton = styled.div`
   }
 `;
 
-const StyledShareIcon = styled(ShareIcon)`
+const StyledSocialsIcon = styled(ShareIcon)`
   color: #888;
   height: 24px;
   transition: color 250ms cubic-bezier(0.23, 1, 0.32, 1) 0s;
@@ -295,7 +295,7 @@ function ProfilePage({ session, providers, csrfToken, accounts, lists, baseUrl, 
               <ul>
                 {lists?.map((list) => {
                   // eslint-disable-next-line react-hooks/rules-of-hooks
-                  const shareListDialog = useDialogState();
+                  const socialsListDialog = useDialogState();
                   // eslint-disable-next-line react-hooks/rules-of-hooks
                   const deleteListDialog = useDialogState();
 
@@ -330,16 +330,16 @@ function ProfilePage({ session, providers, csrfToken, accounts, lists, baseUrl, 
                       </Element>
                       <Element display="flex" alignItems="center" marginLeft="auto">
                         <ListItemButton>
-                          <ListShare
+                          <ListSocials
                             list={list}
                             facebookAppId={facebookAppId}
                             shareUrl={`${baseUrl}/lists/${list._id}`}
-                            dialogState={shareListDialog}
+                            dialogState={socialsListDialog}
                           >
-                            <StyledDialogDisclosure state={shareListDialog}>
-                              <StyledShareIcon />
+                            <StyledDialogDisclosure state={socialsListDialog}>
+                              <StyledSocialsIcon />
                             </StyledDialogDisclosure>
-                          </ListShare>
+                          </ListSocials>
                         </ListItemButton>
                         <ListItemButton>
                           <ListDeletion list={list} dialogState={deleteListDialog}>

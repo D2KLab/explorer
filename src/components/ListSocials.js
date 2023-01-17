@@ -43,7 +43,7 @@ const StyledDialog = styled(Dialog)`
  * @param {string} facebookAppId - the facebook app id
  * @returns A React component
  */
-function ListShare({ list, dialogState, children, shareUrl, facebookAppId }) {
+function ListSocials({ list, dialogState, children, shareUrl, facebookAppId }) {
   const { t } = useTranslation('common');
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const shareDialog = dialogState || useDialogState();
@@ -55,13 +55,13 @@ function ListShare({ list, dialogState, children, shareUrl, facebookAppId }) {
     <>
       {(children && children) || (
         <DialogDisclosure state={shareDialog} as={Button} primary>
-          {t('common:listShare.title')}
+          {t('common:listSocials.title')}
         </DialogDisclosure>
       )}
       <StyledDialog
         state={shareDialog}
         modal
-        aria-label={t('common:listShare.title')}
+        aria-label={t('common:listSocials.title')}
         backdrop
         backdropProps={{
           style: {
@@ -76,7 +76,7 @@ function ListShare({ list, dialogState, children, shareUrl, facebookAppId }) {
         }}
       >
         <Element marginBottom={24}>
-          <h2>{t('common:listShare.title')}</h2>
+          <h2>{t('common:listSocials.title')}</h2>
         </Element>
         <Element marginBottom={24}>
           <FacebookShareButton url={shareUrl} quote={title} style={buttonStyle}>
@@ -129,4 +129,4 @@ function ListShare({ list, dialogState, children, shareUrl, facebookAppId }) {
   );
 }
 
-export default ListShare;
+export default ListSocials;
