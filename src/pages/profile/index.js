@@ -173,6 +173,18 @@ function ProfilePage({ session, providers, csrfToken, accounts, lists, baseUrl, 
       <StyledDialog
         state={deleteProfileDialog}
         modal
+        backdrop
+        backdropProps={{
+          style: {
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            width: '100%',
+            height: '100%',
+            zIndex: 2000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+        }}
         aria-label={t('common:profile.deleteAccount.title')}
       >
         <h2>{t('common:profile.deleteAccount.title')}</h2>
