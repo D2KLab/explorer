@@ -195,8 +195,8 @@ function ListsPage({ isOwner, list, shareLink }) {
                   )}
                 </>
               )}
-              {renderListItems()}
               {renderOperations()}
+              {renderListItems()}
             </Content>
           </>
         )) || (
