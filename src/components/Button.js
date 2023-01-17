@@ -12,12 +12,15 @@ const Container = styled(ReakitButton)`
   border-radius: 0;
   cursor: pointer;
   text-decoration: none;
-  background-color: ${({ bg, theme, primary, secondary }) => {
+  background-color: ${({ bg, theme, primary, secondary, danger }) => {
     if (primary) {
       return theme.colors.primary;
     }
     if (secondary) {
       return theme.colors.secondary;
+    }
+    if (danger) {
+      return theme.colors.danger;
     }
     return bg || '#000';
   }};
@@ -52,25 +55,29 @@ const StyledSpinner = styled(Spinner)`
  * @param {boolean} [loading=false] - Whether the button is loading.
  * @param {boolean} [primary=false] - Whether the button is primary.
  * @param {boolean} [secondary=false] - Whether the button is secondary.
+ * @param {boolean} [danger=false] - Whether the button is danger.
  * @param {string} href - The href of the button.
  * @param {React.ReactNode} children - The children of the button.
  * @param {React.Ref<any>} ref - The ref of the button.
  * @returns A styled button component.
  */
-const Button = forwardRef(({ loading, primary, secondary, href, children, ...props }, ref) => (
-  <Container
-    {...props}
-    as={href ? 'a' : null}
-    href={href}
-    ref={ref}
-    loading={loading ? 1 : undefined}
-    primary={primary ? 1 : undefined}
-    secondary={secondary ? 1 : undefined}
-  >
-    {loading && <StyledSpinner color="#fff" size={24} />}
-    {children}
-  </Container>
-));
+const Button = forwardRef(
+  ({ loading, primary, secondary, danger, href, children, ...props }, ref) => (
+    <Container
+      {...props}
+      as={href ? 'a' : null}
+      href={href}
+      ref={ref}
+      loading={loading ? 1 : undefined}
+      primary={primary ? 1 : undefined}
+      secondary={secondary ? 1 : undefined}
+      danger={danger ? 1 : undefined}
+    >
+      {loading && <StyledSpinner color="#fff" size={24} />}
+      {children}
+    </Container>
+  )
+);
 
 Button.displayName = 'Button';
 
