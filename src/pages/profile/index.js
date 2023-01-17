@@ -135,7 +135,7 @@ const StyledTrashIcon = styled(TrashIcon)`
 `;
 
 function ProfilePage({ session, providers, csrfToken, accounts, lists, baseUrl, facebookAppId }) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const deleteProfileDialog = useDialogState();
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [isUnlinkingAccount, setIsUnlinkingAccount] = useState(false);
@@ -307,11 +307,11 @@ function ProfilePage({ session, providers, csrfToken, accounts, lists, baseUrl, 
                               <time
                                 key="0"
                                 dateTime={new Date(list.updated_at).toISOString()}
-                                title={new Date(list.updated_at).toString()}
+                                title={new Date(list.updated_at).toLocaleDateString(i18n.language)}
                               />,
                             ]}
                             values={{
-                              date: new Date(list.updated_at).toLocaleDateString(),
+                              date: new Date(list.updated_at).toLocaleDateString(i18n.language),
                             }}
                           />
                         </ListItemSubtitle>
