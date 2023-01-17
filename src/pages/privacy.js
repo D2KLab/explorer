@@ -21,12 +21,10 @@ function PrivacyPolicyPage() {
   );
 }
 
-export async function getServerSideProps({ locale }) {
-  return {
-    props: {
-      ...(await serverSideTranslations(locale, ['common', 'project', 'search'])),
-    },
-  };
-}
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ['common', 'project', 'search'])),
+  },
+});
 
 export default PrivacyPolicyPage;
