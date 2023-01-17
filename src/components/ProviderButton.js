@@ -1,4 +1,5 @@
 import { useTranslation } from 'next-i18next';
+import { useMemo } from 'react';
 import styled from 'styled-components';
 
 import Button from '@components/Button';
@@ -40,7 +41,7 @@ export const providersButtons = {
  */
 export function ProviderButton({ provider, ...props }) {
   const { t } = useTranslation('common');
-  const Container = providersButtons[provider.name] || Button;
+  const Container = useMemo(() => providersButtons[provider.name] || Button, [provider]);
 
   return (
     <Container {...props}>
