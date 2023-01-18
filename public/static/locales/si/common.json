@@ -24,8 +24,19 @@
       "public": "Javno?"
     }
   },
-  "listShare": {
-    "title": "Deli seznam"
+  "listSocials": {
+    "title": "Seznam socialnih"
+  },
+  "listCollaboration": {
+    "title": "Povabite sodelavce",
+    "firstLine": "Delite to povezavo s svojimi sodelavci, da jih povabite.",
+    "secondLine": "Bodite previdni, s kom delite to povezavo, saj jim bo omogočila dodajanje in odstranjevanje elementov s tega seznama!",
+    "invite": "Povabi"
+  },
+  "listRemoveCollaborator": {
+    "title": "Odstranite sodelavca",
+    "confirmText": "Ali ste prepričani, da želite odstraniti uporabnika \"<0>{{name}}</0>\"? Na tem seznamu ne bodo mogli več sodelovati.",
+    "removeButton": "Odstrani"
   },
   "providerButton": {
     "label": "Prijavi se z {{provider}}"
@@ -58,7 +69,9 @@
     "editQuery": "Uredi poizvedbo",
     "permalink": "stalna povezava",
     "original": "oglej si izvirnik",
-    "similar": "Oglej si podobno"
+    "similar": "Oglej si podobno",
+    "copy": "Kopirati",
+    "copied": "Kopirano"
   },
   "list": {
     "items": "Elementi v seznamu",
@@ -67,13 +80,21 @@
     "created": "Ustvarjeno: <0>{{date}}</0>",
     "updated": "Zadnja posodobitev: <0>{{date}}</0>",
     "privacy": {
-      "text": "Ta seznam je <0>{{status}}</strong>.",
+      "text": "Ta seznam je <0>{{status}}</0>.",
       "status": {
         "public": "javen",
         "private": "zaseben"
       }
     },
-    "shareLink": "Javna povezava: <0>{{link}}</0>"
+    "shareLink": "Javna povezava: <0>{{link}}</0>",
+    "collaborators": "Sodelavci",
+    "invite": {
+      "title": "Vabilo",
+      "firstLine": "Povabljeni ste bili k sodelovanju na seznamu <0>{{name}}</0>",
+      "secondLine": "Če sprejmete, bo lastnik tega seznama lahko videl vaše ime.",
+      "decline": "Zavrni",
+      "accept": "Sprejmi"
+    }
   },
   "profile": {
     "title": "Profil",

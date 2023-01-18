@@ -24,8 +24,19 @@
       "public": "Pubblico?"
     }
   },
-  "listShare": {
-    "title": "Condividi la lista"
+  "listSocials": {
+    "title": "Elenco social"
+  },
+  "listCollaboration": {
+    "title": "Invita collaboratori",
+    "firstLine": "Condividi questo link con i tuoi collaboratori per invitarli.",
+    "secondLine": "Fai attenzione con chi condividi questo link perché consentirà loro di aggiungere e rimuovere elementi da questo elenco!",
+    "invite": "Invitare"
+  },
+  "listRemoveCollaborator": {
+    "title": "Rimuovi un collaboratore",
+    "confirmText": "Sei sicuro di voler rimuovere l'utente \"<0>{{name}}</0>\"? Non potranno più collaborare a questo elenco.",
+    "removeButton": "Rimuovere"
   },
   "providerButton": {
     "label": "Accedi con {{provider}}"
@@ -58,7 +69,9 @@
     "editQuery": "Scrivi la domanda",
     "permalink": "permalink",
     "original": "visualizza l'originale",
-    "similar": "Visualizza simili"
+    "similar": "Visualizza simili",
+    "copy": "Copia",
+    "copied": "Copiato"
   },
   "list": {
     "items": "Items nella lista",
@@ -73,7 +86,15 @@
         "private": "privato"
       }
     },
-    "shareLink": "Link pubblico: <0>{{link}}</0> "
+    "shareLink": "Link pubblico: <0>{{link}}</0>",
+    "collaborators": "Collaboratori",
+    "invite": {
+      "title": "Invito",
+      "firstLine": "Sei stato invitato a collaborare alla lista <0>{{name}}</0>",
+      "secondLine": "Se accetti, il proprietario di questa lista potrà vedere il tuo nome.",
+      "decline": "Rifiuta",
+      "accept": "Accetta"
+    }
   },
   "profile": {
     "title": "Profilo",

@@ -1,11 +1,11 @@
 import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
-import { useTranslation, Trans } from 'next-i18next';
-import Router from 'next/router';
-import { useState } from 'react';
+import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
 
 import Button from '@components/Button';
+import CopyButton from '@components/CopyButton';
 import Element from '@components/Element';
+import Input from '@components/Input';
 
 const StyledDialog = styled(Dialog)`
   background-color: #fff;
@@ -16,37 +16,28 @@ const StyledDialog = styled(Dialog)`
 `;
 
 /**
- * A React component that renders a dialog that allows the user to delete a list.
+ * A React component that renders a dialog that allows the user to collaborate on a list.
  * @param {List} list - The list to delete.
  * @param {DialogState} [dialogState] - The dialog state to use.
  * @param {React.ReactNode} children - The children to render.
  * @returns A React component
  */
-function ListDeletion({ list, dialogState, children }) {
+function ListCollaboration({ list, inviteUrl, dialogState, children }) {
   const { t } = useTranslation('common');
-  const [isDeleting, setIsDeleting] = useState(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const deleteListDialog = dialogState || useDialogState();
-
-  const deleteList = async () => {
-    setIsDeleting(true);
-    await fetch(`/api/lists/${list._id}`, {
-      method: 'DELETE',
-    });
-    Router.reload();
-  };
+  const inviteListDialog = dialogState || useDialogState();
 
   return (
     <>
       {(children && children) || (
-        <DialogDisclosure state={deleteListDialog} as={Button} danger loading={isDeleting}>
-          {t('common:listDeletion.title')}
+        <DialogDisclosure state={inviteListDialog} as={Button} primary>
+          {t('common:listCollaboration.invite')}
         </DialogDisclosure>
       )}
       <StyledDialog
-        state={deleteListDialog}
+        state={inviteListDialog}
         modal
-        aria-label={t('common:listDeletion.title')}
+        aria-label={t('common:listCollaboration.title')}
         backdrop
         backdropProps={{
           style: {
@@ -60,26 +51,28 @@ function ListDeletion({ list, dialogState, children }) {
           },
         }}
       >
-        <h2>{t('common:listDeletion.title')}</h2>
+        <h2>{t('common:listCollaboration.title')}</h2>
         <p>
-          <Trans
-            i18nKey="common:listDeletion.confirmText"
-            components={[<strong key="0" />]}
-            values={{ name: list.name }}
-          />
+          {t('common:listCollaboration.firstLine')}
+          <br />
+          <strong>{t('common:listCollaboration.secondLine')}</strong>
+        </p>
+        <p>
+          <Input type="text" value={inviteUrl} readonly style={{ width: '100%' }} />
+          <small>
+            <CopyButton value={inviteUrl} style={{ textTransform: 'lowercase' }} />
+          </small>
         </p>
         <Element display="flex" alignItems="center" justifyContent="space-between">
           <Button
             type="button"
             secondary
             onClick={() => {
-              deleteListDialog.hide();
+              inviteListDialog.hide();
             }}
+            style={{ marginLeft: 'auto' }}
           >
-            {t('common:buttons.cancel')}
-          </Button>
-          <Button type="button" danger loading={isDeleting} onClick={deleteList}>
-            {t('common:listDeletion.deleteButton')}
+            {t('common:buttons.close')}
           </Button>
         </Element>
       </StyledDialog>
@@ -87,4 +80,4 @@ function ListDeletion({ list, dialogState, children }) {
   );
 }
 
-export default ListDeletion;
+export default ListCollaboration;

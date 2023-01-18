@@ -38,6 +38,7 @@ export default withRequestValidation({
   const user = await getSessionUser(session);
 
   const isOwner = user && list && list.user.equals(user._id);
+  const isCollaborator = user && list?.collaborators?.some((id) => id.equals(user._id));
 
   if (req.method === 'GET') {
     if (!list.is_public && !isOwner) {
@@ -52,18 +53,18 @@ export default withRequestValidation({
     res.status(200).json(list);
   }
 
-  // Owner operations
-  if (!isOwner) {
-    res.status(403).json({
-      error: {
-        status: 403,
-        message: 'Forbidden',
-      },
-    });
-    return;
-  }
-
   if (req.method === 'PUT') {
+    // Owner or collaborator operation
+    if (!isOwner && !isCollaborator) {
+      res.status(403).json({
+        error: {
+          status: 403,
+          message: 'Forbidden',
+        },
+      });
+      return;
+    }
+
     // Update the list
     const body = JSON.parse(req.body);
 
@@ -88,6 +89,17 @@ export default withRequestValidation({
     const updatedList = await getListById(list._id);
     res.status(200).json(updatedList);
   } else if (req.method === 'DELETE') {
+    // Owner operation
+    if (!isOwner) {
+      res.status(403).json({
+        error: {
+          status: 403,
+          message: 'Forbidden',
+        },
+      });
+      return;
+    }
+
     // Delete the list
     await removeUserList(user, list);
     res.status(200).json({});

@@ -1,3 +1,5 @@
+import { createHmac } from 'crypto';
+
 import config from '~/config';
 
 /**
@@ -132,4 +134,15 @@ export const getSearchData = async ({ query, locale }) => {
   ).json();
 
   return searchData;
+};
+
+/**
+ * Generates a URL for inviting a user to a list.
+ * @param {List} list - the list to invite a user to
+ * @returns {string} the URL for inviting a user to a list
+ */
+export const generateListInviteId = (list) => {
+  const secret = process.env.NEXTAUTH_SECRET;
+  const inviteId = createHmac('sha256', secret).update(list._id.toString()).digest('hex');
+  return inviteId;
 };

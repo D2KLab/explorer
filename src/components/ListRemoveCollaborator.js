@@ -1,4 +1,4 @@
-import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
+import { useDialogState, Dialog } from 'ariakit';
 import { useTranslation, Trans } from 'next-i18next';
 import Router from 'next/router';
 import { useState } from 'react';
@@ -16,21 +16,22 @@ const StyledDialog = styled(Dialog)`
 `;
 
 /**
- * A React component that renders a dialog that allows the user to delete a list.
- * @param {List} list - The list to delete.
+ * A React component that renders a dialog that allows the user to remove a collaborator from a list.
+ * @param {List} list - The list to remove the collaborator from.
+ * @param {List} user - The user to remove.
  * @param {DialogState} [dialogState] - The dialog state to use.
  * @param {React.ReactNode} children - The children to render.
  * @returns A React component
  */
-function ListDeletion({ list, dialogState, children }) {
+function ListRemoveCollaborator({ list, user, dialogState, children }) {
   const { t } = useTranslation('common');
   const [isDeleting, setIsDeleting] = useState(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const deleteListDialog = dialogState || useDialogState();
+  const removalDialog = dialogState || useDialogState();
 
   const deleteList = async () => {
     setIsDeleting(true);
-    await fetch(`/api/lists/${list._id}`, {
+    await fetch(`/api/lists/${list._id}/collaborators/${user._id}`, {
       method: 'DELETE',
     });
     Router.reload();
@@ -38,15 +39,11 @@ function ListDeletion({ list, dialogState, children }) {
 
   return (
     <>
-      {(children && children) || (
-        <DialogDisclosure state={deleteListDialog} as={Button} danger loading={isDeleting}>
-          {t('common:listDeletion.title')}
-        </DialogDisclosure>
-      )}
+      {children}
       <StyledDialog
-        state={deleteListDialog}
+        state={removalDialog}
         modal
-        aria-label={t('common:listDeletion.title')}
+        aria-label={t('common:listRemoveCollaborator.title')}
         backdrop
         backdropProps={{
           style: {
@@ -60,12 +57,12 @@ function ListDeletion({ list, dialogState, children }) {
           },
         }}
       >
-        <h2>{t('common:listDeletion.title')}</h2>
+        <h2>{t('common:listRemoveCollaborator.title')}</h2>
         <p>
           <Trans
-            i18nKey="common:listDeletion.confirmText"
+            i18nKey="common:listRemoveCollaborator.confirmText"
             components={[<strong key="0" />]}
-            values={{ name: list.name }}
+            values={{ name: user.name }}
           />
         </p>
         <Element display="flex" alignItems="center" justifyContent="space-between">
@@ -73,13 +70,13 @@ function ListDeletion({ list, dialogState, children }) {
             type="button"
             secondary
             onClick={() => {
-              deleteListDialog.hide();
+              removalDialog.hide();
             }}
           >
             {t('common:buttons.cancel')}
           </Button>
           <Button type="button" danger loading={isDeleting} onClick={deleteList}>
-            {t('common:listDeletion.deleteButton')}
+            {t('common:listRemoveCollaborator.removeButton')}
           </Button>
         </Element>
       </StyledDialog>
@@ -87,4 +84,4 @@ function ListDeletion({ list, dialogState, children }) {
   );
 }
 
-export default ListDeletion;
+export default ListRemoveCollaborator;

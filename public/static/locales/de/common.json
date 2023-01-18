@@ -24,8 +24,19 @@
       "public": "Öffentlich?"
     }
   },
-  "listShare": {
-    "title": "Teilen der Liste"
+  "listSocials": {
+    "title": "Soziale Liste"
+  },
+  "listCollaboration": {
+    "title": "Laden Sie Mitarbeiter ein",
+    "firstLine": "Teilen Sie diesen Link mit Ihren Mitarbeitern, um sie einzuladen.",
+    "secondLine": "Seien Sie vorsichtig, mit wem Sie diesen Link teilen, da er es ihnen ermöglicht, Elemente zu dieser Liste hinzuzufügen und zu entfernen!",
+    "invite": "Einladen"
+  },
+  "listRemoveCollaborator": {
+    "title": "Entfernen Sie einen Mitbearbeiter",
+    "confirmText": "Möchten Sie den Nutzer \"<0>{{name}}</0>\" wirklich entfernen? Sie können an dieser Liste nicht mehr mitarbeiten.",
+    "removeButton": "Entfernen"
   },
   "providerButton": {
     "label": "Anmelden mit {{provider}}"
@@ -58,7 +69,9 @@
     "editQuery": "Anfrage bearbeiten",
     "permalink": "permalink",
     "original": "Originale Ansicht",
-    "similar": "Ähnliche Ansicht"
+    "similar": "Ähnliche Ansicht",
+    "copy": "Kopieren",
+    "copied": "Kopiert"
   },
   "list": {
     "items": "Elemente in der Liste",
@@ -67,13 +80,21 @@
     "created": "Erstellt am: <0>{{date}}</0>",
     "updated": "Letzte Änderung: <0>{{date}}</0>",
     "privacy": {
-      "text": "Diese Liste ist <0>{{status}}</strong>.",
+      "text": "Diese Liste ist <0>{{status}}</0>.",
       "status": {
         "public": "öffentliche",
         "private": "privat"
       }
     },
-    "shareLink": "Öffentliche Verknüpfung: <0>{{link}}</0>"
+    "shareLink": "Öffentliche Verknüpfung: <0>{{link}}</0>",
+    "collaborators": "Collaborators",
+    "invite": {
+      "title": "Einladung",
+      "firstLine": "Sie wurden eingeladen, an der Liste <0>{{name}}</0> mitzuarbeiten",
+      "secondLine": "Wenn Sie zustimmen, kann der Besitzer dieser Liste Ihren Namen sehen.",
+      "decline": "Ablehnen",
+      "accept": "Akzeptieren"
+    }
   },
   "profile": {
     "title": "Profil",

@@ -24,8 +24,19 @@
       "public": "Public?"
     }
   },
-  "listShare": {
-    "title": "Share list"
+  "listSocials": {
+    "title": "Socials list"
+  },
+  "listCollaboration": {
+    "title": "Invite collaborators",
+    "firstLine": "Share this link with your collaborators to invite them.",
+    "secondLine": "Be careful who you share this link with because it will allow them to add and remove items from this list!",
+    "invite": "Invite"
+  },
+  "listRemoveCollaborator": {
+    "title": "Remove a collaborator",
+    "confirmText": "Are you sure you want to remove the user \"<0>{{name}}</0>\"? They won't be able to collaborate on this list anymore.",
+    "removeButton": "Remove"
   },
   "providerButton": {
     "label": "Sign in with {{provider}}"
@@ -58,7 +69,9 @@
     "editQuery": "Edit the query",
     "permalink": "permalink",
     "original": "view original",
-    "similar": "View similar"
+    "similar": "View similar",
+    "copy": "Copy",
+    "copied": "Copied"
   },
   "list": {
     "items": "Items in the list",
@@ -67,13 +80,21 @@
     "created": "Created on: <0>{{date}}</0>",
     "updated": "Last update: <0>{{date}}</0>",
     "privacy": {
-      "text": "This list is <0>{{status}}</strong>.",
+      "text": "This list is <0>{{status}}</0>.",
       "status": {
         "public": "public",
         "private": "private"
       }
     },
-    "shareLink": "Public link: <0>{{link}}</0>"
+    "shareLink": "Public link: <0>{{link}}</0>",
+    "collaborators": "Collaborators",
+    "invite": {
+      "title": "Invitation",
+      "firstLine": "You have been invited to collaborate on the list <0>{{name}}</0>",
+      "secondLine": "If you accept, the owner of this list will be able to see your name.",
+      "decline": "Decline",
+      "accept": "Accept"
+    }
   },
   "profile": {
     "title": "Profile",

@@ -96,6 +96,17 @@ export const addItemToList = async (itemUri, itemType, list) => {
 };
 
 /**
+ * Gets the user with the given id.
+ * @param {string} userId - the id of the user to get
+ * @returns {Promise<User | null>} - the user with the given id, or null if they don't exist
+ */
+export const getUserById = async (userId) => {
+  if (!ObjectId.isValid(userId)) return null;
+  const db = await connectToDatabase();
+  return db.collection('users').findOne({ _id: new ObjectId(userId) });
+};
+
+/**
  * Gets the user object from the database for the given session.
  * @param {object} session - the session object
  * @returns {object | null} - the user object from the database for the given session.
@@ -121,7 +132,7 @@ export const getUserLists = async (user) => {
   const db = await connectToDatabase();
   return db
     .collection('lists')
-    .find({ user: new ObjectId(user._id) })
+    .find({ $or: [{ user: new ObjectId(user._id) }, { collaborators: new ObjectId(user._id) }] })
     .sort({ updated_at: 1 })
     .toArray();
 };
