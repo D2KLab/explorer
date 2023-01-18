@@ -28,6 +28,7 @@ const Container = styled(ReakitButton)`
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: inherit;
 
   &:hover {
     color: ${({ text }) => text || '#fff'};
