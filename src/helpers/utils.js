@@ -21,6 +21,7 @@ export function uriToId(uriPart, { base }) {
  * @returns {string} the full URI
  */
 export function idToUri(id, { base }) {
+  if (id.startsWith(base)) return id;
   const uri = typeof base !== 'undefined' ? `${base}/${id}` : id;
   return uri;
 }
