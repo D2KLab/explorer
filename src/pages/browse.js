@@ -514,7 +514,6 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
             filters={filters}
             onSearch={onSearch}
             collapsed={isSidebarCollapsed}
-            submitOnChange={!isMapVisible}
           />
         </Element>
         <Content>

@@ -47,11 +47,11 @@ const downloadImageAsBuffer = async (imageUrl) => {
 const flattenObject = (obj) => {
   const flattenKeys = {};
   for (const i in obj) {
-    if (!obj.hasOwnProperty(i)) continue;
+    if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
     if (typeof obj[i] === 'object') {
       const flatObject = flattenObject(obj[i]);
       for (const j in flatObject) {
-        if (!flatObject.hasOwnProperty(j)) continue;
+        if (!Object.prototype.hasOwnProperty.call(flatObject, j)) continue;
         flattenKeys[`${i}.${j}`] = flatObject[j];
       }
     } else {

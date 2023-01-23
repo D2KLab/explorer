@@ -22,7 +22,9 @@ export const getSparqlQuery = async (query) => {
         return Promise.reject();
       },
     });
-  } catch (err) {}
+  } catch (err) {
+    // Continue regardless of any error while parsing the query
+  }
   return sparqlQuery;
 };
 

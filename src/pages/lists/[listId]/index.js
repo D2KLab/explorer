@@ -134,7 +134,7 @@ function ListsPage({ isOwner, collaborators, list, shareLink, inviteUrl }) {
             </Button>
           </Link>
           {isOwner && <ListDeletion list={list} />}
-          {isOwner && <ListCollaboration list={list} inviteUrl={inviteUrl} />}
+          {isOwner && <ListCollaboration inviteUrl={inviteUrl} />}
         </Element>
       </Element>
     );

@@ -34,7 +34,6 @@ const MyPage = ({ filters }) => {
       filters={filters}
       onSearch={onSearch}
       collapsed={false}
-      submitOnChange
     />
     // highlight-end
   );

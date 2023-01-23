@@ -17,12 +17,11 @@ const StyledDialog = styled(Dialog)`
 
 /**
  * A React component that renders a dialog that allows the user to collaborate on a list.
- * @param {List} list - The list to delete.
  * @param {DialogState} [dialogState] - The dialog state to use.
  * @param {React.ReactNode} children - The children to render.
  * @returns A React component
  */
-function ListCollaboration({ list, inviteUrl, dialogState, children }) {
+function ListCollaboration({ inviteUrl, dialogState, children }) {
   const { t } = useTranslation('common');
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const inviteListDialog = dialogState || useDialogState();
