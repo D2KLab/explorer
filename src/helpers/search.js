@@ -349,9 +349,9 @@ const fetchEntities = async (query, language) => {
   let orderByDirection = 'ASC';
   if (query.sort) {
     const [sortVariable, sortDirection] = query.sort.split('|');
-    const sortFilter = filters.find((filter) => filter.id === sortVariable);
+    const sortFilter = route.filters.find((filter) => filter.id === sortVariable);
     if (sortFilter && typeof sortFilter.whereFunc === 'function') {
-      extraWhere.push(
+      mainSearchQuery.$where.push(
         `OPTIONAL { ${[]
           .concat(sortFilter.whereFunc())
           .filter((x) => x)
