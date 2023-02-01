@@ -129,7 +129,7 @@ export default withRequestValidation({
 
   const returnValue = {
     result: entity,
-    inList: await isEntityInList(entity['@id'], query, req),
+    inList: await isEntityInList(entity['@id'], query, req, res),
   };
 
   if (config.debug) {
