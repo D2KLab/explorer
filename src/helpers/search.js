@@ -532,9 +532,13 @@ export const searchImage = async (image) => {
             return;
           }
           await streamPipeline(response.body, fs.createWriteStream(path.join(folder, 'image.jpg')));
-          formData.append('file', fs.createReadStream(path.join(folder, './image.jpg')));
+          formData.append('file', fs.createReadStream(path.join(folder, 'image.jpg')));
           resolve();
         });
+      } catch (e) {
+        console.error(
+          `An error has occurred while saving the temporary image at ${tmpDir}. Error: ${e}`
+        );
       } finally {
         try {
           if (tmpDir) {
