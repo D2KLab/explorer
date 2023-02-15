@@ -508,7 +508,13 @@ export const searchImage = async (image) => {
   const formData = new FormData();
 
   if (typeof image === 'object' && typeof image.filepath !== 'undefined') {
-    formData.append('file', fs.createReadStream(image.filepath));
+    try {
+      formData.append('file', fs.createReadStream(image.filepath));
+    } catch (e) {
+      console.error(
+        `An error has occurred while accessing the image at ${image.filepath}. Error: ${e}`
+      );
+    }
   } else {
     const response = await fetch(image);
     if (!response.ok) throw new Error(`Unexpected Response: ${response.statusText}`);
