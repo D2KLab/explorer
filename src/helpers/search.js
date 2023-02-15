@@ -1,7 +1,6 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import util from 'util';
 
 import { mapLimit } from 'async';
 import FormData from 'form-data';
@@ -502,14 +501,6 @@ export const search = async (query, session, language) => {
 };
 
 /**
- * Takes in a stream and pipes it to another stream.
- * @param {stream.Readable} readable - the readable stream to pipe to the writable stream.
- * @param {stream.Writable} writable - the writable stream to pipe the readable stream to.
- * @returns None
- */
-const streamPipeline = util.promisify(require('stream').pipeline);
-
-/**
  * Image based search, given an uploaded image.
  * @param {object} image - the uploaded image to search for.
  */
@@ -522,35 +513,43 @@ export const searchImage = async (image) => {
     const response = await fetch(image);
     if (!response.ok) throw new Error(`Unexpected Response: ${response.statusText}`);
 
-    await new Promise((resolve, reject) => {
-      let tmpDir;
-      try {
-        tmpDir = os.tmpdir();
-        fs.mkdtemp(`${tmpDir}${path.sep}`, async (err, folder) => {
+    let tmpDir;
+    try {
+      tmpDir = await new Promise((resolve, reject) => {
+        fs.mkdtemp(`${os.tmpdir()}${path.sep}`, (err, folder) => {
           if (err) {
             reject(err);
             return;
           }
-          await streamPipeline(response.body, fs.createWriteStream(path.join(folder, 'image.jpg')));
-          formData.append('file', fs.createReadStream(path.join(folder, 'image.jpg')));
-          resolve();
+          resolve(folder);
         });
-      } catch (e) {
-        console.error(
-          `An error has occurred while saving the temporary image at ${tmpDir}. Error: ${e}`
-        );
-      } finally {
+      });
+
+      const imagePath = path.join(tmpDir, 'image.jpg');
+      const fileStream = fs.createWriteStream(imagePath);
+
+      await new Promise((resolve, reject) => {
+        res.body.pipe(fileStream);
+        res.body.on('error', reject);
+        fileStream.on('finish', resolve);
+      });
+
+      formData.append('file', fs.createReadStream(imagePath));
+    } catch (e) {
+      console.error(
+        `An error has occurred while saving the temporary image at ${tmpDir}. Error: ${e}`
+      );
+    } finally {
+      if (tmpDir) {
         try {
-          if (tmpDir) {
-            fs.rmSync(tmpDir, { recursive: true });
-          }
+          fs.rmSync(tmpDir, { recursive: true });
         } catch (e) {
           console.error(
             `An error has occurred while removing the temp folder at ${tmpDir}. Error: ${e}`
           );
         }
       }
-    });
+    }
   }
 
   const res = await fetch(`https://silknow-image-retrieval.tools.eurecom.fr/api/retrieve`, {
