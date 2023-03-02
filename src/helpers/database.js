@@ -50,18 +50,17 @@ export const updateList = async (list, newValues) => {
 /**
  * Removes an item from a list.
  * @param {string} itemUri - the URI of the item to remove from the list.
- * @param {string} itemType - the type of the item to remove from the list.
  * @param {List} list - the list to remove the item from.
  * @returns None
  */
-export const removeItemFromList = async (itemUri, itemType, list) => {
+export const removeItemFromList = async (itemUri, list) => {
   const db = await connectToDatabase();
   const res = await db.collection('lists').findOneAndUpdate(
     {
       _id: new ObjectId(list._id),
     },
     {
-      $pull: { items: { uri: itemUri, type: itemType } },
+      $pull: { items: { uri: itemUri } },
       $set: { updated_at: new Date() },
     },
     {
@@ -72,20 +71,22 @@ export const removeItemFromList = async (itemUri, itemType, list) => {
 };
 
 /**
- * Adds an item to a list.
- * @param {string} itemUri - the URI of the item to add to the list.
- * @param {string} itemType - the type of the item to add to the list.
- * @param {List} list - the list to add the item to.
+ * Adds an array of items of a same type to a list.
+ * @param {string} itemUri - the array of items URIs to add to the list.
+ * @param {string} itemType - the type of the items to add to the list.
+ * @param {List} list - the list to add the items to.
  * @returns None
  */
-export const addItemToList = async (itemUri, itemType, list) => {
+export const addItemsToList = async (itemsUris, itemsType, list) => {
   const db = await connectToDatabase();
   const res = await db.collection('lists').findOneAndUpdate(
     {
       _id: new ObjectId(list._id),
     },
     {
-      $push: { items: { uri: itemUri, type: itemType } },
+      $push: {
+        items: { $each: itemsUris.map((itemUri) => ({ uri: itemUri, type: itemsType })) },
+      },
       $set: { updated_at: new Date() },
     },
     {

@@ -1,15 +1,7 @@
-import { unstable_getServerSession } from 'next-auth';
-
 import { withRequestValidation } from '@helpers/api';
-import {
-  getListById,
-  getSessionUser,
-  removeItemFromList,
-  addItemToList,
-  removeUserList,
-  updateList,
-} from '@helpers/database';
+import { getListById, getSessionUser, removeUserList, updateList } from '@helpers/database';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
+import { unstable_getServerSession } from 'next-auth';
 
 /**
  * List operations. Takes in a list id.
@@ -69,13 +61,11 @@ export default withRequestValidation({
     const body = JSON.parse(req.body);
 
     // List items
-    if (body.item && body.type) {
-      const inList = list.items.some((item) => item.uri === body.item && item.type === body.type);
-      if (inList) {
-        await removeItemFromList(body.item, body.type, list);
-      } else {
-        await addItemToList(body.item, body.type, list);
-      }
+    const items = [].concat(body.items).filter((x) => x);
+    if (items.length > 0 && body.type) {
+      await updateList(list, {
+        items,
+      });
     }
 
     // List name

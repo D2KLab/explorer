@@ -141,10 +141,10 @@ function SaveButton({ item, type, saved, hideLabel, onChange, ...props }) {
   };
 
   const addToList = async (list) => {
-    await fetch(`/api/lists/${list._id}`, {
+    await fetch(`/api/lists/${list._id}/items`, {
       method: 'PUT',
       body: JSON.stringify({
-        item: item['@id'],
+        items: [item['@id']],
         type,
       }),
     });
@@ -152,12 +152,8 @@ function SaveButton({ item, type, saved, hideLabel, onChange, ...props }) {
   };
 
   const removeFromList = async (list) => {
-    await fetch(`/api/lists/${list._id}`, {
-      method: 'PUT',
-      body: JSON.stringify({
-        item: item['@id'],
-        type,
-      }),
+    await fetch(`/api/lists/${list._id}/items/${encodeURIComponent(item['@id'])}`, {
+      method: 'DELETE',
     });
     await loadLists();
   };
