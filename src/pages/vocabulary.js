@@ -1,10 +1,10 @@
 import { ChevronDown } from '@styled-icons/boxicons-regular/ChevronDown';
 import { ChevronRight } from '@styled-icons/boxicons-regular/ChevronRight';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
-import { useTranslation, Trans } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation, Trans } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useState } from 'react';
 import styled, { css } from 'styled-components';
 import 'intersection-observer';

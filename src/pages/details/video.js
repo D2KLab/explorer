@@ -1,10 +1,10 @@
 import { useTabState, Tab, TabList, TabPanel } from 'ariakit';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import dynamic from 'next/dynamic';
 import DefaultErrorPage from 'next/error';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 

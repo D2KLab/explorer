@@ -1,11 +1,11 @@
 import { Grid as GridIcon } from '@styled-icons/boxicons-solid/Grid';
 import { MapLocationDot } from '@styled-icons/fa-solid/MapLocationDot';
-import { unstable_getServerSession } from 'next-auth';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import DefaultErrorPage from 'next/error';
 import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
+import { unstable_getServerSession } from 'next-auth';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import queryString from 'query-string';
 import { useState, useEffect, useRef, Fragment } from 'react';
 import ReactPaginate from 'react-paginate';

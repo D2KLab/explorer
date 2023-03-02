@@ -1,7 +1,8 @@
+import { unstable_getServerSession } from 'next-auth';
+
 import { withRequestValidation } from '@helpers/api';
 import { getListById, getSessionUser, removeItemFromList } from '@helpers/database';
 import { authOptions } from '@pages/api/auth/[...nextauth]';
-import { unstable_getServerSession } from 'next-auth';
 
 /**
  * List item operations. Takes in a list id and an item uri.

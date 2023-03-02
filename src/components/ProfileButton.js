@@ -1,9 +1,9 @@
 import { DownArrow } from '@styled-icons/boxicons-solid/DownArrow';
 import { User } from '@styled-icons/boxicons-solid/User';
 import { useMenuState, Menu, MenuItem, MenuButton } from 'ariakit';
+import Router from 'next/router';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useTranslation, Trans } from 'next-i18next';
-import Router from 'next/router';
 import styled from 'styled-components';
 
 import Element from '@components/Element';

@@ -1,9 +1,9 @@
 import Cookies from 'js-cookie';
-import { SessionProvider } from 'next-auth/react';
-import { appWithTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { withRouter } from 'next/router';
+import { SessionProvider } from 'next-auth/react';
+import { appWithTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { Reset } from 'styled-reset';

@@ -1,6 +1,6 @@
 import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
-import { useTranslation, Trans } from 'next-i18next';
 import Router from 'next/router';
+import { useTranslation, Trans } from 'next-i18next';
 import { useState } from 'react';
 import styled from 'styled-components';
 

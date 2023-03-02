@@ -1,7 +1,7 @@
 import { Edit as SettingsIcon } from '@styled-icons/boxicons-regular/Edit';
 import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
-import { useTranslation } from 'next-i18next';
 import Router from 'next/router';
+import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import Switch from 'react-switch';
 import styled, { useTheme } from 'styled-components';

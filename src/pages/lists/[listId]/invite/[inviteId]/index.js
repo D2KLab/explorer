@@ -1,8 +1,8 @@
+import DefaultErrorPage from 'next/error';
+import { useRouter } from 'next/router';
 import { unstable_getServerSession } from 'next-auth';
 import { Trans, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import DefaultErrorPage from 'next/error';
-import { useRouter } from 'next/router';
 
 import Body from '@components/Body';
 import Button from '@components/Button';

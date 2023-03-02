@@ -1,5 +1,5 @@
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Router, { useRouter } from 'next/router';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRef, useState, useEffect } from 'react';
 import rrwebPlayer from 'rrweb-player';
 import styled, { css } from 'styled-components';

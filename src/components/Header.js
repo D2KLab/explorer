@@ -1,6 +1,6 @@
 import { WindowOpen } from '@styled-icons/boxicons-regular/WindowOpen';
-import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
 
 import LanguageSwitch from '@components/LanguageSwitch';

@@ -1,7 +1,7 @@
 import { DownArrow } from '@styled-icons/boxicons-solid/DownArrow';
 import { useMenuState, Menu, MenuItem, MenuButton } from 'ariakit';
-import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
 
 import Element from '@components/Element';

@@ -1,9 +1,9 @@
 import { useDialogState, DialogDisclosure } from 'ariakit';
+import DefaultErrorPage from 'next/error';
+import Link from 'next/link';
 import { unstable_getServerSession } from 'next-auth';
 import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import DefaultErrorPage from 'next/error';
-import Link from 'next/link';
 import styled from 'styled-components';
 
 import Body from '@components/Body';

@@ -1,9 +1,9 @@
 import { Heart as HeartIcon } from '@styled-icons/boxicons-regular/Heart';
 import { Heart as HeartSolidIcon } from '@styled-icons/boxicons-solid/Heart';
 import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
+import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
-import Link from 'next/link';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
