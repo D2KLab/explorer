@@ -5,8 +5,7 @@
     "loadMore": "Mehr laden",
     "paginatePrevious": "Vorherige",
     "paginateNext": "Nächste",
-    "toggleMap": "Karte umschalten",
-    "addResults": "Ergebnisse von Seite {{page}} in einer Liste speichern"
+    "toggleMap": "Karte umschalten"
   },
   "labels": {
     "searchResults_one": "{{count}} Suchergebnisse",

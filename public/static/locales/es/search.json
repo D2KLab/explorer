@@ -5,8 +5,7 @@
     "loadMore": "Cargar más",
     "paginatePrevious": "Previo",
     "paginateNext": "Siguiente",
-    "toggleMap": "Mapa",
-    "addResults": "Guardar los resultados de la página {{page}} en una lista"
+    "toggleMap": "Mapa"
   },
   "labels": {
     "searchResults_one": "{{count}} resultado de la búsqueda",
