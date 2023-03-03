@@ -1,4 +1,6 @@
+import { Heart as HeartIcon } from '@styled-icons/boxicons-regular/Heart';
 import { Grid as GridIcon } from '@styled-icons/boxicons-solid/Grid';
+import { Heart as HeartSolidIcon } from '@styled-icons/boxicons-solid/Heart';
 import { MapLocationDot } from '@styled-icons/fa-solid/MapLocationDot';
 import DefaultErrorPage from 'next/error';
 import Link from 'next/link';
@@ -189,6 +191,16 @@ const Result = styled.div`
       opacity: 1;
     }
   }
+`;
+
+const StyledHeartIcon = styled(HeartIcon)`
+  color: #e80020;
+  height: 16px;
+`;
+
+const StyledHeartSolidIcon = styled(HeartSolidIcon)`
+  color: #e80020;
+  height: 16px;
 `;
 
 const PAGE_SIZE = 20;
@@ -611,17 +623,31 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
             <>
               {data?.map((page, i) => {
                 const pageNumber = (parseInt(query.page, 10) || 1) + i;
+                const resultsUris = page.results.map((r) => r['@id']);
+                const isSaved = resultsUris.every((uri) => favorites.includes(uri));
                 return (
                   <Fragment key={pageNumber}>
-                    {page.results.length > 0 && (
-                      <ResultPage>
-                        {pageNumber > 1 && <>{t('search:labels.page', { page: pageNumber })}</>}
-                      </ResultPage>
+                    {page.results.length > 0 && pageNumber > 1 && (
+                      <ResultPage>{t('search:labels.page', { page: pageNumber })}</ResultPage>
                     )}
                     <ScrollDetector
                       onAppears={() => onScrollToPage(pageNumber)}
                       rootMargin="0px 0px -50% 0px"
                     />
+                    <SaveButton
+                      type={query.type}
+                      item={page.results}
+                      saved={isSaved}
+                      onChange={() => router.reload()}
+                      style={{ marginTop: '1em', marginBottom: '2em' }}
+                    >
+                      {isSaved ? (
+                        <StyledHeartSolidIcon style={{ marginRight: '0.5em' }} />
+                      ) : (
+                        <StyledHeartIcon style={{ marginRight: '0.5em' }} />
+                      )}
+                      {t('search:buttons.addResults', { page: pageNumber })}
+                    </SaveButton>
                     <Results loading={isLoadingMore || isPageLoading ? 1 : 0}>
                       {renderResults(page.results, pageNumber)}
                     </Results>

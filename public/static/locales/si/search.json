@@ -5,7 +5,8 @@
     "loadMore": "Naloži več",
     "paginatePrevious": "Prejšnji",
     "paginateNext": "Naslednji",
-    "toggleMap": "Preklopni zemljevid"
+    "toggleMap": "Preklopni zemljevid",
+    "addResults": "Shranite rezultate s strani {{page}} na seznam"
   },
   "labels": {
     "searchResults_one": "{{count}} rezultat iskanja",
