@@ -84,7 +84,7 @@ export const addItemsToList = async (itemsUris, itemsType, list) => {
       _id: new ObjectId(list._id),
     },
     {
-      $push: {
+      $addToSet: {
         items: { $each: itemsUris.map((itemUri) => ({ uri: itemUri, type: itemsType })) },
       },
       $set: { updated_at: new Date() },
