@@ -4,7 +4,7 @@ import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback } from 'react';
 import styled from 'styled-components';
 
 import Button from '@components/Button';
@@ -98,31 +98,19 @@ const StyledItemContent = styled.div`
  * @param {object} props - The props for the component.
  * @returns A save button.
  */
-function SaveButton({ item, type, saved, hideLabel, onChange, children, ...props }) {
+function SaveButton({ item = [], type, saved, hideLabel, onChange, children, ...props }) {
   const { t } = useTranslation('common');
   const [loading, setLoading] = useState(false);
   const [lists, setLists] = useState([]);
   const [newListName, setNewListName] = useState('');
   const [listFormVisible, setListFormVisible] = useState(false);
   const dialog = useDialogState();
-  const isFirstRender = useRef(true);
   const { data: session } = useSession();
 
-  const triggerOnChange = () => {
-    if (typeof onChange === 'function') {
-      onChange(
-        lists.some((list) => list.items.some((it) => it.uri === item['@id'] && it.type === type))
-      );
-    }
-  };
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    triggerOnChange();
-  }, [lists]);
+  const itemsUris = []
+    .concat(item)
+    .map((it) => it['@id'])
+    .filter((x) => x);
 
   const loadLists = async () => {
     setLoading(true);
@@ -140,22 +128,40 @@ function SaveButton({ item, type, saved, hideLabel, onChange, children, ...props
     return loadedLists;
   };
 
+  const reloadAndTriggerOnChange = async () => {
+    const loadedLists = await loadLists();
+    onChange?.(
+      loadedLists.some((list) =>
+        list.items.some((it) => itemsUris.includes(it.uri) && it.type === type)
+      )
+    );
+  };
+
   const addToList = async (list) => {
     await fetch(`/api/lists/${list._id}/items`, {
       method: 'PUT',
       body: JSON.stringify({
-        items: [item['@id']],
+        items: itemsUris,
         type,
       }),
     });
-    await loadLists();
+    await reloadAndTriggerOnChange();
   };
 
   const removeFromList = async (list) => {
-    await fetch(`/api/lists/${list._id}/items/${encodeURIComponent(item['@id'])}`, {
-      method: 'DELETE',
-    });
-    await loadLists();
+    if (itemsUris.length === 1) {
+      await fetch(`/api/lists/${list._id}/items/${encodeURIComponent(itemsUris[0])}`, {
+        method: 'DELETE',
+      });
+    } else {
+      await fetch(`/api/lists/${list._id}/items:batchDelete`, {
+        method: 'POST',
+        body: JSON.stringify({
+          items: itemsUris,
+        }),
+      });
+    }
+    await reloadAndTriggerOnChange();
   };
 
   const createListWithItem = async () => {
@@ -276,9 +282,8 @@ function SaveButton({ item, type, saved, hideLabel, onChange, children, ...props
         ) : (
           <StyledList>
             {lists.map((list) => {
-              const isItemInList = list.items.some(
-                (it) => it.uri === item['@id'] && it.type === type
-              );
+              const isItemInList =
+                item && list.items.some((it) => itemsUris.includes(it.uri) && it.type === type);
               return (
                 <StyledItem key={list._id}>
                   <StyledItemContent
