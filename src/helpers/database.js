@@ -48,6 +48,29 @@ export const updateList = async (list, newValues) => {
 };
 
 /**
+ * Removes an array of items from a list.
+ * @param {string} itemsUris - the array of items URIs to remove from the list.
+ * @param {List} list - the list to remove the items from.
+ * @returns None
+ */
+export const removeItemsFromList = async (itemsUris, list) => {
+  const db = await connectToDatabase();
+  const res = await db.collection('lists').findOneAndUpdate(
+    {
+      _id: new ObjectId(list._id),
+    },
+    {
+      $pull: { items: { uri: { $in: itemsUris } } },
+      $set: { updated_at: new Date() },
+    },
+    {
+      returnNewDocument: true,
+    }
+  );
+  return res.value;
+};
+
+/**
  * Removes an item from a list.
  * @param {string} itemUri - the URI of the item to remove from the list.
  * @param {List} list - the list to remove the item from.
