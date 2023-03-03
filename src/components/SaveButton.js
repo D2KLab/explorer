@@ -98,7 +98,7 @@ const StyledItemContent = styled.div`
  * @param {object} props - The props for the component.
  * @returns A save button.
  */
-function SaveButton({ item, type, saved, hideLabel, onChange, ...props }) {
+function SaveButton({ item, type, saved, hideLabel, onChange, children, ...props }) {
   const { t } = useTranslation('common');
   const [loading, setLoading] = useState(false);
   const [lists, setLists] = useState([]);
@@ -192,15 +192,24 @@ function SaveButton({ item, type, saved, hideLabel, onChange, ...props }) {
     [session]
   );
 
-  return (
-    <>
-      <StyledDialogDisclosure {...props} onClick={onClick} state={dialog}>
+  const renderButton = () => {
+    if (children) return children;
+    return (
+      <>
         {saved ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
         {!hideLabel && (
           <StyledLabel>
             {saved ? t('common:saveButton.saved') : t('common:saveButton.save')}
           </StyledLabel>
         )}
+      </>
+    );
+  };
+
+  return (
+    <>
+      <StyledDialogDisclosure {...props} onClick={onClick} state={dialog}>
+        {renderButton()}
       </StyledDialogDisclosure>
       <StyledDialog
         state={dialog}
