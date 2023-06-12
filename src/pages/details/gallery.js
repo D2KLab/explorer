@@ -2,7 +2,6 @@ import 'react-18-image-lightbox/style.css';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { useMenuState, Menu, MenuItem, MenuButton, MenuButtonArrow } from 'ariakit';
 import { saveAs } from 'file-saver';
-import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -26,7 +25,7 @@ import Pagination from '@components/Pagination';
 import SaveButton from '@components/SaveButton';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import { generatePermalink, getEntityMainLabel, getSearchData } from '@helpers/explorer';
-import { generateMediaUrl, uriToId } from '@helpers/utils';
+import { generateMediaUrl } from '@helpers/utils';
 import NotFoundPage from '@pages/404';
 import { getEntity, getEntityDebugQuery, isEntityInList } from '@pages/api/entity';
 import breakpoints from '@styles/breakpoints';
@@ -228,11 +227,8 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
   const router = useRouter();
   const { query } = router;
   const route = config.routes[query.type];
-  const [isLoadingSimilar, setIsLoadingSimilar] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const downloadMenu = useMenuState();
-  const similarityMenu = useMenuState();
-  const virtualLoomMenu = useMenuState();
   const [lightboxIsOpen, setLightboxIsOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
@@ -277,75 +273,10 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
 
   const pageTitle = getEntityMainLabel(result, { route, language: i18n.language });
 
-  const generateVirtualLoomData = () => {
-    const lang = i18n.language.toUpperCase();
-    return {
-      language: lang,
-      imgUri: images[currentSlide]?.url || images[0]?.url,
-      dimension: {
-        x: result.dimension?.width,
-        y: result.dimension?.height,
-      },
-      technique: (Array.isArray(result.technique)
-        ? result.technique.map((v) => v.label)
-        : [result?.technique?.label]
-      )
-        .filter((x) => x)
-        .filter((x) => x),
-      weaving: 'Plain', // @TODO: do not hardcode weaving
-      backgroundColor: {
-        r: 0.7075471878051758,
-        g: 0.2302865833044052,
-        b: 0.2302865833044052,
-        a: 0.0,
-      },
-      materials: Array.isArray(result.material)
-        ? result.material.map((v) => v.label)
-        : [result?.material?.label].filter((x) => x),
-      endpoint: 'http://grlc.eurecom.fr/api-git/silknow/api/',
-      analytics: Cookies.get('consent') === '1',
-    };
-  };
-
-  const generateVirtualLoomURL = () => {
-    const data = generateVirtualLoomData();
-    const params = [];
-    params.push(`lang=${encodeURIComponent(data.language)}`);
-    params.push(`data=${encodeURIComponent(JSON.stringify(data))}`);
-    const url = `${config.plugins?.virtualLoom?.url}?${params.join('&')}`;
-    return url;
-  };
-
-  const onClickVirtualLoomButton = (e) => {
-    e.stopPropagation();
-
-    const width = 960;
-    const height = 720;
-    let top = window.screen.height - height;
-    top = top > 0 ? top / 2 : 0;
-    let left = window.screen.width - width;
-    left = left > 0 ? left / 2 : 0;
-
-    const url = generateVirtualLoomURL();
-    const win = window.open(
-      url,
-      'Virtual Loom',
-      `width=${width},height=${height},top=${top},left=${left}`
-    );
-    win.moveTo(left, top);
-    win.focus();
-  };
-
   const download = (format) => {
     switch (format) {
-      case 'vljson': {
-        const virtualLoomData = generateVirtualLoomData();
-        const blob = new Blob([JSON.stringify(virtualLoomData)], { type: 'application/json' });
-        saveAs(blob, `${result.identifier || 'Object'}.${format}`);
-        break;
-      }
       case 'json': {
-        const blob = new Blob([JSON.stringify(result)], { type: 'application/json' });
+        const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
         saveAs(blob, `${result.identifier || 'Object'}.${format}`);
         break;
       }
@@ -360,46 +291,6 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
       default:
         break;
     }
-  };
-
-  const viewSimilar = async (similarity) => {
-    similarityMenu.hide();
-    setIsLoadingSimilar(true);
-
-    const params = new URLSearchParams();
-    params.append('type', 'object');
-    params.append('similarity_type', similarity);
-    params.append('similarity_entity', uriToId(result['@id'], { base: route.uriBase }));
-    router.push(`/${config.search.route}?${params.toString()}`);
-  };
-
-  const customRenderThumb = (children) => {
-    if (!config.plugins?.virtualLoom?.url) return;
-    return Carousel.defaultProps.renderThumbs(children).concat(
-      <Element key="virtual-loom">
-        <MenuButton state={virtualLoomMenu}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/virtual-loom-button.png" alt="Virtual Loom" />
-        </MenuButton>
-        <StyledMenu
-          state={virtualLoomMenu}
-          aria-label="Virtual Loom"
-          style={{ position: 'absolute', left: 0 }}
-        >
-          <MenuItem state={virtualLoomMenu} as={Button} primary onClick={onClickVirtualLoomButton}>
-            {t('common:buttons.virtualLoom.web')}
-          </MenuItem>
-          <MenuItem
-            state={virtualLoomMenu}
-            as={Button}
-            primary
-            href={generateVirtualLoomURL().replace(/^https?:\/\//, 'vloom://')}
-          >
-            {t('common:buttons.virtualLoom.desktop')}
-          </MenuItem>
-        </StyledMenu>
-      </Element>
-    );
   };
 
   const onItemSaveChange = () => {
@@ -472,12 +363,7 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
                   />
                 </Element>
               </MobileContainer>
-              <Carousel
-                showArrows
-                {...config.gallery.options}
-                renderThumbs={customRenderThumb}
-                onChange={setCurrentSlide}
-              >
+              <Carousel showArrows {...config.gallery.options} onChange={setCurrentSlide}>
                 {images.map((image, i) => (
                   <div
                     key={image.url}
@@ -547,14 +433,6 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
                 {t('common:buttons.download')} <MenuButtonArrow />
               </MenuButton>
               <StyledMenu state={downloadMenu} aria-label={t('common:buttons.download')}>
-                <MenuItem
-                  state={downloadMenu}
-                  as={Button}
-                  primary
-                  onClick={() => download('vljson')}
-                >
-                  {t('common:buttons.virtualLoom.download')}
-                </MenuItem>
                 <MenuItem state={downloadMenu} as={Button} primary onClick={() => download('json')}>
                   {t('common:buttons.downloadJSON')}
                 </MenuItem>
@@ -565,29 +443,6 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
                   onClick={() => download('image')}
                 >
                   {t('common:buttons.downloadSelectedImage')}
-                </MenuItem>
-              </StyledMenu>
-            </Element>
-            <Element>
-              <MenuButton state={similarityMenu} as={Button} primary loading={isLoadingSimilar}>
-                {t('common:buttons.similar')} <MenuButtonArrow />
-              </MenuButton>
-              <StyledMenu state={similarityMenu} aria-label={t('common:buttons.similar')}>
-                <MenuItem
-                  state={similarityMenu}
-                  as={Button}
-                  primary
-                  onClick={() => viewSimilar('visual')}
-                >
-                  {t('common:similarity.visual')}
-                </MenuItem>
-                <MenuItem
-                  state={similarityMenu}
-                  as={Button}
-                  primary
-                  onClick={() => viewSimilar('semantic')}
-                >
-                  {t('common:similarity.semantic')}
                 </MenuItem>
               </StyledMenu>
             </Element>
