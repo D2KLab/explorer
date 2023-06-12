@@ -517,6 +517,7 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
             filters={filters}
             onSearch={onSearch}
             collapsed={isSidebarCollapsed}
+            renderEmptyFields={config.sidebar?.renderEmptyFields}
           />
         </Element>
         <Content>

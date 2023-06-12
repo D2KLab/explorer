@@ -8,6 +8,7 @@ Sidebar.
 * `type = {string}`
 * `filters = {object[]}`
 * `query = {object}`
+* `renderEmptyFields = {boolean}`
 
 ## Example with code
 
@@ -34,6 +35,7 @@ const MyPage = ({ filters }) => {
       filters={filters}
       onSearch={onSearch}
       collapsed={false}
+      renderEmptyFields={true}
     />
     // highlight-end
   );

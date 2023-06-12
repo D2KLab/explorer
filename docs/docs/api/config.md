@@ -184,6 +184,30 @@ module.exports = {
 
 </Indent>
 
+### `sidebar` {#sidebar}
+
+* Type: `object`
+
+Configuration for sidebar.
+
+<Indent>
+
+#### `renderEmptyFields` {#sidebar-renderEmptyFields}
+
+* Type: `boolean`
+
+If set to `true`, fields with empty values will always be rendered.
+
+```js title="config.js"
+module.exports = {
+  sidebar: {
+    renderEmptyFields: true,
+  },
+};
+```
+
+</Indent>
+
 ### `footer` {#footer}
 
 * Type: `object`

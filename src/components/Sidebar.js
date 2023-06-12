@@ -172,9 +172,10 @@ ConditionFilter.Container = styled.div`
  * @param {string} [type] - The type of search to perform.
  * @param {object[]} [filters] - The list of filters available for the search.
  * @param {object} [query] - The URL query object.
+ * @param {boolean} [renderEmptyFields] - Whether to render empty fields.
  * @returns A React component
  */
-function Sidebar({ className, onSearch, type, filters, query }) {
+function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields }) {
   const theme = useTheme();
   const graphs = useGraphs();
   const { t, i18n } = useTranslation(['project', 'search']);
@@ -416,7 +417,7 @@ function Sidebar({ className, onSearch, type, filters, query }) {
     }
 
     // Do not render filter if it's empty
-    if (filter.values.length === 0) {
+    if (filter.values.length === 0 && !renderEmptyFields) {
       return;
     }
 
