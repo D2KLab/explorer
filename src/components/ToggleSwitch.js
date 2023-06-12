@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 const Switch = styled.div`
   position: relative;
   width: 100%;
-  background-color: #fff;
+  background: ${({ theme }) => theme.colors.background};
   border: 1px solid #333;
   border-radius: 16px;
   display: flex;
@@ -37,6 +37,8 @@ const SwitchItem = styled.div`
   min-height: 38px;
   display: flex;
   align-items: center;
+  color: ${({ active, theme }) =>
+    active ? theme.colors.primaryText || theme.colors.text : theme.colors.text};
 
   &:not(:last-of-type) {
     border-right: 1px solid black;
@@ -105,7 +107,11 @@ function ToggleSwitch({ name, options, defaultOption, onChange }) {
     <Switch>
       {options.map((option, i) => {
         return (
-          <SwitchItem key={option.value} ref={lineRefs.current[i]}>
+          <SwitchItem
+            key={option.value}
+            ref={lineRefs.current[i]}
+            active={selected === option.value}
+          >
             <ClickableLabel title={option.label} value={option.value} onChange={handleChange}>
               <ConcealedRadio value={option.value} selected={selected} />
             </ClickableLabel>

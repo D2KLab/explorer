@@ -8,6 +8,7 @@ const theme = {
     text: '#333',
     background: '#f7f7ef',
     primary: '#2b4253',
+    primaryText: '#fff',
     secondary: '#144168',
     danger: '##dc3545',
     linkHover: '#a02a0c',
