@@ -22,6 +22,10 @@
     "graph": "Grafico",
     "q": "Ricerca testuale",
     "languages": "Lingue",
-    "options": "Opzioni"
+    "options": "Opzioni",
+    "searchIn": "Cerca in",
+    "titleOnly": "Titolo",
+    "contentOnly": "Contenuto",
+    "titleAndContent": "Titolo e contenuto"
   }
 }

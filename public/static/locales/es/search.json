@@ -22,6 +22,10 @@
     "graph": "Gráfica",
     "q": "Búsqueda por texto",
     "languages": "Idiomas",
-    "options": "Opciones"
+    "options": "Opciones",
+    "searchIn": "Buscar en",
+    "titleOnly": "Título",
+    "contentOnly": "Contenido",
+    "titleAndContent": "Título y contenido"
   }
 }
