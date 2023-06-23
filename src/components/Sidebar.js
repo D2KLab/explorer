@@ -579,7 +579,13 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
                   {route.textSearchOptions.map((option) => (
                     <div key={option}>
                       <label>
-                        <input type="radio" name="in" value={option} onChange={handleInputChange} />
+                        <input
+                          type="radio"
+                          name="in"
+                          value={option}
+                          onChange={handleInputChange}
+                          checked={option === fields.in}
+                        />
                         {t(`project:searchOptions.${option}`)}
                       </label>
                     </div>
