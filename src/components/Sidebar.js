@@ -98,6 +98,11 @@ const Field = styled.div`
   ${({ theme }) => theme?.components?.Sidebar?.Field};
 `;
 
+const SubField = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const Option = styled.div`
   display: flex;
   align-items: center;
@@ -233,6 +238,11 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
     if (typeof query.q !== 'undefined') {
       setTextValue(query.q);
       initialFields.q = query.q;
+    }
+
+    // Text search options
+    if (typeof query.in !== 'undefined') {
+      initialFields.in = query.in;
     }
 
     // Graph search
@@ -562,6 +572,21 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
                 onKeyDown={(e) => e.key === 'Enter' && handleInputChange(e)}
               />
             </label>
+            <SubField>
+              {Array.isArray(route.textSearchOptions) && (
+                <>
+                  <label>{t('search:fields.searchIn')}</label>
+                  {route.textSearchOptions.map((option) => (
+                    <div key={option}>
+                      <label>
+                        <input type="radio" name="in" value={option} onChange={handleInputChange} />
+                        {t(`project:searchOptions.${option}`)}
+                      </label>
+                    </div>
+                  ))}
+                </>
+              )}
+            </SubField>
           </Field>
           {filters
             .filter((filter) => !filter.isOption && !filter.isBeforeTextSearch)

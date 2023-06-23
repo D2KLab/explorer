@@ -196,7 +196,7 @@ const generateWhereCondition = async (query, language) => {
   const textSearchWhere = [];
   if (query.q) {
     if (typeof route.textSearchFunc === 'function') {
-      textSearchWhere.push(...route.textSearchFunc(query.q));
+      textSearchWhere.push(...route.textSearchFunc(query.q, query.in));
     } else {
       if (typeof route.labelProp === 'string') {
         textSearchWhere.push(`?id <${route.labelProp}> ?_s1texto`);
