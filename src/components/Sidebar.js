@@ -584,7 +584,11 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
                           name="in"
                           value={option}
                           onChange={handleInputChange}
-                          checked={option === fields.in}
+                          checked={
+                            option === fields.in ||
+                            ((!fields.in && route.textSearchDefaultOption) ||
+                              route.textSearchOptions[0]) === option
+                          }
                         />
                         {t(`project:searchOptions.${option}`)}
                       </label>
