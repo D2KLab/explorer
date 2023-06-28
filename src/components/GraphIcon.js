@@ -10,7 +10,7 @@ const StyledImage = styled.img`
       object-fit: contain;
     `}
 
-  ${({ theme }) => theme?.components?.GraphIcon?.StyledImage};
+  ${({ theme }) => theme?.components?.GraphIcon?.StyledImage}
 `;
 
 /**

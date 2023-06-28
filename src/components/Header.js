@@ -21,7 +21,7 @@ const Container = styled.div`
   align-items: center;
   font-size: 0.875rem;
 
-  ${({ theme }) => theme?.components?.Header?.Container};
+  ${({ theme }) => theme?.components?.Header?.Container}
 `;
 
 const StyledLanguageSwitch = styled(LanguageSwitch)`
@@ -31,7 +31,7 @@ const StyledLanguageSwitch = styled(LanguageSwitch)`
     display: flex;
   `}
 
-  ${({ theme }) => theme?.components?.Header?.StyledLanguageSwitch};
+  ${({ theme }) => theme?.components?.Header?.StyledLanguageSwitch}
 `;
 
 const StyledProfileButton = styled(ProfileButton)`
@@ -41,7 +41,7 @@ const StyledProfileButton = styled(ProfileButton)`
     margin-left: 0;
   `}
 
-  ${({ theme }) => theme?.components?.Header?.StyledProfileButton};
+  ${({ theme }) => theme?.components?.Header?.StyledProfileButton}
 `;
 
 const LogoContainer = styled.span`
@@ -54,7 +54,7 @@ const LogoContainer = styled.span`
     margin-right: 2em;
   `}
 
-  ${({ theme }) => theme?.components?.Header?.LogoContainer};
+  ${({ theme }) => theme?.components?.Header?.LogoContainer}
 `;
 
 const Logo = styled.img`
@@ -62,14 +62,14 @@ const Logo = styled.img`
   max-height: 54px;
   flex: 0 0 auto;
 
-  ${({ theme }) => theme?.components?.Header?.Logo};
+  ${({ theme }) => theme?.components?.Header?.Logo}
 `;
 
 const LogoTitle = styled.span`
   color: #000;
   font-size: 2em;
 
-  ${({ theme }) => theme?.components?.Header?.LogoTitle};
+  ${({ theme }) => theme?.components?.Header?.LogoTitle}
 `;
 
 const NavContainer = styled.div`
@@ -79,7 +79,7 @@ const NavContainer = styled.div`
     display: flex;
   `}
 
-  ${({ theme }) => theme?.components?.Header?.NavContainer};
+  ${({ theme }) => theme?.components?.Header?.NavContainer}
 `;
 
 const NavList = styled.ul`
@@ -91,13 +91,13 @@ const NavList = styled.ul`
   align-items: center;
   margin: 0px;
 
-  ${({ theme }) => theme?.components?.Header?.NavList};
+  ${({ theme }) => theme?.components?.Header?.NavList}
 `;
 
 const NavItem = styled.li`
   padding: 0 1em;
 
-  ${({ theme }) => theme?.components?.Header?.NavItem};
+  ${({ theme }) => theme?.components?.Header?.NavItem}
 `;
 
 const NavLink = styled.a`
@@ -108,7 +108,7 @@ const NavLink = styled.a`
   align-items: center;
   text-align: center;
 
-  ${({ theme }) => theme?.components?.Header?.NavLink};
+  ${({ theme }) => theme?.components?.Header?.NavLink}
 `;
 
 const SearchContainer = styled.div`
@@ -121,7 +121,7 @@ const SearchContainer = styled.div`
     display: block;
   `}
 
-  ${({ theme }) => theme?.components?.Header?.SearchContainer};
+  ${({ theme }) => theme?.components?.Header?.SearchContainer}
 `;
 
 /**

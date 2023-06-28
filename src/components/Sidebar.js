@@ -30,17 +30,18 @@ const Container = styled.div`
     );
   `}
 
-  ${({ theme }) => theme?.components?.Sidebar?.Container};
+  ${({ theme }) => theme?.components?.Sidebar?.Container}
 `;
 
 const StyledInput = styled(Input)`
-  ${({ theme }) => theme?.components?.Sidebar?.StyledInput};
+  width: 100%;
+  ${({ theme }) => theme?.components?.Sidebar?.StyledInput}
 `;
 
 const StyledSwitch = styled(Switch)`
   margin-left: 5px;
 
-  ${({ theme }) => theme?.components?.Sidebar?.StyledSwitch};
+  ${({ theme }) => theme?.components?.Sidebar?.StyledSwitch}
 `;
 
 const ButtonsBar = styled.div`
@@ -50,7 +51,7 @@ const ButtonsBar = styled.div`
   margin-bottom: 24px;
   row-gap: 24px;
   column-gap: 24px;
-  ${({ theme }) => theme?.components?.Sidebar?.ButtonsBar};
+  ${({ theme }) => theme?.components?.Sidebar?.ButtonsBar}
 `;
 
 const MobileButtonsBar = styled(ButtonsBar)`
@@ -58,7 +59,7 @@ const MobileButtonsBar = styled(ButtonsBar)`
     display: none;
   `}
 
-  ${({ theme }) => theme?.components?.Sidebar?.MobileButtonsBar};
+  ${({ theme }) => theme?.components?.Sidebar?.MobileButtonsBar}
 `;
 
 const ClearButton = styled(Button)`
@@ -67,7 +68,7 @@ const ClearButton = styled(Button)`
   flex: 1 1 120px;
   justify-content: center;
 
-  ${({ theme }) => theme?.components?.Sidebar?.ClearButton};
+  ${({ theme }) => theme?.components?.Sidebar?.ClearButton}
 `;
 
 const FilterButton = styled(Button)`
@@ -76,11 +77,11 @@ const FilterButton = styled(Button)`
   flex: 1 1 120px;
   justify-content: center;
 
-  ${({ theme }) => theme?.components?.Sidebar?.FilterButton};
+  ${({ theme }) => theme?.components?.Sidebar?.FilterButton}
 `;
 
 const Fields = styled.div`
-  ${({ theme }) => theme?.components?.Sidebar?.Fields};
+  ${({ theme }) => theme?.components?.Sidebar?.Fields}
 `;
 
 const Field = styled.div`
@@ -95,7 +96,7 @@ const Field = styled.div`
     width: 100%;
   }
 
-  ${({ theme }) => theme?.components?.Sidebar?.Field};
+  ${({ theme }) => theme?.components?.Sidebar?.Field}
 `;
 
 const SubField = styled.div`
@@ -112,7 +113,7 @@ const Option = styled.div`
     flex: 1;
   }
 
-  ${({ theme }) => theme?.components?.Sidebar?.Option};
+  ${({ theme }) => theme?.components?.Sidebar?.Option}
 `;
 
 const ConditionFilter = styled.div`

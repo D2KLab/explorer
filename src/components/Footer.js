@@ -17,7 +17,7 @@ const Container = styled.div`
     flex-direction: row;
   `}
 
-  ${({ theme }) => theme?.components?.Footer?.Container};
+  ${({ theme }) => theme?.components?.Footer?.Container}
 `;
 
 const Credits = styled.div`
@@ -40,7 +40,7 @@ const Credits = styled.div`
     }
   }
 
-  ${({ theme }) => theme?.components?.Footer?.Credits};
+  ${({ theme }) => theme?.components?.Footer?.Credits}
 `;
 
 const LogoContainer = styled.div`

@@ -6,7 +6,7 @@ import GraphIcon from '@components/GraphIcon';
 import config from '~/config';
 
 export const ThumbnailContainer = styled.div`
-  border: 2px solid ${({ theme }) => theme.colors.secondary};
+  border: 2px solid ${({ theme }) => theme.colors.secondary}
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,7 +25,7 @@ export const GraphIconContainer = styled.div`
   align-items: center;
   justify-content: center;
 
-  ${({ theme }) => theme?.components?.Media?.GraphIconContainer};
+  ${({ theme }) => theme?.components?.Media?.GraphIconContainer}
 `;
 
 export const TextContainer = styled.div`

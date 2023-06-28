@@ -69,7 +69,7 @@ const Title = styled.h1`
     font-size: 4rem;
   `}
 
-  ${({ theme }) => theme?.pages?.HomePage?.Title};
+  ${({ theme }) => theme?.pages?.HomePage?.Title}
 `;
 
 const Logo = styled.div`
