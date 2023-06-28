@@ -219,6 +219,13 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
 
   const debouncedFields = useDebounce(fieldsToDebounce, 1000);
   useEffect(() => {
+    // Compare debouncedFields and fields to see if any value is different between the two
+    const isDifferent = Object.entries(debouncedFields).some(([key, value]) => {
+      return value !== fields[key];
+    });
+    if (!isDifferent) {
+      return;
+    }
     setFields((prev) => ({
       ...prev,
       ...debouncedFields,
@@ -240,9 +247,7 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
 
   useEffect(() => {
     // Generate initial fields
-    const initialFields = {
-      q: '', // Set `q` to an empty string to let React know that this is a controlled input (https://reactjs.org/docs/forms.html#controlled-components)
-    };
+    const initialFields = {};
 
     // Text search
     if (typeof query.q !== 'undefined') {
@@ -305,6 +310,7 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
 
     isFirstRender.current = true;
     setFields(initialFields);
+    setFieldsToDebounce(initialFields);
   }, [query]);
 
   const handleInputChange = (event, meta) => {
@@ -365,9 +371,8 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
 
   const clearSearch = () => {
     setTextValue('');
-    setFields({
-      q: '',
-    });
+    setFields({});
+    setFieldsToDebounce({});
   };
 
   const renderSelectedOption = (item) => (
@@ -403,14 +408,14 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
         }
 
         if (Array.isArray(field)) {
-          return field.find((f) => f === v.value || f.value === v.value);
+          return field.find((f) => `${f.value || f}` === v.value);
         }
 
         if (field.value) {
-          return field.value === v.value;
+          return field.value.toString() === v.value.toString();
         }
 
-        return field === v.value;
+        return `${field}` === `${v.value}`;
       });
     }
 
@@ -456,6 +461,13 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
       ...filter.inputProps,
     };
 
+    const handleChange = (e) => {
+      setFieldsToDebounce((prevFields) => ({
+        ...prevFields,
+        [`filter_${filter.id}`]: e.target.value,
+      }));
+    };
+
     return (
       <Field key={filter.id} style={filter.style}>
         <label style={filter.hideLabel && { marginTop: 0 }}>
@@ -466,12 +478,9 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
                 type="search"
                 {...filterInputProps}
                 defaultValue={value}
-                onChange={(ev) => {
-                  setFieldsToDebounce((prevFields) => ({
-                    ...prevFields,
-                    [`filter_${filter.id}`]: ev.target.value,
-                  }));
-                }}
+                onChange={handleChange}
+                onBlur={handleChange}
+                onKeyDown={(e) => e.key === 'Enter' && handleChange(e)}
               />
             ) : (
               <SelectInput
@@ -601,9 +610,28 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
               <StyledInput
                 name="q"
                 type="search"
-                value={textValue}
-                onChange={(e) => setTextValue(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleInputChange(e)}
+                value={fieldsToDebounce.q}
+                onChange={(e) => {
+                  setFieldsToDebounce((prevFields) => ({
+                    ...prevFields,
+                    q: e.target.value,
+                  }));
+                }}
+                onBlur={(e) => {
+                  setFieldsToDebounce((prevFields) => ({
+                    ...prevFields,
+                    q: e.target.value,
+                  }));
+                }}
+                onKeyDown={(e) => {
+                  if (e.key !== 'Enter') {
+                    return;
+                  }
+                  setFieldsToDebounce((prevFields) => ({
+                    ...prevFields,
+                    q: e.target.value,
+                  }));
+                }}
               />
             </label>
             <SubField>
