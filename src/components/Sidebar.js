@@ -186,6 +186,7 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
   const graphs = useGraphs();
   const { t, i18n } = useTranslation(['project', 'search']);
   const [fields, setFields] = useState({});
+  const [fieldsToDebounce, setFieldsToDebounce] = useState({});
   const [textValue, setTextValue] = useState('');
   const [languages] = useState(
     Object.entries(config.search.languages).map(([langKey, langLabel]) => ({
@@ -215,6 +216,14 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
       }));
     }
   }, [debouncedTextValue]);
+
+  const debouncedFields = useDebounce(fieldsToDebounce, 1000);
+  useEffect(() => {
+    setFields((prev) => ({
+      ...prev,
+      ...debouncedFields,
+    }));
+  }, [debouncedFields]);
 
   // The [fields] useEffect has to be defined before the [query] useEffect
   // because the [query] one will affect the fields, which might result in
@@ -384,26 +393,25 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
   const renderFilter = (filter) => {
     const field = fields[`filter_${filter.id}`];
 
-    let value = null;
-    if (filter.isMulti || filter.isToggle) {
-      value = field || null;
+    let value;
+    if (filter.isMulti || filter.isToggle || filter.isAutocomplete === false) {
+      value = field;
     } else {
-      value =
-        filter.values.find((v) => {
-          if (typeof v.value === 'undefined' || !field) {
-            return false;
-          }
+      value = filter.values.find((v) => {
+        if (typeof v.value === 'undefined' || !field) {
+          return false;
+        }
 
-          if (Array.isArray(field)) {
-            return field.find((f) => f === v.value || f.value === v.value);
-          }
+        if (Array.isArray(field)) {
+          return field.find((f) => f === v.value || f.value === v.value);
+        }
 
-          if (field.value) {
-            return field.value === v.value;
-          }
+        if (field.value) {
+          return field.value === v.value;
+        }
 
-          return field === v.value;
-        }) || null;
+        return field === v.value;
+      });
     }
 
     if (filter.isToggle) {
@@ -428,7 +436,7 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
     }
 
     // Do not render filter if it's empty
-    if (filter.values.length === 0 && !renderEmptyFields) {
+    if (filter.isAutocomplete !== false && filter.values.length === 0 && !renderEmptyFields) {
       return;
     }
 
@@ -438,38 +446,63 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
       filter.condition === 'user-defined' && fields[`filter_${filter.id}`]?.length > 1;
     const isConditionSet = fields[`cond_filter_${filter.id}`];
 
+    const filterInputProps = {
+      inputId: `filter_${filter.id}`,
+      instanceId: `filter_${filter.id}`,
+      name: `filter_${filter.id}`,
+      onChange: handleInputChange,
+      placeholder: t(`project:filters.${filter.placeholder}`, t('search:labels.select')),
+      styles: theme?.sidebar?.selectStyles,
+      ...filter.inputProps,
+    };
+
     return (
       <Field key={filter.id} style={filter.style}>
         <label style={filter.hideLabel && { marginTop: 0 }}>
           {!filter.hideLabel && t(`project:filters.${filter.id}`, filter.label)}
           <div style={{ position: 'relative' }}>
-            <SelectInput
-              inputId={`filter_${filter.id}`}
-              instanceId={`filter_${filter.id}`}
-              name={`filter_${filter.id}`}
-              options={filter.values}
-              value={value}
-              placeholder={t(`project:filters.${filter.placeholder}`, t('search:labels.select'))}
-              onChange={handleInputChange}
-              renderSelectedOption={
-                typeof filter.vocabulary !== 'undefined' ? renderSelectedOption : undefined
-              }
-              selectedOptionsStyle={{
-                paddingRight: hasCondition ? 48 : 0,
-              }}
-              isClearable
-              filterOption={(option, rawInput) => {
-                const inputValue = rawInput.toLocaleLowerCase();
-                const { label } = option;
-                const { altLabel } = option.data;
-                return (
-                  label.toLocaleString().toLocaleLowerCase().includes(inputValue) ||
-                  altLabel?.toLocaleString().toLocaleLowerCase().includes(inputValue)
-                );
-              }}
-              theme={theme?.sidebar?.selectTheme}
-              styles={theme?.sidebar?.selectStyles}
-            />
+            {filter.isAutocomplete === false ? (
+              <StyledInput
+                type="search"
+                {...filterInputProps}
+                defaultValue={value}
+                onChange={(ev) => {
+                  setFieldsToDebounce((prevFields) => ({
+                    ...prevFields,
+                    [`filter_${filter.id}`]: ev.target.value,
+                  }));
+                }}
+              />
+            ) : (
+              <SelectInput
+                {...filterInputProps}
+                value={value}
+                options={filter.values}
+                menuIsOpen={filter.isAutocomplete === false ? false : undefined}
+                onInputChange={(value) =>
+                  filter.isAutocomplete === false &&
+                  handleInputChange(value, { name: `filter_${filter.id}` })
+                }
+                renderSelectedOption={
+                  typeof filter.vocabulary !== 'undefined' ? renderSelectedOption : undefined
+                }
+                selectedOptionsStyle={{
+                  paddingRight: hasCondition ? 48 : 0,
+                }}
+                isClearable
+                filterOption={(option, rawInput) => {
+                  if (!rawInput) return true;
+                  const inputValue = rawInput.toLocaleLowerCase();
+                  const { label } = option;
+                  const { altLabel } = option.data;
+                  return (
+                    label.toLocaleString().toLocaleLowerCase().includes(inputValue) ||
+                    altLabel?.toLocaleString().toLocaleLowerCase().includes(inputValue)
+                  );
+                }}
+                theme={theme?.sidebar?.selectTheme}
+              />
+            )}
             {hasCondition && (
               <a
                 onClick={(ev) => {

@@ -34,50 +34,53 @@ export const getFilters = async (query, { language }) => {
   // Fetch filters
   for (let i = 0; i < route.filters.length; i += 1) {
     const filter = route.filters[i];
+
     let filterValues = Array.isArray(filter.values) ? filter.values : [];
 
-    let filterQuery = null;
-    if (filter.query) {
-      filterQuery = getQueryObject(filter.query, { language, params: query });
-    } else if (filter.vocabulary) {
-      const vocabulary = config.vocabularies[filter.vocabulary];
-      if (vocabulary) {
-        filterQuery = getQueryObject(vocabulary.query, { language, params: query });
+    if (filter.isAutocomplete !== false) {
+      let filterQuery = null;
+      if (filter.query) {
+        filterQuery = getQueryObject(filter.query, { language, params: query });
+      } else if (filter.vocabulary) {
+        const vocabulary = config.vocabularies[filter.vocabulary];
+        if (vocabulary) {
+          filterQuery = getQueryObject(vocabulary.query, { language, params: query });
+        }
       }
-    }
 
-    if (filterQuery) {
-      const resQuery = await SparqlClient.query(filterQuery, {
-        endpoint: config.api.endpoint,
-        debug: config.debug,
-        params: config.api.params,
-      });
-      if (resQuery) {
-        filterValues.push(
-          ...resQuery['@graph'].map((row) => {
-            const value = row['@id']['@value'] || row['@id'];
-            const label = []
-              .concat(row.label ? row.label['@value'] || row.label : value)
-              .filter((x) => x)
-              .join(', ');
-            const altLabel = []
-              .concat(row.altLabel ? row.altLabel['@value'] || row.altLabel : null)
-              .filter((x) => x)
-              .join(', ');
-            return {
-              label,
-              value,
-              altLabel,
-            };
-          })
-        );
+      if (filterQuery) {
+        const resQuery = await SparqlClient.query(filterQuery, {
+          endpoint: config.api.endpoint,
+          debug: config.debug,
+          params: config.api.params,
+        });
+        if (resQuery) {
+          filterValues.push(
+            ...resQuery['@graph'].map((row) => {
+              const value = row['@id']['@value'] || row['@id'];
+              const label = []
+                .concat(row.label ? row.label['@value'] || row.label : value)
+                .filter((x) => x)
+                .join(', ');
+              const altLabel = []
+                .concat(row.altLabel ? row.altLabel['@value'] || row.altLabel : null)
+                .filter((x) => x)
+                .join(', ');
+              return {
+                label,
+                value,
+                altLabel,
+              };
+            })
+          );
 
-        // Sort values by label
-        filterValues.sort(
-          (a, b) =>
-            typeof a.label === 'string' &&
-            a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' })
-        );
+          // Sort values by label
+          filterValues.sort(
+            (a, b) =>
+              typeof a.label === 'string' &&
+              a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' })
+          );
+        }
       }
     }
 
