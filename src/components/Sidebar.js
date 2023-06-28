@@ -417,6 +417,12 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
 
         return `${field}` === `${v.value}`;
       });
+      if (value?.label) {
+        value.label = t(
+          `project:filters-values.${filter.id}.${value.key || value.value}`,
+          value.label
+        );
+      }
     }
 
     if (filter.isToggle) {
@@ -468,6 +474,15 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
       }));
     };
 
+    const options =
+      filter.isAutocomplete === false
+        ? filter.values
+        : filter.values.map((v) => ({
+            ...v,
+            label: t(`project:filters-values.${filter.id}.${v.key || v.value}`, v.label),
+            value: v.value,
+          }));
+
     return (
       <Field key={filter.id} style={filter.style}>
         <label style={filter.hideLabel && { marginTop: 0 }}>
@@ -486,7 +501,7 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
               <SelectInput
                 {...filterInputProps}
                 value={value}
-                options={filter.values}
+                options={options}
                 menuIsOpen={filter.isAutocomplete === false ? false : undefined}
                 onInputChange={(value) =>
                   filter.isAutocomplete === false &&
