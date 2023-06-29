@@ -582,6 +582,7 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
                 options={sortOptions}
                 value={sortOptions.find((o) => o.value === query.sort)}
                 onChange={onSortChange}
+                isSearchable={false}
                 theme={selectTheme}
               />
             </Option>
@@ -595,6 +596,7 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
                   options={similarityOptions}
                   value={similarityOptions.find((o) => o.value === query.similarity_type)}
                   onChange={onSimilarityChange}
+                  isSearchable={false}
                   theme={selectTheme}
                 />
               </Option>
