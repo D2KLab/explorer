@@ -503,10 +503,6 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
                 value={value}
                 options={options}
                 menuIsOpen={filter.isAutocomplete === false ? false : undefined}
-                onInputChange={(value) =>
-                  filter.isAutocomplete === false &&
-                  handleInputChange(value, { name: `filter_${filter.id}` })
-                }
                 renderSelectedOption={
                   typeof filter.vocabulary !== 'undefined' ? renderSelectedOption : undefined
                 }
