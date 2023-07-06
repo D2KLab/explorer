@@ -33,7 +33,9 @@ function ListDeletion({ list, dialogState, children }) {
     await fetch(`/api/lists/${list._id}`, {
       method: 'DELETE',
     });
-    Router.reload();
+    Router.push({
+      pathname: '/profile',
+    });
   };
 
   return (
