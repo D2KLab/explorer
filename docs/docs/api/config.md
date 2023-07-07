@@ -218,14 +218,19 @@ Configuration for footer.
 
 #### `logo` {#footer-logo}
 
-* Type: `string[]`
+* Type: `(string | object)[]`
 
 List of images to display in the footer. If not set, the [website logo](#metadata-logo) will be displayed instead.
+If one of the elements is an object, it can be passed with a `url` (image path) and `href` (hyperlink) property.
 
 ```js title="config.js"
 module.exports = {
   footer: {
-    logo: ['/images/eu-logo.png', '/images/footer.png'],
+    logo: [
+      '/images/eu-logo.png',
+      '/images/footer.png',
+      { url: '/images/github.png', href: 'https://github.com/D2KLab/explorer' },
+    ],
   },
 };
 ```

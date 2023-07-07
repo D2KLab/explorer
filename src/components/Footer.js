@@ -83,9 +83,25 @@ function Footer({ className }) {
       </Credits>
       <LogoContainer>
         {Array.isArray(config.footer.logo) ? (
-          config.footer.logo.map((logo) => (
-            <Logo key={logo} src={logo} alt={config.metadata.title} title={config.metadata.title} />
-          ))
+          config.footer.logo.map((logo) => {
+            const logoUrl = typeof logo === 'string' ? logo : logo.url;
+            const logoElement = (
+              <Logo
+                key={logoUrl}
+                src={logoUrl}
+                alt={config.metadata.title}
+                title={config.metadata.title}
+              />
+            );
+            if (typeof logo === 'object' && logo.href) {
+              return (
+                <a href={logo.href} key={logoUrl} rel="noopener noreferrer">
+                  {logoElement}
+                </a>
+              );
+            }
+            return logoElement;
+          })
         ) : (
           <Logo
             src={config.footer.logo || config.metadata.logo}
