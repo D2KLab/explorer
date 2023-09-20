@@ -320,7 +320,7 @@ export const dumpEntities = async (query, language) => {
 const fetchEntities = async (query, language) => {
   const entities = [];
   let debugSparqlQuery = null;
-  let totalResults = 0;
+  let totalResults = -1;
 
   const route = config.routes[query.type];
   if (!route) {
@@ -352,8 +352,8 @@ const fetchEntities = async (query, language) => {
   };
 
   // Sort by
-  let orderByVariable = 'id';
-  let orderByDirection = 'ASC';
+  let orderByVariable = 'orderByVariable' in route && !route.orderByVariable ? null : 'id';
+  let orderByDirection = route.orderByDirection || 'ASC';
   if (query.sort) {
     const [sortVariable, sortDirection] = query.sort.split('|');
     const sortFilter = route.filters.find((filter) => filter.id === sortVariable);
@@ -394,26 +394,28 @@ const fetchEntities = async (query, language) => {
   }
 
   // Compute the total number of pages (used for pagination)
-  const paginationQuery = {
-    proto: {
-      id: '?count',
-    },
-    $where: `
-    SELECT (COUNT(DISTINCT ?id) AS ?count) WHERE {
-      ${whereCondition}
+  if (route.countResults === false) {
+    const paginationQuery = {
+      proto: {
+        id: '?count',
+      },
+      $where: `
+      SELECT (COUNT(DISTINCT ?id) AS ?count) WHERE {
+        ${whereCondition}
+      }
+      ${query.approximate ? 'LIMIT 1000' : ''}
+    `,
+    };
+    try {
+      const resPagination = await SparqlClient.query(paginationQuery, {
+        endpoint: config.api.endpoint,
+        debug: config.debug,
+        params: config.api.params,
+      });
+      totalResults = resPagination && resPagination[0] ? parseInt(resPagination[0].id, 10) : 0;
+    } catch (e) {
+      console.error(e);
     }
-    ${query.approximate ? 'LIMIT 1000' : ''}
-  `,
-  };
-  try {
-    const resPagination = await SparqlClient.query(paginationQuery, {
-      endpoint: config.api.endpoint,
-      debug: config.debug,
-      params: config.api.params,
-    });
-    totalResults = resPagination && resPagination[0] ? parseInt(resPagination[0].id, 10) : 0;
-  } catch (e) {
-    console.error(e);
   }
 
   return {

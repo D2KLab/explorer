@@ -593,6 +593,56 @@ module.exports = {
 };
 ```
 
+#### `orderByVariable` {#routes-orderByVariable}
+
+* Type: `string | null`
+* Default value: `"id"`
+
+Define the query variable used for ordering. If set to `null`, it will disable the order clause used by default.
+
+```js title="config.js"
+module.exports = {
+  routes: {
+    countries: {
+      orderByVariable: null,
+    },
+  },
+};
+```
+
+#### `orderByDirection` {#routes-orderByDirection}
+
+* Type: `string`
+* Default value: `"ASC"`
+
+Change the direction of the order clause. Accepted values: `ASC` (ascendant order), `DESC` (descendant order).
+
+```js title="config.js"
+module.exports = {
+  routes: {
+    countries: {
+      orderByDirection: 'DESC',
+    },
+  },
+};
+```
+
+#### `countResults` {#routes-countResults}
+
+* Type: `boolean`
+
+Set to `false` to disable the computation of total results count. This can greatly improve performances on large datasets. It will also affect the pagination system.
+
+```js title="config.js"
+module.exports = {
+  routes: {
+    countries: {
+      countResults: false,
+    },
+  },
+};
+```
+
 #### `rdfType` {#routes-rdfType}
 
 * Type: `string`
