@@ -247,7 +247,7 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
     );
   }, [data]);
 
-  totalPages = Math.ceil(totalResults / PAGE_SIZE);
+  totalPages = totalResults >= 0 ? Math.ceil(totalResults / PAGE_SIZE) : currentPage + 1;
 
   const debouncedHandleResize = useDebounce(() => {
     if (typeof window !== 'undefined') {
@@ -548,7 +548,9 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
           <StyledTitle>
             {isLoadingMore || isPageLoading
               ? t('search:labels.loading')
-              : t('search:labels.searchResults', { count: totalResults })}
+              : totalResults >= 0
+              ? t('search:labels.searchResults', { count: totalResults })
+              : undefined}
           </StyledTitle>
           {similarityEntity && (
             <Element marginBottom={24}>
