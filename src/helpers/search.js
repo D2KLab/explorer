@@ -320,7 +320,7 @@ export const dumpEntities = async (query, language) => {
 const fetchEntities = async (query, language) => {
   const entities = [];
   let debugSparqlQuery = null;
-  let totalResults = -1;
+  let totalResults = 0;
 
   const route = config.routes[query.type];
   if (!route) {
@@ -395,6 +395,8 @@ const fetchEntities = async (query, language) => {
 
   // Compute the total number of pages (used for pagination)
   if (route.countResults === false) {
+    totalResults = -1;
+  } else {
     const paginationQuery = {
       proto: {
         id: '?count',
