@@ -142,7 +142,7 @@ export const getSessionUser = async (session) => {
 
   const db = await connectToDatabase();
 
-  const user = await db.collection('users').findOne({ _id: ObjectId(session.user.id) });
+  const user = await db.collection('users').findOne({ _id: new ObjectId(session.user.id) });
 
   return user;
 };
