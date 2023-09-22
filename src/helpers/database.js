@@ -42,7 +42,7 @@ export const updateList = async (list, newValues) => {
     },
     {
       returnNewDocument: true,
-    }
+    },
   );
   return res.value;
 };
@@ -65,7 +65,7 @@ export const removeItemsFromList = async (itemsUris, list) => {
     },
     {
       returnNewDocument: true,
-    }
+    },
   );
   return res.value;
 };
@@ -88,7 +88,7 @@ export const removeItemFromList = async (itemUri, list) => {
     },
     {
       returnNewDocument: true,
-    }
+    },
   );
   return res.value;
 };
@@ -114,7 +114,7 @@ export const addItemsToList = async (itemsUris, itemsType, list) => {
     },
     {
       returnNewDocument: true,
-    }
+    },
   );
   return res.value;
 };
@@ -194,7 +194,7 @@ export const removeUserList = async (user, list) => {
     },
     {
       justOne: true,
-    }
+    },
   );
 };
 
@@ -257,7 +257,7 @@ export const removeUserAccount = async (user, account) => {
     },
     {
       justOne: true,
-    }
+    },
   );
 };
 

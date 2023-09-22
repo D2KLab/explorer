@@ -71,14 +71,14 @@ export const getFilters = async (query, { language }) => {
                 value,
                 altLabel,
               };
-            })
+            }),
           );
 
           // Sort values by label
           filterValues.sort(
             (a, b) =>
               typeof a.label === 'string' &&
-              a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' })
+              a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }),
           );
         }
       }
@@ -202,8 +202,8 @@ const generateWhereCondition = async (query, language) => {
       textSearchWhere.push(
         ...route.textSearchFunc(
           query.q,
-          query.in || route.textSearchDefaultOption || route.textSearchOptions[0]
-        )
+          query.in || route.textSearchDefaultOption || route.textSearchOptions[0],
+        ),
       );
     } else {
       if (typeof route.labelProp === 'string') {
@@ -228,7 +228,7 @@ const generateWhereCondition = async (query, language) => {
         : 'http://www.w3.org/2000/01/rdf-schema#label';
     extraWhere.push(`?id <${labelProp}> ?label`);
     extraFilter.push(
-      query.languages.map((lang) => `LANGMATCHES(LANG(?label), "${lang}")`).join(' || ')
+      query.languages.map((lang) => `LANGMATCHES(LANG(?label), "${lang}")`).join(' || '),
     );
   }
 
@@ -239,7 +239,7 @@ const generateWhereCondition = async (query, language) => {
       uris.push(
         ...query[`${query.similarity_type}_uris`]
           .split(',')
-          .map((id) => idToUri(id, { base: route.uriBase }))
+          .map((id) => idToUri(id, { base: route.uriBase })),
       );
     } else if (query.similarity_entity) {
       const similarityEntity = await getEntity(
@@ -247,7 +247,7 @@ const generateWhereCondition = async (query, language) => {
           id: query.similarity_entity,
           type: query.type,
         },
-        language
+        language,
       );
 
       if (similarityEntity) {
@@ -362,7 +362,7 @@ const fetchEntities = async (query, language) => {
         `OPTIONAL { ${[]
           .concat(sortFilter.whereFunc())
           .filter((x) => x)
-          .join(' . ')} }`
+          .join(' . ')} }`,
       );
       orderByVariable = sortFilter.isSortable?.variable || sortVariable;
       if (['ASC', 'DESC'].includes(sortDirection)) {
@@ -449,7 +449,7 @@ export const search = async (query, session, language) => {
       maxConcurrentRequests,
       async (entity) => {
         const searchDetailsQuery = JSON.parse(
-          JSON.stringify(getQueryObject(route.query, { language, params: query }))
+          JSON.stringify(getQueryObject(route.query, { language, params: query })),
         );
         searchDetailsQuery.$where = searchDetailsQuery.$where || [];
         searchDetailsQuery.$filter = searchDetailsQuery.$filter || [];
@@ -479,7 +479,7 @@ export const search = async (query, session, language) => {
         }
         results.push(...res.flat());
         resolve();
-      }
+      },
     );
   });
 
@@ -496,10 +496,10 @@ export const search = async (query, session, language) => {
         ...results
           .filter((result) =>
             loadedLists.some((list) =>
-              list.items.some((it) => it.uri === result['@id'] && it.type === query.type)
-            )
+              list.items.some((it) => it.uri === result['@id'] && it.type === query.type),
+            ),
           )
-          .map((result) => result['@id'])
+          .map((result) => result['@id']),
       );
     }
   }
@@ -524,7 +524,7 @@ export const searchImage = async (image) => {
       formData.append('file', fs.createReadStream(image.filepath));
     } catch (e) {
       console.error(
-        `An error has occurred while accessing the image at ${image.filepath}. Error: ${e}`
+        `An error has occurred while accessing the image at ${image.filepath}. Error: ${e}`,
       );
     }
   } else {
@@ -555,7 +555,7 @@ export const searchImage = async (image) => {
       formData.append('file', fs.createReadStream(imagePath));
     } catch (e) {
       console.error(
-        `An error has occurred while saving the temporary image at ${tmpDir}. Error: ${e}`
+        `An error has occurred while saving the temporary image at ${tmpDir}. Error: ${e}`,
       );
     } finally {
       if (tmpDir) {
@@ -563,7 +563,7 @@ export const searchImage = async (image) => {
           fs.rmSync(tmpDir, { recursive: true });
         } catch (e) {
           console.error(
-            `An error has occurred while removing the temp folder at ${tmpDir}. Error: ${e}`
+            `An error has occurred while removing the temp folder at ${tmpDir}. Error: ${e}`,
           );
         }
       }

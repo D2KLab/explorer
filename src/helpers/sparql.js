@@ -1,8 +1,8 @@
-const sparqlTransformer = require('sparql-transformer').default;
+import sparqlTransformer from 'sparql-transformer';
 
-const cache = require('./cache');
+import cache from './cache';
 
-const config = require('~/config');
+import config from '~/config';
 
 /**
  * Takes in a SPARQL query and returns the transformed query using sparql-transformer

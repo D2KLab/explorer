@@ -121,7 +121,7 @@ export default withRequestValidation({
           type: item.type,
           hl: req.query.hl,
         },
-        req.query.hl
+        req.query.hl,
       );
 
       if (result) {
@@ -147,7 +147,7 @@ export default withRequestValidation({
           if (imageBuffer) {
             zip.addFile(
               path.join(listFolder, resultBaseName, path.basename(imagesToDownload[j])),
-              imageBuffer
+              imageBuffer,
             );
           }
         }
@@ -159,14 +159,14 @@ export default withRequestValidation({
         const csv = json2csv.parse(flatResult, { header: true, fields: Object.keys(flatResult) });
         zip.addFile(
           path.join(listFolder, resultBaseName, `${resultBaseName}.csv`),
-          Buffer.from(csv, 'utf8')
+          Buffer.from(csv, 'utf8'),
         );
 
         // Add JSON metadata to the Zip
         const jsonContent = JSON.stringify(result, null, 2);
         zip.addFile(
           path.join(listFolder, resultBaseName, `${resultBaseName}.json`),
-          Buffer.from(jsonContent, 'utf8')
+          Buffer.from(jsonContent, 'utf8'),
         );
 
         // Construct the markdown results for this entity
@@ -192,7 +192,7 @@ export default withRequestValidation({
         const markdownItemText = json2md(JSON.parse(JSON.stringify(markdownItem)));
         zip.addFile(
           path.join(listFolder, resultBaseName, `${resultBaseName}.md`),
-          Buffer.from(markdownItemText, 'utf8')
+          Buffer.from(markdownItemText, 'utf8'),
         );
 
         // Push the markdown item to the list of all markdown results

@@ -121,8 +121,8 @@ function Pagination({ searchData, result, pageSize = 20, ...props }) {
             routeParams.delete('type');
             router.push(
               `/${searchParams.get('stype')}/${encodeURI(
-                uriToId(id, { base: route.uriBase })
-              )}?${routeParams}`
+                uriToId(id, { base: route.uriBase }),
+              )}?${routeParams}`,
             );
           })();
         }}
@@ -149,7 +149,7 @@ function Pagination({ searchData, result, pageSize = 20, ...props }) {
     return renderBrowseLink(
       prevParams,
       (results) => results[results.length - 1]?.['@id'],
-      prevLabel
+      prevLabel,
     );
   };
 

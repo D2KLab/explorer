@@ -19,11 +19,11 @@ export default function useDebounce(value, delay) {
             setTimeout(() => {
               setId(null);
               value(...args);
-            }, delay)
+            }, delay),
           );
         }
       },
-      [value]
+      [value],
     );
   }
 

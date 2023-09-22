@@ -151,7 +151,9 @@ const SearchForm = styled.form`
   flex-grow: 1;
   max-width: 90%;
   background-color: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12),
+  box-shadow:
+    0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 3px 1px -2px rgba(0, 0, 0, 0.12),
     0 1px 5px 0 rgba(0, 0, 0, 0.2);
   position: relative;
   height: 100%;
@@ -187,7 +189,9 @@ const StyledSearchInput = styled(SearchInput)`
 
     background-color: #ffffff;
     outline: 0;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12),
+    box-shadow:
+      0 2px 2px 0 rgba(0, 0, 0, 0.14),
+      0 3px 1px -2px rgba(0, 0, 0, 0.12),
       0 1px 5px 0 rgba(0, 0, 0, 0.2);
     color: #212121;
     border-bottom-left-radius: 0.25rem;
@@ -204,7 +208,9 @@ const SearchButton = styled(ReakitButton)`
   height: 80%;
   background-color: ${({ theme }) => theme.home.textSearchButton.background};
   color: ${({ theme }) => theme.home.textSearchButton.text};
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12),
+  box-shadow:
+    0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 3px 1px -2px rgba(0, 0, 0, 0.12),
     0 1px 5px 0 rgba(0, 0, 0, 0.2);
   margin-right: 10px;
   width: 50px;
@@ -232,7 +238,9 @@ const StyledUploadDialog = styled(Dialog)`
   background-color: #ffffff;
   border-radius: 0.25rem;
   outline: 0;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12),
+  box-shadow:
+    0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 3px 1px -2px rgba(0, 0, 0, 0.12),
     0 1px 5px 0 rgba(0, 0, 0, 0.2);
   color: #212121;
   z-index: 999;
@@ -298,11 +306,11 @@ function HomePage() {
           params.append('similarity_type', similarity);
           params.append(
             'visual_uris',
-            visualUris.map((uri) => uriToId(uri, { base: route.uriBase }))
+            visualUris.map((uri) => uriToId(uri, { base: route.uriBase })),
           );
           params.append(
             'semantic_uris',
-            semanticUris.map((uri) => uriToId(uri, { base: route.uriBase }))
+            semanticUris.map((uri) => uriToId(uri, { base: route.uriBase })),
           );
           router.push(`/${config.search.route}?${params.toString()}`);
         }
@@ -327,7 +335,7 @@ function HomePage() {
       xhr.open('POST', '/api/image-search', true);
       xhr.send(formData);
     },
-    [similarity]
+    [similarity],
   );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -442,7 +450,7 @@ function HomePage() {
                     >
                       {t(
                         `project:routes.${routeName}`,
-                        routeName.substr(0, 1).toUpperCase() + routeName.substr(1)
+                        routeName.substr(0, 1).toUpperCase() + routeName.substr(1),
                       )}
                     </BigButton>
                   </Link>

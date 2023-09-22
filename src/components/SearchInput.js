@@ -123,7 +123,7 @@ function SearchInput({ className, placeholder, ariaLabel = 'Search input', ...pr
         `/api/autocomplete?${new URLSearchParams({
           hl: i18n.language,
           q: value,
-        })}`
+        })}`,
       )
     ).json();
 
@@ -180,7 +180,7 @@ function SearchInput({ className, placeholder, ariaLabel = 'Search input', ...pr
     debounce(async ({ value }) => {
       setSuggestions(await getSuggestions(value));
     }, 500),
-    []
+    [],
   );
 
   const onSuggestionsClearRequested = () => {

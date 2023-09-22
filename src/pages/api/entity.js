@@ -22,7 +22,7 @@ const getEntityQuery = (route, language, query) => {
   }
   const jsonQuery = route.details && route.details.query ? route.details.query : route.query;
   const searchQuery = JSON.parse(
-    JSON.stringify(getQueryObject(jsonQuery, { language, params: query }))
+    JSON.stringify(getQueryObject(jsonQuery, { language, params: query })),
   );
   searchQuery.$filter = searchQuery.$filter || [];
   if (!searchQuery.$values) {
@@ -91,7 +91,7 @@ export const isEntityInList = async (entityId, query, req, res) => {
   // Check if this item is in a user list and flag it accordingly.
   const loadedLists = await getUserLists(user);
   return loadedLists.some((list) =>
-    list.items.some((it) => it.uri === entityId && it.type === query.type)
+    list.items.some((it) => it.uri === entityId && it.type === query.type),
   );
 };
 

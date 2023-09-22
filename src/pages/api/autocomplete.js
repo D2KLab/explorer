@@ -27,7 +27,7 @@ export default withRequestValidation({
       approximate: true,
     },
     session,
-    query.hl || req.headers['accept-language']
+    query.hl || req.headers['accept-language'],
   );
 
   res.status(200).json(results);

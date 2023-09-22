@@ -41,7 +41,7 @@ export default withRequestValidation({
   ];
 
   requestUrl = `${imaginaryEndpoint}/pipeline?url=${encodeURIComponent(
-    url
+    url,
   )}&operations=${encodeURIComponent(JSON.stringify(operations))}`;
 
   // Fetch and return image

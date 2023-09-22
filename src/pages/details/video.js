@@ -417,10 +417,10 @@ function VideoDetailsPage({
           videoWidth,
           videoHeight,
           offsetWidth,
-          offsetHeight
+          offsetHeight,
         );
         return { bounds, start_npt: track.start_npt, end_npt: track.end_npt };
-      })
+      }),
     );
   };
 
@@ -593,20 +593,20 @@ function VideoDetailsPage({
                 width={$videoPlayer.current?.offsetWidth}
                 height={$videoPlayer.current?.offsetHeight}
               >
-                {faceRectangles.map(
-                  (rect) =>
-                    rect && (
-                      <FaceRectangle
-                        x={rect.bounds.x}
-                        y={rect.bounds.y}
-                        width={rect.bounds.w}
-                        height={rect.bounds.h}
-                        visible={
-                          videoPlayedSeconds >= rect.start_npt && videoPlayedSeconds <= rect.end_npt
-                        }
-                      />
-                    )
-                )}
+                {faceRectangles
+                  .filter((rect) => rect)
+                  .map((rect) => (
+                    <FaceRectangle
+                      key={`${rect.start_npt}-${rect.end_npt}-${rect.bounds.x}-${rect.bounds.y}-${rect.bounds.w}-${rect.bounds.h}`}
+                      x={rect.bounds.x}
+                      y={rect.bounds.y}
+                      width={rect.bounds.w}
+                      height={rect.bounds.h}
+                      visible={
+                        videoPlayedSeconds >= rect.start_npt && videoPlayedSeconds <= rect.end_npt
+                      }
+                    />
+                  ))}
               </FaceOverlay>
             </PlayerWrapper>
             {config?.plugins?.videoSegments && renderAnalysis()}
@@ -678,7 +678,7 @@ function VideoDetailsPage({
                         href={`/details/${route.details.view}?id=${encodeURIComponent(
                           uriToId(link, {
                             base: route.uriBase,
-                          })
+                          }),
                         )}&type=${query.type}`}
                         as={`/${query.type}/${encodeURI(uriToId(link, { base: route.uriBase }))}`}
                       >
@@ -787,8 +787,8 @@ export async function getServerSideProps(context) {
     const resTrack = await (
       await fetch(
         `https://facerec.eurecom.fr/track?video=${encodeURIComponent(
-          result['@id']
-        )}&project=memad&speedup=25`
+          result['@id'],
+        )}&project=memad&speedup=25`,
       )
     ).json();
     faceTracks = resTrack.tracks || [];
@@ -821,7 +821,7 @@ export async function getServerSideProps(context) {
     subtitles.push({
       kind: 'subtitles',
       src: `/api/memad/subtitles?type=programmes&lang=French&id=${encodeURIComponent(
-        uriToId(result['@id'], { base: route.uriBase })
+        uriToId(result['@id'], { base: route.uriBase }),
       )}`,
       srcLang: 'French',
       default: true,
@@ -829,7 +829,7 @@ export async function getServerSideProps(context) {
     subtitles.push({
       kind: 'subtitles',
       src: `/api/memad/subtitles?type=programmes&lang=English&id=${encodeURIComponent(
-        uriToId(result['@id'], { base: route.uriBase })
+        uriToId(result['@id'], { base: route.uriBase }),
       )}`,
       srcLang: 'English',
     });

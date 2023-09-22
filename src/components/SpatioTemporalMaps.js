@@ -21,7 +21,7 @@ function SpatioTemporalMaps({ mapRef, query }) {
       _t: new Date().getTime(),
       _l: i18n.language,
     }),
-    [queryString.stringify(query)]
+    [queryString.stringify(query)],
   );
 
   return (

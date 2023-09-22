@@ -23,7 +23,7 @@ export default withRequestValidation({
       .status(302)
       .setHeader(
         'location',
-        '/auth/signin?callbackUrl=' + encodeURIComponent(`${listUrl}/invite/${inviteId}`)
+        '/auth/signin?callbackUrl=' + encodeURIComponent(`${listUrl}/invite/${inviteId}`),
       )
       .end();
     return;

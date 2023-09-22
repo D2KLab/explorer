@@ -31,7 +31,7 @@ export async function getServerSideProps({ res, locale }) {
     searchData
       .map((result) => {
         return `${process.env.SITE}/${routeName}/${encodeURI(
-          uriToId(result['@id'], { base: route.uriBase })
+          uriToId(result['@id'], { base: route.uriBase }),
         )}`;
       })
       .forEach((entry) => entries.push(entry));

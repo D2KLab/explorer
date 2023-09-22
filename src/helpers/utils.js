@@ -125,7 +125,7 @@ export function linkify(text) {
   const replacePattern2 = /(^|[^/])(www\.[\S]+(\b|$))/gim;
   replacedText = replacedText.replace(
     replacePattern2,
-    '$1<a href="http://$2" target="_blank">$2</a>'
+    '$1<a href="http://$2" target="_blank">$2</a>',
   );
 
   // Change email addresses to mailto:: links.

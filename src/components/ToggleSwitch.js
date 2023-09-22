@@ -26,7 +26,9 @@ const SwitchSelection = styled.span`
   ${({ active }) =>
     active
       ? css`
-          transition: left 150ms ease-out, width 150ms ease-out;
+          transition:
+            left 150ms ease-out,
+            width 150ms ease-out;
         `
       : ''};
 `;

@@ -53,7 +53,9 @@ const VocabularyTitle = styled.div`
     margin-right: 0.25em;
     padding-left: 0.8em;
     padding-bottom: 0.6em;
-    text-shadow: 0px 4px 3px rgba(0, 0, 0, 0.2), 0px 8px 13px rgba(0, 0, 0, 0.1),
+    text-shadow:
+      0px 4px 3px rgba(0, 0, 0, 0.2),
+      0px 8px 13px rgba(0, 0, 0, 0.1),
       0px 18px 23px rgba(0, 0, 0, 0.1);
     word-break: break-all;
     font-size: 3rem;
@@ -130,7 +132,9 @@ const Anchor = styled.div`
     text-decoration: none;
     color: #666;
 
-    transition: color 0.3s ease-in-out, border-left-color 0.3s ease-in-out;
+    transition:
+      color 0.3s ease-in-out,
+      border-left-color 0.3s ease-in-out;
 
     &:hover {
       color: ${({ theme }) => theme.colors.secondary};
@@ -189,7 +193,7 @@ const cleanupItem = (obj) =>
       }
       v = cleanupItem(v);
       return Object.keys(v).length > 0 ? [[k, v]] : [];
-    })
+    }),
   );
 
 const getResultItems = (result) =>
@@ -290,7 +294,7 @@ function VocabularyPage({ results, featured, debugSparqlQuery }) {
 
   const vocabularyLabel = t(
     `project:routes.${query.type}`,
-    query.type.substr(0, 1).toUpperCase() + query.type.substr(1)
+    query.type.substr(0, 1).toUpperCase() + query.type.substr(1),
   );
 
   return (
@@ -359,7 +363,7 @@ function VocabularyPage({ results, featured, debugSparqlQuery }) {
                       {config.plugins?.skosmos && (
                         <a
                           href={`${config.plugins?.skosmos?.baseUrl}${encodeURIComponent(
-                            item['@id']
+                            item['@id'],
                           )}`}
                           target="_blank"
                           rel="noopener noreferrer"

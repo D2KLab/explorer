@@ -91,7 +91,7 @@ function ListsPage({ isOwner, collaborators, list, shareLink, inviteUrl }) {
                   href={`/details/${route.details.view}?id=${encodeURIComponent(
                     uriToId(result['@id'], {
                       base: route.uriBase,
-                    })
+                    }),
                   )}&type=${routeName}`}
                   as={`/${routeName}/${encodeURI(uriToId(result['@id'], { base: route.uriBase }))}`}
                   style={{ color: 'inherit', textDecoration: 'inherit' }}
@@ -102,7 +102,7 @@ function ListsPage({ isOwner, collaborators, list, shareLink, inviteUrl }) {
                     thumbnail={generateMediaUrl(result.image, 300)}
                     direction="column"
                     link={`/${routeName}/${encodeURI(
-                      uriToId(result['@id'], { base: route.uriBase })
+                      uriToId(result['@id'], { base: route.uriBase }),
                     )}`}
                     uri={result.graph}
                   />
@@ -309,7 +309,7 @@ export async function getServerSideProps(ctx) {
           id: uriToId(item.uri, { base: route.uriBase }),
           type: item.type,
         },
-        ctx.locale
+        ctx.locale,
       );
 
       if (result) {

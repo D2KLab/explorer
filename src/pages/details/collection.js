@@ -98,7 +98,8 @@ function CollectionDetailsPage({ result, inList, searchData, debugSparqlQuery })
   result.items = Array.isArray(result.items)
     ? result.items
     : [result.items].filter(
-        (x) => x && (typeof x !== 'object' || x.constructor !== Object || Object.keys(x).length > 0)
+        (x) =>
+          x && (typeof x !== 'object' || x.constructor !== Object || Object.keys(x).length > 0),
       );
 
   const onItemSaveChange = () => {
@@ -196,12 +197,12 @@ function CollectionDetailsPage({ result, inList, searchData, debugSparqlQuery })
                       href={`/details/${itemRoute.details.view}?id=${encodeURIComponent(
                         uriToId(item['@id'], {
                           base: itemRoute.uriBase,
-                        })
+                        }),
                       )}&type=${itemRouteName}`}
                       as={`/${itemRouteName}/${encodeURI(
                         uriToId(item['@id'], {
                           base: itemRoute.uriBase,
-                        })
+                        }),
                       )}`}
                     >
                       {element}

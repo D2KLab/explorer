@@ -132,8 +132,8 @@ function SaveButton({ item = [], type, saved, hideLabel, onChange, children, ...
     const loadedLists = await loadLists();
     onChange?.(
       loadedLists.some((list) =>
-        list.items.some((it) => itemsUris.includes(it.uri) && it.type === type)
-      )
+        list.items.some((it) => itemsUris.includes(it.uri) && it.type === type),
+      ),
     );
   };
 
@@ -195,7 +195,7 @@ function SaveButton({ item = [], type, saved, hideLabel, onChange, children, ...
       }
       loadLists(event);
     },
-    [session]
+    [session],
   );
 
   const renderButton = () => {

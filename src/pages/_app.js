@@ -21,7 +21,7 @@ const NProgress = dynamic(
   () => {
     return import('@components/NProgress');
   },
-  { ssr: false }
+  { ssr: false },
 );
 
 function MyApp({ Component, pageProps }) {

@@ -94,7 +94,7 @@ function ListDetailsPage({ items, debugSparqlQuery }) {
   };
 
   const filteredItems = items.filter(
-    (item) => item.label.toLocaleLowerCase().indexOf(itemSearch.toLocaleLowerCase()) > -1
+    (item) => item.label.toLocaleLowerCase().indexOf(itemSearch.toLocaleLowerCase()) > -1,
   );
   filteredItems.sort((a, b) => typeof a.label === 'string' && a.label.localeCompare(b.label));
 

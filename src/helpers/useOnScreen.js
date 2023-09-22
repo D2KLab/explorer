@@ -20,7 +20,7 @@ function useOnScreen(ref, rootMargin = '0px', threshold = 0) {
       {
         rootMargin,
         threshold,
-      }
+      },
     );
     if (ref.current) {
       observer.observe(ref.current);

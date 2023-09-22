@@ -243,7 +243,7 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
       data.reduce((acc, cur) => {
         acc.push(...cur.favorites);
         return acc;
-      }, [])
+      }, []),
     );
   }, [data]);
 
@@ -312,7 +312,7 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
         query: newQuery,
       },
       undefined,
-      { shallow: isMapSearch }
+      { shallow: isMapSearch },
     );
   };
 
@@ -426,7 +426,7 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
           {
             label: t(`project:filters.${filter.id}`, filter.label) + ' (Descendant)',
             value: `${filter.id}|DESC`,
-          }
+          },
         );
       } else {
         r.push({
@@ -476,7 +476,7 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
             hideLabel
             onChange={(saved) =>
               setFavorites((prev) =>
-                saved ? [...prev, result['@id']] : prev.filter((item) => item !== result['@id'])
+                saved ? [...prev, result['@id']] : prev.filter((item) => item !== result['@id']),
               )
             }
           />
@@ -534,7 +534,7 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
                       return prev;
                     }, []),
                     null,
-                    2
+                    2,
                   )}
               </pre>
             </Metadata>
@@ -558,10 +558,10 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
                 href={`/details/${route.details.view}?id=${encodeURIComponent(
                   uriToId(similarityEntity['@id'], {
                     base: route.uriBase,
-                  })
+                  }),
                 )}&type=${query.type}`}
                 as={`/${query.type}/${encodeURI(
-                  uriToId(similarityEntity['@id'], { base: route.uriBase })
+                  uriToId(similarityEntity['@id'], { base: route.uriBase }),
                 )}`}
               >
                 <Media
@@ -704,7 +704,7 @@ export async function getServerSideProps({ req, res, query, locale }) {
         type: query.type,
         hl: locale,
       },
-      locale
+      locale,
     );
   }
 

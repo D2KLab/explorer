@@ -157,7 +157,7 @@ function Header({ className }) {
                   <NavLink>
                     {t(
                       `routes.${routeName}`,
-                      routeName.substr(0, 1).toUpperCase() + routeName.substr(1)
+                      routeName.substr(0, 1).toUpperCase() + routeName.substr(1),
                     )}
                   </NavLink>
                 </Link>

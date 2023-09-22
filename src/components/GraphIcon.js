@@ -3,12 +3,11 @@ import styled, { css } from 'styled-components';
 import { useGraphs } from '@helpers/useGraphs';
 
 const StyledImage = styled.img`
-  ${({ size }) =>
-    css`
-      width: ${size}px;
-      height: ${size}px;
-      object-fit: contain;
-    `}
+  ${({ size }) => css`
+    width: ${size}px;
+    height: ${size}px;
+    object-fit: contain;
+  `}
 
   ${({ theme }) => theme?.components?.GraphIcon?.StyledImage}
 `;

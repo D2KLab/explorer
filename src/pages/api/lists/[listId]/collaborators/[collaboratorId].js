@@ -63,7 +63,7 @@ export default withRequestValidation({
   } else if (req.method === 'DELETE') {
     collaborators.splice(
       collaborators.findIndex((id) => id.toString() === collaboratorId),
-      1
+      1,
     );
     await updateList(list, { collaborators });
   }

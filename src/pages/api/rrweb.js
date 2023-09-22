@@ -58,7 +58,7 @@ export default withRequestValidation({
     },
     {
       upsert: true,
-    }
+    },
   );
 
   res.status(204).end();

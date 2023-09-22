@@ -79,7 +79,7 @@ function Menu({ className, open, ...props }) {
           <Link key={routeName} href={`/${routeName}`} tabIndex={tabIndex}>
             {t(
               `project:routes.${routeName}`,
-              routeName.substr(0, 1).toUpperCase() + routeName.substr(1)
+              routeName.substr(0, 1).toUpperCase() + routeName.substr(1),
             )}
           </Link>
         ))}

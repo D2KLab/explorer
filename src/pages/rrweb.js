@@ -49,7 +49,9 @@ const Anchor = styled.div`
     text-decoration: none;
     color: #666;
 
-    transition: color 0.3s ease-in-out, border-left-color 0.3s ease-in-out;
+    transition:
+      color 0.3s ease-in-out,
+      border-left-color 0.3s ease-in-out;
 
     &:hover {
       color: ${({ theme }) => theme.colors.secondary};
@@ -182,7 +184,7 @@ export async function getServerSideProps({ query, locale }) {
       ...(await serverSideTranslations(locale, ['common', 'project', 'search'])),
       captures: JSON.parse(JSON.stringify(captures)), // serialize captures list
       selectedCapture: JSON.parse(
-        JSON.stringify(captures.find((capture) => capture.capture_session_id === query.id) || null)
+        JSON.stringify(captures.find((capture) => capture.capture_session_id === query.id) || null),
       ),
       events,
     },

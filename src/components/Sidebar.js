@@ -192,7 +192,7 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
     Object.entries(config.search.languages).map(([langKey, langLabel]) => ({
       label: langLabel,
       value: langKey,
-    }))
+    })),
   );
   const [graphOptions, setGraphOptions] = useState([]);
 
@@ -201,7 +201,7 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
       Object.entries(graphs).map(([graphURI, graphObj]) => ({
         value: graphURI,
         label: graphObj.label,
-      }))
+      })),
     );
   }, [graphs]);
 
@@ -420,7 +420,7 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
       if (value?.label) {
         value.label = t(
           `project:filters-values.${filter.id}.${value.key || value.value}`,
-          value.label
+          value.label,
         );
       }
     }

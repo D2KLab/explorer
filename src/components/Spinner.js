@@ -2,11 +2,10 @@ import styled, { css } from 'styled-components';
 
 const StyledSpinner = styled.svg`
   animation: rotate 1s linear infinite;
-  ${({ size = 50 }) =>
-    css`
-      width: ${size}px;
-      height: ${size}px;
-    `}
+  ${({ size = 50 }) => css`
+    width: ${size}px;
+    height: ${size}px;
+  `}
 
   circle {
     stroke: ${({ color, theme }) => color || theme.colors.primary};

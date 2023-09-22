@@ -7,13 +7,11 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
 
-  ${({ theme }) =>
-    css`
-      min-height: calc(
-        100vh - ${theme.header.height} - ${theme.header.borderBottomWidth} -
-          ${theme.footer.minHeight}
-      );
-    `};
+  ${({ theme }) => css`
+    min-height: calc(
+      100vh - ${theme.header.height} - ${theme.header.borderBottomWidth} - ${theme.footer.minHeight}
+    );
+  `};
 
   ${({ hasSidebar }) =>
     hasSidebar
