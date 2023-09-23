@@ -1,3 +1,5 @@
+import { Readable } from 'node:stream';
+
 import { withRequestValidation } from '@helpers/api';
 
 /**
@@ -8,8 +10,6 @@ export default withRequestValidation({
   allowedMethods: ['GET'],
 })(async (req, res) => {
   const { url, width, height } = req.query;
-
-  let requestUrl = url;
 
   // Check if imaginary is configured
   const imaginaryEndpoint = process.env.IMAGINARY_URL;
@@ -40,18 +40,19 @@ export default withRequestValidation({
     },
   ];
 
-  requestUrl = `${imaginaryEndpoint}/pipeline?url=${encodeURIComponent(
+  const requestUrl = `${imaginaryEndpoint}/pipeline?url=${encodeURIComponent(
     url,
   )}&operations=${encodeURIComponent(JSON.stringify(operations))}`;
 
   // Fetch and return image
   const fetchRes = await fetch(requestUrl);
   const headers = Object.fromEntries(fetchRes.headers.entries());
+  console.log(fetchRes, headers);
   if (fetchRes.status >= 400) {
     // Do not write cache headers if there is an error
     delete headers['cache-control'];
     delete headers.expires;
   }
   res.writeHead(fetchRes.status, headers);
-  return fetchRes.body.pipe(res);
+  Readable.fromWeb(fetchRes.body).pipe(res);
 });
