@@ -615,62 +615,64 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
           {filters
             .filter((filter) => !filter.isOption && filter.isBeforeTextSearch)
             .map(renderFilter)}
-          <Field>
-            <label>
-              {t('project:filters.q', t('search:fields.q'))}
-              <StyledInput
-                name="q"
-                type="search"
-                value={fieldsToDebounce.q}
-                onChange={(e) => {
-                  setFieldsToDebounce((prevFields) => ({
-                    ...prevFields,
-                    q: e.target.value,
-                  }));
-                }}
-                onBlur={(e) => {
-                  setFieldsToDebounce((prevFields) => ({
-                    ...prevFields,
-                    q: e.target.value,
-                  }));
-                }}
-                onKeyDown={(e) => {
-                  if (e.key !== 'Enter') {
-                    return;
-                  }
-                  setFieldsToDebounce((prevFields) => ({
-                    ...prevFields,
-                    q: e.target.value,
-                  }));
-                }}
-              />
-            </label>
-            <SubField>
-              {Array.isArray(route.textSearchOptions) && (
-                <>
-                  <label>{t('search:fields.searchIn')}</label>
-                  {route.textSearchOptions.map((option) => (
-                    <div key={option}>
-                      <label>
-                        <input
-                          type="radio"
-                          name="in"
-                          value={option}
-                          onChange={handleInputChange}
-                          checked={
-                            option === fields.in ||
-                            ((!fields.in && route.textSearchDefaultOption) ||
-                              route.textSearchOptions[0]) === option
-                          }
-                        />
-                        {t(`project:searchOptions.${option}`)}
-                      </label>
-                    </div>
-                  ))}
-                </>
-              )}
-            </SubField>
-          </Field>
+          {config.allowTextSearch && (
+            <Field>
+              <label>
+                {t('project:filters.q', t('search:fields.q'))}
+                <StyledInput
+                  name="q"
+                  type="search"
+                  value={fieldsToDebounce.q}
+                  onChange={(e) => {
+                    setFieldsToDebounce((prevFields) => ({
+                      ...prevFields,
+                      q: e.target.value,
+                    }));
+                  }}
+                  onBlur={(e) => {
+                    setFieldsToDebounce((prevFields) => ({
+                      ...prevFields,
+                      q: e.target.value,
+                    }));
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key !== 'Enter') {
+                      return;
+                    }
+                    setFieldsToDebounce((prevFields) => ({
+                      ...prevFields,
+                      q: e.target.value,
+                    }));
+                  }}
+                />
+              </label>
+              <SubField>
+                {Array.isArray(route.textSearchOptions) && (
+                  <>
+                    <label>{t('search:fields.searchIn')}</label>
+                    {route.textSearchOptions.map((option) => (
+                      <div key={option}>
+                        <label>
+                          <input
+                            type="radio"
+                            name="in"
+                            value={option}
+                            onChange={handleInputChange}
+                            checked={
+                              option === fields.in ||
+                              ((!fields.in && route.textSearchDefaultOption) ||
+                                route.textSearchOptions[0]) === option
+                            }
+                          />
+                          {t(`project:searchOptions.${option}`)}
+                        </label>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </SubField>
+            </Field>
+          )}
           {filters
             .filter((filter) => !filter.isOption && !filter.isBeforeTextSearch)
             .map(renderFilter)}
