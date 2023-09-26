@@ -177,7 +177,7 @@ function Header({ className }) {
         </NavList>
       </NavContainer>
       <SearchContainer>
-        <SearchBox placeholder={t('project:search')} />
+        {config.search?.allowTextSearch && <SearchBox placeholder={t('project:search')} />}
       </SearchContainer>
       <StyledLanguageSwitch />
       <StyledProfileButton />
