@@ -615,7 +615,7 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
           {filters
             .filter((filter) => !filter.isOption && filter.isBeforeTextSearch)
             .map(renderFilter)}
-          {config.allowTextSearch && (
+          {config.search.allowTextSearch && (
             <Field>
               <label>
                 {t('project:filters.q', t('search:fields.q'))}
