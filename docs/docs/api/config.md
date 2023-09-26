@@ -292,6 +292,20 @@ module.exports = {
 };
 ```
 
+#### `showInHeader` {#search-showInHeader}
+
+* Type: `boolean`
+
+If set to `false`, the search box will be hidden from the header.
+
+```js title="config.js"
+module.exports = {
+  search: {
+    showInHeader: false,
+  },
+};
+```
+
 #### `placeholderImage` {#search-placeholderImage}
 
 * Type: `string`
