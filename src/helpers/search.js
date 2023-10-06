@@ -202,7 +202,7 @@ const generateWhereCondition = async (query, language) => {
       textSearchWhere.push(
         ...route.textSearchFunc(
           query.q,
-          query.in || route.textSearchDefaultOption || route.textSearchOptions[0],
+          query.in || route.textSearchDefaultOption || route.textSearchOptions?.[0],
         ),
       );
     } else {
