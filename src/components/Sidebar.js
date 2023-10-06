@@ -483,46 +483,64 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
             value: v.value,
           }));
 
+    let input;
+    if (filter.type === 'date') {
+      input = (
+        <StyledInput
+          type="date"
+          {...filterInputProps}
+          defaultValue={value}
+          onChange={handleChange}
+          onBlur={handleChange}
+          onKeyDown={(e) => e.key === 'Enter' && handleChange(e)}
+        />
+      );
+    } else if (filter.isAutocomplete === false) {
+      input = (
+        <StyledInput
+          type="search"
+          {...filterInputProps}
+          defaultValue={value}
+          onChange={handleChange}
+          onBlur={handleChange}
+          onKeyDown={(e) => e.key === 'Enter' && handleChange(e)}
+        />
+      );
+    } else {
+      input = (
+        <SelectInput
+          {...filterInputProps}
+          value={value}
+          options={options}
+          menuIsOpen={filter.isAutocomplete === false ? false : undefined}
+          renderSelectedOption={
+            typeof filter.vocabulary !== 'undefined' ? renderSelectedOption : undefined
+          }
+          selectedOptionsStyle={{
+            paddingRight: hasCondition ? 48 : 0,
+          }}
+          isClearable
+          filterOption={(option, rawInput) => {
+            if (!rawInput) return true;
+            const inputValue = rawInput.toLocaleLowerCase();
+            const { label } = option;
+            const { altLabel } = option.data;
+            return (
+              label.toLocaleString().toLocaleLowerCase().includes(inputValue) ||
+              altLabel?.toLocaleString().toLocaleLowerCase().includes(inputValue)
+            );
+          }}
+          theme={theme?.sidebar?.selectTheme}
+        />
+      );
+    }
+
     return (
       <Field key={filter.id} style={filter.style}>
         <label style={filter.hideLabel && { marginTop: 0 }}>
           {!filter.hideLabel && t(`project:filters.${filter.id}`, filter.label)}
           <div style={{ position: 'relative' }}>
-            {filter.isAutocomplete === false ? (
-              <StyledInput
-                type="search"
-                {...filterInputProps}
-                defaultValue={value}
-                onChange={handleChange}
-                onBlur={handleChange}
-                onKeyDown={(e) => e.key === 'Enter' && handleChange(e)}
-              />
-            ) : (
-              <SelectInput
-                {...filterInputProps}
-                value={value}
-                options={options}
-                menuIsOpen={filter.isAutocomplete === false ? false : undefined}
-                renderSelectedOption={
-                  typeof filter.vocabulary !== 'undefined' ? renderSelectedOption : undefined
-                }
-                selectedOptionsStyle={{
-                  paddingRight: hasCondition ? 48 : 0,
-                }}
-                isClearable
-                filterOption={(option, rawInput) => {
-                  if (!rawInput) return true;
-                  const inputValue = rawInput.toLocaleLowerCase();
-                  const { label } = option;
-                  const { altLabel } = option.data;
-                  return (
-                    label.toLocaleString().toLocaleLowerCase().includes(inputValue) ||
-                    altLabel?.toLocaleString().toLocaleLowerCase().includes(inputValue)
-                  );
-                }}
-                theme={theme?.sidebar?.selectTheme}
-              />
-            )}
+            {input}
             {hasCondition && (
               <a
                 onClick={(ev) => {
