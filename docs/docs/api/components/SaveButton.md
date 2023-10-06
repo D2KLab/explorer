@@ -7,6 +7,7 @@ Save button.
 * `type = {string}`
 * `item = {object}`
 * `saved = {boolean}`
+* `size = {number | string}`
 * `onChange = {function}`
 
 ## Example with code

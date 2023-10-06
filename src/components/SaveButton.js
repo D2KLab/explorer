@@ -14,12 +14,10 @@ import { slugify } from '@helpers/utils';
 
 const StyledHeartIcon = styled(HeartIcon)`
   color: #222;
-  height: 16px;
 `;
 
 const StyledHeartSolidIcon = styled(HeartSolidIcon)`
   color: #e80020;
-  height: 16px;
 `;
 
 const StyledDialog = styled(Dialog)`
@@ -98,7 +96,16 @@ const StyledItemContent = styled.div`
  * @param {object} props - The props for the component.
  * @returns A save button.
  */
-function SaveButton({ item = [], type, saved, hideLabel, onChange, children, ...props }) {
+function SaveButton({
+  item = [],
+  size = '16px',
+  type,
+  saved,
+  hideLabel,
+  onChange,
+  children,
+  ...props
+}) {
   const { t } = useTranslation('common');
   const [loading, setLoading] = useState(false);
   const [lists, setLists] = useState([]);
@@ -202,7 +209,7 @@ function SaveButton({ item = [], type, saved, hideLabel, onChange, children, ...
     if (children) return children;
     return (
       <>
-        {saved ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
+        {saved ? <StyledHeartSolidIcon height={size} /> : <StyledHeartIcon height={size} />}
         {!hideLabel && (
           <StyledLabel>
             {saved ? t('common:saveButton.saved') : t('common:saveButton.save')}
