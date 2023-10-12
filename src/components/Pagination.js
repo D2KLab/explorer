@@ -97,7 +97,7 @@ function Pagination({ searchData, result, pageSize = 20, ...props }) {
             let newData;
             start();
             try {
-              newData = await (await fetch(`${query.sapi}?${linkParams}`)).json();
+              newData = await (await fetch(`/api/${query.sapi}?${linkParams}`)).json();
             } finally {
               done();
             }

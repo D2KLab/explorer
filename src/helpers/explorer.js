@@ -126,7 +126,7 @@ export const getSearchData = async ({ query, locale }) => {
   searchParams.delete('spath');
 
   const searchData = await (
-    await fetch(`${process.env.SITE}${query.sapi}?${searchParams}`, {
+    await fetch(`${process.env.SITE}/api/${query.sapi}?${searchParams}`, {
       headers: {
         'accept-language': locale,
       },

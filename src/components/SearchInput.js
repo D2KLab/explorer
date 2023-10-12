@@ -195,7 +195,7 @@ function SearchInput({ className, placeholder, ariaLabel = 'Search input', ...pr
         pathname: `/${routeName}/${encodeURI(uriToId(suggestion['@id'], { base: route.uriBase }))}`,
         query: {
           q: inputValue,
-          sapi: '/api/autocomplete',
+          sapi: 'autocomplete',
           spath: `/${routeName}`,
         },
       });

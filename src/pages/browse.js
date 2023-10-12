@@ -455,7 +455,7 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
             id={result['@id']}
             type={query.type}
             page={pageNumber}
-            searchApi="/api/search"
+            searchApi="search"
             onClick={() => {
               // Make sure the page number is correct if it hasn't been updated yet
               onScrollToPage(pageNumber);
