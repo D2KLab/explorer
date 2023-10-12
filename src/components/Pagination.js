@@ -154,7 +154,7 @@ function Pagination({ searchData, result, pageSize = 20, ...props }) {
       return renderDetailsLink(nextItem['@id'], nextLabel);
     }
 
-    if (totalResults <= currentIndex) {
+    if (totalResults > -1 && totalResults <= currentIndex) {
       return renderDisabled(nextLabel);
     }
 
@@ -165,6 +165,8 @@ function Pagination({ searchData, result, pageSize = 20, ...props }) {
     return renderBrowseLink(nextParams, (results) => results[0]?.['@id'], nextLabel);
   };
 
+  const hasMoreResults = totalResults === -1 || totalResults > 0;
+
   return (
     <Element
       display="flex"
@@ -174,7 +176,7 @@ function Pagination({ searchData, result, pageSize = 20, ...props }) {
       {...props}
       style={{ borderBottom: '1px solid #e7e7e7', ...props.style }}
     >
-      {totalResults > 0 && (
+      {hasMoreResults > 0 && (
         <Element display="flex" alignItems="center" paddingLeft={48}>
           {renderPrevious()}
         </Element>
@@ -185,13 +187,14 @@ function Pagination({ searchData, result, pageSize = 20, ...props }) {
             {t('common:pagination.back')}
           </Link>
         </Element>
-        {totalResults > 0 && (
+        {hasMoreResults && (
           <Element>
-            {currentIndex} / {totalResults}
+            {currentIndex}
+            {totalResults > 0 && ` / ${totalResults}`}
           </Element>
         )}
       </Element>
-      {totalResults > 0 && (
+      {hasMoreResults && (
         <Element display="flex" alignItems="center" justifyContent="flex-end" paddingRight={48}>
           {renderNext()}
         </Element>
