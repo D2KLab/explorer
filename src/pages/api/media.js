@@ -47,7 +47,6 @@ export default withRequestValidation({
   // Fetch and return image
   const fetchRes = await fetch(requestUrl);
   const headers = Object.fromEntries(fetchRes.headers.entries());
-  console.log(fetchRes, headers);
   if (fetchRes.status >= 400) {
     // Do not write cache headers if there is an error
     delete headers['cache-control'];
