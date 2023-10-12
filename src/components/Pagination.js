@@ -69,16 +69,11 @@ function Pagination({ searchData, result, pageSize = 20, ...props }) {
     <span style={{ color: '#aaa', cursor: 'not-allowed' }}>{children}</span>
   );
 
-  const renderDetailsLink = (id, children) => {
-    const params = new URLSearchParams(searchParams);
-    params.delete('id');
-    params.delete('type');
-    return (
-      <PaginatedLink key={id} id={id} type={query.type} searchApi={params.get('sapi')}>
-        {children}
-      </PaginatedLink>
-    );
-  };
+  const renderDetailsLink = (id, children) => (
+    <PaginatedLink key={id} id={id} type={query.type} searchParams={searchParams}>
+      {children}
+    </PaginatedLink>
+  );
 
   const renderBrowseLink = (params, idFunc, children) => {
     const linkParams = getLinkParams(params);

@@ -11,32 +11,37 @@ import config from '~/config';
  * @param {string} type - the type of the item that the link is for.
  * @param {number} [page] - the page that the link is for.
  * @param {string} [searchApi] - the search api that the link is for.
+ * @param {string} [searchParams] - the search params that the link is for.
  * @param {React.ReactNode} children - the content of the link.
  * @param {object} props - the props of
  */
-const PaginatedLink = ({ id, type, page, searchApi, children, ...props }) => {
+const PaginatedLink = ({ id, type, page, searchApi, searchParams, children, ...props }) => {
   const router = useRouter();
   const route = config.routes[type];
 
   const [spath, sparams] = router.asPath.split('?');
-  const searchParams = new URLSearchParams(sparams);
+  const newSearchParams = new URLSearchParams(searchParams || sparams);
   if (typeof page !== 'undefined' && page !== null) {
-    searchParams.set('page', page);
+    newSearchParams.set('page', page);
   }
-  if (searchParams.get('id') !== null) {
-    searchParams.set('sid', searchParams.get('id'));
+  if (newSearchParams.get('id') !== null) {
+    newSearchParams.set('sid', newSearchParams.get('id'));
   }
-  if (searchParams.get('type') !== null) {
-    searchParams.set('stype', searchParams.get('type'));
+  if (newSearchParams.get('type') !== null) {
+    newSearchParams.set('stype', newSearchParams.get('type'));
   } else {
-    searchParams.set('stype', router.query.type);
+    newSearchParams.set('stype', router.query.type);
   }
-  searchParams.delete('id');
-  searchParams.delete('type');
-  searchParams.set('sapi', searchApi);
-  searchParams.set('spath', spath);
+  newSearchParams.delete('id');
+  newSearchParams.delete('type');
+  if (searchApi) {
+    newSearchParams.set('sapi', searchApi);
+  }
+  if (newSearchParams.get('spath') === null) {
+    newSearchParams.set('spath', spath);
+  }
 
-  const href = `/${type}/${encodeURI(uriToId(id, { base: route.uriBase }))}?${searchParams}`;
+  const href = `/${type}/${encodeURI(uriToId(id, { base: route.uriBase }))}?${newSearchParams}`;
 
   return (
     <Link href={href} {...props}>

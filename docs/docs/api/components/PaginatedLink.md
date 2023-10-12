@@ -7,6 +7,7 @@ Paginated link.
 * `id = {string}`
 * `type = {string}`
 * `searchApi = {string}`
+* `searchParams = {object}`
 * Any props from [next/link](https://nextjs.org/docs/api-reference/next/link)
 
 ## Example with code:
