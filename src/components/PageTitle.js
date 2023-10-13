@@ -10,9 +10,10 @@ import config from '~/config';
  */
 function PageTitle({ title }) {
   const { t } = useTranslation('project');
+  const pageTitle = title || t('project:site.title', config?.metadata?.title);
   return (
     <Head>
-      <title>{`${title} | ${t('project:site.title', config?.metadata?.title)}`}</title>
+      <title>{pageTitle.length > 363 ? `${pageTitle.substr(0, 363)}…` : pageTitle}</title>
       <meta
         name="description"
         content={t('project:site.description', config?.metadata?.description)}
