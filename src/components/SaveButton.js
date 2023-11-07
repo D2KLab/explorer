@@ -296,7 +296,11 @@ function SaveButton({
                   <StyledItemContent
                     onClick={() => (isItemInList ? removeFromList(list) : addToList(list))}
                   >
-                    {isItemInList ? <StyledHeartSolidIcon /> : <StyledHeartIcon />}
+                    {isItemInList ? (
+                      <StyledHeartSolidIcon height={24} />
+                    ) : (
+                      <StyledHeartIcon height={24} />
+                    )}
                     <StyledLabel>{list.name}</StyledLabel>
                   </StyledItemContent>
                   <Element marginLeft="auto">
