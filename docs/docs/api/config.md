@@ -721,6 +721,13 @@ Label of the filter.
 }
 ```
 
+##### `isHidden` {#route-filters-isHidden}
+
+* Type: `boolean`
+
+If set to `true`, the filter won't be visible in the Sidebar.
+
+
 ##### `isMulti` {#route-filters-isMulti}
 
 * Type: `boolean`

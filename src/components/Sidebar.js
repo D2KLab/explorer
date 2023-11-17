@@ -396,6 +396,10 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
   );
 
   const renderFilter = (filter) => {
+    if (filter.isHidden) {
+      return;
+    }
+
     const field = fields[`filter_${filter.id}`];
 
     let value;
