@@ -10,6 +10,20 @@ import Spinner from '@components/Spinner';
 import { uriToId } from '@helpers/utils';
 import config from '~/config';
 
+function buildParams(data) {
+  const params = new URLSearchParams();
+
+  Object.entries(data).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((value) => params.append(key, value.toString()));
+    } else {
+      params.append(key, value.toString());
+    }
+  });
+
+  return params;
+}
+
 const getLinkParams = (params) => {
   const linkParams = new URLSearchParams(params);
   const sid = linkParams.get('sid');
@@ -54,7 +68,7 @@ function Pagination({ searchData, result, pageSize = 20, ...props }) {
   const nextItem = results[i + 1];
   const previousItem = results[i - 1];
 
-  const searchParams = new URLSearchParams(query);
+  const searchParams = buildParams(query);
 
   const page = parseInt(searchParams.get('page'), 10) || 1;
   const currentIndex = (page - 1) * pageSize + i + 1;
