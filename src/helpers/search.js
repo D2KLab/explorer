@@ -171,14 +171,18 @@ const getExtraFromFilters = (query, filters) => {
               }
             });
             extraWhere.push(unionWhere.join('\n'));
-          }
 
-          if (typeof filter.filterFunc === 'function') {
-            const filterRet = values.map((value, i) => filter.filterFunc(value, i));
-            if (Array.isArray(filterRet)) {
-              extraFilter.push(`(${filterRet.join(' || ')})`);
-            } else {
-              extraFilter.push(filterRet);
+            const whereFilters = [];
+            if (typeof filter.filterFunc === 'function') {
+              const filterRet = values.map((value, i) => filter.filterFunc(value, i));
+              if (Array.isArray(filterRet)) {
+                whereFilters.push(`(${filterRet.join(' || ')})`);
+              } else {
+                whereFilters.push(filterRet);
+              }
+            }
+            if (whereFilters.length > 0) {
+              extraWhere.push(`FILTER(${whereFilters.join(' || ')})`);
             }
           }
         }
