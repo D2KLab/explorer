@@ -147,14 +147,15 @@ const getExtraFromFilters = (query, filters) => {
           // AND condition is a little bit more complicated to handle
           // We have to combine whereFunc and the content of filterFunc together
           values.forEach((value, i) => {
-            const filterRet = filter.filterFunc(value, i);
+            const filterRet =
+              typeof filter.filterFunc === 'function' ? filter.filterFunc(value, i) : [];
             extraWhere.push(`{
-              ${[]
-                .concat(filter.whereFunc(value, i))
-                .filter((x) => x)
-                .join(' . ')}
-              ${filterRet ? `FILTER(${filterRet})` : ''}
-            }`);
+                ${[]
+                  .concat(filter.whereFunc(value, i))
+                  .filter((x) => x)
+                  .join(' . ')}
+                ${filterRet.length > 0 ? `FILTER(${filterRet})` : ''}
+              }`);
           });
         } else if (filterCondition === 'or') {
           if (typeof filter.whereFunc === 'function') {
