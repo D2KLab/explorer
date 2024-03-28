@@ -55,24 +55,23 @@ export const getFilters = async (query, { language }) => {
           params: config.api.params,
         });
         if (resQuery) {
-          filterValues.push(
-            ...resQuery['@graph'].map((row) => {
-              const value = row['@id']['@value'] || row['@id'];
-              const label = []
-                .concat(row.label ? row.label['@value'] || row.label : value)
-                .filter((x) => x)
-                .join(', ');
-              const altLabel = []
-                .concat(row.altLabel ? row.altLabel['@value'] || row.altLabel : null)
-                .filter((x) => x)
-                .join(', ');
-              return {
-                label,
-                value,
-                altLabel,
-              };
-            }),
-          );
+          for (let j = 0; j < resQuery['@graph'].length; j += 1) {
+            const row = resQuery['@graph'][j];
+            const value = row['@id']['@value'] || row['@id'];
+            const label = []
+              .concat(row.label ? row.label['@value'] || row.label : value)
+              .filter((x) => x)
+              .join(', ');
+            const altLabel = []
+              .concat(row.altLabel ? row.altLabel['@value'] || row.altLabel : null)
+              .filter((x) => x)
+              .join(', ');
+            filterValues.push({
+              label,
+              value,
+              altLabel,
+            });
+          }
 
           // Sort values by label
           filterValues.sort(
