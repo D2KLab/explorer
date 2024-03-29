@@ -403,7 +403,12 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
     const field = fields[`filter_${filter.id}`];
 
     let value;
-    if (filter.isMulti || filter.isToggle || filter.isAutocomplete === false) {
+    if (
+      filter.isMulti ||
+      filter.isToggle ||
+      filter.isAutocomplete === false ||
+      filter.type === 'date'
+    ) {
       value = field;
     } else {
       value = filter.values.find((v) => {
