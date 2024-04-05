@@ -364,7 +364,7 @@ const fetchEntities = async (query, language) => {
     [sortFilterId, sortDirection] = query.sort.split('|');
   } else if (route.defaultSort) {
     sortFilterId = route.defaultSort.id;
-    sortDirection = route.defaultSort.direction;
+    sortDirection = route.defaultSort.reverse ? 'DESC' : 'ASC';
   }
   if (sortFilterId) {
     const sortFilter = route.filters.find((filter) => filter.id === sortFilterId);
