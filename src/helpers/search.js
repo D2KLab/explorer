@@ -358,9 +358,16 @@ const fetchEntities = async (query, language) => {
   // Sort by
   let orderByVariable = 'orderByVariable' in route && !route.orderByVariable ? null : 'id';
   let orderByDirection = route.orderByDirection || 'ASC';
+  let sortFilterId = null;
+  let sortDirection = null;
   if (query.sort) {
-    const [sortVariable, sortDirection] = query.sort.split('|');
-    const sortFilter = route.filters.find((filter) => filter.id === sortVariable);
+    [sortFilterId, sortDirection] = query.sort.split('|');
+  } else if (route.defaultSort) {
+    sortFilterId = route.defaultSort.id;
+    sortDirection = route.defaultSort.direction;
+  }
+  if (sortFilterId) {
+    const sortFilter = route.filters.find((filter) => filter.id === sortFilterId);
     if (sortFilter && typeof sortFilter.whereFunc === 'function') {
       mainSearchQuery.$where.push(
         `OPTIONAL { ${[]
@@ -368,7 +375,7 @@ const fetchEntities = async (query, language) => {
           .filter((x) => x)
           .join(' . ')} }`,
       );
-      orderByVariable = sortFilter.isSortable?.variable || sortVariable;
+      orderByVariable = sortFilter.isSortable?.variable || sortFilterId;
       if (['ASC', 'DESC'].includes(sortDirection)) {
         orderByDirection = sortDirection;
       }

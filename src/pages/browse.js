@@ -347,7 +347,7 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
   };
 
   const onSortChange = (selectedOption) => {
-    const { value } = selectedOption;
+    const { value } = selectedOption || {};
 
     const newQuery = {
       ...query,
@@ -431,7 +431,7 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
       } else {
         r.push({
           label: t(`project:filters.${filter.id}`, filter.label),
-          value: `${filter.id}`,
+          value: `${filter.id}|ASC`,
         });
       }
       return r;
@@ -582,7 +582,13 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
                 name="sort"
                 placeholder={t('search:labels.select')}
                 options={sortOptions}
-                value={sortOptions.find((o) => o.value === query.sort)}
+                value={sortOptions.find(
+                  (o) =>
+                    o.value ===
+                    (query.sort ||
+                      `${route.defaultSort?.id}|${route.defaultSort.reverse ? 'DESC' : 'ASC'}`),
+                )}
+                isClearable={query.sort ? true : false}
                 onChange={onSortChange}
                 isSearchable={false}
                 theme={selectTheme}

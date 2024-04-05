@@ -607,6 +607,28 @@ module.exports = {
 };
 ```
 
+### `defaultSort` {#routes-defaultSort}
+
+* Type: `object`
+
+Default sorting options for the route. The object should contain the following properties:
+
+* `id` - The ID of the filter to sort by.
+* `reverse` - If set to `true`, the sorting will be in descending order.
+
+```js title="config.js"
+module.exports = {
+  routes: {
+    countries: {
+      defaultSort: {
+        id: 'label',
+        reverse: false,
+      },
+    },
+  },
+};
+```
+
 #### `orderByVariable` {#routes-orderByVariable}
 
 * Type: `string | null`
