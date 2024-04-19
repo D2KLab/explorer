@@ -586,7 +586,7 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
                   (o) =>
                     o.value ===
                     (query.sort ||
-                      `${route.defaultSort?.id}|${route.defaultSort.reverse ? 'DESC' : 'ASC'}`),
+                      `${route.defaultSort?.id}|${route.defaultSort?.reverse ? 'DESC' : 'ASC'}`),
                 )}
                 isClearable={query.sort ? true : false}
                 onChange={onSortChange}
