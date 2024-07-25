@@ -4,10 +4,10 @@ services:
   - docker
 
 script:
-  - docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+  - docker compose -f docker-compose.prod.yml up -d --build
 
 after_script:
-  - docker-compose down
+  - docker compose down
 
 after_success:
   - test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && curl -X POST "$DEPLOY_WEBHOOK_URL"

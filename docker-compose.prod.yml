@@ -1,14 +1,40 @@
-version: '3'
+volumes:
+  mongo:
+  images:
+
 services:
   web:
+    build: .
+    depends_on:
+      - mongo
+      - redis
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - SITE=${SITE}
+      - GOOGLE_ID=${GOOGLE_ID}
+      - GOOGLE_SECRET=${GOOGLE_SECRET}
+      - MONGODB_URI=${MONGODB_URI}
+    env_file:
+      - .env
     ports:
       - '4733:3000'
-    environment:
-      - NODE_ENV=production
-    network_mode: bridge
+    restart: unless-stopped
   mongo:
-    network_mode: bridge
+    image: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo:/data/db
   imaginary:
-    network_mode: bridge
+    image: h2non/imaginary:latest
+    volumes:
+      - images:/mnt/data
+    environment:
+      PORT: 9000
+    command: -enable-url-source -mount /mnt/data -allowed-origins ${IMAGINARY_ALLOWED_ORIGINS} -http-cache-ttl 31556926
+    ports:
+      - '9000:9000'
   redis:
-    network_mode: bridge
+    image: redis
+    ports:
+      - '6379:6379'

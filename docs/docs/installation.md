@@ -43,7 +43,6 @@ explorer-boilerplate
 ├── config.js
 ├── docker-compose.dev.yml
 ├── docker-compose.prod.yml
-├── docker-compose.yml
 ├── LICENSE
 ├── package-lock.json
 ├── package.json
@@ -61,7 +60,7 @@ explorer-boilerplate
   - `/src/pages` - Any JSX file within this directory will be converted into a website page. More details can be found in the [pages guide](guides/creating-pages.md).
 - `/config.js` - A config file containing the site configuration.
 - `/package.json` - A D2KLab Explorer website is a React app. You can install and use any npm packages you like in them.
-- `/docker-compose.yml` - Along with `docker-compose.dev.yml` and `docker-compose.prod.yml`, these files are used to deploy the website into a running application.
+- `/docker-compose.dev.yml` and `/docker-compose.prod.yml` - These files are used to deploy the website into a running application.
 - `/theme.js` - Used to change the global appearance and colors of the website.
 
 ## Running the development server {#running-the-development-server}
@@ -70,7 +69,7 @@ To preview your changes as you edit the files, you can run a local development s
 
 ```bash npm2yarn
 cd explorer-boilerplate/
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+docker compose -f docker-compose.dev.yml up
 ```
 
 By default, the site will be accessible at [http://localhost:3000](http://localhost:3000).
@@ -87,7 +86,7 @@ Notice how the command is using `docker-compose.prod.yml` for production.
 
 ```bash npm2yarn
 cd explorer-boilerplate/
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+docker compose -f docker-compose.prod.yml up
 ```
 
 By default, the site will be accessible at [http://localhost:3000](http://localhost:3000).

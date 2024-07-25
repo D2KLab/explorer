@@ -48,13 +48,13 @@ npm run start
 - Build for development
 
 ```bash
-docker-composer -f docker-compose.yml -f docker-compose.dev.yml up
+docker compose -f docker-compose.dev.yml up
 ```
 
 - Build for production
 
 ```bash
-docker-composer -f docker-compose.yml -f docker-compose.prod.yml up
+docker compose -f docker-compose.prod.yml up
 ```
 
 ## License

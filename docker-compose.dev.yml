@@ -1,12 +1,43 @@
-version: '3'
+volumes:
+  mongo:
+  images:
+
 services:
   web:
-    command: npm run dev
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    depends_on:
+      - mongo
+      - redis
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - SITE=${SITE}
+      - GOOGLE_ID=${GOOGLE_ID}
+      - GOOGLE_SECRET=${GOOGLE_SECRET}
+      - MONGODB_URI=${MONGODB_URI}
+    env_file:
+      - .env
     ports:
       - '3000:3000'
-    environment:
-      - NODE_ENV=development
+      - '9229:9229'
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-      - /usr/src/app/.next
+      - ./src:/usr/app/src
+      - ./public:/usr/app/public
+  mongo:
+    image: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo:/data/db
+  imaginary:
+    image: h2non/imaginary:latest
+    volumes:
+      - images:/mnt/data
+    environment:
+      PORT: 9000
+    command: -enable-url-source -mount /mnt/data -allowed-origins ${IMAGINARY_ALLOWED_ORIGINS} -http-cache-ttl 31556926
+    ports:
+      - '9000:9000'
+  redis:
+    image: redis
