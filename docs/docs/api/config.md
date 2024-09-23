@@ -25,7 +25,7 @@ module.exports = {
 
 ### `debug` {#debug}
 
-* Type: `boolean`
+- Type: `boolean`
 
 Set to `true` to enable debug mode. When debug mode is enabled, additional content such as SPARQL queries and outputs will be displayed on the pages.
 
@@ -39,7 +39,7 @@ module.exports = {
 
 ### `metadata` {#metadata}
 
-* Type: `object`
+- Type: `object`
 
 Configuration for site metadata.
 
@@ -47,7 +47,7 @@ Configuration for site metadata.
 
 #### `title` {#metadata-title}
 
-* Type: `string`
+- Type: `string`
 
 Title for your website. Will be used in metadata and as browser tab title.
 
@@ -61,7 +61,7 @@ module.exports = {
 
 #### `logo` {#metadata-logo}
 
-* Type: `string`
+- Type: `string`
 
 ```js title="config.js"
 module.exports = {
@@ -75,7 +75,7 @@ module.exports = {
 
 ### `head` {#head}
 
-* Type: `object`
+- Type: `object`
 
 Configuration for head.
 
@@ -83,7 +83,7 @@ Configuration for head.
 
 #### `styles` {#head-styles}
 
-* Type: `string[]`
+- Type: `string[]`
 
 List of URLs of styles to import.
 
@@ -97,7 +97,7 @@ module.exports = {
 
 #### `preload` {#head-preload}
 
-* Type: `object[]`
+- Type: `object[]`
 
 List of resources to preload. Can be used to preload fonts and prevent flash of unstyled content. Accepts any attributes from the [`<link>` tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types/preload).
 
@@ -134,7 +134,7 @@ module.exports = {
 
 ### `home` {#home}
 
-* Type: `object`
+- Type: `object`
 
 Configuration for the homepage.
 
@@ -142,7 +142,7 @@ Configuration for the homepage.
 
 #### `hero` {#home-hero}
 
-* Type: `object`
+- Type: `object`
 
 Configuration of the hero section on the homepage.
 
@@ -150,7 +150,7 @@ Configuration of the hero section on the homepage.
 
 ##### `showHeadline` {#home-hero-showHeadline}
 
-* Type: `boolean`
+- Type: `boolean`
 
 Set to `true` to display the headline on the homepage hero section. See [home.json](translations#home) to change the headline text.
 
@@ -166,7 +166,7 @@ module.exports = {
 
 ##### `showLogo` {#home-hero-showLogo}
 
-* Type: `boolean`
+- Type: `boolean`
 
 Set to `true` to display the [logo](#metadata-logo) on the homepage hero section.
 
@@ -186,7 +186,7 @@ module.exports = {
 
 ### `sidebar` {#sidebar}
 
-* Type: `object`
+- Type: `object`
 
 Configuration for sidebar.
 
@@ -194,7 +194,7 @@ Configuration for sidebar.
 
 #### `renderEmptyFields` {#sidebar-renderEmptyFields}
 
-* Type: `boolean`
+- Type: `boolean`
 
 If set to `true`, fields with empty values will always be rendered.
 
@@ -210,7 +210,7 @@ module.exports = {
 
 ### `footer` {#footer}
 
-* Type: `object`
+- Type: `object`
 
 Configuration for footer.
 
@@ -218,7 +218,7 @@ Configuration for footer.
 
 #### `logo` {#footer-logo}
 
-* Type: `(string | object)[]`
+- Type: `(string | object)[]`
 
 List of images to display in the footer. If not set, the [website logo](#metadata-logo) will be displayed instead.
 If one of the elements is an object, it can be passed with a `url` (image path) and `href` (hyperlink) property.
@@ -239,7 +239,7 @@ module.exports = {
 
 ### `search` {#search}
 
-* Type: `object`
+- Type: `object`
 
 Configuration for search.
 
@@ -247,7 +247,7 @@ Configuration for search.
 
 #### `route` {#search-route}
 
-* Type: `string`
+- Type: `string`
 
 The route key to be used when searching for an item.
 
@@ -266,7 +266,7 @@ module.exports = {
 
 #### `allowTextSearch` {#search-allowTextSearch}
 
-* Type: `boolean`
+- Type: `boolean`
 
 If set to `true`, text search will be enabled through the interface.
 
@@ -280,7 +280,7 @@ module.exports = {
 
 #### `allowImageSearch` {#search-allowImageSearch}
 
-* Type: `boolean`
+- Type: `boolean`
 
 If set to `true`, image search will be enabled through the interface.
 
@@ -294,7 +294,7 @@ module.exports = {
 
 #### `showInHeader` {#search-showInHeader}
 
-* Type: `boolean`
+- Type: `boolean`
 
 If set to `false`, the search box will be hidden from the header.
 
@@ -308,7 +308,7 @@ module.exports = {
 
 #### `placeholderImage` {#search-placeholderImage}
 
-* Type: `string`
+- Type: `string`
 
 URL to an image used as a placeholder when there is no images for a result.
 
@@ -322,7 +322,7 @@ module.exports = {
 
 #### `languages` {#search-languages}
 
-* Type: `object`
+- Type: `object`
 
 An object which represents the languages available in the website. The key is a [UTS Locale Identifier](https://www.unicode.org/reports/tr35/tr35-59/tr35.html#Identifiers). The value is the language name to be displayed through the interface.
 
@@ -332,7 +332,7 @@ module.exports = {
     languages: {
       en: 'English',
       'fr-CA': 'French (Canada)',
-      'fr': 'French',
+      fr: 'French',
     },
   },
 };
@@ -340,7 +340,7 @@ module.exports = {
 
 #### `defaultLanguage` {#search-defaultLanguage}
 
-* Type: `string`
+- Type: `string`
 
 This is the default language to use when visiting the website.
 
@@ -358,13 +358,13 @@ module.exports = {
 
 <Indent>
 
-* Type: `object`
+- Type: `object`
 
 Configuration for api.
 
 #### `endpoint` {#api-endpoint}
 
-* Type: `string`
+- Type: `string`
 
 URL to the SPARQL endpoint used for querying.
 
@@ -378,7 +378,7 @@ module.exports = {
 
 #### `params` {#api-params}
 
-* Type: `object`
+- Type: `object`
 
 Additional URL parameters passed while querying the endpoint.
 
@@ -396,7 +396,7 @@ module.exports = {
 
 #### `queryLink` {#api-queryLink}
 
-* Type: `function(string) => string`
+- Type: `function(string) => string`
 
 Used for customizing the URL for editing the query when [debug mode](#debug) is enabled. Some triple stores have different URL patterns. For example, Virtuoso uses a `qtxt` parameter, while GraphDB uses a `query` parameter.
 
@@ -412,7 +412,7 @@ module.exports = {
 
 #### `permalinkUrl` {#api-permalinkUrl}
 
-* Type: `function(string) => string`
+- Type: `function(string) => string`
 
 Used for customizing the permalink URL displayed on the details page.
 
@@ -428,7 +428,7 @@ module.exports = {
 
 #### `prefixes` {#api-prefixes}
 
-* Type: `object`
+- Type: `object`
 
 List of [SPARQL prefixes](https://www.w3.org/TR/sparql11-query/#prefNames) added to the SPARQL query.
 
@@ -450,7 +450,7 @@ module.exports = {
 
 ### `routes` {#routes}
 
-* Type: `object`
+- Type: `object`
 
 Configuration for routes.
 
@@ -539,13 +539,13 @@ module.exports = {
 
 #### `view` {#routes-view}
 
-* Type: `string`
+- Type: `string`
 
 Name of the view to use for displaying the route.
 
 Available views by default:
 
-* `browse` - Classic search results page with a sidebar for filtering.
+- `browse` - Classic search results page with a sidebar for filtering.
 
 You can also [create a custom page](/creating-pages) and refer to it with the `view` property.
 
@@ -561,7 +561,7 @@ module.exports = {
 
 #### `showInNavbar` {#routes-showInNavbar}
 
-* Type: `boolean`
+- Type: `boolean`
 
 If set to `true`, the route will be displayed in the navbar at the top of the website.
 
@@ -577,7 +577,7 @@ module.exports = {
 
 #### `filterByGraph` {#routes-filterByGraph}
 
-* Type: `boolean`
+- Type: `boolean`
 
 If set to `true`, the sidebar will have a graph input filter. The list of graphs is obtained by the [graphs](#graphs) property.
 
@@ -593,7 +593,7 @@ module.exports = {
 
 #### `hideFilterButton` {#routes-hideFilterButton}
 
-* Type: `boolean`
+- Type: `boolean`
 
 If set to `true`, the filter button will be hidden in the sidebar.
 
@@ -609,12 +609,12 @@ module.exports = {
 
 ### `defaultSort` {#routes-defaultSort}
 
-* Type: `object`
+- Type: `object`
 
 Default sorting options for the route. The object should contain the following properties:
 
-* `id` - The ID of the filter to sort by.
-* `reverse` - If set to `true`, the sorting will be in descending order.
+- `id` - The ID of the filter to sort by.
+- `reverse` - If set to `true`, the sorting will be in descending order.
 
 ```js title="config.js"
 module.exports = {
@@ -631,8 +631,8 @@ module.exports = {
 
 #### `orderByVariable` {#routes-orderByVariable}
 
-* Type: `string | null`
-* Default value: `"id"`
+- Type: `string | null`
+- Default value: `"id"`
 
 Define the query variable used for ordering. If set to `null`, it will disable the order clause used by default.
 
@@ -648,8 +648,8 @@ module.exports = {
 
 #### `orderByDirection` {#routes-orderByDirection}
 
-* Type: `string`
-* Default value: `"ASC"`
+- Type: `string`
+- Default value: `"ASC"`
 
 Change the direction of the order clause. Accepted values: `ASC` (ascendant order), `DESC` (descendant order).
 
@@ -665,7 +665,7 @@ module.exports = {
 
 #### `countResults` {#routes-countResults}
 
-* Type: `boolean`
+- Type: `boolean`
 
 Set to `false` to disable the computation of total results count. This can greatly improve performances on large datasets. It will also affect the pagination system.
 
@@ -681,7 +681,7 @@ module.exports = {
 
 #### `rdfType` {#routes-rdfType}
 
-* Type: `string`
+- Type: `string`
 
 RDF type of the resources for this route.
 
@@ -697,7 +697,7 @@ module.exports = {
 
 #### `uriBase` {#routes-uriBase}
 
-* Type: `string`
+- Type: `string`
 
 Base URI of resources for this route. It is optional, and is used to generate shorter links for details pages, by removing the base URI from the URL.
 
@@ -713,7 +713,7 @@ module.exports = {
 
 #### `filters` {#routes-filters}
 
-* Type: `object[]`
+- Type: `object[]`
 
 List of filters.
 
@@ -721,7 +721,7 @@ List of filters.
 
 ##### `id` {#route-filters-id}
 
-* Type: `string`
+- Type: `string`
 
 Unique identifier of the filter.
 
@@ -733,7 +733,7 @@ Unique identifier of the filter.
 
 ##### `label` {#route-filters-label}
 
-* Type: `string`
+- Type: `string`
 
 Label of the filter.
 
@@ -745,26 +745,25 @@ Label of the filter.
 
 ##### `isHidden` {#route-filters-isHidden}
 
-* Type: `boolean`
+- Type: `boolean`
 
 If set to `true`, the filter won't be visible in the Sidebar.
 
-
 ##### `isMulti` {#route-filters-isMulti}
 
-* Type: `boolean`
+- Type: `boolean`
 
 If set to `true`, allows the user to select more than one value.
 
 ##### `isToggle` {#route-filters-isToggle}
 
-* Type: `boolean`
+- Type: `boolean`
 
 If set to `true`, changes the input type to a checkbox, and expects `values` to be defined (see the [values](#route-filters-values) property).
 
 ##### `values` {#route-filters-values}
 
-* Type: `object[]`
+- Type: `object[]`
 
 ```js title="Example"
 {
@@ -780,7 +779,7 @@ The default value can be selected using the [defaultOption](#route-filters-defau
 
 ##### `defaultOption` {#route-filters-defaultOption}
 
-* Type: `number`
+- Type: `number`
 
 Index from the [values](#route-filters-values) property to be selected as the default value.
 
@@ -792,34 +791,34 @@ Index from the [values](#route-filters-values) property to be selected as the de
 
 ##### `isSortable` {#route-filters-isSortable}
 
-* Type: `boolean | object`
+- Type: `boolean | object`
 
 If set to `true`, allows the user to sort search results by the value of this filter.
 
 If defined as an object, the following properties are accepted:
 
-* `variable` (`string`) - The name fo the variable to use for sorting.
-* `reverse` (`boolean`) - If set to `true`, allow for both ascendant/descendant order.
+- `variable` (`string`) - The name fo the variable to use for sorting.
+- `reverse` (`boolean`) - If set to `true`, allow for both ascendant/descendant order.
 
 ##### `query` {#route-filters-query}
 
-* Type: `QueryObject | function() => QueryObject`
+- Type: `QueryObject | function() => QueryObject`
 
 The function takes an optional parameter (`{ language, params }`) and expects a [QueryObject](#QueryObject).
 
-* language: The language code (eg. "en", "fr")
-* params: An object containing query parameters (such as filters, or sort options)
+- language: The language code (eg. "en", "fr")
+- params: An object containing query parameters (such as filters, or sort options)
 
 ##### `whereFunc` {#route-filters-whereFunc}
 
-* Type: `function(string, number) => string | string[]`
+- Type: `function(string, number) => string | string[]`
 
 Additional WHERE condition to append to the search query when the user selected a value from this filter.
 
 It takes the following optional parameters:
 
-* `value` (`string`) - The value selected by the user for this filter.
-* `index` (`number`) - The index of the value.
+- `value` (`string`) - The value selected by the user for this filter.
+- `index` (`number`) - The index of the value.
 
 ```js title="Example"
 {
@@ -829,14 +828,14 @@ It takes the following optional parameters:
 
 ##### `filterFunc` {#route-filters-filterFunc}
 
-* Type: `function(string, number) => string | string[]`
+- Type: `function(string, number) => string | string[]`
 
 Additional FILTER condition to append to the search query when the user selected a value from this filter.
 
 It takes the following optional parameters:
 
-* `value` (`string`) - The value selected by the user for this filter.
-* `index` (`number`) - The index of the value.
+- `value` (`string`) - The value selected by the user for this filter.
+- `index` (`number`) - The index of the value.
 
 ```js title="Example"
 {
@@ -854,7 +853,7 @@ FILTER(?language = "...")
 
 ##### `style` {#route-filters-style}
 
-* Type: `object`
+- Type: `object`
 
 React Stylesheet object used for customizing the appearance of a filter input.
 
@@ -869,7 +868,7 @@ React Stylesheet object used for customizing the appearance of a filter input.
 
 #### `baseWhere` {#routes-baseWhere}
 
-* Type: `string | string[]`
+- Type: `string | string[]`
 
 Base condition of the query. This condition will be applied to the main [query](#routes-query) as well as the filters.
 
@@ -886,12 +885,12 @@ Base condition of the query. This condition will be applied to the main [query](
 
 #### `query` {#routes-query}
 
-* Type: `QueryObject | function() => QueryObject`
+- Type: `QueryObject | function() => QueryObject`
 
 The function takes an optional parameter (`{ language, params }`) and expects a [QueryObject](#QueryObject).
 
-* language: The language code (eg. "en", "fr")
-* params: An object containing query parameters (such as filters, or sort options)
+- language: The language code (eg. "en", "fr")
+- params: An object containing query parameters (such as filters, or sort options)
 
 ```js
 {
@@ -927,7 +926,7 @@ The function takes an optional parameter (`{ language, params }`) and expects a 
 
 #### `details` {#routes-details}
 
-* Type: `object`
+- Type: `object`
 
 Configuration for the details view of this route.
 
@@ -935,15 +934,15 @@ Configuration for the details view of this route.
 
 ##### `view` {#route-details-view}
 
-* Type: `string`
+- Type: `string`
 
 Name of the view to use for displaying the details page.
 
 Available views by default:
 
-* `gallery` - Gallery page with an image carousel.
-* `collection` - Collection page with a list of items.
-* `video` - Page with a video player.
+- `gallery` - Gallery page with an image carousel.
+- `collection` - Collection page with a list of items.
+- `video` - Page with a video player.
 
 You can also [create a custom page](/creating-pages) and refer to it with the `view` property.
 
@@ -953,7 +952,7 @@ module.exports = {
     countries: {
       details: {
         view: 'gallery',
-      }
+      },
     },
   },
 };
@@ -961,7 +960,7 @@ module.exports = {
 
 ##### `showPermalink` {#route-details-showPermalink}
 
-* Type: `bolean`
+- Type: `bolean`
 
 If set to `true`, permalink will be visible on the details page. Generation of permalinks is handled by the [permalinkUrl](#api-permalinkUrl) property.
 
@@ -977,7 +976,7 @@ module.exports = {
 
 ##### `excludedMetadata` {#route-details-excludedMetadata}
 
-* Type: `string[]`
+- Type: `string[]`
 
 List of metadata to exclude from the details view. This is useful if you have a single query for both the search view and the details view, but certain properties should only be visible on the search page and you want to exclude them from the details page.
 
@@ -995,7 +994,9 @@ module.exports = {
             description: '?description',
           },
         ],
-        $where: [/* ... */],
+        $where: [
+          /* ... */
+        ],
       },
       details: {
         excludedMetadata: ['description'],
@@ -1007,7 +1008,7 @@ module.exports = {
 
 ##### `query` {#route-details-query}
 
-* Type: `QueryObject | function() => QueryObject`
+- Type: `QueryObject | function() => QueryObject`
 
 :::tip
 
@@ -1015,11 +1016,10 @@ If you plan to use the same query for the search and for the details, you can si
 
 :::
 
-
 The function takes an optional parameter (`{ language, params }`) and expects a [QueryObject](#QueryObject).
 
-* language: The language code (eg. "en", "fr")
-* params: An object containing query parameters (such as filters, or sort options)
+- language: The language code (eg. "en", "fr")
+- params: An object containing query parameters (such as filters, or sort options)
 
 </Indent>
 
@@ -1027,15 +1027,15 @@ The function takes an optional parameter (`{ language, params }`) and expects a 
 
 ### `graphs` {#graphs}
 
-* Type: `object | function() => QueryObject`
+- Type: `object | function() => QueryObject`
 
 It is used to display the name, icon, and url of the graph in details pages, as well as in the Graph filter on the sidebar. You can use either an object or a query to retrieve the list of graphs.
 
 Available properties are:
 
-* `label` - Graph name which will be displayed on the interface.
-* `icon` - URL to an image file used for the icon _(optional)_.
-* `url` - Website URL _(optional)_.
+- `label` - Graph name which will be displayed on the interface.
+- `icon` - URL to an image file used for the icon _(optional)_.
+- `url` - Website URL _(optional)_.
 
 <Tabs>
   <TabItem value="list" label="Example using a list" default>
@@ -1084,7 +1084,7 @@ module.exports = {
 
 ### `gallery` {#gallery}
 
-* Type: `object`
+- Type: `object`
 
 Configuration for gallery.
 
@@ -1092,7 +1092,7 @@ Configuration for gallery.
 
 #### `options` {#gallery-options}
 
-* Type: `object`
+- Type: `object`
 
 The full list of properties can be found in the [react-responsive-carousel documentation](https://github.com/leandrowd/react-responsive-carousel#props).
 
@@ -1119,7 +1119,7 @@ module.exports = {
 
 ### `vocabularies` {#vocabularies}
 
-* Type: `object`
+- Type: `object`
 
 Configuration for Vocabularies.
 
@@ -1128,7 +1128,7 @@ This property is used for optimizing queries further. The output of the Vocabula
 <details>
 <summary>Example of a Vocabulary configuration</summary>
 
-* Vocabulary configuration
+- Vocabulary configuration
 
 ```js title="config.js"
 module.exports = {
@@ -1146,7 +1146,7 @@ module.exports = {
           OPTIONAL {
             ?category skos:prefLabel ?categoryLabel .
             FILTER(LANG(?categoryLabel) = "${language}")
-          }`
+          }`,
         ],
         $langTag: 'hide',
       }),
@@ -1155,7 +1155,7 @@ module.exports = {
 };
 ```
 
-* Query
+- Query
 
 ```js
 {
@@ -1176,7 +1176,7 @@ module.exports = {
 }
 ```
 
-* Without a defined Vocabulary, the result would look like:
+- Without a defined Vocabulary, the result would look like:
 
 ```json
 {
@@ -1186,7 +1186,7 @@ module.exports = {
 }
 ```
 
-* With a defined Vocabulary, the result will be expanded into:
+- With a defined Vocabulary, the result will be expanded into:
 
 ```json
 {
@@ -1204,7 +1204,7 @@ module.exports = {
 
 ### `analytics` {#analytics}
 
-* Type: `object`
+- Type: `object`
 
 Configuration for Analytics.
 
@@ -1212,7 +1212,7 @@ Configuration for Analytics.
 
 #### `id` {#analytics-id}
 
-* Type: `string`
+- Type: `string`
 
 Analytics Property ID. It should look like: "UA-XXXXXX-X" or "G-XXXXXXX". More informations can be found on Google's [support page](https://support.google.com/analytics/answer/9539598?hl=en).
 
@@ -1271,7 +1271,7 @@ type QueryObject = {
    * Add the content as a FILTER.
    * Ex. "$filter": "?myNum > 3"
    */
-  $filter?:	string | string [];
+  $filter?: string | string[];
   /** Set the prefixes in the format "foaf": "http://xmlns.com/foaf/0.1/". */
   $prefixes?: object;
   /**
@@ -1287,5 +1287,5 @@ type QueryObject = {
    * Ex. hide => "label":"Bologna" ; show => "label":{"value": "Bologna", "language": "it"}
    */
   $langTag?: 'hide' | 'show';
-}
+};
 ```
