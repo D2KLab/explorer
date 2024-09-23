@@ -549,8 +549,8 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
             {isLoadingMore || isPageLoading
               ? t('search:labels.loading')
               : totalResults >= 0
-              ? t('search:labels.searchResults', { count: totalResults })
-              : undefined}
+                ? t('search:labels.searchResults', { count: totalResults })
+                : undefined}
           </StyledTitle>
           {similarityEntity && (
             <Element marginBottom={24}>
