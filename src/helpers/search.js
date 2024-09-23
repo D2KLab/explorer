@@ -1,13 +1,10 @@
 import fs from 'fs';
-import os from 'os';
-import path from 'path';
 
 import { mapLimit } from 'async';
-import FormData from 'form-data';
 
 import { getSessionUser, getUserLists } from '@helpers/database';
 import SparqlClient from '@helpers/sparql';
-import { removeEmptyObjects, getQueryObject, idToUri } from '@helpers/utils';
+import { getQueryObject, idToUri, removeEmptyObjects } from '@helpers/utils';
 import { fillWithVocabularies } from '@helpers/vocabulary';
 import { getEntity } from '@pages/api/entity';
 import config from '~/config';
@@ -525,68 +522,39 @@ export const search = async (query, session, language) => {
 
 /**
  * Image based search, given an uploaded image.
- * @param {object} image - the uploaded image to search for.
+ * @param {object | string} image - the uploaded image to search for, or the URI of the image to search for.
  */
 export const searchImage = async (image) => {
+  if (!image) {
+    throw new Error('No image provided');
+  }
+
   const formData = new FormData();
 
-  if (typeof image === 'object' && typeof image.filepath !== 'undefined') {
+  if (typeof image === 'string') {
+    const res = await fetch(image);
+    const blob = await res.blob();
+    formData.append('file', blob, 'image.jpg');
+  } else if (typeof image === 'object' && image.filepath) {
     try {
-      formData.append('file', fs.createReadStream(image.filepath));
-    } catch (e) {
-      console.error(
-        `An error has occurred while accessing the image at ${image.filepath}. Error: ${e}`,
-      );
-    }
-  } else {
-    const response = await fetch(image);
-    if (!response.ok) throw new Error(`Unexpected Response: ${response.statusText}`);
-
-    let tmpDir;
-    try {
-      tmpDir = await new Promise((resolve, reject) => {
-        fs.mkdtemp(`${os.tmpdir()}${path.sep}`, (err, folder) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          resolve(folder);
-        });
-      });
-
-      const imagePath = path.join(tmpDir, 'image.jpg');
-      const fileStream = fs.createWriteStream(imagePath);
-
-      await new Promise((resolve, reject) => {
-        res.body.pipe(fileStream);
-        res.body.on('error', reject);
-        fileStream.on('finish', resolve);
-      });
-
-      formData.append('file', fs.createReadStream(imagePath));
-    } catch (e) {
-      console.error(
-        `An error has occurred while saving the temporary image at ${tmpDir}. Error: ${e}`,
-      );
+      const stream = fs.createReadStream(image.filepath);
+      const blob = await new Response(stream).blob();
+      formData.append('file', blob, image.newFilename);
+    } catch (error) {
+      console.error('Error uploading image', error);
+      return { error: 'Error uploading image' };
     } finally {
-      if (tmpDir) {
-        try {
-          fs.rmSync(tmpDir, { recursive: true });
-        } catch (e) {
-          console.error(
-            `An error has occurred while removing the temp folder at ${tmpDir}. Error: ${e}`,
-          );
-        }
-      }
+      fs.unlinkSync(image.filepath);
     }
   }
 
-  const res = await fetch(`https://silknow-image-retrieval.tools.eurecom.fr/api/retrieve`, {
+  const res = await fetch('https://silknow-image-retrieval.tools.eurecom.fr/api/retrieve', {
     method: 'POST',
     body: formData,
   });
 
   const data = await res.json();
+
   if (data.message) {
     throw new Error(data.message);
   }

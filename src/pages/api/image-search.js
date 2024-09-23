@@ -26,7 +26,11 @@ export default withRequestValidation({
   const { image } = files;
   const { uri } = req.query;
 
-  const result = await searchImage(image || uri);
-
-  res.status(200).json(result);
+  try {
+    const result = await searchImage(Array.isArray(image) ? image[0] : image || uri);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error searching image', error);
+    return res.status(500).json({ error: 'Error searching image' });
+  }
 });
