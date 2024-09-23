@@ -31,12 +31,7 @@ FROM base AS runner
 
 WORKDIR /usr/src/app
 
-COPY --from=builder /usr/src/app/public ./public
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder /usr/src/app/.next/standalone ./
-COPY --from=builder /usr/src/app/.next/static ./.next/static
+COPY . .
 
 # Environment variables must be redefined at run time
 ARG ENV_VARIABLE
