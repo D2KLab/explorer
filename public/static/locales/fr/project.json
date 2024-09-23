@@ -3,7 +3,9 @@
   "footer": {
     "text": "Les données contenues dans Exploratory Search proviennent de DBpedia.\nL'explorateur de recherche a été développé à EURECOM."
   },
-  "metadata": {},
+  "metadata": {
+    "language": "Langage"
+  },
   "routes": {},
   "filters": {}
 }

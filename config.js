@@ -68,6 +68,7 @@ module.exports = {
       uriBase: 'http://dbpedia.org/resource',
       details: {
         view: 'gallery',
+        excludedMetadata: ['description'],
       },
       filters: [
         {
@@ -83,7 +84,10 @@ module.exports = {
               },
             ],
             $where: [
-              '?country a <http://dbpedia.org/ontology/Country>',
+              '?country a <http://dbpedia.org/ontology/Country> .',
+              '?country a <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations> .',
+              '?country dbo:capital ?capital .',
+              'FILTER NOT EXISTS { ?country <http://dbpedia.org/ontology/dissolutionYear> ?yearEnd }',
               '?country <http://dbpedia.org/ontology/language> ?language',
               '?language rdfs:label ?label',
             ],
@@ -93,18 +97,15 @@ module.exports = {
           whereFunc: () => ['?id <http://dbpedia.org/ontology/language> ?language'],
           filterFunc: (val) => `?language = <${val}>`,
         },
-        {
-          id: 'show-only-images',
-          isOption: true,
-          whereFunc: () => [],
-        },
       ],
       labelFunc: (props) => props.label || props.identifier,
       baseWhere: [
-        '?id a <http://dbpedia.org/ontology/Country>',
-        '?id a <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations>',
-        '?id dbo:capital ?capital',
-        'FILTER NOT EXISTS { ?id <http://dbpedia.org/ontology/dissolutionYear> ?yearEnd }',
+        `GRAPH ?g {
+          ?id a <http://dbpedia.org/ontology/Country> .
+          ?id a <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations> .
+          ?id dbo:capital ?capital .
+          FILTER NOT EXISTS { ?id <http://dbpedia.org/ontology/dissolutionYear> ?yearEnd }
+        }`,
       ],
       query: {
         '@graph': [
