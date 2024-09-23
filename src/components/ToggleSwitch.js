@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, createRef } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 const Switch = styled.div`
   position: relative;
@@ -23,14 +23,9 @@ const SwitchSelection = styled.span`
   position: absolute;
   top: 0;
   background: ${({ theme }) => theme.colors.primary};
-  ${({ active }) =>
-    active
-      ? css`
-          transition:
-            left 150ms ease-out,
-            width 150ms ease-out;
-        `
-      : ''};
+  transition:
+    left 150ms ease-out,
+    width 150ms ease-out;
 `;
 
 const SwitchItem = styled.div`
@@ -80,6 +75,8 @@ function ToggleSwitch({ name, options, defaultOption, onChange }) {
   const [selected, setSelected] = useState();
   const [left, setLeft] = useState();
   const [width, setWidth] = useState(-1);
+  const lineRefs = useRef([]);
+  lineRefs.current = options.map((_, i) => lineRefs.current[i] ?? createRef());
 
   const handleChange = (val, event) => {
     setSelected(val);
@@ -94,16 +91,12 @@ function ToggleSwitch({ name, options, defaultOption, onChange }) {
 
   useEffect(() => {
     const el = lineRefs.current[options.findIndex((option) => option.value === selected)]?.current;
-
     if (el) {
       const { offsetLeft, offsetWidth } = el;
       setLeft(offsetLeft);
       setWidth(offsetWidth);
     }
   }, [selected]);
-
-  const lineRefs = useRef([]);
-  lineRefs.current = options.map((_, i) => lineRefs.current[i] ?? createRef());
 
   return (
     <Switch>
@@ -120,7 +113,7 @@ function ToggleSwitch({ name, options, defaultOption, onChange }) {
           </SwitchItem>
         );
       })}
-      <SwitchSelection style={{ left, width }} active={width > -1} />
+      <SwitchSelection style={{ left, width }} active={lineRefs.current} />
     </Switch>
   );
 }
