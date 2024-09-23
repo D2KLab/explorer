@@ -11,6 +11,7 @@ module.exports = {
   i18n,
   images: {
     domains: config.imagesDomains,
+    remotePatterns: config.imagesRemotePatterns,
   },
   rewrites: async () => [
     ...Object.entries(config.routes).flatMap(([routeName, route]) => {

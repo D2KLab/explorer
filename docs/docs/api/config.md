@@ -118,9 +118,15 @@ module.exports = {
 
 </Indent>
 
-### `imagesDomains` {#head}
+### `imagesDomains` (Deprecated) {#head-imagesDomains}
 
-* Type: `string[]`
+- Type: `string[]`
+
+:::warning
+
+This property is deprecated in favor of [#imagesRemotePatterns](#head-imagesRemotePatterns).
+
+:::
 
 List of allowed hostnames for external images.
 
@@ -129,6 +135,26 @@ See [Next.js documentation](https://nextjs.org/docs/api-reference/next/image#dom
 ```js title="config.js"
 module.exports = {
   imagesDomains: ['upload.wikimedia.org'],
+};
+```
+
+### `imagesRemotePatterns` (#head-imagesRemotePatterns)
+
+- Type: `object[]`
+
+List of allowed remote patterns for external images.
+
+See [Next.js documentation](https://nextjs.org/docs/app/api-reference/components/image#remotepatterns) for more informaitons.
+
+```js title="config.js"
+module.exports = {
+  imagesRemotePatterns: [
+    {
+      protocol: 'https',
+      hostname: 'upload.wikimedia.org',
+      port: '',
+    },
+  ],
 };
 ```
 
