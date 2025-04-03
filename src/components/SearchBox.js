@@ -1,5 +1,5 @@
+import { Button as ReakitButton } from '@ariakit/react';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
-import { Button as ReakitButton } from 'ariakit';
 import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
 

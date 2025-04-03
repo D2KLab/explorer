@@ -1,6 +1,6 @@
 import DefaultErrorPage from 'next/error';
 import { useRouter } from 'next/router';
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { Trans, useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
@@ -83,7 +83,7 @@ function ListInvitePage({ list }) {
 
 export async function getServerSideProps(ctx) {
   const { req, res, query } = ctx;
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
 
   const props = {
     ...(await serverSideTranslations(ctx.locale, ['common', 'project', 'search'])),

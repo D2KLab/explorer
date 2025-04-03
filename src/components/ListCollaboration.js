@@ -1,4 +1,4 @@
-import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
+import { useDialogStore, Dialog, DialogDisclosure } from '@ariakit/react';
 import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
 
@@ -17,24 +17,24 @@ const StyledDialog = styled(Dialog)`
 
 /**
  * A React component that renders a dialog that allows the user to collaborate on a list.
- * @param {DialogState} [dialogState] - The dialog state to use.
+ * @param {DialogStore} [dialogStore] - The dialog store to use.
  * @param {React.ReactNode} children - The children to render.
  * @returns A React component
  */
-function ListCollaboration({ inviteUrl, dialogState, children }) {
+function ListCollaboration({ inviteUrl, dialogStore, children }) {
   const { t } = useTranslation('common');
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const inviteListDialog = dialogState || useDialogState();
+  const inviteListDialog = dialogStore || useDialogStore();
 
   return (
     <>
       {(children && children) || (
-        <DialogDisclosure state={inviteListDialog} as={Button} primary>
+        <DialogDisclosure store={inviteListDialog} as={Button} primary>
           {t('common:listCollaboration.invite')}
         </DialogDisclosure>
       )}
       <StyledDialog
-        state={inviteListDialog}
+        store={inviteListDialog}
         modal
         aria-label={t('common:listCollaboration.title')}
         backdrop

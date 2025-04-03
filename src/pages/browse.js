@@ -85,6 +85,7 @@ const CollapseSidebarButton = styled(Button)`
   background: #a6a6a6;
   color: #000;
   text-transform: uppercase;
+  display: flex;
 
   ${breakpoints.mobile`
     display: none;

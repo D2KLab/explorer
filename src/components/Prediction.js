@@ -1,5 +1,5 @@
+import { useDialogStore, Dialog, Tooltip, TooltipAnchor, useTooltipStore } from '@ariakit/react';
 import { CircleQuestion } from '@styled-icons/fa-solid/CircleQuestion';
-import { useDialogState, Dialog, Tooltip, TooltipAnchor, useTooltipState } from 'ariakit';
 import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
 
@@ -10,8 +10,9 @@ import theme from '~/theme';
 const StyledTooltip = styled(Tooltip)`
   box-sizing: border-box;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-family:
+    -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, Arial,
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   color: rgb(255, 255, 255);
   background-color: rgba(33, 33, 33, 0.9);
   font-size: 0.8em;
@@ -56,12 +57,12 @@ function Prediction({ prediction }) {
   const { score, kind, used, explanation } = prediction;
   const explanations = Array.isArray(explanation) ? explanation : [explanation];
 
-  const dialog = useDialogState({ modal: true });
+  const dialog = useDialogStore({ modal: true });
 
-  const tooltipPrediction = useTooltipState();
+  const tooltipPrediction = useTooltipStore();
   return (
     <>
-      <StyledDialog state={dialog} modal aria-label="">
+      <StyledDialog store={dialog} modal aria-label="">
         <PredictionDetails>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={generateMediaUrl(used, 200, 200)} alt="" />
@@ -76,14 +77,14 @@ function Prediction({ prediction }) {
         {Math.floor(score * 100)}%
       </small>{' '}
       <TooltipAnchor
-        state={tooltipPrediction}
+        store={tooltipPrediction}
         as={CircleQuestion}
         size={16}
         color={theme.colors.prediction}
         style={{ cursor: 'pointer' }}
         onClick={() => dialog.show()}
       />
-      <StyledTooltip state={tooltipPrediction}>
+      <StyledTooltip store={tooltipPrediction}>
         {kind === 'http://data.silknow.org/actor/luh-image-analysis/' && (
           // eslint-disable-next-line @next/next/no-img-element
           <img

@@ -1,4 +1,4 @@
-import { useDialogState, Dialog } from 'ariakit';
+import { useDialogStore, Dialog } from '@ariakit/react';
 import Router from 'next/router';
 import { useTranslation, Trans } from 'next-i18next';
 import { useState } from 'react';
@@ -19,15 +19,15 @@ const StyledDialog = styled(Dialog)`
  * A React component that renders a dialog that allows the user to remove a collaborator from a list.
  * @param {List} list - The list to remove the collaborator from.
  * @param {List} user - The user to remove.
- * @param {DialogState} [dialogState] - The dialog state to use.
+ * @param {DialogStore} [dialogStore] - The dialog store to use.
  * @param {React.ReactNode} children - The children to render.
  * @returns A React component
  */
-function ListRemoveCollaborator({ list, user, dialogState, children }) {
+function ListRemoveCollaborator({ list, user, dialogStore, children }) {
   const { t } = useTranslation('common');
   const [isDeleting, setIsDeleting] = useState(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const removalDialog = dialogState || useDialogState();
+  const removalDialog = dialogStore || useDialogStore();
 
   const deleteList = async () => {
     setIsDeleting(true);
@@ -41,7 +41,7 @@ function ListRemoveCollaborator({ list, user, dialogState, children }) {
     <>
       {children}
       <StyledDialog
-        state={removalDialog}
+        store={removalDialog}
         modal
         aria-label={t('common:listRemoveCollaborator.title')}
         backdrop

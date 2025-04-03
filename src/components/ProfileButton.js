@@ -1,6 +1,6 @@
+import { useMenuStore, Menu, MenuItem, MenuButton } from '@ariakit/react';
 import { DownArrow } from '@styled-icons/boxicons-solid/DownArrow';
 import { User } from '@styled-icons/boxicons-solid/User';
-import { useMenuState, Menu, MenuItem, MenuButton } from 'ariakit';
 import Router from 'next/router';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useTranslation, Trans } from 'next-i18next';
@@ -91,7 +91,7 @@ const StyledUserIcon = styled(User)`
  */
 function ProfileButton({ className }) {
   const { t } = useTranslation('common');
-  const menu = useMenuState();
+  const menu = useMenuStore();
 
   const { data: session, status } = useSession();
   const loading = status === 'loading';
@@ -104,7 +104,7 @@ function ProfileButton({ className }) {
     return (
       <>
         <StyledMenuItem
-          state={menu}
+          store={menu}
           onClick={() => {
             Router.push({
               pathname: '/profile',
@@ -120,7 +120,7 @@ function ProfileButton({ className }) {
         </StyledMenuItem>
         <StyledDivider />
         <StyledMenuItem
-          state={menu}
+          store={menu}
           onClick={() => {
             Router.push({
               pathname: '/profile',
@@ -132,7 +132,7 @@ function ProfileButton({ className }) {
         </StyledMenuItem>
         <StyledDivider />
         <StyledMenuItem
-          state={menu}
+          store={menu}
           href="/api/auth/signout"
           onClick={(e) => {
             e.preventDefault();
@@ -148,7 +148,7 @@ function ProfileButton({ className }) {
 
   const renderMenu = () => (
     <>
-      <StyledMenuButton state={menu}>
+      <StyledMenuButton store={menu}>
         {session?.user?.image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -163,12 +163,12 @@ function ProfileButton({ className }) {
         {t('common:profileButton.label')}
         <StyledDownArrow />
       </StyledMenuButton>
-      <StyledMenu state={menu} aria-label={t('common:profileButton.label')}>
+      <StyledMenu store={menu} aria-label={t('common:profileButton.label')}>
         {session ? (
           renderSessionMenuItems(session, menu)
         ) : (
           <StyledMenuItem
-            state={menu}
+            store={menu}
             href="/api/signin"
             onClick={(e) => {
               e.preventDefault();

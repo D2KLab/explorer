@@ -1,4 +1,4 @@
-import { useDialogState, Dialog } from 'ariakit';
+import { Dialog, useDialogStore } from '@ariakit/react';
 import Cookies from 'js-cookie';
 import { useTranslation } from 'next-i18next';
 import { useState, useEffect } from 'react';
@@ -32,7 +32,7 @@ const StyledSwitch = styled(Switch)`
 function ConsentPopup() {
   const { t } = useTranslation(['common', 'project']);
   const theme = useTheme();
-  const dialog = useDialogState({ modal: true, visible: true });
+  const dialog = useDialogStore();
   const [consenting, setConsenting] = useState();
 
   const handleSwitchChange = (checked, event, id) => {
@@ -54,7 +54,7 @@ function ConsentPopup() {
     <div>
       <StyledDialog
         modal
-        state={dialog}
+        store={dialog}
         aria-label={title}
         hideOnClickOutside={false}
         hideOnEsc={false}

@@ -1,4 +1,4 @@
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 
 import { withRequestValidation } from '@helpers/api';
 import { search } from '@helpers/search';
@@ -17,7 +17,7 @@ export default withRequestValidation({
   const { q } = req.query;
   const { query } = req;
 
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
 
   const results = await search(
     {

@@ -1,4 +1,4 @@
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 
 import { authOptions } from './auth/[...nextauth]';
 
@@ -123,7 +123,7 @@ export const isEntityInList = async (entityId, query, req, res) => {
   try {
     if (!entityId || !req) return false;
 
-    const session = await unstable_getServerSession(req, res, authOptions);
+    const session = await getServerSession(req, res, authOptions);
     if (!session) return false;
 
     const user = await getSessionUser(session);

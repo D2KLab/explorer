@@ -1,6 +1,6 @@
+import { Button as ReakitButton, Dialog, DialogDisclosure, useDialogStore } from '@ariakit/react';
 import { SearchAlt2 } from '@styled-icons/boxicons-regular/SearchAlt2';
 import { Camera } from '@styled-icons/boxicons-solid/Camera';
-import { Button as ReakitButton, useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -279,7 +279,7 @@ function HomePage() {
   const [similarity, setSimilarity] = useState('visual');
 
   // Search by image
-  const dialog = useDialogState();
+  const dialog = useDialogStore();
   const onDrop = useCallback(
     (acceptedFiles) => {
       setProcessStatus('uploading');
@@ -384,12 +384,12 @@ function HomePage() {
                     as={DialogDisclosure}
                     type="button"
                     aria-label={t('common:buttons.searchByImage')}
-                    state={dialog}
+                    store={dialog}
                   >
                     <CameraIcon />
                   </CameraButton>
                   <StyledUploadDialog
-                    state={dialog}
+                    store={dialog}
                     modal={false}
                     aria-label={t('common:buttons.searchByImage')}
                   >

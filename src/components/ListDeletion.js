@@ -1,4 +1,4 @@
-import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
+import { useDialogStore, Dialog, DialogDisclosure } from '@ariakit/react';
 import Router from 'next/router';
 import { useTranslation, Trans } from 'next-i18next';
 import { useState } from 'react';
@@ -18,15 +18,15 @@ const StyledDialog = styled(Dialog)`
 /**
  * A React component that renders a dialog that allows the user to delete a list.
  * @param {List} list - The list to delete.
- * @param {DialogState} [dialogState] - The dialog state to use.
+ * @param {DialogStore} [dialogStore] - The dialog store to use.
  * @param {React.ReactNode} children - The children to render.
  * @returns A React component
  */
-function ListDeletion({ list, dialogState, children }) {
+function ListDeletion({ list, dialogStore, children }) {
   const { t } = useTranslation('common');
   const [isDeleting, setIsDeleting] = useState(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const deleteListDialog = dialogState || useDialogState();
+  const deleteListDialog = dialogStore || useDialogStore();
 
   const deleteList = async () => {
     setIsDeleting(true);
@@ -41,12 +41,12 @@ function ListDeletion({ list, dialogState, children }) {
   return (
     <>
       {(children && children) || (
-        <DialogDisclosure state={deleteListDialog} as={Button} danger loading={isDeleting}>
+        <DialogDisclosure store={deleteListDialog} as={Button} danger loading={isDeleting}>
           {t('common:listDeletion.title')}
         </DialogDisclosure>
       )}
       <StyledDialog
-        state={deleteListDialog}
+        store={deleteListDialog}
         modal
         aria-label={t('common:listDeletion.title')}
         backdrop

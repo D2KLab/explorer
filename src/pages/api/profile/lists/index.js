@@ -1,4 +1,4 @@
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 
 import { withRequestValidation } from '@helpers/api';
 import { getSessionUser, getUserLists, createUserList } from '@helpers/database';
@@ -15,7 +15,7 @@ export default withRequestValidation({
   useSession: true,
   allowedMethods: ['GET', 'POST'],
 })(async (req, res) => {
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
 
   // Get user informations
   const user = await getSessionUser(session);

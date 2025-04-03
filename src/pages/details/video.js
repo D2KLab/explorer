@@ -1,4 +1,4 @@
-import { useTabState, Tab, TabList, TabPanel } from 'ariakit';
+import { useTabStore, Tab, TabList, TabPanel } from '@ariakit/react';
 import dynamic from 'next/dynamic';
 import DefaultErrorPage from 'next/error';
 import Link from 'next/link';
@@ -316,7 +316,7 @@ function VideoDetailsPage({
   const router = useRouter();
   const { query } = router;
   const [faceRectangles, setFaceRectangles] = useState([]);
-  const tab = useTabState();
+  const tab = useTabStore();
   const $videoPlayer = useRef(null);
   const [videoPlayedSeconds, setVideoPlayedSeconds] = useState(0);
 
@@ -440,19 +440,19 @@ function VideoDetailsPage({
 
     return (
       <Element flex="0.7">
-        <StyledTabList state={tab} aria-label="Analysis">
-          {hasVideoSegments && <StyledTab state={tab}>Segments</StyledTab>}
-          {hasAnnotations && <StyledTab state={tab}>NER</StyledTab>}
-          {hasFaceTracks && <StyledTab state={tab}>FaceRec</StyledTab>}
-          {hasCaptions && <StyledTab state={tab}>DeepCaptions</StyledTab>}
+        <StyledTabList store={tab} aria-label="Analysis">
+          {hasVideoSegments && <StyledTab store={tab}>Segments</StyledTab>}
+          {hasAnnotations && <StyledTab store={tab}>NER</StyledTab>}
+          {hasFaceTracks && <StyledTab store={tab}>FaceRec</StyledTab>}
+          {hasCaptions && <StyledTab store={tab}>DeepCaptions</StyledTab>}
         </StyledTabList>
         {hasVideoSegments && (
-          <StyledTabPanel state={tab}>
+          <StyledTabPanel store={tab}>
             <VideoSegments>{videoSegments.map(renderVideoSegment)}</VideoSegments>
           </StyledTabPanel>
         )}
         {hasAnnotations && (
-          <StyledTabPanel state={tab}>
+          <StyledTabPanel store={tab}>
             <ul>
               {annotations.map((ann) => (
                 <Segment key={ann['@id']}>
@@ -473,7 +473,7 @@ function VideoDetailsPage({
           </StyledTabPanel>
         )}
         {hasFaceTracks && (
-          <StyledTabPanel state={tab}>
+          <StyledTabPanel store={tab}>
             {faceTracks.map((track) => (
               <Segment key={track.track_id}>
                 <SegmentButton onClick={() => seekVideoTo(track.start_npt)}>
@@ -495,7 +495,7 @@ function VideoDetailsPage({
           </StyledTabPanel>
         )}
         {hasCaptions && (
-          <StyledTabPanel state={tab}>
+          <StyledTabPanel store={tab}>
             {captions.map((caption) => (
               <Segment key={caption['@id']}>
                 <SegmentButton onClick={() => seekVideoTo(caption.startSeconds)}>

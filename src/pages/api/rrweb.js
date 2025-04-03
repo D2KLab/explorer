@@ -1,6 +1,6 @@
 import cookie from 'cookie';
 import { ObjectId } from 'mongodb';
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 
 import { authOptions } from './auth/[...nextauth]';
 
@@ -15,7 +15,7 @@ import { connectToDatabase, getSessionUser } from '@helpers/database';
 export default withRequestValidation({
   allowedMethods: ['POST'],
 })(async (req, res) => {
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
   const user = await getSessionUser(session);
   const db = await connectToDatabase();
 

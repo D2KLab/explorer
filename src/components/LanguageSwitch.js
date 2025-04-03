@@ -1,5 +1,5 @@
+import { Menu, MenuItem, MenuButton, useMenuStore } from '@ariakit/react';
 import { DownArrow } from '@styled-icons/boxicons-solid/DownArrow';
-import { useMenuState, Menu, MenuItem, MenuButton } from 'ariakit';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
@@ -62,20 +62,20 @@ const StyledDownArrow = styled(DownArrow)`
  * @returns A language switch button.
  */
 function LanguageSwitch({ className }) {
-  const menu = useMenuState();
+  const menu = useMenuStore();
   const { i18n } = useTranslation();
   const router = useRouter();
 
   return (
     <Element className={className}>
-      <StyledMenuButton state={menu}>
+      <StyledMenuButton store={menu}>
         <span>{config.search.languages[i18n.language]}</span>
         <StyledDownArrow />
       </StyledMenuButton>
-      <StyledMenu state={menu} aria-label={config.search.languages[i18n.language]}>
+      <StyledMenu store={menu} aria-label={config.search.languages[i18n.language]}>
         {Object.entries(config.search.languages).map(([langKey, langLabel]) => (
           <StyledMenuItem
-            state={menu}
+            store={menu}
             key={langKey}
             onClick={() => {
               menu.hide();

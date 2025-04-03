@@ -1,5 +1,5 @@
+import { useDialogStore, Dialog, DialogDisclosure } from '@ariakit/react';
 import { Edit as SettingsIcon } from '@styled-icons/boxicons-regular/Edit';
-import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import Router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -43,7 +43,7 @@ const StyledSettingsIcon = styled(SettingsIcon)`
 function ListSettings({ list }) {
   const theme = useTheme();
   const { t } = useTranslation('common');
-  const settingsDialog = useDialogState();
+  const settingsDialog = useDialogStore();
   const [isUpdating, setIsUpdating] = useState(false);
   const [listName, setListName] = useState(list.name);
   const [listPublic, setListPublic] = useState(list.is_public);
@@ -68,11 +68,11 @@ function ListSettings({ list }) {
 
   return (
     <>
-      <StyledDialogDisclosure state={settingsDialog}>
+      <StyledDialogDisclosure store={settingsDialog}>
         <StyledSettingsIcon />
       </StyledDialogDisclosure>
       <StyledDialog
-        state={settingsDialog}
+        store={settingsDialog}
         modal
         aria-label={t('common:listSettings.title')}
         backdrop

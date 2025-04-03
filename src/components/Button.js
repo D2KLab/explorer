@@ -1,4 +1,4 @@
-import { Button as ReakitButton } from 'ariakit';
+import { Button as ReakitButton } from '@ariakit/react';
 import { forwardRef } from 'react';
 import styled from 'styled-components';
 

@@ -1,5 +1,5 @@
+import { layout, space, flexbox } from '@techstack/styled-system';
 import styled from 'styled-components';
-import { layout, space, flexbox } from 'styled-system';
 
 /**
  * A styled component that applies the layout, space, and flexbox CSS properties.

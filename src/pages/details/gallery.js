@@ -1,14 +1,15 @@
-import 'react-18-image-lightbox/style.css';
+import 'yet-another-react-lightbox/styles.css';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { useMenuState, Menu, MenuItem, MenuButton, MenuButtonArrow } from 'ariakit';
+import { Menu, MenuItem, MenuButton, MenuButtonArrow, useMenuStore } from '@ariakit/react';
 import { saveAs } from 'file-saver';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useState } from 'react';
-import Lightbox from 'react-18-image-lightbox';
 import { Carousel } from 'react-responsive-carousel';
 import styled from 'styled-components';
+import Lightbox from 'yet-another-react-lightbox';
+import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 
 import Body from '@components/Body';
 import Button from '@components/Button';
@@ -230,7 +231,7 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
   const { query } = router;
   const route = config.routes[query.type];
   const [currentSlide, setCurrentSlide] = useState(0);
-  const downloadMenu = useMenuState();
+  const downloadMenu = useMenuStore();
   const [lightboxIsOpen, setLightboxIsOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
@@ -313,19 +314,22 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
         <Columns>
           {images.length > 0 && (
             <Primary>
-              {lightboxIsOpen && (
-                <Lightbox
-                  imageTitle={images[lightboxIndex]?.label || pageTitle}
-                  mainSrc={images[lightboxIndex]?.url}
-                  nextSrc={images[(lightboxIndex + 1) % images.length]?.url}
-                  prevSrc={images[(lightboxIndex + images.length - 1) % images.length]?.url}
-                  onCloseRequest={() => setLightboxIsOpen(false)}
-                  onMovePrevRequest={() =>
-                    setLightboxIndex((lightboxIndex + images.length - 1) % images.length)
-                  }
-                  onMoveNextRequest={() => setLightboxIndex((lightboxIndex + 1) % images.length)}
-                />
-              )}
+              <Lightbox
+                index={lightboxIndex}
+                open={lightboxIsOpen}
+                close={() => setLightboxIsOpen(false)}
+                slides={images.map((image) => ({
+                  src: generateMediaUrl(image.url, 1024),
+                  title: image.label,
+                  description: image.description,
+                }))}
+                controller={{
+                  closeOnBackdropClick: true,
+                  closeOnPullDown: true,
+                  closeOnPullUp: true,
+                }}
+                plugins={[Zoom]}
+              />
 
               <MobileContainer>
                 <Title>{pageTitle}</Title>
@@ -431,15 +435,15 @@ function GalleryDetailsPage({ result, inList, searchData, debugSparqlQuery }) {
               <MetadataList metadata={result} type={query.type} />
             </Element>
             <Element marginBottom={24}>
-              <MenuButton state={downloadMenu} as={Button} primary>
+              <MenuButton store={downloadMenu} as={Button} primary>
                 {t('common:buttons.download')} <MenuButtonArrow />
               </MenuButton>
-              <StyledMenu state={downloadMenu} aria-label={t('common:buttons.download')}>
-                <MenuItem state={downloadMenu} as={Button} primary onClick={() => download('json')}>
+              <StyledMenu store={downloadMenu} aria-label={t('common:buttons.download')}>
+                <MenuItem store={downloadMenu} as={Button} primary onClick={() => download('json')}>
                   {t('common:buttons.downloadJSON')}
                 </MenuItem>
                 <MenuItem
-                  state={downloadMenu}
+                  store={downloadMenu}
                   as={Button}
                   primary
                   onClick={() => download('image')}

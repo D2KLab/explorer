@@ -1,9 +1,9 @@
+import { useDialogStore, Dialog, DialogDisclosure } from '@ariakit/react';
 import { ShareAlt as ShareIcon } from '@styled-icons/boxicons-solid/ShareAlt';
 import { TrashAlt as TrashIcon } from '@styled-icons/boxicons-solid/TrashAlt';
-import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import Link from 'next/link';
 import Router from 'next/router';
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { getProviders, getCsrfToken, signOut } from 'next-auth/react';
 import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -136,7 +136,7 @@ const StyledTrashIcon = styled(TrashIcon)`
 
 function ProfilePage({ session, providers, csrfToken, accounts, lists, baseUrl, facebookAppId }) {
   const { t, i18n } = useTranslation('common');
-  const deleteProfileDialog = useDialogState();
+  const deleteProfileDialog = useDialogStore();
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [isUnlinkingAccount, setIsUnlinkingAccount] = useState(false);
 
@@ -162,7 +162,7 @@ function ProfilePage({ session, providers, csrfToken, accounts, lists, baseUrl, 
         {t('common:profile.deleteAccount.title')}
       </h3>
       <DialogDisclosure
-        state={deleteProfileDialog}
+        store={deleteProfileDialog}
         as={DeleteButton}
         bg="#fff"
         text="#dc3545"
@@ -171,7 +171,7 @@ function ProfilePage({ session, providers, csrfToken, accounts, lists, baseUrl, 
         {t('common:profile.deleteAccount.title')}
       </DialogDisclosure>
       <StyledDialog
-        state={deleteProfileDialog}
+        store={deleteProfileDialog}
         modal
         backdrop
         backdropProps={{
@@ -295,9 +295,9 @@ function ProfilePage({ session, providers, csrfToken, accounts, lists, baseUrl, 
               <ul>
                 {lists?.map((list) => {
                   // eslint-disable-next-line react-hooks/rules-of-hooks
-                  const socialsListDialog = useDialogState();
+                  const socialsListDialog = useDialogStore();
                   // eslint-disable-next-line react-hooks/rules-of-hooks
-                  const deleteListDialog = useDialogState();
+                  const deleteListDialog = useDialogStore();
 
                   return (
                     <ListItem key={list._id}>
@@ -334,16 +334,16 @@ function ProfilePage({ session, providers, csrfToken, accounts, lists, baseUrl, 
                             list={list}
                             facebookAppId={facebookAppId}
                             shareUrl={`${baseUrl}/lists/${list._id}`}
-                            dialogState={socialsListDialog}
+                            dialogStore={socialsListDialog}
                           >
-                            <StyledDialogDisclosure state={socialsListDialog}>
+                            <StyledDialogDisclosure store={socialsListDialog}>
                               <StyledSocialsIcon />
                             </StyledDialogDisclosure>
                           </ListSocials>
                         </ListItemButton>
                         <ListItemButton>
-                          <ListDeletion list={list} dialogState={deleteListDialog}>
-                            <StyledDialogDisclosure state={deleteListDialog}>
+                          <ListDeletion list={list} dialogStore={deleteListDialog}>
+                            <StyledDialogDisclosure store={deleteListDialog}>
                               <StyledTrashIcon />
                             </StyledDialogDisclosure>
                           </ListDeletion>
@@ -374,7 +374,7 @@ function ProfilePage({ session, providers, csrfToken, accounts, lists, baseUrl, 
 export default ProfilePage;
 
 export async function getServerSideProps(ctx) {
-  const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions);
+  const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const user = await getSessionUser(session);
 
   if (!user) {

@@ -1,4 +1,4 @@
-import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
+import { useDialogStore, Dialog, DialogDisclosure } from '@ariakit/react';
 import { useTranslation } from 'next-i18next';
 import {
   EmailShareButton,
@@ -37,16 +37,16 @@ const StyledDialog = styled(Dialog)`
 /**
  * A React component that renders a list of buttons that share the list.
  * @param {List} list - the list to share
- * @param {DialogState} dialogState - the dialog state to use
+ * @param {DialogStore} dialogStore - the dialog store to use
  * @param {React.ReactNode} children - the children to render
  * @param {string} shareUrl - the url to share
  * @param {string} facebookAppId - the facebook app id
  * @returns A React component
  */
-function ListSocials({ list, dialogState, children, shareUrl, facebookAppId }) {
+function ListSocials({ list, dialogStore, children, shareUrl, facebookAppId }) {
   const { t } = useTranslation('common');
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const shareDialog = dialogState || useDialogState();
+  const shareDialog = dialogStore || useDialogStore();
   const title = list.name;
 
   const buttonStyle = { margin: '1em' };
@@ -54,12 +54,12 @@ function ListSocials({ list, dialogState, children, shareUrl, facebookAppId }) {
   return (
     <>
       {(children && children) || (
-        <DialogDisclosure state={shareDialog} as={Button} primary>
+        <DialogDisclosure store={shareDialog} as={Button} primary>
           {t('common:listSocials.title')}
         </DialogDisclosure>
       )}
       <StyledDialog
-        state={shareDialog}
+        store={shareDialog}
         modal
         aria-label={t('common:listSocials.title')}
         backdrop

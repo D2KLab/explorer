@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 
 import { withRequestValidation } from '@helpers/api';
 import { getListById, getSessionUser, getUserById, updateList } from '@helpers/database';
@@ -28,7 +28,7 @@ export default withRequestValidation({
   }
 
   // Get user informations
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
   const user = await getSessionUser(session);
 
   const isOwner = user && list && list.user.equals(user._id);

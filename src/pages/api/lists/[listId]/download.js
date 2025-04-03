@@ -4,7 +4,7 @@ import { Duplex } from 'stream';
 import AdmZip from 'adm-zip';
 import json2csv from 'json2csv';
 import json2md from 'json2md';
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { i18n } from 'next-i18next';
 
 import { withRequestValidation } from '@helpers/api';
@@ -83,7 +83,7 @@ export default withRequestValidation({
   }
 
   // Get user informations
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
   const user = await getSessionUser(session);
 
   const isOwner = user && list && list.user.equals(user._id);

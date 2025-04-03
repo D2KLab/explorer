@@ -1,6 +1,6 @@
+import { useDialogStore, Dialog, DialogDisclosure } from '@ariakit/react';
 import { Heart as HeartIcon } from '@styled-icons/boxicons-regular/Heart';
 import { Heart as HeartSolidIcon } from '@styled-icons/boxicons-solid/Heart';
-import { useDialogState, Dialog, DialogDisclosure } from 'ariakit';
 import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
@@ -111,7 +111,7 @@ function SaveButton({
   const [lists, setLists] = useState([]);
   const [newListName, setNewListName] = useState('');
   const [listFormVisible, setListFormVisible] = useState(false);
-  const dialog = useDialogState();
+  const dialog = useDialogStore();
   const { data: session } = useSession();
 
   const itemsUris = []
@@ -221,11 +221,11 @@ function SaveButton({
 
   return (
     <>
-      <StyledDialogDisclosure {...props} onClick={onClick} state={dialog}>
+      <StyledDialogDisclosure {...props} onClick={onClick} store={dialog}>
         {renderButton()}
       </StyledDialogDisclosure>
       <StyledDialog
-        state={dialog}
+        store={dialog}
         modal
         aria-label={t('common:saveButton.title')}
         backdrop

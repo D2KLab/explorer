@@ -1,7 +1,7 @@
-import { useDialogState, DialogDisclosure } from 'ariakit';
+import { useDialogStore, DialogDisclosure } from '@ariakit/react';
 import DefaultErrorPage from 'next/error';
 import Link from 'next/link';
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styled from 'styled-components';
@@ -151,16 +151,16 @@ function ListsPage({ isOwner, collaborators, list, shareLink, inviteUrl }) {
           <ul>
             {collaborators.map((collaborator) => {
               // eslint-disable-next-line react-hooks/rules-of-hooks
-              const removeCollaboratorDialog = useDialogState();
+              const removeCollaboratorDialog = useDialogStore();
               return (
                 <li key={collaborator._id}>
                   <Element display="flex" alignItems="center" style={{ gap: 8 }}>
                     <ListRemoveCollaborator
                       list={list}
                       user={collaborator}
-                      dialogState={removeCollaboratorDialog}
+                      dialogStore={removeCollaboratorDialog}
                     >
-                      <StyledDialogDisclosure state={removeCollaboratorDialog}>
+                      <StyledDialogDisclosure store={removeCollaboratorDialog}>
                         <DeleteIcon fill={theme.colors.danger} />
                       </StyledDialogDisclosure>
                     </ListRemoveCollaborator>
@@ -271,7 +271,7 @@ function ListsPage({ isOwner, collaborators, list, shareLink, inviteUrl }) {
 
 export async function getServerSideProps(ctx) {
   const { req, res, query } = ctx;
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
   const list = await getListById(query.listId.split('-').pop());
 
   const props = {

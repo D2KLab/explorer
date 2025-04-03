@@ -445,7 +445,7 @@ function Sidebar({ className, onSearch, type, filters, query, renderEmptyFields 
                 name={`filter_${filter.id}`}
                 options={filter.values}
                 defaultOption={
-                  filter.values[valueIndex > -1 ? valueIndex : filter.defaultOption ?? 0]
+                  filter.values[valueIndex > -1 ? valueIndex : (filter.defaultOption ?? 0)]
                 }
                 onChange={handleInputChange}
               />

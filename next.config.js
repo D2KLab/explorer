@@ -2,6 +2,7 @@ const config = require('./config');
 const { i18n } = require('./next-i18next.config');
 
 module.exports = {
+  output: 'standalone',
   eslint: {
     ignoreDuringBuilds: true,
   },
