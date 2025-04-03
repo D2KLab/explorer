@@ -16,14 +16,19 @@ services:
       - GOOGLE_ID=${GOOGLE_ID}
       - GOOGLE_SECRET=${GOOGLE_SECRET}
       - MONGODB_URI=${MONGODB_URI}
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
     env_file:
       - .env
     ports:
       - '3000:3000'
       - '9229:9229'
     volumes:
-      - ./src:/usr/app/src
-      - ./public:/usr/app/public
+      - ./src:/usr/src/app/src
+      - ./public:/usr/src/app/public
+      - ./config.js:/usr/src/app/config.js
+      - ./theme.js:/usr/src/app/theme.js
+    restart: unless-stopped
   mongo:
     image: mongo
     ports:
@@ -41,3 +46,5 @@ services:
       - '9000:9000'
   redis:
     image: redis
+    ports:
+      - '6379:6379'
