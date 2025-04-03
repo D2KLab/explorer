@@ -19,47 +19,89 @@ export const getSparqlQuery = async (query) => {
       debug: false,
       sparqlFunction: (sparql) => {
         sparqlQuery = sparql.trim();
-        return Promise.reject();
+        return Promise.reject(new Error('Getting only SPARQL string'));
       },
     });
   } catch (err) {
-    // Continue regardless of any error while parsing the query
+    // Log unexpected errors
+    if (err.message !== 'Getting only SPARQL string') {
+      console.error('Error generating SPARQL query:', err);
+    }
   }
   return sparqlQuery;
 };
 
 /**
+ * Retrieves results from cache if available
+ * @param {string} cacheKey - Key to check in cache
+ * @returns {Object|null} The cached result or null if not found
+ */
+const getFromCache = async (cacheKey) => {
+  const exists = await cache.exists(cacheKey);
+  if (exists === 1) {
+    const cachedData = await cache.get(cacheKey);
+    return JSON.parse(cachedData);
+  }
+  return null;
+};
+
+/**
+ * Stores results in cache
+ * @param {string} cacheKey - Key to use for caching
+ * @param {Object} data - Data to cache
+ */
+const storeInCache = async (cacheKey, data) => {
+  if (data) {
+    await cache.set(cacheKey, JSON.stringify(data));
+  }
+};
+
+/**
  * Takes in a query object and returns the results of the query.
  * @param {object} queryObject - the query object
- * @param {string} [endpoint="https://query.wikidata.org/sparql"] - the endpoint to query
- * @param {boolean} [debug=false] - whether to print the query to the console
- * @param {object} [params={}] - the parameters to pass to the endpoint
- * @returns {object} the results of the query
+ * @param {object} options - query options
+ * @param {string} [options.endpoint="https://query.wikidata.org/sparql"] - the endpoint to query
+ * @param {boolean} [options.debug=false] - whether to log the query information
+ * @param {object} [options.params={}] - the parameters to pass to the endpoint
+ * @returns {object|null} the results of the query or null if the query failed
  */
 export const query = async (queryObject, { endpoint, debug = false, params = {} } = {}) => {
   const sparqlQuery = await getSparqlQuery(queryObject);
-  let results = null;
-  if (sparqlQuery) {
-    const cacheKey = JSON.stringify(sparqlQuery);
-    await cache.exists(cacheKey).then(async (reply) => {
-      if (reply !== 1) {
-        const resQuery = await sparqlTransformer(queryObject, {
-          endpoint,
-          debug,
-          params,
-        });
-        if (resQuery) {
-          await cache.set(cacheKey, JSON.stringify(resQuery));
-        }
-        results = resQuery;
-      } else {
-        results = JSON.parse(await cache.get(cacheKey));
-      }
-    });
+  if (!sparqlQuery) {
+    return null;
   }
-  return results;
+
+  const cacheKey = JSON.stringify(sparqlQuery);
+
+  // Try to get from cache first
+  const cachedResult = await getFromCache(cacheKey);
+  if (cachedResult) {
+    return cachedResult;
+  }
+
+  // If not in cache, execute the query
+  try {
+    const resQuery = await sparqlTransformer(queryObject, {
+      endpoint,
+      debug,
+      params,
+    });
+
+    // Cache the result
+    await storeInCache(cacheKey, resQuery);
+    return resQuery;
+  } catch (err) {
+    console.error('Error executing SPARQL query:', err);
+    return null;
+  }
 };
 
+/**
+ * Utility functions for executing and manipulating SPARQL queries
+ * @namespace
+ * @property {Function} getSparqlQuery - Convert a query object to a SPARQL string
+ * @property {Function} query - Execute a SPARQL query and return the results
+ */
 const sparql = {
   getSparqlQuery,
   query,
