@@ -85,6 +85,35 @@ export const query = async (queryObject, { endpoint, debug = false, params = {} 
       endpoint,
       debug,
       params,
+      sparqlFunction: (sparql) => {
+        const fetchOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/sparql-query',
+            Accept: 'application/json',
+          },
+          signal: AbortSignal.timeout(60 * 1000),
+          body: sparql,
+        };
+        return fetch(endpoint, fetchOptions)
+          .then((response) => {
+            if (!response.ok) {
+              if (debug) {
+                console.error('Network response was not ok:', response.statusText);
+                console.error('SPARQL query:', sparql);
+                console.error('Fetch options:', fetchOptions);
+              }
+              throw new Error(`Network response was not ok: ${response.statusText}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (debug) {
+              console.log('SPARQL response:', data);
+            }
+            return data;
+          });
+      }
     });
 
     // Cache the result
