@@ -1,7 +1,5 @@
 import fs from 'fs';
 
-import { mapLimit } from 'async';
-
 import { getSessionUser, getUserLists } from '@helpers/database';
 import SparqlClient from '@helpers/sparql';
 import { getQueryObject, idToUri, removeEmptyObjects } from '@helpers/utils';
@@ -61,105 +59,85 @@ export const getFilters = async (query, { language }) => {
     }
 
     const filters = [];
-    const filterPromises = [];
 
     for (let i = 0; i < route.filters.length; i += 1) {
       const filter = route.filters[i];
 
-      filterPromises.push(
-        (async () => {
-          try {
-            let filterValues = Array.isArray(filter.values) ? [...filter.values] : [];
+      try {
+        let filterValues = Array.isArray(filter.values) ? [...filter.values] : [];
 
-            if (filter.isAutocomplete !== false) {
-              let filterQuery = null;
+        if (filter.isAutocomplete !== false) {
+          let filterQuery = null;
 
-              if (filter.query) {
-                filterQuery = getQueryObject(filter.query, { language, params: query });
-              } else if (filter.vocabulary) {
-                const vocabulary = config.vocabularies[filter.vocabulary];
-                if (vocabulary) {
-                  filterQuery = getQueryObject(vocabulary.query, { language, params: query });
-                }
-              }
-
-              if (filterQuery) {
-                const resQuery = await safeQueryWithTimeout(filterQuery);
-
-                if (resQuery && resQuery['@graph'] && Array.isArray(resQuery['@graph'])) {
-                  for (let j = 0; j < resQuery['@graph'].length; j += 1) {
-                    const row = resQuery['@graph'][j];
-
-                    // Skip invalid rows
-                    if (!row || !row['@id']) continue;
-
-                    const value = row['@id']['@value'] || row['@id'];
-                    const label = []
-                      .concat(row.label ? row.label['@value'] || row.label : value)
-                      .filter((x) => x)
-                      .join(', ');
-                    const altLabel = []
-                      .concat(row.altLabel ? row.altLabel['@value'] || row.altLabel : null)
-                      .filter((x) => x)
-                      .join(', ');
-                    filterValues.push({
-                      label,
-                      value,
-                      altLabel,
-                    });
-                  }
-
-                  filterValues.sort(
-                    (a, b) =>
-                      typeof a.label === 'string' &&
-                      a.label.localeCompare(b.label, undefined, {
-                        numeric: true,
-                        sensitivity: 'base',
-                      }),
-                  );
-                }
-              }
+          if (filter.query) {
+            filterQuery = getQueryObject(filter.query, { language, params: query });
+          } else if (filter.vocabulary) {
+            const vocabulary = config.vocabularies[filter.vocabulary];
+            if (vocabulary) {
+              filterQuery = getQueryObject(vocabulary.query, { language, params: query });
             }
-
-            const serializedFilter = {
-              ...filter,
-              values: filterValues,
-            };
-
-            // Remove function properties that can't be serialized
-            Object.entries(serializedFilter).forEach(([key, value]) => {
-              if (typeof value === 'function') {
-                delete serializedFilter[key];
-              }
-            });
-
-            return serializedFilter;
-          } catch (filterError) {
-            console.error(`Error processing filter ${filter.id}:`, filterError);
-            return {
-              ...filter,
-              values: Array.isArray(filter.values) ? [...filter.values] : [],
-              error: true,
-            };
           }
-        })(),
-      );
-    }
 
-    const filterResults = await Promise.allSettled(filterPromises);
+          if (filterQuery) {
+            const resQuery = await safeQueryWithTimeout(filterQuery);
 
-    filterResults.forEach((result, index) => {
-      if (result.status === 'fulfilled') {
-        filters.push(result.value);
-      } else {
-        console.error(`Filter #${index} failed:`, result.reason);
+            if (resQuery && resQuery['@graph'] && Array.isArray(resQuery['@graph'])) {
+              for (let j = 0; j < resQuery['@graph'].length; j += 1) {
+                const row = resQuery['@graph'][j];
+
+                // Skip invalid rows
+                if (!row || !row['@id']) continue;
+
+                const value = row['@id']['@value'] || row['@id'];
+                const label = []
+                  .concat(row.label ? row.label['@value'] || row.label : value)
+                  .filter((x) => x)
+                  .join(', ');
+                const altLabel = []
+                  .concat(row.altLabel ? row.altLabel['@value'] || row.altLabel : null)
+                  .filter((x) => x)
+                  .join(', ');
+                filterValues.push({
+                  label,
+                  value,
+                  altLabel,
+                });
+              }
+
+              filterValues.sort(
+                (a, b) =>
+                  typeof a.label === 'string' &&
+                  a.label.localeCompare(b.label, undefined, {
+                    numeric: true,
+                    sensitivity: 'base',
+                  }),
+              );
+            }
+          }
+        }
+
+        const serializedFilter = {
+          ...filter,
+          values: filterValues,
+        };
+
+        // Remove function properties that can't be serialized
+        Object.entries(serializedFilter).forEach(([key, value]) => {
+          if (typeof value === 'function') {
+            delete serializedFilter[key];
+          }
+        });
+
+        filters.push(serializedFilter);
+      } catch (filterError) {
+        console.error(`Error processing filter ${filter.id}:`, filterError);
         filters.push({
-          ...(route.filters[index] || {}),
-          values: [],
+          ...filter,
+          values: Array.isArray(filter.values) ? [...filter.values] : [],
           error: true,
         });
       }
-    });
+    }
 
     return filters;
   } catch (error) {
@@ -692,77 +670,49 @@ export const search = async (query, session, language) => {
       };
     }
 
-    const maxConcurrentRequests = 3;
     const entityDetailsTimeout = 10000; // 10 seconds
 
-    try {
-      await new Promise((resolve) => {
-        mapLimit(
-          entities,
-          maxConcurrentRequests,
-          async (entity) => {
-            try {
-              // Skip invalid entities
-              if (!entity || !entity['@id']) {
-                return [];
-              }
+    for (const entity of entities) {
+      try {
+        // Skip invalid entities
+        if (!entity || !entity['@id']) {
+          continue;
+        }
 
-              const searchDetailsQuery = JSON.parse(
-                JSON.stringify(getQueryObject(route.query, { language, params: query })),
-              );
-              searchDetailsQuery.$where = searchDetailsQuery.$where || [];
-              searchDetailsQuery.$filter = searchDetailsQuery.$filter || [];
-              searchDetailsQuery.$values = searchDetailsQuery.$values || {};
-              searchDetailsQuery.$values['?id'] = searchDetailsQuery.$values['?id'] || [];
-              searchDetailsQuery.$values['?id'].push(entity['@id']);
+        const searchDetailsQuery = JSON.parse(
+          JSON.stringify(getQueryObject(route.query, { language, params: query })),
+        );
+        searchDetailsQuery.$where = searchDetailsQuery.$where || [];
+        searchDetailsQuery.$filter = searchDetailsQuery.$filter || [];
+        searchDetailsQuery.$values = searchDetailsQuery.$values || {};
+        searchDetailsQuery.$values['?id'] = searchDetailsQuery.$values['?id'] || [];
+        searchDetailsQuery.$values['?id'].push(entity['@id']);
 
-              // Set a timeout for entity details fetching
-              const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(
-                  () =>
-                    reject(new Error(`Entity details timed out after ${entityDetailsTimeout}ms`)),
-                  entityDetailsTimeout,
-                );
-              });
+        // Set a timeout for entity details fetching
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(
+            () => reject(new Error(`Entity details timed out after ${entityDetailsTimeout}ms`)),
+            entityDetailsTimeout,
+          );
+        });
 
-              const searchPromise = safeQueryWithTimeout(searchDetailsQuery);
+        const searchPromise = safeQueryWithTimeout(searchDetailsQuery);
 
-              const resSearchDetails = await Promise.race([searchPromise, timeoutPromise]).catch(
-                (error) => {
-                  console.error(`Error fetching details for entity ${entity['@id']}:`, error);
-                  return null;
-                },
-              );
-
-              const details = [];
-              if (resSearchDetails && resSearchDetails['@graph']) {
-                // Ignore empty objects
-                const detailsWithoutEmptyObjects =
-                  resSearchDetails['@graph'].map(removeEmptyObjects);
-                details.push(...detailsWithoutEmptyObjects);
-              }
-
-              return details;
-            } catch (entityError) {
-              console.error(`Error processing entity ${entity['@id']}:`, entityError);
-              return [];
-            }
-          },
-          (err, res) => {
-            if (err) {
-              console.error('Error in entity details mapping:', err);
-              // Don't fail completely, resolve with what we have
-              resolve(res || []);
-              return;
-            }
-            results.push(...(res || []).flat().filter((item) => item));
-            resolve();
+        const resSearchDetails = await Promise.race([searchPromise, timeoutPromise]).catch(
+          (error) => {
+            console.error(`Error fetching details for entity ${entity['@id']}:`, error);
+            return null;
           },
         );
-      });
-    } catch (mapError) {
-      console.error('Error mapping entity details:', mapError);
-      // Continue with what we have
+
+        if (resSearchDetails && resSearchDetails['@graph']) {
+          // Ignore empty objects
+          const detailsWithoutEmptyObjects = resSearchDetails['@graph'].map(removeEmptyObjects);
+          results.push(...detailsWithoutEmptyObjects.filter((item) => item));
+        }
+      } catch (entityError) {
+        console.error(`Error processing entity ${entity['@id']}:`, entityError);
+      }
     }
 
     // Fill with vocabularies, but don't let it fail the entire search
