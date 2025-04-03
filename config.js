@@ -19,33 +19,6 @@ module.exports = {
   search: {
     route: 'countries',
     allowTextSearch: true,
-    textSearchQuery: {
-      '@graph': [
-        {
-          '@id': '?id',
-          '@type': '?rdfType',
-          label: '?label',
-          representation: {
-            '@id': '?image$sample',
-            image: '?image$sample',
-          },
-        },
-      ],
-      $where: [
-        '?id a ?rdfType',
-        `VALUES ?rdfType {
-          <http://dbpedia.org/ontology/Country>
-          <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations>
-        }`,
-        '?id dbo:capital ?capital',
-        'FILTER NOT EXISTS { ?id <http://dbpedia.org/ontology/dissolutionYear> ?yearEnd }',
-        '?id <http://www.w3.org/2000/01/rdf-schema#label> ?label',
-        '?id dbo:thumbnail ?image',
-      ],
-      $filter: ['langmatches(lang(?label), "en") || lang(?label) = ""'],
-      $limit: 5,
-      $langTag: 'hide',
-    },
     allowImageSearch: false,
     placeholderImage: '/images/placeholder.png',
     languages: {
@@ -84,9 +57,8 @@ module.exports = {
               },
             ],
             $where: [
-              '?country a <http://dbpedia.org/ontology/Country> .',
-              '?country a <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations> .',
-              '?country dbo:capital ?capital .',
+              '?country a <http://dbpedia.org/ontology/Country>, <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations> .',
+              'FILTER EXISTS { ?country dbo:capital [] }',
               'FILTER NOT EXISTS { ?country <http://dbpedia.org/ontology/dissolutionYear> ?yearEnd }',
               '?country <http://dbpedia.org/ontology/language> ?language',
               '?language rdfs:label ?label',
@@ -97,14 +69,63 @@ module.exports = {
           whereFunc: () => ['?id <http://dbpedia.org/ontology/language> ?language'],
           filterFunc: (val) => `?language = <${val}>`,
         },
+        {
+          id: 'currency',
+          label: 'Currency',
+          isMulti: true,
+          isSortable: true,
+          query: {
+            '@graph': [
+              {
+                '@id': '?currency',
+                label: '?label',
+              },
+            ],
+            $where: [
+              '?country a <http://dbpedia.org/ontology/Country>, <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations> .',
+              'FILTER EXISTS { ?country dbo:capital [] }',
+              'FILTER NOT EXISTS { ?country <http://dbpedia.org/ontology/dissolutionYear> ?yearEnd }',
+              '?country dbo:currency ?currency',
+              '?currency rdfs:label ?label',
+            ],
+            $filter: ['langmatches(lang(?label), "en") || lang(?label) = ""'],
+            $langTag: 'hide',
+          },
+          whereFunc: () => ['?id dbo:currency ?currency'],
+          filterFunc: (val) => `?currency = <${val}>`,
+        },
+        {
+          id: 'governmentType',
+          label: 'Government Type',
+          isMulti: true,
+          isSortable: true,
+          query: {
+            '@graph': [
+              {
+                '@id': '?govType',
+                label: '?label',
+              },
+            ],
+            $where: [
+              '?country a <http://dbpedia.org/ontology/Country>, <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations> .',
+              'FILTER EXISTS { ?country dbo:capital [] }',
+              'FILTER NOT EXISTS { ?country <http://dbpedia.org/ontology/dissolutionYear> ?yearEnd }',
+              '?country dbo:governmentType ?govType',
+              '?govType rdfs:label ?label',
+            ],
+            $filter: ['langmatches(lang(?label), "en") || lang(?label) = ""'],
+            $langTag: 'hide',
+          },
+          whereFunc: () => ['?id dbo:governmentType ?govType'],
+          filterFunc: (val) => `?govType = <${val}>`,
+        },
       ],
       labelFunc: (props) => props.label || props.identifier,
       baseWhere: [
         `GRAPH ?g {
-          ?id a <http://dbpedia.org/ontology/Country> .
-          ?id a <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations> .
-          ?id dbo:capital ?capital .
-          FILTER NOT EXISTS { ?id <http://dbpedia.org/ontology/dissolutionYear> ?yearEnd }
+          ?id a <http://dbpedia.org/ontology/Country>, <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations> .
+          FILTER EXISTS { ?id dbo:capital [] }
+          FILTER NOT EXISTS { ?id <http://dbpedia.org/ontology/dissolutionYear> [] }
         }`,
       ],
       query: {
