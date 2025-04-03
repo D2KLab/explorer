@@ -107,6 +107,7 @@ export const getEntity = async (query, language) => {
     return entity;
   } catch (error) {
     console.error('Error in getEntity:', error);
+    console.error('Query:', query);
     return null;
   }
 };

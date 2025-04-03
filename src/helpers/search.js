@@ -36,6 +36,7 @@ async function safeQueryWithTimeout(query, options = {}) {
     return await Promise.race([queryPromise, timeoutPromise]);
   } catch (error) {
     console.error('SPARQL query error:', error.message);
+    console.error('Query:', query);
     return null;
   }
 }
