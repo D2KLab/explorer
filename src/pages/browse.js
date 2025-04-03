@@ -3,7 +3,6 @@ import { MapLocationDot } from '@styled-icons/fa-solid/MapLocationDot';
 import DefaultErrorPage from 'next/error';
 import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
-import { unstable_getServerSession } from 'next-auth';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import queryString from 'query-string';
@@ -31,11 +30,10 @@ import Sidebar from '@components/Sidebar';
 import SPARQLQueryLink from '@components/SPARQLQueryLink';
 import SpatioTemporalMaps from '@components/SpatioTemporalMaps';
 import { getEntityMainImage, getEntityMainLabel } from '@helpers/explorer';
-import { search, getFilters } from '@helpers/search';
+import { getFilters } from '@helpers/search';
 import useDebounce from '@helpers/useDebounce';
 import useOnScreen from '@helpers/useOnScreen';
 import { uriToId, generateMediaUrl } from '@helpers/utils';
-import { authOptions } from '@pages/api/auth/[...nextauth]';
 import { getEntity } from '@pages/api/entity';
 import breakpoints, { sizes } from '@styles/breakpoints';
 import config from '~/config';
@@ -197,7 +195,7 @@ const Result = styled.div`
 
 const PAGE_SIZE = 20;
 
-function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
+function BrowsePage({ baseUrl, filters, similarityEntity }) {
   const router = useRouter();
   const { query, pathname } = router;
   const { t, i18n } = useTranslation(['common', 'search', 'project']);
@@ -223,7 +221,7 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
   };
 
   const { data, error, size, setSize } = useSWRInfinite(getKey, fetcher, {
-    fallbackData: [initialData],
+    revalidateOnFocus: false,
   });
 
   const isLoadingInitialData = !data && !error;
@@ -240,12 +238,14 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
   }
 
   useEffect(() => {
-    setFavorites(
-      data.reduce((acc, cur) => {
-        acc.push(...cur.favorites);
-        return acc;
-      }, []),
-    );
+    if (data) {
+      setFavorites(
+        data.reduce((acc, cur) => {
+          acc.push(...cur.favorites);
+          return acc;
+        }, []),
+      );
+    }
   }, [data]);
 
   totalPages = totalResults >= 0 ? Math.ceil(totalResults / PAGE_SIZE) : currentPage + 1;
@@ -646,7 +646,7 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
                       onAppears={() => onScrollToPage(pageNumber)}
                       rootMargin="0px 0px -50% 0px"
                     />
-                    <Results loading={isLoadingMore || isPageLoading ? 1 : 0}>
+                    <Results loading={isPageLoading ? 1 : 0}>
                       {renderResults(page.results, pageNumber)}
                     </Results>
                   </Fragment>
@@ -698,10 +698,8 @@ function BrowsePage({ initialData, baseUrl, filters, similarityEntity }) {
   );
 }
 
-export async function getServerSideProps({ req, res, query, locale }) {
+export async function getServerSideProps({ query, locale }) {
   const filters = await getFilters(query, { language: locale });
-  const session = await unstable_getServerSession(req, res, authOptions);
-  const searchData = await search(query, session, locale);
 
   let similarityEntity;
   if (query.similarity_entity) {
@@ -718,12 +716,6 @@ export async function getServerSideProps({ req, res, query, locale }) {
   return {
     props: {
       ...(await serverSideTranslations(locale, ['common', 'project', 'search'])),
-      initialData: {
-        results: searchData.results,
-        totalResults: searchData.totalResults,
-        favorites: searchData.favorites,
-        debugSparqlQuery: searchData.debugSparqlQuery,
-      },
       baseUrl: process.env.SITE,
       filters,
       similarityEntity: similarityEntity || null,
