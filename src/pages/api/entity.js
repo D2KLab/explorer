@@ -70,9 +70,10 @@ export const getEntity = async (query, language) => {
       return null;
     }
 
-    // Set a timeout for the SPARQL query
+    // Set a timeout for the SPARQL query - use route-specific timeout if available
+    const timeout = route.timeout || config.api.timeout || 15000;
     const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('SPARQL query timed out')), 10000);
+      setTimeout(() => reject(new Error('SPARQL query timed out')), timeout);
     });
 
     // Execute the query with a timeout
@@ -196,9 +197,10 @@ export default withRequestValidation({
 
     const language = query.hl || req.headers['accept-language'];
 
-    // Set a timeout for the entire operation
+    // Set a timeout for the entire operation - use route-specific timeout if available
+    const timeout = route.timeout || config.api.timeout || 15000;
     const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('Request timed out')), 15000);
+      setTimeout(() => reject(new Error('Request timed out')), timeout);
     });
 
     // Get entity with a timeout

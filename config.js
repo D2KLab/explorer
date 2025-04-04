@@ -15,6 +15,7 @@ module.exports = {
   },
   api: {
     endpoint: 'https://dbpedia.org/sparql',
+    timeout: 15000,
   },
   search: {
     route: 'countries',
@@ -39,6 +40,7 @@ module.exports = {
       showInNavbar: true,
       rdfType: 'http://dbpedia.org/ontology/Country',
       uriBase: 'http://dbpedia.org/resource',
+      timeout: 30000,
       details: {
         view: 'gallery',
         excludedMetadata: ['description'],

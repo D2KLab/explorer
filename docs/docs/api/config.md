@@ -420,6 +420,20 @@ module.exports = {
 };
 ```
 
+#### `timeout` {#api-timeout}
+
+- Type: `number`
+
+Default timeout in milliseconds for SPARQL queries. If a query exceeds this time, it will be aborted.
+
+```js title="config.js"
+module.exports = {
+  api: {
+    timeout: 15000, // 15 seconds
+  },
+};
+```
+
 #### `queryLink` {#api-queryLink}
 
 - Type: `function(string) => string`
@@ -732,6 +746,22 @@ module.exports = {
   routes: {
     countries: {
       uriBase: 'http://dbpedia.org/resource',
+    },
+  },
+};
+```
+
+#### `timeout` {#routes-timeout}
+
+- Type: `number`
+
+Route-specific timeout in milliseconds for SPARQL queries. If specified, this overrides the global `api.timeout` value for this specific route.
+
+```js title="config.js"
+module.exports = {
+  routes: {
+    countries: {
+      timeout: 30000, // 30 seconds for this route
     },
   },
 };

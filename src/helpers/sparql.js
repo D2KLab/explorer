@@ -113,7 +113,7 @@ export const query = async (queryObject, { endpoint, debug = false, params = {} 
             }
             return data;
           });
-      }
+      },
     });
 
     // Cache the result

@@ -15,11 +15,12 @@ const conditions = {
 /**
  * Executes a SPARQL query with timeout protection
  * @param {Object} query - SPARQL query object
- * @param {Object} options - Query options
+ * @param {Object} options - Options including timeout
+ *  @param {number} options.timeout - Timeout in milliseconds
  * @returns {Promise<Object>} - Query result
  */
 async function safeQueryWithTimeout(query, options = {}) {
-  const timeout = options.timeout || 15000; // 15 seconds default timeout
+  const timeout = options.timeout || config.api.timeout || 60000;
 
   try {
     const timeoutPromise = new Promise((_, reject) => {
@@ -80,7 +81,7 @@ export const getFilters = async (query, { language }) => {
           }
 
           if (filterQuery) {
-            const resQuery = await safeQueryWithTimeout(filterQuery);
+            const resQuery = await safeQueryWithTimeout(filterQuery, { timeout: route.timeout });
 
             if (resQuery && resQuery['@graph'] && Array.isArray(resQuery['@graph'])) {
               for (let j = 0; j < resQuery['@graph'].length; j += 1) {
@@ -450,7 +451,7 @@ export const dumpEntities = async (query, language) => {
         };
 
         // Call the endpoint with the dump query and timeout protection
-        const resDump = await safeQueryWithTimeout(dumpQuery, { timeout: 30000 });
+        const resDump = await safeQueryWithTimeout(dumpQuery, { timeout: 60000 });
 
         if (resDump && resDump['@graph'] && Array.isArray(resDump['@graph'])) {
           if (resDump['@graph'].length === 0) {
@@ -589,7 +590,7 @@ const fetchEntities = async (query, language) => {
 
     // Call the endpoint with the main search query
     try {
-      const resMainSearch = await safeQueryWithTimeout(mainSearchQuery);
+      const resMainSearch = await safeQueryWithTimeout(mainSearchQuery, { timeout: route.timeout });
       if (resMainSearch && resMainSearch['@graph'] && Array.isArray(resMainSearch['@graph'])) {
         entities.push(...resMainSearch['@graph']);
       }
@@ -614,7 +615,9 @@ const fetchEntities = async (query, language) => {
         `,
         };
 
-        const resPagination = await safeQueryWithTimeout(paginationQuery);
+        const resPagination = await safeQueryWithTimeout(paginationQuery, {
+          timeout: route.timeout,
+        });
         totalResults = resPagination && resPagination[0] ? parseInt(resPagination[0].id, 10) : 0;
       } catch (e) {
         console.error('Error in pagination query:', e);
@@ -671,7 +674,7 @@ export const search = async (query, session, language) => {
       };
     }
 
-    const entityDetailsTimeout = 10000; // 10 seconds
+    const entityDetailsTimeout = route.timeout || config.api.timeout || 10000;
 
     for (const entity of entities) {
       try {
@@ -697,7 +700,7 @@ export const search = async (query, session, language) => {
           );
         });
 
-        const searchPromise = safeQueryWithTimeout(searchDetailsQuery);
+        const searchPromise = safeQueryWithTimeout(searchDetailsQuery, { timeout: route.timeout });
 
         const resSearchDetails = await Promise.race([searchPromise, timeoutPromise]).catch(
           (error) => {
