@@ -86,6 +86,11 @@ export const query = async (queryObject, { endpoint, debug = false, params = {} 
       debug,
       params,
       sparqlFunction: (sparql) => {
+        const url = new URL(endpoint);
+        Object.entries(params).forEach(([key, value]) => {
+          url.searchParams.append(key, value);
+        });
+
         const fetchOptions = {
           method: 'POST',
           headers: {
@@ -95,7 +100,7 @@ export const query = async (queryObject, { endpoint, debug = false, params = {} 
           signal: AbortSignal.timeout(60 * 1000),
           body: sparql,
         };
-        return fetch(endpoint, fetchOptions)
+        return fetch(url.toString(), fetchOptions)
           .then((response) => {
             if (!response.ok) {
               if (debug) {
