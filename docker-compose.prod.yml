@@ -4,7 +4,9 @@ volumes:
 
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: prod.Dockerfile
     depends_on:
       - mongo
       - redis
