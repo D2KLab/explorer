@@ -279,6 +279,44 @@ function adaptDimension(bounding, origW, origH, destW, destH) {
   };
 }
 
+async function fetchFaceTracks(videoId) {
+  const url = `https://facerec.eurecom.fr/track?video=${encodeURIComponent(
+    videoId,
+  )}&project=memad&speedup=25`;
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      console.error('FaceRec request failed:', response.status, response.statusText);
+      return [];
+    }
+
+    const body = await response.text();
+    let data;
+    try {
+      data = JSON.parse(body);
+    } catch (err) {
+      console.error(
+        'FaceRec returned non-JSON response:',
+        response.headers.get('content-type') || 'unknown content type',
+        err.message,
+      );
+      return [];
+    }
+
+    const tracks = Array.isArray(data.tracks) ? data.tracks : [];
+    const featClusters = Array.isArray(data.feat_clusters) ? data.feat_clusters : [];
+    return tracks
+      .concat(featClusters)
+      .filter((track) => track.confidence > 0.7)
+      .sort((a, b) => (a.start_npt > b.start_npt ? 1 : -1));
+  } catch (err) {
+    console.error('FaceRec request failed:', err.message);
+    return [];
+  }
+}
+
 function isInViewport(el) {
   const rect = el.getBoundingClientRect();
   return (
@@ -784,17 +822,7 @@ export async function getServerSideProps(context) {
 
     // FACEREC
     // Get face tracking data
-    const resTrack = await (
-      await fetch(
-        `https://facerec.eurecom.fr/track?video=${encodeURIComponent(
-          result['@id'],
-        )}&project=memad&speedup=25`,
-      )
-    ).json();
-    faceTracks = resTrack.tracks || [];
-    faceTracks = faceTracks.concat(resTrack.feat_clusters || []);
-    faceTracks = faceTracks.filter((track) => track.confidence > 0.7);
-    faceTracks.sort((a, b) => (a.start_npt > b.start_npt ? 1 : -1));
+    faceTracks = await fetchFaceTracks(result['@id']);
 
     // DEEPCAPTIONS
     // Process the captions
