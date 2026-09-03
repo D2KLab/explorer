@@ -126,11 +126,14 @@ export const getSearchData = async ({ query, locale }) => {
   searchParams.delete('spath');
 
   const searchData = await (
-    await fetch(`${process.env.SITE}/api/${query.sapi}?${searchParams}`, {
-      headers: {
-        'accept-language': locale,
+    await fetch(
+      `${process.env.INTERNAL_SITE || process.env.SITE}/api/${query.sapi}?${searchParams}`,
+      {
+        headers: {
+          'accept-language': locale,
+        },
       },
-    })
+    )
   ).json();
 
   return searchData;
