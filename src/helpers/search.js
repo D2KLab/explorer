@@ -1,5 +1,7 @@
 import fs from 'fs';
 
+import { mapLimit } from 'async';
+
 import { getSessionUser, getUserLists } from '@helpers/database';
 import SparqlClient from '@helpers/sparql';
 import { getQueryObject, idToUri, removeEmptyObjects } from '@helpers/utils';
@@ -60,11 +62,7 @@ export const getFilters = async (query, { language }) => {
       return [];
     }
 
-    const filters = [];
-
-    for (let i = 0; i < route.filters.length; i += 1) {
-      const filter = route.filters[i];
-
+    const filters = await mapLimit(route.filters, 5, async (filter) => {
       try {
         let filterValues = Array.isArray(filter.values) ? [...filter.values] : [];
 
@@ -130,16 +128,16 @@ export const getFilters = async (query, { language }) => {
           }
         });
 
-        filters.push(serializedFilter);
+        return serializedFilter;
       } catch (filterError) {
         console.error(`Error processing filter ${filter.id}:`, filterError);
-        filters.push({
+        return {
           ...filter,
           values: Array.isArray(filter.values) ? [...filter.values] : [],
           error: true,
-        });
+        };
       }
-    }
+    });
 
     return filters;
   } catch (error) {
@@ -676,11 +674,11 @@ export const search = async (query, session, language) => {
 
     const entityDetailsTimeout = route.timeout || config.api.timeout || 10000;
 
-    for (const entity of entities) {
+    const detailsResults = await mapLimit(entities, 8, async (entity) => {
       try {
         // Skip invalid entities
         if (!entity || !entity['@id']) {
-          continue;
+          return null;
         }
 
         const searchDetailsQuery = JSON.parse(
@@ -711,13 +709,16 @@ export const search = async (query, session, language) => {
 
         if (resSearchDetails && resSearchDetails['@graph']) {
           // Ignore empty objects
-          const detailsWithoutEmptyObjects = resSearchDetails['@graph'].map(removeEmptyObjects);
-          results.push(...detailsWithoutEmptyObjects.filter((item) => item));
+          return resSearchDetails['@graph'].map(removeEmptyObjects).filter((item) => item);
         }
+        return null;
       } catch (entityError) {
         console.error(`Error processing entity ${entity['@id']}:`, entityError);
+        return null;
       }
-    }
+    });
+
+    results.push(...detailsResults.filter(Boolean).flat());
 
     // Fill with vocabularies, but don't let it fail the entire search
     for (let i = 0; i < results.length; i += 1) {
