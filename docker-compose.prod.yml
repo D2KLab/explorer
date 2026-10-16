@@ -22,13 +22,13 @@ services:
       - '4733:3000'
     restart: unless-stopped
   mongo:
-    image: mongo
+    image: mongo:7.0
     ports:
       - '27017:27017'
     volumes:
       - mongo:/data/db
   imaginary:
-    image: h2non/imaginary:latest
+    image: h2non/imaginary:1.2.4
     volumes:
       - images:/mnt/data
     environment:
@@ -37,6 +37,6 @@ services:
     ports:
       - '9000:9000'
   redis:
-    image: redis
+    image: redis:8.4
     ports:
       - '6379:6379'
