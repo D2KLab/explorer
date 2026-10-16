@@ -40,6 +40,7 @@ module.exports = {
       showInNavbar: true,
       rdfType: 'http://dbpedia.org/ontology/Country',
       uriBase: 'http://dbpedia.org/resource',
+      labelProp: 'http://www.w3.org/2000/01/rdf-schema#label',
       timeout: 30000,
       details: {
         view: 'gallery',
