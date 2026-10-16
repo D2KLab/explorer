@@ -100,7 +100,8 @@ function Media({
             alt=""
             fill
             sizes="100vw, 100vw"
-            onLoadingComplete={() => {
+            unoptimized
+            onLoad={() => {
               setImageVisible(true);
               setPlaceholderVisible(false);
             }}

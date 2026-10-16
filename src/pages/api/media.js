@@ -1,6 +1,18 @@
 import { Readable } from 'node:stream';
 
 import { withRequestValidation } from '@helpers/api';
+import config from '~/config';
+
+function sendPlaceholderImage(res) {
+  const placeholder = config.search?.placeholderImage;
+  if (!placeholder) {
+    res.writeHead(502, { 'Cache-Control': 'no-store' });
+    res.end();
+    return;
+  }
+  res.writeHead(302, { Location: placeholder, 'Cache-Control': 'no-store' });
+  res.end();
+}
 
 /**
  * A function that takes in a URL and returns a response with an optimized version of the image at that URL.
@@ -44,14 +56,18 @@ export default withRequestValidation({
     url,
   )}&operations=${encodeURIComponent(JSON.stringify(operations))}`;
 
-  // Fetch and return image
-  const fetchRes = await fetch(requestUrl);
-  const headers = Object.fromEntries(fetchRes.headers.entries());
-  if (fetchRes.status >= 400) {
-    // Do not write cache headers if there is an error
-    delete headers['cache-control'];
-    delete headers.expires;
+  let fetchRes;
+  try {
+    fetchRes = await fetch(requestUrl);
+  } catch (error) {
+    console.error('Media proxy: upstream request failed', url, error);
+    return sendPlaceholderImage(res);
   }
+  if (fetchRes.status >= 400) {
+    console.error('Media proxy: upstream returned', fetchRes.status, url);
+    return sendPlaceholderImage(res);
+  }
+  const headers = Object.fromEntries(fetchRes.headers.entries());
   res.writeHead(fetchRes.status, headers);
   Readable.fromWeb(fetchRes.body).pipe(res);
 });
