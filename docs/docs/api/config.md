@@ -537,7 +537,7 @@ module.exports = {
       ],
       baseWhere: [
         '?id a <http://dbpedia.org/ontology/Country>',
-        '?id a <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations>',
+        '?id <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Member_states_of_the_United_Nations>',
         '?id dbo:capital ?capital',
         'FILTER NOT EXISTS { ?id <http://dbpedia.org/ontology/dissolutionYear> ?yearEnd }',
       ],
@@ -932,7 +932,7 @@ Base condition of the query. This condition will be applied to the main [query](
 {
   baseWhere: [
     '?id a <http://dbpedia.org/ontology/Country>',
-    '?id a <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations>',
+    '?id <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Member_states_of_the_United_Nations>',
     '?id dbo:capital ?capital',
     'FILTER NOT EXISTS { ?id <http://dbpedia.org/ontology/dissolutionYear> ?yearEnd }',
   ],

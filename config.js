@@ -59,7 +59,7 @@ module.exports = {
               },
             ],
             $where: [
-              '?country a <http://dbpedia.org/ontology/Country>, <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations> .',
+              '?country a <http://dbpedia.org/ontology/Country> . ?country <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Member_states_of_the_United_Nations> .',
               'FILTER EXISTS { ?country dbo:capital [] }',
               'FILTER NOT EXISTS { ?country <http://dbpedia.org/ontology/dissolutionYear> ?yearEnd }',
               '?country <http://dbpedia.org/ontology/language> ?language',
@@ -84,7 +84,7 @@ module.exports = {
               },
             ],
             $where: [
-              '?country a <http://dbpedia.org/ontology/Country>, <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations> .',
+              '?country a <http://dbpedia.org/ontology/Country> . ?country <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Member_states_of_the_United_Nations> .',
               'FILTER EXISTS { ?country dbo:capital [] }',
               'FILTER NOT EXISTS { ?country <http://dbpedia.org/ontology/dissolutionYear> ?yearEnd }',
               '?country dbo:currency ?currency',
@@ -109,7 +109,7 @@ module.exports = {
               },
             ],
             $where: [
-              '?country a <http://dbpedia.org/ontology/Country>, <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations> .',
+              '?country a <http://dbpedia.org/ontology/Country> . ?country <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Member_states_of_the_United_Nations> .',
               'FILTER EXISTS { ?country dbo:capital [] }',
               'FILTER NOT EXISTS { ?country <http://dbpedia.org/ontology/dissolutionYear> ?yearEnd }',
               '?country dbo:governmentType ?govType',
@@ -125,7 +125,8 @@ module.exports = {
       labelFunc: (props) => props.label || props.identifier,
       baseWhere: [
         `GRAPH ?g {
-          ?id a <http://dbpedia.org/ontology/Country>, <http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations> .
+          ?id a <http://dbpedia.org/ontology/Country> .
+          ?id <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Category:Member_states_of_the_United_Nations> .
           FILTER EXISTS { ?id dbo:capital [] }
           FILTER NOT EXISTS { ?id <http://dbpedia.org/ontology/dissolutionYear> [] }
         }`,
